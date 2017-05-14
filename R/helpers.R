@@ -2,7 +2,7 @@
 # if geometry = TRUE
 
 
-use_tigris <- function(geography, year, cb = TRUE, resolution = NULL,
+use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
                        state = NULL, county = NULL, starts_with = NULL) {
 
   if (geography == "state") {
@@ -45,4 +45,16 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = NULL,
     stop("Other geographies are not yet supported, but are coming soon.  Use the tigris package and join as normal instead.")
 
   }
+}
+
+#' Title
+#'
+#' @param api_key
+#'
+#' @return
+#' @export
+#'
+#' @examples
+census_api_key <- function(api_key) {
+  Sys.setenv(CENSUS_API_KEY = api_key)
 }

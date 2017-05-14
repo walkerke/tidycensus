@@ -4,9 +4,9 @@
 \alias{get_decennial}
 \title{Title}
 \usage{
-get_decennial(geography, variables, key, year = 2010, sumfile = "sf1",
+get_decennial(geography, variables, year = 2010, sumfile = "sf1",
   state = NULL, county = NULL, geometry = FALSE, output = "tidy",
-  keep_geo_vars = FALSE, ...)
+  keep_geo_vars = FALSE, summary_var = NULL, key = NULL, ...)
 }
 \arguments{
 \item{...}{}

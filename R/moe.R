@@ -8,13 +8,13 @@
 #' @examples
 moe_sum <- function(...) {
 
-  inputs <- list(...)
+  inputs <- c(...)
 
-  squared <- map(inputs, function(x) x^2)
+  squared <- map_dbl(inputs, function(x) x^2)
 
-  result <- sqrt(Reduce("+", squared))
+  result <- sqrt(sum(squared))
 
-  result
+  return(result)
 
 }
 
@@ -66,7 +66,6 @@ moe_product <- function(a, b, moe_a, moe_b) {
   return(result)
 
 }
-
 
 
 
