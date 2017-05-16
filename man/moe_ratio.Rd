@@ -6,6 +6,18 @@
 \usage{
 moe_ratio(num, denom, moe_num, moe_denom)
 }
+\arguments{
+\item{num}{The numerator involved in the ratio calculation (an estimate)}
+
+\item{denom}{The denominator involved in the ratio calculation (an estimate)}
+
+\item{moe_num}{The margin of error of the numerator}
+
+\item{moe_denom}{The margin of error of the denominator}
+}
+\value{
+A margin of error for a derived ratio
+}
 \description{
 Calculate the margin of error for a derived ratio
 }

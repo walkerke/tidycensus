@@ -7,12 +7,28 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   if (geography == "state") {
 
-    states(cb = cb, resolution = resolution, year = year, class = "sf")
+    st <- states(cb = cb, resolution = resolution, year = year, class = "sf")
+
+    if (year == 1990) {
+      st <- mutate(st, GEOID = ST)
+    } else if (year %in% c(2000, 2010)) {
+      st <- mutate(st, GEOID = STATE)
+    }
+
+    return(st)
 
   } else if (geography == "county") {
 
-    counties(cb = cb, state = state, resolution = resolution, year = year,
+    ct <- counties(cb = cb, state = state, resolution = resolution, year = year,
              class = "sf")
+
+    if (year == 1990) {
+      ct <- mutate(ct, GEOID = paste0(ST, CO))
+    } else if (year %in% c(2000, 2010)) {
+      ct <- mutate(ct, GEOID = paste0(STATE, COUNTY))
+    }
+
+    return(ct)
 
   } else if (geography == "tract") {
 
@@ -33,23 +49,52 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "block group") {
 
-    block_groups(cb = cb, state = state, county = county, year = year,
+    bg <- block_groups(cb = cb, state = state, county = county, year = year,
                  class = "sf")
+
+    if (year == 2000) {
+      bg <- bg %>%
+        mutate(TRACT = str_pad(TRACT, 6, "right", "0")) %>%
+        mutate(GEOID = paste0(STATE, COUNTY, TRACT, BLKGROUP))
+    } else if (year == 2010) {
+      bg <- mutate(bg, GEOID = paste0(STATE, COUNTY, TRACT, BLKGRP))
+    }
+
+    return(bg)
 
   } else if (geography == "zcta" | geography == "zip code tabulation area") {
 
-    zctas(cb = cb, starts_with = starts_with, year = year, class = "sf")
+    z <- zctas(cb = cb, starts_with = starts_with, year = year, class = "sf")
+
+    if (year %in% c(2000, 2010)) {
+      z <- mutate(z, GEOID = NAME)
+    } else {
+      z <- rename(z, GEOID = GEOID10)
+    }
+
+    return(z)
+
+  } else if (geography == "block") {
+
+    bl <- blocks(state = state, county = county, year = year, class = "sf")
+
+    if (year > 2000) {
+      bl <- rename(bl, GEOID = GEOID10)
+    } else if (year == 2000) {
+      bl <- rename(bl, GEOID = BLKIDFP00)
+    }
 
   } else {
 
-    stop("Other geographies are not yet supported, but are coming soon.  Use the tigris package and join as normal instead.")
+    stop(sprintf("Geometry for %s is not yet supported.  Use the tigris package and join as normal instead.",
+                 geography), call. = FALSE)
 
   }
 }
 
-#' Title
+#' Set the Census API key
 #'
-#' @param api_key
+#' @param api_key A character string representing a user's Census API key.
 #'
 #' @return
 #' @export

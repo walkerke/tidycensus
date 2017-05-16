@@ -2,14 +2,19 @@
 % Please edit documentation in R/search_variables.R
 \name{search_variables}
 \alias{search_variables}
-\title{Title}
+\title{Search for variables in a decennial Census or American Community Survey dataset}
 \usage{
 search_variables(year, dataset, string)
 }
 \arguments{
-\item{string}{}
+\item{year}{The year for which you are requesting variables.  Either the year of the decennial Census,
+or the endyear for a 5-year ACS sample.}
+
+\item{dataset}{One of "sf1", "sf3", or "acs5".}
+
+\item{string}{Character string to filter the variable list.}
 }
 \description{
-Title
+Search for variables in a decennial Census or American Community Survey dataset
 }
 

@@ -2,14 +2,14 @@
 % Please edit documentation in R/helpers.R
 \name{census_api_key}
 \alias{census_api_key}
-\title{Title}
+\title{Set the Census API key}
 \usage{
 census_api_key(api_key)
 }
 \arguments{
-\item{api_key}{}
+\item{api_key}{A character string representing a user's Census API key.}
 }
 \description{
-Title
+Set the Census API key
 }
 

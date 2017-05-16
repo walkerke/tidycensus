@@ -1,19 +1,36 @@
-#' Title
+#' Obtain data and feature geometry for the decennial Census
 #'
-#' @param geography
-#' @param variables
-#' @param key
-#' @param year
-#' @param sumfile
-#' @param state
-#' @param county
-#' @param geometry
-#' @param ...
+#' @param geography The geography of your data.
+#' @param variables Character string or vector of character strings of variable
+#'                  IDs.#'
+#' @param year The year for which you are requesting data.  1990, 2000, and 2010 are available.
+#' @param sumfile The Census summary file.  Defaults to sf1; the function will look in sf3 if it
+#'                cannot find a variable in sf1.
+#' @param state The state for which you are requesting data. State
+#'              names, postal codes, and FIPS codes are accepted.
+#'              Defaults to NULL.
+#' @param county The county for which you are requesting data. County names and
+#'               FIPS codes are accepted. Must be combined with a value supplied
+#'               to `state`.  Defaults to NULL.
+#' @param geometry if FALSE (the default), return a regular tibble of ACS data.
+#'                 if TRUE, uses the tigris package to return an sf tibble
+#'                 with simple feature geometry in the `geometry` column.  state, county, tract, and block group are
+#'                 supported for 1990 through 2010; block and ZCTA geometry are supported for 2000 and 2010.
+#' @param output One of "tidy" (the default) in which each row represents an
+#'               enumeration unit-variable combination, or "wide" in which each
+#'               row represents an enumeration unit and the variables are in the
+#'               columns.
+#' @param keep_geo_vars if TRUE, keeps all the variables from the Census
+#'                      shapefile obtained by tigris.  Defaults to FALSE.
+#' @param summary_var Character string of a "summary variable" from the decennial Census
+#'                    to be included in your output. Usually a variable (e.g. total population)
+#'                    that you'll want to use as a denominator or comparison.
+#' @param key Your Census API key.
+#'            Obtain one at \url{http://api.census.gov/data/key_signup.html}
+#' @param ... Other keyword arguments
 #'
-#' @return
+#' @return a tibble or sf tibble of decennial Census data
 #' @export
-#'
-#' @examples
 get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
                    state = NULL, county = NULL, geometry = FALSE, output = "tidy",
                    keep_geo_vars = FALSE, summary_var = NULL, key = NULL, ...) {

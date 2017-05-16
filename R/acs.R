@@ -1,7 +1,6 @@
 #' Obtain data and feature geometry for the five-year American Community Survey
 #'
-#' @param geography The geography of your data. "state", "county", "tract",
-#'                  "block group", and "zcta" are currently supported.
+#' @param geography The geography of your data.
 #' @param variables Character string or vector of character strings of variable
 #'                  IDs. tidycensus automatically returns the estimate and the
 #'                  margin of error associated with the variable.
@@ -19,7 +18,8 @@
 #'               to `state`.  Defaults to NULL.
 #' @param geometry if FALSE (the default), return a regular tibble of ACS data.
 #'                 if TRUE, uses the tigris package to return an sf tibble
-#'                 with simple feature geometry in the `geometry` column.
+#'                 with simple feature geometry in the `geometry` column.  state, county, tract, block group,
+#'                 block, and ZCTA geometry are supported.
 #' @param keep_geo_vars if TRUE, keeps all the variables from the Census
 #'                      shapefile obtained by tigris.  Defaults to FALSE.
 #' @param summary_var Character string of a "summary variable" from the ACS
@@ -33,8 +33,6 @@
 #'
 #' @return A tibble or sf tibble of ACS data
 #' @export
-#'
-#' @examples
 get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
                     state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
                     summary_var = NULL, key = NULL, moe_level = "90", ...) {

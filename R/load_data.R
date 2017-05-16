@@ -55,6 +55,8 @@ load_data_acs <- function(geography, formatted_variables, key, endyear, state = 
 
   else {
 
+    vars_to_get <- paste0(formatted_variables, ",NAME")
+
     call <- GET(base, query = list(get = vars_to_get,
                                    "for" = paste0(geography, ":*"),
                                    key = key))

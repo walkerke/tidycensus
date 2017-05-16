@@ -9,8 +9,7 @@ get_acs(geography, variables, endyear = 2015, output = "tidy",
   summary_var = NULL, key = NULL, moe_level = "90", ...)
 }
 \arguments{
-\item{geography}{The geography of your data. "state", "county", "tract",
-"block group", and "zcta" are currently supported.}
+\item{geography}{The geography of your data.}
 
 \item{variables}{Character string or vector of character strings of variable
 IDs. tidycensus automatically returns the estimate and the
@@ -34,7 +33,8 @@ to `state`.  Defaults to NULL.}
 
 \item{geometry}{if FALSE (the default), return a regular tibble of ACS data.
 if TRUE, uses the tigris package to return an sf tibble
-with simple feature geometry in the `geometry` column.}
+with simple feature geometry in the `geometry` column.  state, county, tract, block group,
+block, and ZCTA geometry are supported.}
 
 \item{keep_geo_vars}{if TRUE, keeps all the variables from the Census
 shapefile obtained by tigris.  Defaults to FALSE.}

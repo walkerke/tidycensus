@@ -1,11 +1,9 @@
-#' Title
+#' Calculate the margin of error for a derived sum
 #'
 #' @param ... The margins of error of the variables involved in the sum calculation
 #'
-#' @return A derived margin of error for a sum
+#' @return A margin of error for a derived sum
 #' @export
-#'
-#' @examples
 moe_sum <- function(...) {
 
   inputs <- c(...)
@@ -18,10 +16,14 @@ moe_sum <- function(...) {
 
 }
 
-
-
 #' Calculate the margin of error for a derived proportion
 #'
+#' @param num The numerator involved in the proportion calculation (an estimate)
+#' @param denom The denominator involved in the proportion calculation (an estimate)
+#' @param moe_num The margin of error of the numerator
+#' @param moe_denom The margin of error of the denominator
+#'
+#' @return A margin of error for a derived proportion
 #' @export
 moe_prop <- function(num, denom, moe_num, moe_denom) {
 
@@ -37,6 +39,12 @@ moe_prop <- function(num, denom, moe_num, moe_denom) {
 
 #' Calculate the margin of error for a derived ratio
 #'
+#' @param num The numerator involved in the ratio calculation (an estimate)
+#' @param denom The denominator involved in the ratio calculation (an estimate)
+#' @param moe_num The margin of error of the numerator
+#' @param moe_denom The margin of error of the denominator
+#'
+#' @return A margin of error for a derived ratio
 #' @export
 moe_ratio <- function(num, denom, moe_num, moe_denom) {
 
@@ -54,12 +62,18 @@ moe_ratio <- function(num, denom, moe_num, moe_denom) {
 
 #' Calculate the margin of error for a derived product
 #'
+#' @param est1 The first factor in the multiplication equation (an estimate)
+#' @param est2 The second factor in the multiplication equation (an estimate)
+#' @param moe1 The margin of error of the first factor
+#' @param moe2 The margin of error of the second factor
+#'
+#' @return
 #' @export
-moe_product <- function(a, b, moe_a, moe_b) {
+moe_product <- function(est1, est2, moe1, moe2) {
 
-  p1 <- (a^2 * moe_b^2)
+  p1 <- (est1^2 * moe2^2)
 
-  p2 <- (b^2 * moe_a^2)
+  p2 <- (est2^2 * moe1^2)
 
   result <- sqrt(p1 + p2)
 

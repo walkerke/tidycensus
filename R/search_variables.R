@@ -1,12 +1,11 @@
-#' Title
+#' Load variables from a decennial Census or American Community Survey dataset to search in R
 #'
-#' @param year
-#' @param dataset
+#' @param year The year for which you are requesting variables.  Either the year of the decennial Census,
+#'             or the endyear for a 5-year ACS sample.
+#' @param dataset One of "sf1", "sf3", or "acs5".
 #'
 #' @return
 #' @export
-#'
-#' @examples
 load_variables <- function(year, dataset) {
 
   set <- paste(as.character(year), dataset, sep = "/")
@@ -25,16 +24,15 @@ load_variables <- function(year, dataset) {
 }
 
 
-#' Title
+#' Search for variables in a decennial Census or American Community Survey dataset
 #'
-#' @param year
-#' @param dataset
-#' @param string
+#' @param year The year for which you are requesting variables.  Either the year of the decennial Census,
+#'             or the endyear for a 5-year ACS sample.
+#' @param dataset One of "sf1", "sf3", or "acs5".
+#' @param string Character string to filter the variable list.
 #'
 #' @return
 #' @export
-#'
-#' @examples
 search_variables <- function(year, dataset, string) {
 
   set <- paste(as.character(year), dataset, sep = "/")

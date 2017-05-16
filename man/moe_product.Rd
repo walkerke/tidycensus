@@ -4,7 +4,16 @@
 \alias{moe_product}
 \title{Calculate the margin of error for a derived product}
 \usage{
-moe_product(a, b, moe_a, moe_b)
+moe_product(est1, est2, moe1, moe2)
+}
+\arguments{
+\item{est1}{The first factor in the multiplication equation (an estimate)}
+
+\item{est2}{The second factor in the multiplication equation (an estimate)}
+
+\item{moe1}{The margin of error of the first factor}
+
+\item{moe2}{The margin of error of the second factor}
 }
 \description{
 Calculate the margin of error for a derived product

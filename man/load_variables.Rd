@@ -2,14 +2,17 @@
 % Please edit documentation in R/search_variables.R
 \name{load_variables}
 \alias{load_variables}
-\title{Title}
+\title{Load variables from a decennial Census or American Community Survey dataset to search in R}
 \usage{
 load_variables(year, dataset)
 }
 \arguments{
-\item{dataset}{}
+\item{year}{The year for which you are requesting variables.  Either the year of the decennial Census,
+or the endyear for a 5-year ACS sample.}
+
+\item{dataset}{One of "sf1", "sf3", or "acs5".}
 }
 \description{
-Title
+Load variables from a decennial Census or American Community Survey dataset to search in R
 }
 

@@ -6,6 +6,18 @@
 \usage{
 moe_prop(num, denom, moe_num, moe_denom)
 }
+\arguments{
+\item{num}{The numerator involved in the proportion calculation (an estimate)}
+
+\item{denom}{The denominator involved in the proportion calculation (an estimate)}
+
+\item{moe_num}{The margin of error of the numerator}
+
+\item{moe_denom}{The margin of error of the denominator}
+}
+\value{
+A margin of error for a derived proportion
+}
 \description{
 Calculate the margin of error for a derived proportion
 }

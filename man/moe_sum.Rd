@@ -2,7 +2,7 @@
 % Please edit documentation in R/moe.R
 \name{moe_sum}
 \alias{moe_sum}
-\title{Title}
+\title{Calculate the margin of error for a derived sum}
 \usage{
 moe_sum(...)
 }
@@ -10,9 +10,9 @@ moe_sum(...)
 \item{...}{The margins of error of the variables involved in the sum calculation}
 }
 \value{
-A derived margin of error for a sum
+A margin of error for a derived sum
 }
 \description{
-Title
+Calculate the margin of error for a derived sum
 }
 
