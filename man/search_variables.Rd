@@ -14,7 +14,9 @@ or the endyear for a 5-year ACS sample.}
 
 \item{string}{Character string to filter the variable list.}
 }
+\value{
+A filtered data frame of variables from the requested dataset.
+}
 \description{
 Search for variables in a decennial Census or American Community Survey dataset
 }
-

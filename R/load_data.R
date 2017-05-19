@@ -108,7 +108,11 @@ load_data_decennial <- function(geography, variables, key, year,
 
   var <- paste(variables, sep = "", collapse = ",")
 
-  vars_to_get <- paste0(var, ",NAME")
+  if (year == 1990) {
+    vars_to_get <- paste0(var, ",ANPSADPI")
+  } else {
+    vars_to_get <- paste0(var, ",NAME")
+  }
 
 
   base <- paste0("http://api.census.gov/data/",
@@ -156,6 +160,10 @@ load_data_decennial <- function(geography, variables, key, year,
 
   dat <- dat[-1,]
 
+  if (year == 1990) {
+    dat <- rename(dat, NAME = ANPSADPI)
+  }
+
   l <- length(variables)
 
   if (length(variables) > 1) {
@@ -175,6 +183,15 @@ load_data_decennial <- function(geography, variables, key, year,
 
   # Paste into a GEOID column
   dat$GEOID <- do.call(paste0, dat[id_vars])
+
+
+  # Fix issues with ZCTAs if necessary
+  if (geography == "zip code tabulation area") {
+    l <- unique(nchar(dat$GEOID))
+    if (l == 7) {
+      dat$GEOID <- str_sub(dat$GEOID, 3, 7)
+    }
+  }
 
   # Now, remove them
   dat <- dat[, !(names(dat) %in% id_vars)]

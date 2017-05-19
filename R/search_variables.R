@@ -4,7 +4,7 @@
 #'             or the endyear for a 5-year ACS sample.
 #' @param dataset One of "sf1", "sf3", or "acs5".
 #'
-#' @return
+#' @return A data frame of variables from the requested dataset.
 #' @export
 load_variables <- function(year, dataset) {
 
@@ -31,7 +31,7 @@ load_variables <- function(year, dataset) {
 #' @param dataset One of "sf1", "sf3", or "acs5".
 #' @param string Character string to filter the variable list.
 #'
-#' @return
+#' @return A filtered data frame of variables from the requested dataset.
 #' @export
 search_variables <- function(year, dataset, string) {
 

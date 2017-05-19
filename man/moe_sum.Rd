@@ -15,4 +15,3 @@ A margin of error for a derived sum
 \description{
 Calculate the margin of error for a derived sum
 }
-

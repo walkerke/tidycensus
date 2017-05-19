@@ -55,4 +55,3 @@ a tibble or sf tibble of decennial Census data
 \description{
 Obtain data and feature geometry for the decennial Census
 }
-

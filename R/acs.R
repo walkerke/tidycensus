@@ -51,6 +51,8 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
     stop("The maximum number of variables supported by `get_acs` at one time is 25 at the moment. Consider splitting your variables into multiple calls and using cbind/rbind to combine them.", call. = FALSE)
   }
 
+  if (geography == "zcta") geography <- "zip code tabulation area"
+
   if (moe_level == "90") {
     moe_factor <- 1
   } else if (moe_level == "95") {
@@ -89,7 +91,7 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
     moex <- function(x) round(x * moe_factor, 0)
 
     dat2 <- dat %>%
-      mutate_if(grepl("*M", names(.)), funs(moex))
+      mutate_if(grepl("*M$", names(.)), funs(moex))
 
   }
 
@@ -125,7 +127,7 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
     }
 
     # Merge and return the output
-    out <- left_join(geom, dat2, by = "GEOID")
+    out <- inner_join(geom, dat2, by = "GEOID")
 
     return(out)
 

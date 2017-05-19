@@ -67,7 +67,7 @@ moe_ratio <- function(num, denom, moe_num, moe_denom) {
 #' @param moe1 The margin of error of the first factor
 #' @param moe2 The margin of error of the second factor
 #'
-#' @return
+#' @return A margin of error for a derived product
 #' @export
 moe_product <- function(est1, est2, moe1, moe2) {
 

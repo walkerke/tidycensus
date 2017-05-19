@@ -15,7 +15,9 @@ moe_product(est1, est2, moe1, moe2)
 
 \item{moe2}{The margin of error of the second factor}
 }
+\value{
+A margin of error for a derived product
+}
 \description{
 Calculate the margin of error for a derived product
 }
-

@@ -12,7 +12,9 @@ or the endyear for a 5-year ACS sample.}
 
 \item{dataset}{One of "sf1", "sf3", or "acs5".}
 }
+\value{
+A data frame of variables from the requested dataset.
+}
 \description{
 Load variables from a decennial Census or American Community Survey dataset to search in R
 }
-

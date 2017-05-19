@@ -57,4 +57,3 @@ A tibble or sf tibble of ACS data
 \description{
 Obtain data and feature geometry for the five-year American Community Survey
 }
-

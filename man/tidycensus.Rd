@@ -11,4 +11,3 @@ This packages uses US Census Bureau data but is neither endorsed nor supported b
 \author{
 Kyle Walker
 }
-

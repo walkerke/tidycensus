@@ -21,4 +21,3 @@ A margin of error for a derived proportion
 \description{
 Calculate the margin of error for a derived proportion
 }
-

@@ -54,6 +54,13 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
     stop("The maximum number of variables supported by the Census API at one time is 50. Consider splitting your variables into multiple calls and using cbind/rbind to combine them.", call. = FALSE)
   }
 
+  if (geography == "zcta") geography <- "zip code tabulation area"
+
+  if (geography == "zip code tabulation area" & is.null(state)) {
+    stop("ZCTA data for the decennial Census is only available by state from tidycensus.",
+         call. = FALSE)
+  }
+
   dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county))
 
   # If sf1 fails, try to get it from sf3
@@ -63,10 +70,10 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
 
   if (output == "tidy") {
 
-    sub <- dat[c("GEOID", variables)]
+    sub <- dat[c("GEOID", "NAME", variables)]
 
     dat2 <- sub %>%
-      gather(key = variable, value = value, -GEOID)
+      gather(key = variable, value = value, -GEOID, -NAME)
 
   } else if (output == "wide") {
 
@@ -102,7 +109,7 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
     }
 
     # Merge and return the output
-    out <- left_join(geom, dat2, by = "GEOID")
+    out <- inner_join(geom, dat2, by = "GEOID")
 
     return(out)
 

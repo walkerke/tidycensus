@@ -64,7 +64,13 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "zcta" | geography == "zip code tabulation area") {
 
-    z <- zctas(cb = cb, starts_with = starts_with, year = year, class = "sf")
+    # For right now, to get it to work, it has to be cb = FALSE for 2010
+    # Re-visit this in the future.
+
+    if (year == 2010) cb <- FALSE
+
+    z <- zctas(cb = cb, starts_with = starts_with, year = year,
+               class = "sf", state = state)
 
     if (year %in% c(2000, 2010)) {
       z <- mutate(z, GEOID = NAME)
@@ -96,10 +102,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 #'
 #' @param api_key A character string representing a user's Census API key.
 #'
-#' @return
 #' @export
-#'
-#' @examples
 census_api_key <- function(api_key) {
   Sys.setenv(CENSUS_API_KEY = api_key)
 }
