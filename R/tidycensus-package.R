@@ -14,4 +14,6 @@
 #' @import tigris
 #' @import stringr
 #' @import rvest
+#' @import rappdirs
+#' @importFrom readr read_rds write_rds
 NULL

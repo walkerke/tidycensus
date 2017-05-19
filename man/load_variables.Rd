@@ -4,16 +4,18 @@
 \alias{load_variables}
 \title{Load variables from a decennial Census or American Community Survey dataset to search in R}
 \usage{
-load_variables(year, dataset)
+load_variables(year, dataset, cache = FALSE)
 }
 \arguments{
 \item{year}{The year for which you are requesting variables.  Either the year of the decennial Census,
 or the endyear for a 5-year ACS sample.}
 
 \item{dataset}{One of "sf1", "sf3", or "acs5".}
+
+\item{cache}{Whether you would like to cache the dataset for future access.  Defaults to FALSE.}
 }
 \value{
-A data frame of variables from the requested dataset.
+A tibble of variables from the requested dataset.
 }
 \description{
 Load variables from a decennial Census or American Community Survey dataset to search in R

@@ -3,52 +3,52 @@
 #' @param year The year for which you are requesting variables.  Either the year of the decennial Census,
 #'             or the endyear for a 5-year ACS sample.
 #' @param dataset One of "sf1", "sf3", or "acs5".
+#' @param cache Whether you would like to cache the dataset for future access.  Defaults to FALSE.
 #'
-#' @return A data frame of variables from the requested dataset.
+#' @return A tibble of variables from the requested dataset.
 #' @export
-load_variables <- function(year, dataset) {
+load_variables <- function(year, dataset, cache = FALSE) {
 
-  set <- paste(as.character(year), dataset, sep = "/")
+  rds <- paste0(dataset, "_", year, ".rds")
 
-  url <- paste("http://api.census.gov/data",
-               set,
-               "variables.html", sep = "/")
+  get_dataset <- function() {
+    set <- paste(as.character(year), dataset, sep = "/")
 
-  dat <- url %>%
-    html() %>%
-    html_nodes("table") %>%
-    html_table(fill = TRUE)
+    url <- paste("http://api.census.gov/data",
+                 set,
+                 "variables.html", sep = "/")
 
-  dat[[1]]
+    dat <- url %>%
+      html() %>%
+      html_nodes("table") %>%
+      html_table(fill = TRUE)
 
-}
+    out <- dat[[1]]
 
+    out <- out[-1,]
 
-#' Search for variables in a decennial Census or American Community Survey dataset
-#'
-#' @param year The year for which you are requesting variables.  Either the year of the decennial Census,
-#'             or the endyear for a 5-year ACS sample.
-#' @param dataset One of "sf1", "sf3", or "acs5".
-#' @param string Character string to filter the variable list.
-#'
-#' @return A filtered data frame of variables from the requested dataset.
-#' @export
-search_variables <- function(year, dataset, string) {
+    out <- out[,1:3]
 
-  set <- paste(as.character(year), dataset, sep = "/")
+    return(tbl_df(out))
+  }
 
-  url <- paste("http://api.census.gov/data",
-               set,
-               "variables.html", sep = "/")
+  if (cache) {
+    cache_dir <- user_cache_dir("tidycensus")
+    if (!file.exists(cache_dir)) {
+      dir.create(cache_dir, recursive = TRUE)
+    }
 
-  dat <- url %>%
-    html() %>%
-    html_nodes("table") %>%
-    html_table(fill = TRUE)
-
-  sub <- dat[[1]] %>%
-    filter(grepl(string, Label, ignore.case = TRUE))
-
-  sub
-
+    if (file.exists(cache_dir)) {
+      file_loc <- file.path(cache_dir, rds)
+      if (file.exists(file_loc)) {
+        return(read_rds(file_loc))
+      } else {
+        df <- get_dataset()
+        write_rds(df, file_loc)
+        return(df)
+      }
+    }
+  } else {
+    return(get_dataset())
+  }
 }

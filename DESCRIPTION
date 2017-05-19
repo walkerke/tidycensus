@@ -19,5 +19,7 @@ Imports:
     purrr, 
     rvest, 
     stringr, 
-    tidyr
+    tidyr, 
+    rappdirs, 
+    readr
 RoxygenNote: 6.0.1
