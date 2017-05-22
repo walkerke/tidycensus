@@ -68,10 +68,6 @@
     
     
 <div class="contents">
-<div id="basic-functionality-of-tidycensus" class="section level2">
-<h2 class="hasAnchor">
-<a href="#basic-functionality-of-tidycensus" class="anchor"></a>Basic functionality of <strong>tidycensus</strong>
-</h2>
 <p>To get started working with <strong>tidycensus</strong>, users should load the package along with the <strong>tidyverse</strong> package, and set their Census API key. A key can be obtained from <link here>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidycensus)
 <span class="kw">library</span>(tidyverse)
@@ -96,7 +92,6 @@
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> <span class="kw">reorder</span>(NAME, value))) +<span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
 <p><img src="basic-usage_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
-</div>
 <div id="searching-for-variables" class="section level2">
 <h2 class="hasAnchor">
 <a href="#searching-for-variables" class="anchor"></a>Searching for variables</h2>
@@ -110,26 +105,30 @@
 <div id="working-with-acs-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#working-with-acs-data" class="anchor"></a>Working with ACS data</h2>
-<p>American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population. In turn, ACS data points are <strong>estimates</strong> characterized by a <strong>margin of error</strong>. <strong>tidycensus</strong> will always return the estimate and margin of error together for any requested variables. In turn, when requesting ACS data with <strong>tidycensus</strong>, it is not necessary to specify the <code>"E"</code> or <code>"M"</code> suffix for a variable name. Let’s fetch median age data from the 2011-2015 ACS for counties in Connecticut; the endyear is not necessary here as the function defaults to 2015.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ct15 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="dt">geography =</span> <span class="st">"county"</span>, <span class="dt">state =</span> <span class="st">"CT"</span>, <span class="dt">variables =</span> <span class="st">"B01002_001"</span>)
+<p>American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population. In turn, ACS data points are <strong>estimates</strong> characterized by a <strong>margin of error</strong>. <strong>tidycensus</strong> will always return the estimate and margin of error together for any requested variables. In turn, when requesting ACS data with <strong>tidycensus</strong>, it is not necessary to specify the <code>"E"</code> or <code>"M"</code> suffix for a variable name. Let’s fetch median household income data from the 2011-2015 ACS for counties in Vermont; the endyear is not necessary here as the function defaults to 2015.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="dt">geography =</span> <span class="st">"county"</span>, <span class="dt">variables =</span> <span class="st">"B19013_001"</span>, <span class="dt">state =</span> <span class="st">"VT"</span>)
 
-<span class="kw">head</span>(ct15)</code></pre></div>
+<span class="kw">head</span>(vt)</code></pre></div>
 <pre><code>## # A tibble: 6 × 5
-##   GEOID                           NAME   variable estimate   moe
-##   &lt;chr&gt;                          &lt;chr&gt;      &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
-## 1 09001  Fairfield County, Connecticut B01002_001     39.7   0.1
-## 2 09003   Hartford County, Connecticut B01002_001     40.1   0.1
-## 3 09005 Litchfield County, Connecticut B01002_001     46.0   0.2
-## 4 09007  Middlesex County, Connecticut B01002_001     44.2   0.1
-## 5 09009  New Haven County, Connecticut B01002_001     39.8   0.2
-## 6 09011 New London County, Connecticut B01002_001     40.7   0.2</code></pre>
+##   GEOID                       NAME   variable estimate   moe
+##   &lt;chr&gt;                      &lt;chr&gt;      &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
+## 1 50001    Addison County, Vermont B19013_001    59688  2199
+## 2 50003 Bennington County, Vermont B19013_001    49573  2146
+## 3 50005  Caledonia County, Vermont B19013_001    45323  1559
+## 4 50007 Chittenden County, Vermont B19013_001    65350  1634
+## 5 50009      Essex County, Vermont B19013_001    36599  1779
+## 6 50011   Franklin County, Vermont B19013_001    58199  2034</code></pre>
 <p>The output is similar to a call to <code>get_decennial</code>, but instead of a <code>value</code> column, <code>get_acs</code> returns <code>estimate</code> and <code>moe</code> columns for the ACS estimate and margin of error, respectively. <code>moe</code> represents the default 90 percent confidence level around the estimate; this can be changed to 95 or 99 percent with the <code>moe_level</code> parameter in <code>get_acs</code> if desired.</p>
 <p>As we have the margin of error, we can visualize the uncertainty around the estimate:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ct15 %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">NAME =</span> <span class="kw">gsub</span>(<span class="st">", Connecticut"</span>, <span class="st">""</span>, NAME)) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> <span class="kw">reorder</span>(NAME, estimate))) +<span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_errorbarh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> estimate -<span class="st"> </span>moe, <span class="dt">xmax =</span> estimate +<span class="st"> </span>moe, <span class="dt">height =</span> <span class="fl">0.25</span>)) +<span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">size =</span> <span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vt %&gt;%
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">NAME =</span> <span class="kw">gsub</span>(<span class="st">" County, Vermont"</span>, <span class="st">""</span>, NAME)) %&gt;%
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> <span class="kw">reorder</span>(NAME, estimate))) +
+<span class="st">  </span><span class="kw">geom_errorbarh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> estimate -<span class="st"> </span>moe, <span class="dt">xmax =</span> estimate +<span class="st"> </span>moe)) +
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">size =</span> <span class="dv">3</span>) +
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"Household income by county in Vermont"</span>,
+       <span class="dt">subtitle =</span> <span class="st">"2011-2015 American Community Survey"</span>,
+       <span class="dt">y =</span> <span class="st">""</span>,
+       <span class="dt">x =</span> <span class="st">"ACS estimate (bars represent margin of error)"</span>)</code></pre></div>
 <p><img src="basic-usage_files/figure-html/unnamed-chunk-7-1.png" width="768"></p>
 </div>
 </div>
@@ -139,8 +138,7 @@
         <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#basic-functionality-of-tidycensus">Basic functionality of <strong>tidycensus</strong></a></li>
-      <li><a href="#searching-for-variables">Searching for variables</a></li>
+<li><a href="#searching-for-variables">Searching for variables</a></li>
       <li><a href="#working-with-acs-data">Working with ACS data</a></li>
       </ul>
 </div>
