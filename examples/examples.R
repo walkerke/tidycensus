@@ -12,12 +12,18 @@ options(tigris_use_cache = TRUE)
 options(tigris_class = "sf")
 census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
 
+z00 <- get_decennial(geography = "zcta", variables = "PCT0120001", state = "MN",
+                     geometry = TRUE)
+
+zc <- get_acs(geography = "zip code tabulation area", variables = "B19013_001",
+              summary_var = "B01001_001", geometry = TRUE)
+
 tarr <- get_acs(geography = "tract", variables = c("B19013_001", "B01001_001"),
-                state = "TX", county = "Tarrant", geometry = TRUE, output = "wide")
+                state = "TX", county = "Tarrant", geometry = TRUE, output = "wide",
+                moe_level = 99)
 
 tarr <- get_acs(geography = "tract", variables = "B19013_001",
-                state = "TX", county = "Tarrant", geometry = TRUE,
-                summary_var = "B01001_001", moe_level = "99")
+                state = "TX", county = "Tarrant", geometry = TRUE)
 
 racevars <- c("B03002_003", "B03002_004", "B03002_006", "B03001_003")
 harris <- get_acs(geography = "tract", variables = racevars, key = api_key,
@@ -39,8 +45,7 @@ ggplot(harris, aes(fill = pct, color = pct)) +
   scale_color_viridis()
 
 
-vt <- get_acs(geography = "county", variables = "B19013_001", key = api_key,
-              state = "VT")
+vt <- get_acs(geography = "county", variables = "B19013_001", state = "VT")
 vt %>%
   mutate(NAME = str_replace(NAME, " County, Vermont", "")) %>%
   ggplot(aes(x = estimate, y = reorder(NAME, estimate))) +
@@ -67,7 +72,10 @@ armed <- get_decennial(geography = "tract", variables = "P038002", year = 2000,
                        state = "MN", county = "Hennepin", geometry = TRUE)
 
 black90 <- get_decennial(geography = "tract", variables = "P0100002", year = 1990,
-                         key = api_key, state = "IL", county = "Cook", geometry = TRUE)
+                         state = "IL", county = "Cook", geometry = TRUE)
+
+ny <- get_decennial(geography = "county", variables = "P0100002", year = 1990,
+                    state = "NY", geometry = TRUE)
 
 vars <- c("P0100001", "P0100002", "P0100004", "P0080001")
 vars10 <- c("P0050003", "P0050004", "P0050006", "P0040003")
@@ -78,7 +86,7 @@ race10 <- get_decennial(geography = "tract", variables = vars10, year = 2010,
 il <- get_decennial(geography = "county", variables = vars10, year = 2010,
                     key = api_key, state = "IL", geometry = TRUE)
 
-ggplot(race10, aes(fill = value, color = value)) +
+ggplot(il, aes(fill = value, color = value)) +
   geom_sf() +
   facet_wrap(~variable)
 
