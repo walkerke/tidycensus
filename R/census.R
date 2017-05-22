@@ -51,7 +51,7 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
   }
 
   if (length(variables) > 50) {
-    stop("The maximum number of variables supported by the Census API at one time is 50. Consider splitting your variables into multiple calls and using cbind/rbind to combine them.", call. = FALSE)
+    stop("The maximum number of variables supported by the Census API at one time is 50. I'm working on a fix; in the meantime consider splitting your variables into multiple calls and using cbind/rbind to combine them.", call. = FALSE)
   }
 
   if (geography == "zcta") geography <- "zip code tabulation area"
@@ -61,7 +61,13 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
          call. = FALSE)
   }
 
-  dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county))
+  if (geography == "zip code tabulation area" & year == 2000 & geometry == TRUE) {
+    stop("Linked ZCTA geometry and attributes for 2000 are not currently available in tidycensus.",
+         call. = FALSE)
+  }
+
+  dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county),
+             silent = TRUE)
 
   # If sf1 fails, try to get it from sf3
   if ("try-error" %in% class(dat)) {
@@ -93,7 +99,9 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
 
     dat2 <- dat2 %>%
       inner_join(sumdat, by = "GEOID") %>%
-      rename_("summary_var" = summary_var)
+      rename_("summary_value" = summary_var,
+              NAME = "NAME.x") %>%
+      select(-NAME.y)
 
   }
 
@@ -109,7 +117,8 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
     }
 
     # Merge and return the output
-    out <- inner_join(geom, dat2, by = "GEOID")
+    out <- inner_join(geom, dat2, by = "GEOID") %>%
+      st_as_sf()
 
     return(out)
 

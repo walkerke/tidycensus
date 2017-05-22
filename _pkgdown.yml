@@ -1,0 +1,18 @@
+template:
+  params:
+    bootswatch: spacelab
+
+navbar:
+  left:
+  - text: Basic usage of tidycensus
+    href: articles/basic-usage.html
+  - text: Spatial data in tidycensus
+    href: articles/spatial-data.html
+  - text: Margins of error in the ACS
+    href: articles/margins-of-error.html
+  right:
+  - text: Source
+    href: http://github.com/walkerke/tidycensus
+    icon: fa-github fa-lg
+  - text: Reference
+    href: reference/index.html

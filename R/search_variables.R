@@ -3,7 +3,8 @@
 #' @param year The year for which you are requesting variables.  Either the year of the decennial Census,
 #'             or the endyear for a 5-year ACS sample.
 #' @param dataset One of "sf1", "sf3", or "acs5".
-#' @param cache Whether you would like to cache the dataset for future access.  Defaults to FALSE.
+#' @param cache Whether you would like to cache the dataset for future access, or load the dataset
+#'              from an existing cache. Defaults to FALSE.
 #'
 #' @return A tibble of variables from the requested dataset.
 #' @export

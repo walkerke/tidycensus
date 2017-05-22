@@ -12,7 +12,8 @@ or the endyear for a 5-year ACS sample.}
 
 \item{dataset}{One of "sf1", "sf3", or "acs5".}
 
-\item{cache}{Whether you would like to cache the dataset for future access.  Defaults to FALSE.}
+\item{cache}{Whether you would like to cache the dataset for future access, or load the dataset
+from an existing cache. Defaults to FALSE.}
 }
 \value{
 A tibble of variables from the requested dataset.

@@ -1,0 +1,82 @@
+---
+title: "Basic usage of tidycensus"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8)
+```
+
+To get started working with __tidycensus__, users should load the package along with the __tidyverse__ package, and set their Census API key.  A key can be obtained from <link here>.  
+
+```{r, echo = FALSE}
+library(tidycensus)
+library(tidyverse)
+
+census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
+```
+
+```{r, eval = FALSE}
+library(tidycensus)
+library(tidyverse)
+
+census_api_key("YOUR API KEY GOES HERE")
+```
+
+There are two major functions implemented in __tidycensus__: `get_decennial`, which grants access to the 1990, 2000, and 2010 decennial US Census APIs, and `get_acs`, which grants access to the 5-year American Community Survey APIs.  In this basic example, let's look at median gross rent by state in 1990: 
+
+```{r}
+m90 <- get_decennial(geography = "state", variables = "H043A001", year = 1990)
+
+head(m90)
+```
+
+The function returns a tibble with four columns by default: `GEOID`, which is an identifier for the geographical unit associated with the row; `NAME`, which is a descriptive name of the geographical unit; `variable`, which is the Census variable represented in the row; and `value`, which is the value of the variable for that unit.  By default, __tidycensus__ functions return tidy data frames in which rows represent unit-variable combinations; for a wide data frame with Census variable names in the columns, set `output = "wide"` in the function call.  
+
+As the function has returned a tidy object, we can visualize it quickly with __ggplot2__: 
+
+```{r, fig.height = 8}
+m90 %>%
+  ggplot(aes(x = value, y = reorder(NAME, value))) + 
+  geom_point()
+```
+
+## Searching for variables
+
+Getting variables from the Census or ACS requires knowing the variable ID - and there are thousands of these IDs across the different Census files.  To rapidly search for variables, use the `load_variables` function.  The function takes two required arguments: the year of the Census or endyear of the ACS sample, and the dataset - one of `"sf1"`, `"sf3"`, or `"acs5"`. For ideal functionality, I recommend assigning the result of this function to a variable, setting `cache = TRUE` to store the result on your computer for future access, and using the `View` function in RStudio to interactively browse for variables.  
+
+```{r, eval = FALSE}
+v15 <- load_variables(2015, "acs5", cache = TRUE)
+
+View(v15)
+```
+
+<img src=img/view.png style="width: 100%">
+
+By filtering for "median age" I can quickly view the variable IDs that correspond to my query.  
+
+## Working with ACS data
+
+American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population.  In turn, ACS data points are __estimates__ characterized by a __margin of error__.  __tidycensus__ will always return the estimate and margin of error together for any requested variables.  In turn, when requesting ACS data with __tidycensus__, it is not necessary to specify the `"E"` or `"M"` suffix for a variable name.  Let's fetch median household income data from the 2011-2015 ACS for counties in Vermont; the endyear is not necessary here as the function defaults to 2015. 
+
+```{r}
+vt <- get_acs(geography = "county", variables = "B19013_001", state = "VT")
+
+head(vt)
+```
+
+The output is similar to a call to `get_decennial`, but instead of a `value` column, `get_acs` returns `estimate` and `moe` columns for the ACS estimate and margin of error, respectively.  `moe` represents the default 90 percent confidence level around the estimate; this can be changed to 95 or 99 percent with the `moe_level` parameter in `get_acs` if desired. 
+
+As we have the margin of error, we can visualize the uncertainty around the estimate: 
+
+```{r}
+vt %>%
+  mutate(NAME = gsub(" County, Vermont", "", NAME)) %>%
+  ggplot(aes(x = estimate, y = reorder(NAME, estimate))) +
+  geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
+  geom_point(color = "red", size = 3) +
+  labs(title = "Household income by county in Vermont",
+       subtitle = "2011-2015 American Community Survey",
+       y = "",
+       x = "ACS estimate (bars represent margin of error)")
+```

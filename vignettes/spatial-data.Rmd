@@ -1,0 +1,79 @@
+---
+title: "Spatial data in tidycensus"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+library(tidycensus)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8)
+census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
+```
+
+If requested, __tidycensus__ can return simple feature geometry for geographic units along with variables from the decennial US Census or American Community survey.  By setting `geometry = TRUE` in a __tidycensus__ function call, __tidycensus__ will use the __tigris__ package to retrieve the corresponding geographic dataset from the US Census Bureau and pre-merge it with the tabular data obtained from the Census API.  The following example shows median household income from the 2011-2015 ACS for Census tracts in Orange County, California: 
+
+```{r}
+library(tidycensus)
+library(tidyverse)
+options(tigris_use_cache = TRUE)
+
+orange <- get_acs(state = "CA", county = "Orange", geography = "tract", 
+                  variables = "B19013_001", geometry = TRUE)
+
+head(orange)
+```
+
+Our object `orange` looks much like the basic __tidycensus__ output, but with a `geometry` list-column describing the geometry of each feature, using the geographic coordinate system NAD 1983 (EPSG: 4269) which is the default for Census shapefiles.  __tidycensus__ uses the Census [cartographic boundary shapefiles](https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html) for faster processing; if you prefer the TIGER/Line shapefiles, set `cb = FALSE` in the function call. 
+
+As the dataset is in a tidy format, it can be quickly visualized with the `geom_sf` functionality currently in the development version of __ggplot2__: 
+
+```{r}
+library(viridis)
+
+orange %>%
+  ggplot(aes(fill = estimate, color = estimate)) + 
+  geom_sf() + 
+  coord_sf(crs = 26911) + 
+  scale_fill_viridis(option = "magma") + 
+  scale_color_viridis(option = "magma")
+```
+
+## Faceted mapping
+
+One of the most powerful features of __ggplot2__ is its support for small multiples, which works very well with the tidy data format returned by __tidycensus__.  Many Census and ACS variables return _counts_, however, which are generally inappropriate for choropleth mapping.  In turn, `get_decennial` and `get_acs` have an optional argument, `summary_var`, that can work as a multi-group denominator when appropriate.  Let's use the following example of the racial geography of Harris County, Texas.  First, we'll request data for non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and Hispanics by Census tract for the 2010 Census, and specify total population as the summary variable.  `year` is not necessary here as the default is 2010.   
+
+```{r}
+racevars <- c("P0050003", "P0050004", "P0050006", "P0040003")
+
+harris <- get_decennial(geography = "tract", variables = racevars, key = api_key,
+                  state = "TX", county = "Harris County", geometry = TRUE,
+                  summary_var = "P0010001") 
+
+head(harris)
+```
+
+We notice that there are four entries for each Census tract, with each entry representing one of our requested variables. The `summary_var` column represents the value of the summary value, which is total population in this instance.  When a summary variable is specified in `get_acs`, both `summary_est` and `summary_moe` columns will be returned.  
+
+With this information, we can set up an analysis pipeline in which we calculate a new percent-of-total column; recode the Census variable names into more intuitive labels; and visualize the result for each group in a faceted plot.  
+
+```{r}
+library(forcats)
+
+harris %>%
+  mutate(pct = 100 * (value / summary_value),
+         variable = fct_recode(variable,
+                               White = "P0050003",
+                               Black = "P0050004",
+                               Asian = "P0050006",
+                               Hispanic = "P0040003")) %>%
+  ggplot(aes(fill = pct, color = pct)) +
+  facet_wrap(~variable) +
+  geom_sf() +
+  coord_sf(crs = 26915) + 
+  scale_fill_viridis() +
+  scale_color_viridis()
+```
+           
+There is a lot more you can do with the spatial functionality in __tidycensus__, including more sophisticated visualization and spatial analysis; look for updates [on my blog](https://walkerke.github.io) and in this space.             
+  
+  

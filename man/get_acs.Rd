@@ -6,7 +6,7 @@
 \usage{
 get_acs(geography, variables, endyear = 2015, output = "tidy",
   state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
-  summary_var = NULL, key = NULL, moe_level = "90", ...)
+  summary_var = NULL, key = NULL, moe_level = 90, ...)
 }
 \arguments{
 \item{geography}{The geography of your data.}

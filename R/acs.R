@@ -35,7 +35,7 @@
 #' @export
 get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
                     state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
-                    summary_var = NULL, key = NULL, moe_level = "90", ...) {
+                    summary_var = NULL, key = NULL, moe_level = 90, ...) {
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 
@@ -48,19 +48,20 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
   }
 
   if (length(variables) > 25) {
-    stop("The maximum number of variables supported by `get_acs` at one time is 25 at the moment. Consider splitting your variables into multiple calls and using cbind/rbind to combine them.", call. = FALSE)
+    stop("The maximum number of variables supported by `get_acs` at one time is 25 at the moment.  I'm working on a fix; in the meantime consider splitting your variables into multiple calls and using cbind/rbind to combine them.",
+         call. = FALSE)
   }
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
-  if (moe_level == "90") {
+  if (moe_level == 90) {
     moe_factor <- 1
-  } else if (moe_level == "95") {
+  } else if (moe_level == 95) {
     moe_factor <- (1.96 / 1.645)
-  } else if (moe_level == "99") {
+  } else if (moe_level == 99) {
     moe_factor <- (2.56 / 1.645)
   } else {
-    stop("`moe_level` must be one of '90', '95', or '99'", call. = FALSE)
+    stop("`moe_level` must be one of 90, 95, or 99.", call. = FALSE)
   }
 
   vars <- format_variables_acs(variables)
@@ -78,7 +79,7 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
       separate(variable, into = c("variable", "type"), sep = -2) %>%
       mutate(type = ifelse(type == "E", "estimate", "moe")) %>%
       spread(type, value) %>%
-      mutate(moe = round(moe * moe_factor, 0))
+      mutate(moe = moe * moe_factor)
 
 
   } else if (output == "wide") {
@@ -88,7 +89,7 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
 
     # dat[[moe_vars]] <- apply(dat[[moe_vars]], 2, function(x) round(x * moe_factor, 0))
 
-    moex <- function(x) round(x * moe_factor, 0)
+    moex <- function(x) x * moe_factor
 
     dat2 <- dat %>%
       mutate_if(grepl("*M$", names(.)), funs(moex))

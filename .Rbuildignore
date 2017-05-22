@@ -1,2 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^docs$
+^vignettes$
+^data-raw$
+_pkgdown.yml
+^examples$
+index.Rmd
+

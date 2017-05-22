@@ -31,5 +31,5 @@ fips_state_table <- structure(list(abb = c("ak", "al", "ar", "as", "az", "ca", "
 
 
 .onLoad <- function(libname, pkgname) {
-  data("fips_codes", package=pkgname, envir=parent.env(environment()))
+  utils::data("fips_codes", package=pkgname, envir=parent.env(environment()))
 }
