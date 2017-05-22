@@ -83,17 +83,16 @@ vars &lt;-<span class="st"> </span><span class="kw">map_chr</span>(<span class="
 
 ramsey &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="dt">geography =</span> <span class="st">"tract"</span>, <span class="dt">variables =</span> vars, <span class="dt">state =</span> <span class="st">"MN"</span>, <span class="dt">county =</span> <span class="st">"Ramsey"</span>)
 
-<span class="kw">head</span>(ramsey)</code></pre></div>
-<pre><code>## # A tibble: 6 × 5
-##         GEOID                                       NAME   variable
-##         &lt;chr&gt;                                      &lt;chr&gt;      &lt;chr&gt;
-## 1 27123030100 Census Tract 301, Ramsey County, Minnesota B01001_020
-## 2 27123030100 Census Tract 301, Ramsey County, Minnesota B01001_021
-## 3 27123030100 Census Tract 301, Ramsey County, Minnesota B01001_022
-## 4 27123030100 Census Tract 301, Ramsey County, Minnesota B01001_023
-## 5 27123030100 Census Tract 301, Ramsey County, Minnesota B01001_024
-## 6 27123030100 Census Tract 301, Ramsey County, Minnesota B01001_025
-## # ... with 2 more variables: estimate &lt;dbl&gt;, moe &lt;dbl&gt;</code></pre>
+<span class="kw">head</span>(ramsey %&gt;%<span class="st"> </span><span class="kw">select</span>(-NAME))</code></pre></div>
+<pre><code>## # A tibble: 6 × 4
+##         GEOID   variable estimate   moe
+##         &lt;chr&gt;      &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
+## 1 27123030100 B01001_020       30    21
+## 2 27123030100 B01001_021       65    33
+## 3 27123030100 B01001_022       66    35
+## 4 27123030100 B01001_023       16    19
+## 5 27123030100 B01001_024       47    41
+## 6 27123030100 B01001_025       24    18</code></pre>
 <p>We can see the issue already: for Census Tract 301 in Ramsey County, the ACS estimates a male population aged between 75 and 79 of 16 - with a margin of error exceeding the estimate. One way to address this is through data aggregation. While the estimate for males age 75 to 79 in this Census tract may be unreliable, the estimate for the total population over age 65 in the tract is likely better, but is not available directly from the ACS API. In turn, we can summarize our data.</p>
 <p>The US Census Bureau publishes guidelines on how to calculate margins of error for derived estimates (see the footnotes). These formulas are implemented in <strong>tidycensus</strong> in the <code>moe_sum</code>, <code>moe_prop</code>, <code>moe_ratio</code>, and <code>moe_product</code> functions. The example below illustrates the use of <code>moe_sum</code> to calculate the margin of error around a derived estimate for Census tract population over age 65.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ramsey65 &lt;-<span class="st"> </span>ramsey %&gt;%

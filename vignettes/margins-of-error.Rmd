@@ -7,6 +7,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidycensus)
 census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
+library(tidyverse)
+options(tibble.print.min = 6)
 ```
 
 As opposed to the decennial Census datasets available with __tidycensus__, datasets from the five-year American Community Survey include _estimates_ with an associated _margin of error_, as the ACS is based on an annual sample of around 3 million households.  As explained by the Census Bureau: 
@@ -32,7 +34,7 @@ vars <- map_chr(c(20:25, 44:49), function(x) paste0("B01001_0", x))
 
 ramsey <- get_acs(geography = "tract", variables = vars, state = "MN", county = "Ramsey")
 
-head(ramsey)
+head(ramsey %>% select(-NAME))
 ```
 
 We can see the issue already: for Census Tract 301 in Ramsey County, the ACS estimates a male population aged between 75 and 79 of 16 - with a margin of error exceeding the estimate.  One way to address this is through data aggregation.  While the estimate for males age 75 to 79 in this Census tract may be unreliable, the estimate for the total population over age 65 in the tract is likely better, but is not available directly from the ACS API.  In turn, we can summarize our data.  
