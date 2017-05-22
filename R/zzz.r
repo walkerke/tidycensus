@@ -33,3 +33,9 @@ fips_state_table <- structure(list(abb = c("ak", "al", "ar", "as", "az", "ca", "
 .onLoad <- function(libname, pkgname) {
   utils::data("fips_codes", package=pkgname, envir=parent.env(environment()))
 }
+
+# Place-holder until I update with the tidyeval framework
+utils::globalVariables(c("variable", "value", "GEOID", "NAME", "type", "moe",
+                         ".", "NAME.y", "summary_moe", "TRACTBASE", "TRACT",
+                         "ANPSADPI", "BLKGROUP", "BLKGRP", "BLKIDFP00", "CO", "COUNTY",
+                         "GEOID10", "ST", "STATE", "TRACTSUF"))

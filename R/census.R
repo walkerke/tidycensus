@@ -61,8 +61,8 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
          call. = FALSE)
   }
 
-  if (geography == "zip code tabulation area" & year == 2000 & geometry == TRUE) {
-    stop("Linked ZCTA geometry and attributes for 2000 are not currently available in tidycensus.",
+  if (geography == "zip code tabulation area" & geometry == TRUE) {
+    stop("Linked ZCTA geometry and attributes for `get_decennial` are not currently available in tidycensus.",
          call. = FALSE)
   }
 
