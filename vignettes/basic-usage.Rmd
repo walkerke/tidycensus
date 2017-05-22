@@ -7,7 +7,7 @@ output: html_document
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8)
 ```
 
-To get started working with __tidycensus__, users should load the package along with the __tidyverse__ package, and set their Census API key.  A key can be obtained from <link here>.  
+To get started working with __tidycensus__, users should load the package along with the __tidyverse__ package, and set their Census API key.  A key can be obtained from <http://api.census.gov/data/key_signup.html>.  
 
 ```{r, echo = FALSE}
 library(tidycensus)
