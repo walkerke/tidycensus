@@ -45,7 +45,7 @@ One of the most powerful features of __ggplot2__ is its support for small multip
 ```{r}
 racevars <- c("P0050003", "P0050004", "P0050006", "P0040003")
 
-harris <- get_decennial(geography = "tract", variables = racevars, key = api_key,
+harris <- get_decennial(geography = "tract", variables = racevars, 
                   state = "TX", county = "Harris County", geometry = TRUE,
                   summary_var = "P0010001") 
 
