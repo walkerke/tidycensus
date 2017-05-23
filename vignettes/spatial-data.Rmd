@@ -52,7 +52,7 @@ harris <- get_decennial(geography = "tract", variables = racevars, key = api_key
 head(harris)
 ```
 
-We notice that there are four entries for each Census tract, with each entry representing one of our requested variables. The `summary_var` column represents the value of the summary value, which is total population in this instance.  When a summary variable is specified in `get_acs`, both `summary_est` and `summary_moe` columns will be returned.  
+We notice that there are four entries for each Census tract, with each entry representing one of our requested variables. The `summary_value` column represents the value of the summary variable, which is total population in this instance.  When a summary variable is specified in `get_acs`, both `summary_est` and `summary_moe` columns will be returned.  
 
 With this information, we can set up an analysis pipeline in which we calculate a new percent-of-total column; recode the Census variable names into more intuitive labels; and visualize the result for each group in a faceted plot.  
 

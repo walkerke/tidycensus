@@ -139,7 +139,7 @@ harris &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_
 ## 4 MULTIPOLYGON(((-95.373478 2...
 ## 5 MULTIPOLYGON(((-95.32851 29...
 ## 6 MULTIPOLYGON(((-95.32851 29...</code></pre>
-<p>We notice that there are four entries for each Census tract, with each entry representing one of our requested variables. The <code>summary_var</code> column represents the value of the summary value, which is total population in this instance. When a summary variable is specified in <code>get_acs</code>, both <code>summary_est</code> and <code>summary_moe</code> columns will be returned.</p>
+<p>We notice that there are four entries for each Census tract, with each entry representing one of our requested variables. The <code>summary_value</code> column represents the value of the summary variable, which is total population in this instance. When a summary variable is specified in <code>get_acs</code>, both <code>summary_est</code> and <code>summary_moe</code> columns will be returned.</p>
 <p>With this information, we can set up an analysis pipeline in which we calculate a new percent-of-total column; recode the Census variable names into more intuitive labels; and visualize the result for each group in a faceted plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(forcats)
 

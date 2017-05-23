@@ -57,4 +57,6 @@ If you find this project useful, you can support package development in the foll
 * Hiring me as a consultant to help you use __tidycensus__ in your project, or hiring me to give a workshop on __tidycensus__ for your organization.  Please contact me at <kwalkerdata@gmail.com> if you are interested!
 * Filing an issue - or even better, a pull request - at https://github.com/walkerke/tidycensus/issues.  
 
+Note: This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau.
+
 

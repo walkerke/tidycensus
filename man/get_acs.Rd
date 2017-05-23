@@ -47,7 +47,7 @@ that you'll want to use as a denominator or comparison.}
 \item{key}{Your Census API key.
 Obtain one at \url{http://api.census.gov/data/key_signup.html}}
 
-\item{moe_level}{The confidence level of the returned margin of error.  One of "90" (the default), "95", or "99".}
+\item{moe_level}{The confidence level of the returned margin of error.  One of 90 (the default), 95, or 99.}
 
 \item{...}{Other keyword arguments}
 }
