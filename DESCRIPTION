@@ -13,6 +13,7 @@ Description: An integrated R interface to the decennial US Census and American C
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Depends:  R (>= 3.3.0)
 Imports:
     httr,
     sf,
