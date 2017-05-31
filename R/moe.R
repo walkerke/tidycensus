@@ -31,7 +31,8 @@ moe_prop <- function(num, denom, moe_num, moe_denom) {
 
   x <- moe_num^2 - (prop^2 * moe_denom^2)
 
-  result <- sqrt(x) / denom
+  result <- ifelse(x < 0, moe_ratio(num = num, denom = denom, moe_num = moe_num, moe_denom = moe_denom),
+                   sqrt(x) / denom)
 
   return(result)
 }
