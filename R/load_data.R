@@ -24,7 +24,7 @@ format_variables_acs <- function(variables) {
 
 load_data_acs <- function(geography, formatted_variables, key, endyear, state = NULL, county = NULL) {
 
-  base <- paste0("http://api.census.gov/data/",
+  base <- paste0("https://api.census.gov/data/",
                  as.character(endyear),
                  "/acs5")
 
@@ -34,7 +34,13 @@ load_data_acs <- function(geography, formatted_variables, key, endyear, state = 
 
     if (!is.null(county)) {
 
-      county <- validate_county(state, county)
+      county <- map_chr(county, function(x) {
+        validate_county(state, x)
+      })
+
+      if (length(county) > 1) {
+        county <- paste(county, sep = "", collapse = ",")
+      }
 
       in_area <- paste0("state:", state,
                         "+county:", county)
@@ -115,7 +121,7 @@ load_data_decennial <- function(geography, variables, key, year,
   }
 
 
-  base <- paste0("http://api.census.gov/data/",
+  base <- paste0("https://api.census.gov/data/",
                  as.character(year),
                  "/",
                  sumfile)
@@ -126,7 +132,13 @@ load_data_decennial <- function(geography, variables, key, year,
 
     if (!is.null(county)) {
 
-      county <- validate_county(state, county)
+      county <- map_chr(county, function(x) {
+        validate_county(state, x)
+      })
+
+      if (length(county) > 1) {
+        county <- paste(county, sep = "", collapse = ",")
+      }
 
       in_area <- paste0("state:", state,
                         "+county:", county)
