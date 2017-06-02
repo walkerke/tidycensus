@@ -30,7 +30,13 @@ load_data_acs <- function(geography, formatted_variables, key, endyear, state = 
 
   if (!is.null(state)) {
 
-    state <- validate_state(state)
+    state <- map_chr(state, function(x) {
+      validate_state(x)
+    })
+
+    if (length(state) > 1) {
+      state <- paste(state, sep = "", collapse = ",")
+    }
 
     if (!is.null(county)) {
 
@@ -71,6 +77,9 @@ load_data_acs <- function(geography, formatted_variables, key, endyear, state = 
 
 
   content <- content(call, as = "text")
+
+  validate_call(content = content, geography = geography, year = endyear,
+                dataset = "acs5")
 
   dat <- tbl_df(fromJSON(content))
 
@@ -128,7 +137,13 @@ load_data_decennial <- function(geography, variables, key, year,
 
   if (!is.null(state)) {
 
-    state <- validate_state(state)
+    state <- map_chr(state, function(x) {
+      validate_state(x)
+    })
+
+    if (length(state) > 1) {
+      state <- paste(state, sep = "", collapse = ",")
+    }
 
     if (!is.null(county)) {
 
@@ -165,6 +180,9 @@ load_data_decennial <- function(geography, variables, key, year,
 
 
   content <- content(call, as = "text")
+
+  validate_call(content = content, geography = geography, year = year,
+                dataset = sumfile)
 
   dat <- tbl_df(fromJSON(content))
 
