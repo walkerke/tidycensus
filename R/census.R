@@ -66,6 +66,43 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
          call. = FALSE)
   }
 
+  # If more than one state specified for tracts - or more than one county
+  # for block groups - take care of this under the hood by having the function
+  # call itself and return the result
+  if (geography == "tract" & length(state) > 1) {
+    if (geometry == TRUE) {
+      mc <- match.call(expand.dots = TRUE)
+      result <- map(state, function(x) {
+        mc[["state"]] <- x
+        eval(mc)
+      }) %>%
+        reduce(rbind)
+    } else {
+      result <- map_df(state, function(x) {
+        mc[["state"]] <- x
+        eval(mc)
+      })
+    }
+    return(result)
+  }
+
+  if (geography == "block group" & length(county) > 1) {
+    if (geometry == TRUE) {
+      mc <- match.call(expand.dots = TRUE)
+      result <- map(county, function(x) {
+        mc[["county"]] <- x
+        eval(mc)
+      }) %>%
+        reduce(rbind)
+    } else {
+      result <- map_df(county, function(x) {
+        mc[["county"]] <- x
+        eval(mc)
+      })
+    }
+    return(result)
+  }
+
   dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county),
              silent = TRUE)
 

@@ -20,7 +20,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
                  "variables.html", sep = "/")
 
     dat <- url %>%
-      html() %>%
+      read_html() %>%
       html_nodes("table") %>%
       html_table(fill = TRUE)
 
