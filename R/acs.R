@@ -46,11 +46,11 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
     stop('A Census API key is required.  Obtain one at http://api.census.gov/data/key_signup.html, and then supply the key to the `census_api_key` function to use it throughout your tidycensus session.')
 
   }
-
-  if (length(variables) > 25) {
-    stop("The maximum number of variables supported by `get_acs` at one time is 25 at the moment.  I'm working on a fix; in the meantime consider splitting your variables into multiple calls and using cbind/rbind to combine them.",
-         call. = FALSE)
-  }
+#
+#   if (length(variables) > 24) {
+#     stop("The maximum number of variables supported by `get_acs` at one time is 25 at the moment.  I'm working on a fix; in the meantime consider splitting your variables into multiple calls and using cbind/rbind to combine them.",
+#          call. = FALSE)
+#   }
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
@@ -101,11 +101,25 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
     stop("`moe_level` must be one of 90, 95, or 99.", call. = FALSE)
   }
 
-  vars <- format_variables_acs(variables)
 
-  dat <- load_data_acs(geography, vars, key, endyear, state, county)
+  # Allow for as many variables in a call as desired
+  if (length(variables) > 24) {
+    l <- split(variables, ceiling(seq_along(variables) / 24))
 
-  var_vector <- unlist(strsplit(vars, split = ","))
+    dat <- map(l, function(x) {
+      vars <- format_variables_acs(x)
+      load_data_acs(geography, vars, key, endyear, state, county)
+    }) %>%
+      bind_cols()
+  } else {
+    vars <- format_variables_acs(variables)
+
+    dat <- load_data_acs(geography, vars, key, endyear, state, county)
+  }
+
+  vars2 <- format_variables_acs(variables)
+
+  var_vector <- unlist(strsplit(vars2, split = ","))
 
   if (output == "tidy") {
 
@@ -120,6 +134,10 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
 
 
   } else if (output == "wide") {
+
+    # Remove duplicated columns
+
+    dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
 
     # Find MOE vars
     # moe_vars <- grep("*M", names(dat))
