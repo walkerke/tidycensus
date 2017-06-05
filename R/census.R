@@ -50,9 +50,9 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
          call. = FALSE)
   }
 
-  if (length(variables) > 50) {
-    stop("The maximum number of variables supported by the Census API at one time is 50. I'm working on a fix; in the meantime consider splitting your variables into multiple calls and using cbind/rbind to combine them.", call. = FALSE)
-  }
+  # if (length(variables) > 50) {
+  #   stop("The maximum number of variables supported by the Census API at one time is 50. I'm working on a fix; in the meantime consider splitting your variables into multiple calls and using cbind/rbind to combine them.", call. = FALSE)
+  # }
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
@@ -103,13 +103,30 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
     return(result)
   }
 
-  dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county),
-             silent = TRUE)
+  if (length(variables) > 48) {
+    l <- split(variables, ceiling(seq_along(variables) / 48))
 
-  # If sf1 fails, try to get it from sf3
-  if ("try-error" %in% class(dat)) {
-    dat <- try(load_data_decennial(geography, variables, key, year, sumfile = "sf3", state, county))
+    dat <- map(l, function(x) {
+      d <- try(load_data_decennial(geography, x, key, year, sumfile, state, county),
+                 silent = TRUE)
+      # If sf1 fails, try to get it from sf3
+      if ("try-error" %in% class(d)) {
+        d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", state, county)))
+      }
+      d
+    }) %>%
+      bind_cols()
+  } else {
+    dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county),
+               silent = TRUE)
+
+    # If sf1 fails, try to get it from sf3
+    if ("try-error" %in% class(dat)) {
+      dat <- try(suppressMessages(load_data_decennial(geography, variables, key, year, sumfile = "sf3", state, county)))
+    }
+
   }
+
 
   if (output == "tidy") {
 
@@ -119,6 +136,8 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
       gather(key = variable, value = value, -GEOID, -NAME)
 
   } else if (output == "wide") {
+
+    dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
 
     dat2 <- dat
 
