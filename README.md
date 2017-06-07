@@ -1,6 +1,6 @@
 ## tidycensus
 
-[![Build Status](https://travis-ci.org/walkerke/tidycensus.svg?branch=master)](https://travis-ci.org/walkerke/tidycensus)
+[![Build Status](https://travis-ci.org/walkerke/tidycensus.svg?branch=master)](https://travis-ci.org/walkerke/tidycensus) ![](http://www.r-pkg.org/badges/version/tidycensus)  ![](http://cranlogs.r-pkg.org/badges/tidycensus)
 
 Load US Census boundary and attribute data as 'tidyverse' and 'sf'-ready data frames
 
