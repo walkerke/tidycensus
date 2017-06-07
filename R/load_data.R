@@ -28,6 +28,11 @@ load_data_acs <- function(geography, formatted_variables, key, endyear, state = 
                  as.character(endyear),
                  "/acs5")
 
+  if (grepl("DP", formatted_variables)) {
+    message("Using the ACS Data Profile")
+    base <- paste0(base, "/profile")
+  }
+
   if (!is.null(state)) {
 
     state <- map_chr(state, function(x) {

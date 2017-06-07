@@ -108,13 +108,13 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
 
     dat <- map(l, function(x) {
       vars <- format_variables_acs(x)
-      load_data_acs(geography, vars, key, endyear, state, county)
+      suppressWarnings(load_data_acs(geography, vars, key, endyear, state, county))
     }) %>%
       bind_cols()
   } else {
     vars <- format_variables_acs(variables)
 
-    dat <- load_data_acs(geography, vars, key, endyear, state, county)
+    dat <- suppressWarnings(load_data_acs(geography, vars, key, endyear, state, county))
   }
 
   vars2 <- format_variables_acs(variables)
