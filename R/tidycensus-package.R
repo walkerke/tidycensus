@@ -8,7 +8,7 @@
 #' @import httr
 #' @import sf
 #' @import dplyr
-#' @importFrom purrr map_dbl map_chr
+#' @importFrom purrr map_dbl map_chr map reduce map_df flatten_df
 #' @import tidyr
 #' @importFrom jsonlite fromJSON
 #' @import tigris
@@ -16,4 +16,5 @@
 #' @import rvest
 #' @import rappdirs
 #' @importFrom readr read_rds write_rds
+#' @importFrom xml2 read_html
 NULL

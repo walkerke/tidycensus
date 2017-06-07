@@ -2,7 +2,7 @@
 #'
 #' @param year The year for which you are requesting variables.  Either the year of the decennial Census,
 #'             or the endyear for a 5-year ACS sample.
-#' @param dataset One of "sf1", "sf3", or "acs5".
+#' @param dataset One of "sf1", "sf3", "acs5", or "acs5/profile".
 #' @param cache Whether you would like to cache the dataset for future access, or load the dataset
 #'              from an existing cache. Defaults to FALSE.
 #'
@@ -12,25 +12,51 @@ load_variables <- function(year, dataset, cache = FALSE) {
 
   rds <- paste0(dataset, "_", year, ".rds")
 
-  get_dataset <- function() {
-    set <- paste(as.character(year), dataset, sep = "/")
+  if (dataset == "acs5/profile") {
+    rds <- gsub("/", "_", rds)
+  }
 
-    url <- paste("http://api.census.gov/data",
-                 set,
-                 "variables.html", sep = "/")
+  get_dataset <- function(d) {
+    set <- paste(as.character(year), d, sep = "/")
 
-    dat <- url %>%
-      html() %>%
-      html_nodes("table") %>%
-      html_table(fill = TRUE)
+    # If ACS, use JSON parsing to speed things up
+    if (grepl("acs5", d)) {
+      url <- paste("http://api.census.gov/data",
+                   set,
+                   "variables.json", sep = "/")
 
-    out <- dat[[1]]
+      dat <- GET(url) %>%
+        content(as = "text") %>%
+        fromJSON() %>%
+        flatten_df(.id = "name") %>%
+        arrange(name)
 
-    out <- out[-1,]
+      out <- dat[,1:3]
 
-    out <- out[,1:3]
+      return(tbl_df(out))
+    # Otherwise use HTML scraping as JSON is not available for decennial Census
+    } else {
+      url <- paste("http://api.census.gov/data",
+                   set,
+                   "variables.html", sep = "/")
 
-    return(tbl_df(out))
+      dat <- url %>%
+        read_html() %>%
+        html_nodes("table") %>%
+        html_table(fill = TRUE)
+
+      out <- dat[[1]]
+
+      out <- out[-1,]
+
+      out <- out[,1:3]
+
+      names(out) <- tolower(names(out))
+
+      return(tbl_df(out))
+
+    }
+
   }
 
   if (cache) {
@@ -44,12 +70,12 @@ load_variables <- function(year, dataset, cache = FALSE) {
       if (file.exists(file_loc)) {
         return(read_rds(file_loc))
       } else {
-        df <- get_dataset()
+        df <- get_dataset(dataset)
         write_rds(df, file_loc)
         return(df)
       }
     }
   } else {
-    return(get_dataset())
+    return(get_dataset(dataset))
   }
 }
