@@ -17,4 +17,5 @@
 #' @import rappdirs
 #' @importFrom readr read_rds write_rds
 #' @importFrom xml2 read_html
+#' @import units
 NULL

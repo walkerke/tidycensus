@@ -7,6 +7,10 @@
 #'              from an existing cache. Defaults to FALSE.
 #'
 #' @return A tibble of variables from the requested dataset.
+#' @examples \dontrun{
+#' v15 <- load_variables(2015, "acs5", cache = TRUE)
+#' View(v15)
+#' }
 #' @export
 load_variables <- function(year, dataset, cache = FALSE) {
 

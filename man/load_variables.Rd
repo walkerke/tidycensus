@@ -10,7 +10,7 @@ load_variables(year, dataset, cache = FALSE)
 \item{year}{The year for which you are requesting variables.  Either the year of the decennial Census,
 or the endyear for a 5-year ACS sample.}
 
-\item{dataset}{One of "sf1", "sf3", or "acs5".}
+\item{dataset}{One of "sf1", "sf3", "acs5", or "acs5/profile".}
 
 \item{cache}{Whether you would like to cache the dataset for future access, or load the dataset
 from an existing cache. Defaults to FALSE.}

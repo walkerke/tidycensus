@@ -73,7 +73,16 @@ harris %>%
   scale_fill_viridis() +
   scale_color_viridis()
 ```
-           
+
+Beyond this, you might be interested in writing your dataset to a shapefile or GeoJSON for use in external GIS or visualization applications.  You can accomplish this with the `st_write` function in the __sf__ package: 
+
+```{r, eval = FALSE}
+library(sf)
+st_write(orange, "orange.shp")
+```
+
+Your __tidycensus__-obtained dataset can now be used in ArcGIS, QGIS, Tableau, or any other application that reads shapefiles.  
+
 There is a lot more you can do with the spatial functionality in __tidycensus__, including more sophisticated visualization and spatial analysis; look for updates [on my blog](https://walkerke.github.io) and in this space.             
   
   
