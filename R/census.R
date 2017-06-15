@@ -77,6 +77,10 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
         eval(mc)
       }) %>%
         reduce(rbind)
+      geoms <- unique(st_geometry_type(result))
+      if (length(geoms) > 1) {
+        result <- st_cast(result, "MULTIPOLYGON")
+      }
     } else {
       result <- map_df(state, function(x) {
         mc[["state"]] <- x
@@ -86,7 +90,7 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
     return(result)
   }
 
-  if (geography == "block group" & length(county) > 1) {
+  if (geography %in% c("block group", "block") & length(county) > 1) {
     if (geometry == TRUE) {
       mc <- match.call(expand.dots = TRUE)
       result <- map(county, function(x) {
@@ -94,6 +98,10 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
         eval(mc)
       }) %>%
         reduce(rbind)
+      geoms <- unique(st_geometry_type(result))
+      if (length(geoms) > 1) {
+        st_cast(result, "MULTIPOLYGON")
+      }
     } else {
       result <- map_df(county, function(x) {
         mc[["county"]] <- x

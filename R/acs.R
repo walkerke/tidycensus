@@ -58,13 +58,17 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
   # for block groups - take care of this under the hood by having the function
   # call itself and return the result
   if (geography == "tract" & length(state) > 1) {
+    mc <- match.call(expand.dots = TRUE)
     if (geometry == TRUE) {
-      mc <- match.call(expand.dots = TRUE)
       result <- map(state, function(x) {
         mc[["state"]] <- x
         eval(mc)
       }) %>%
         reduce(rbind)
+      geoms <- unique(st_geometry_type(result))
+      if (length(geoms) > 1) {
+        result <- st_cast(result, "MULTIPOLYGON")
+      }
     } else {
       result <- map_df(state, function(x) {
         mc[["state"]] <- x
@@ -75,13 +79,17 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
   }
 
   if (geography == "block group" & length(county) > 1) {
+    mc <- match.call(expand.dots = TRUE)
     if (geometry == TRUE) {
-      mc <- match.call(expand.dots = TRUE)
       result <- map(county, function(x) {
         mc[["county"]] <- x
         eval(mc)
       }) %>%
         reduce(rbind)
+      geoms <- unique(st_geometry_type(result))
+      if ("POLYGON" %in% geoms & "MULTIPOLYGON" %in% geoms) {
+        result <- st_cast(result, "MULTIPOLYGON")
+      }
     } else {
       result <- map_df(county, function(x) {
         mc[["county"]] <- x
