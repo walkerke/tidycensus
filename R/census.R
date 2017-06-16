@@ -81,6 +81,9 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
       if (length(geoms) > 1) {
         result <- st_cast(result, "MULTIPOLYGON")
       }
+      result <- result %>%
+        as_tibble() %>%
+        st_as_sf()
     } else {
       result <- map_df(state, function(x) {
         mc[["state"]] <- x
@@ -102,6 +105,9 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
       if (length(geoms) > 1) {
         st_cast(result, "MULTIPOLYGON")
       }
+      result <- result %>%
+        as_tibble() %>%
+        st_as_sf()
     } else {
       result <- map_df(county, function(x) {
         mc[["county"]] <- x
@@ -182,6 +188,7 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
 
     # Merge and return the output
     out <- inner_join(geom, dat2, by = "GEOID") %>%
+      as_tibble() %>%
       st_as_sf()
 
     return(out)

@@ -69,6 +69,9 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
       if (length(geoms) > 1) {
         result <- st_cast(result, "MULTIPOLYGON")
       }
+      result <- result %>%
+        as_tibble() %>%
+        st_as_sf()
     } else {
       result <- map_df(state, function(x) {
         mc[["state"]] <- x
@@ -87,9 +90,12 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
-      if ("POLYGON" %in% geoms & "MULTIPOLYGON" %in% geoms) {
+      if (length(geoms) > 1) {
         result <- st_cast(result, "MULTIPOLYGON")
       }
+      result <- result %>%
+        as_tibble() %>%
+        st_as_sf()
     } else {
       result <- map_df(county, function(x) {
         mc[["county"]] <- x
@@ -191,7 +197,9 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
     }
 
     # Merge and return the output
-    out <- inner_join(geom, dat2, by = "GEOID")
+    out <- inner_join(geom, dat2, by = "GEOID") %>%
+      as_tibble() %>%
+      st_as_sf()
 
     return(out)
 
