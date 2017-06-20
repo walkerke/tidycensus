@@ -55,3 +55,23 @@ a tibble or sf tibble of decennial Census data
 \description{
 Obtain data and feature geometry for the decennial Census
 }
+\examples{
+\dontrun{
+# Plot of race/ethnicity by county in Illinois for 2010
+library(tidycensus)
+library(tidyverse)
+library(viridis)
+census_api_key("YOUR KEY GOES HERE")
+vars10 <- c("P0050003", "P0050004", "P0050006", "P0040003")
+
+il <- get_decennial(geography = "county", variables = vars10, year = 2010,
+                    summary_var = "P0010001", state = "IL", geometry = TRUE) \%>\%
+  mutate(pct = 100 * (value / summary_value))
+
+ggplot(il, aes(fill = pct, color = pct)) +
+  geom_sf() +
+  facet_wrap(~variable)
+
+
+}
+}

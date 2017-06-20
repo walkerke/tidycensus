@@ -21,3 +21,9 @@ A tibble of variables from the requested dataset.
 \description{
 Load variables from a decennial Census or American Community Survey dataset to search in R
 }
+\examples{
+\dontrun{
+v15 <- load_variables(2015, "acs5", cache = TRUE)
+View(v15)
+}
+}
