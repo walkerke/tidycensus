@@ -32,6 +32,35 @@
 #' @param ... Other keyword arguments
 #'
 #' @return A tibble or sf tibble of ACS data
+#' @examples \dontrun{
+#' library(tidycensus)
+#' library(tidyverse)
+#' library(viridis)
+#' census_api_key("YOUR KEY GOES HERE")
+#'
+#' tarr <- get_acs(geography = "tract", variables = "B19013_001",
+#'                 state = "TX", county = "Tarrant", geometry = TRUE)
+#'
+#' ggplot(tarr, aes(fill = estimate, color = estimate)) +
+#'   geom_sf() +
+#'   coord_sf(crs = 26914) +
+#'   scale_fill_viridis(option = "magma") +
+#'   scale_color_viridis(options = "magma")
+#'
+#'
+#' vt <- get_acs(geography = "county", variables = "B19013_001", state = "VT")
+#'
+#' vt %>%
+#' mutate(NAME = gsub(" County, Vermont", "", NAME)) %>%
+#'  ggplot(aes(x = estimate, y = reorder(NAME, estimate))) +
+#'   geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
+#'   geom_point(color = "red", size = 3) +
+#'   labs(title = "Household income by county in Vermont",
+#'        subtitle = "2011-2015 American Community Survey",
+#'        y = "",
+#'        x = "ACS estimate (bars represent margin of error)")
+#'
+#' }
 #' @export
 get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
                     state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,

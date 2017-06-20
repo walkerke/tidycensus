@@ -30,6 +30,24 @@
 #' @param ... Other keyword arguments
 #'
 #' @return a tibble or sf tibble of decennial Census data
+#' @examples \dontrun{
+#' # Plot of race/ethnicity by county in Illinois for 2010
+#' library(tidycensus)
+#' library(tidyverse)
+#' library(viridis)
+#' census_api_key("YOUR KEY GOES HERE")
+#' vars10 <- c("P0050003", "P0050004", "P0050006", "P0040003")
+#'
+#' il <- get_decennial(geography = "county", variables = vars10, year = 2010,
+#'                     summary_var = "P0010001", state = "IL", geometry = TRUE) %>%
+#'   mutate(pct = 100 * (value / summary_value))
+#'
+#' ggplot(il, aes(fill = pct, color = pct)) +
+#'   geom_sf() +
+#'   facet_wrap(~variable)
+#'
+#'
+#' }
 #' @export
 get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
                    state = NULL, county = NULL, geometry = FALSE, output = "tidy",
@@ -70,8 +88,8 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
   # for block groups - take care of this under the hood by having the function
   # call itself and return the result
   if (geography == "tract" & length(state) > 1) {
+    mc <- match.call(expand.dots = TRUE)
     if (geometry == TRUE) {
-      mc <- match.call(expand.dots = TRUE)
       result <- map(state, function(x) {
         mc[["state"]] <- x
         eval(mc)
@@ -93,9 +111,9 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
     return(result)
   }
 
-  if (geography %in% c("block group", "block") & length(county) > 1) {
+  if ((geography %in% c("block group", "block") & length(county) > 1) | (geography == "tract" & length(county) > 1)) {
+    mc <- match.call(expand.dots = TRUE)
     if (geometry == TRUE) {
-      mc <- match.call(expand.dots = TRUE)
       result <- map(county, function(x) {
         mc[["county"]] <- x
         eval(mc)
