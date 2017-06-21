@@ -54,7 +54,7 @@ We recommend moving this block and the preceding CSS link to the HEAD of your HT
 
 You can also follow my blog at https://walkerke.github.io.  
 
-I'm planning a CRAN release after I get the first round of feedback from users and continue testing.  My development focus is on making the current datasets as accessible as possible; if you need other approaches or datasets, I recommend the [censusapi](https://github.com/hrecht/censusapi) and [acs](https://cran.r-project.org/web/packages/acs/index.html) packages.
+My development focus is on making the current datasets as accessible as possible; if you need other approaches or datasets, I recommend the [censusapi](https://github.com/hrecht/censusapi) and [acs](https://cran.r-project.org/web/packages/acs/index.html) packages.
 
 If you find this project useful, you can support package development in the following ways: 
 
