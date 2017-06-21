@@ -83,20 +83,17 @@ orange &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_
 ## bbox:           xmin: -117.9594 ymin: 33.8592 xmax: -117.7601 ymax: 33.93685
 ## epsg (SRID):    4269
 ## proj4string:    +proj=longlat +datum=NAD83 +no_defs
+## # A tibble: 6 x 6
 ##         GEOID                                           NAME   variable
+##         &lt;chr&gt;                                          &lt;chr&gt;      &lt;chr&gt;
 ## 1 06059001201  Census Tract 12.01, Orange County, California B19013_001
 ## 2 06059001503  Census Tract 15.03, Orange County, California B19013_001
 ## 3 06059001902  Census Tract 19.02, Orange County, California B19013_001
 ## 4 06059011504 Census Tract 115.04, Orange County, California B19013_001
 ## 5 06059021817 Census Tract 218.17, Orange County, California B19013_001
 ## 6 06059021824 Census Tract 218.24, Orange County, California B19013_001
-##   estimate   moe                       geometry
-## 1    53463  4195 MULTIPOLYGON(((-117.959187 ...
-## 2    79438 10584 MULTIPOLYGON(((-117.915771 ...
-## 3    71477 14091 MULTIPOLYGON(((-117.959422 ...
-## 4    31793  8503 MULTIPOLYGON(((-117.890099 ...
-## 5   103333  6638 MULTIPOLYGON(((-117.790824 ...
-## 6   152679 12282 MULTIPOLYGON(((-117.776768 ...</code></pre>
+## # ... with 3 more variables: estimate &lt;dbl&gt;, moe &lt;dbl&gt;, geometry &lt;S3:
+## #   sfc_MULTIPOLYGON&gt;</code></pre>
 <p>Our object <code>orange</code> looks much like the basic <strong>tidycensus</strong> output, but with a <code>geometry</code> list-column describing the geometry of each feature, using the geographic coordinate system NAD 1983 (EPSG: 4269) which is the default for Census shapefiles. <strong>tidycensus</strong> uses the Census <a href="https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html">cartographic boundary shapefiles</a> for faster processing; if you prefer the TIGER/Line shapefiles, set <code>cb = FALSE</code> in the function call.</p>
 <p>As the dataset is in a tidy format, it can be quickly visualized with the <code>geom_sf</code> functionality currently in the development version of <strong>ggplot2</strong>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(viridis)
@@ -125,20 +122,16 @@ harris &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_
 ## bbox:           xmin: -95.37457 ymin: 29.74486 xmax: -95.32409 ymax: 29.80907
 ## epsg (SRID):    4269
 ## proj4string:    +proj=longlat +datum=NAD83 +no_defs
+## # A tibble: 6 x 6
 ##         GEOID              NAME variable value summary_value
+##         &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt;         &lt;dbl&gt;
 ## 1 48201100000 Census Tract 1000 P0050003  2082          4690
 ## 2 48201100000 Census Tract 1000 P0050004  1047          4690
 ## 3 48201100000 Census Tract 1000 P0050006   134          4690
 ## 4 48201100000 Census Tract 1000 P0040003  1070          4690
 ## 5 48201210900 Census Tract 2109 P0050003    35          1620
 ## 6 48201210900 Census Tract 2109 P0050004  1195          1620
-##                         geometry
-## 1 MULTIPOLYGON(((-95.373478 2...
-## 2 MULTIPOLYGON(((-95.373478 2...
-## 3 MULTIPOLYGON(((-95.373478 2...
-## 4 MULTIPOLYGON(((-95.373478 2...
-## 5 MULTIPOLYGON(((-95.32851 29...
-## 6 MULTIPOLYGON(((-95.32851 29...</code></pre>
+## # ... with 1 more variables: geometry &lt;S3: sfc_MULTIPOLYGON&gt;</code></pre>
 <p>We notice that there are four entries for each Census tract, with each entry representing one of our requested variables. The <code>summary_value</code> column represents the value of the summary variable, which is total population in this instance. When a summary variable is specified in <code>get_acs</code>, both <code>summary_est</code> and <code>summary_moe</code> columns will be returned.</p>
 <p>With this information, we can set up an analysis pipeline in which we calculate a new percent-of-total column; recode the Census variable names into more intuitive labels; and visualize the result for each group in a faceted plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(forcats)

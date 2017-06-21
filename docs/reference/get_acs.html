@@ -170,6 +170,36 @@ Obtain one at <a href = 'http://api.census.gov/data/key_signup.html'>http://api.
     <p>A tibble or sf tibble of ACS data</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>not_run</span>({
+  <span class='fu'>library</span>(<span class='no'>tidycensus</span>)
+  <span class='fu'>library</span>(<span class='no'>tidyverse</span>)
+  <span class='fu'>library</span>(<span class='no'>viridis</span>)
+  <span class='fu'><a href='census_api_key.html'>census_api_key</a></span>(<span class='st'>"YOUR KEY GOES HERE"</span>)
+
+  <span class='no'>tarr</span> <span class='kw'>&lt;-</span> <span class='fu'>get_acs</span>(<span class='kw'>geography</span> <span class='kw'>=</span> <span class='st'>"tract"</span>, <span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"B19013_001"</span>,
+                  <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"TX"</span>, <span class='kw'>county</span> <span class='kw'>=</span> <span class='st'>"Tarrant"</span>, <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+  <span class='fu'>ggplot</span>(<span class='no'>tarr</span>, <span class='fu'>aes</span>(<span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>estimate</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>estimate</span>)) +
+    <span class='fu'>geom_sf</span>() +
+    <span class='fu'>coord_sf</span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='fl'>26914</span>) +
+    <span class='fu'>scale_fill_viridis</span>(<span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"magma"</span>) +
+    <span class='fu'>scale_color_viridis</span>(<span class='kw'>options</span> <span class='kw'>=</span> <span class='st'>"magma"</span>)
+
+
+  <span class='no'>vt</span> <span class='kw'>&lt;-</span> <span class='fu'>get_acs</span>(<span class='kw'>geography</span> <span class='kw'>=</span> <span class='st'>"county"</span>, <span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"B19013_001"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>)
+
+  <span class='no'>vt</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>mutate</span>(<span class='kw'>NAME</span> <span class='kw'>=</span> <span class='fu'>gsub</span>(<span class='st'>" County, Vermont"</span>, <span class='st'>""</span>, <span class='no'>NAME</span>)) <span class='kw'>%&gt;%</span>
+   <span class='fu'>ggplot</span>(<span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>estimate</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>reorder</span>(<span class='no'>NAME</span>, <span class='no'>estimate</span>))) +
+    <span class='fu'>geom_errorbarh</span>(<span class='fu'>aes</span>(<span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>estimate</span> - <span class='no'>moe</span>, <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>estimate</span> + <span class='no'>moe</span>)) +
+    <span class='fu'>geom_point</span>(<span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>3</span>) +
+    <span class='fu'>labs</span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Household income by county in Vermont"</span>,
+         <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"2011-2015 American Community Survey"</span>,
+         <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>""</span>,
+         <span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"ACS estimate (bars represent margin of error)"</span>)
+
+})</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -177,7 +207,9 @@ Obtain one at <a href = 'http://api.census.gov/data/key_signup.html'>http://api.
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>
