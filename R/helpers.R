@@ -106,7 +106,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 #' original file for disaster recovery purposes.
 #' @param key The API key provided to you from the Census formated in quotes. A key can be acquired at \url{http://api.census.gov/data/key_signup.html}
 #' @param overwrite If this is set to TRUE, it will overwrite an existing CENSUS_KEY that you already have in your \code{.Renviron} file.
-#' @importFrom utils write.table
+#' @importFrom utils write.table read.table
 #' @examples
 #'
 #' \dontrun{
