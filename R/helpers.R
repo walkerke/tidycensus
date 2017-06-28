@@ -100,12 +100,12 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
 #' Install a CENSUS API Key in Your \code{.Renviron} File for Repeated Use
 #' @description This function will add your CENSUS API key to your \code{.Renviron} file so it can be called securely without being stored
-#' in your code. After you have installed your key, it can be called any time by typing \code{Sys.getenv("CENSUS_KEY")} and can be
-#' used in package functions by simply typing CENSUS_KEY If you do not have an \code{.Renviron} file, the function will create on for you.
+#' in your code. After you have installed your key, it can be called any time by typing \code{Sys.getenv("CENSUS_API_KEY")} and can be
+#' used in package functions by simply typing CENSUS_API_KEY If you do not have an \code{.Renviron} file, the function will create on for you.
 #' If you already have an \code{.Renviron} file, the function will append the key to your existing file, while making a backup of your
 #' original file for disaster recovery purposes.
 #' @param key The API key provided to you from the Census formated in quotes. A key can be acquired at \url{http://api.census.gov/data/key_signup.html}
-#' @param overwrite If this is set to TRUE, it will overwrite an existing CENSUS_KEY that you already have in your \code{.Renviron} file.
+#' @param overwrite If this is set to TRUE, it will overwrite an existing CENSUS_API_KEY that you already have in your \code{.Renviron} file.
 #' @importFrom utils write.table read.table
 #' @examples
 #'
@@ -114,7 +114,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 #' # First time, relead your enviornment so you can use the key without restarting R.
 #' readRenviron("~/.Renviron")
 #' # You can check it with:
-#' Sys.getenv("CENSUS_KEY")
+#' Sys.getenv("CENSUS_API_KEY")
 #' }
 #'
 #' \dontrun{
@@ -123,7 +123,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 #' # First time, relead your enviornment so you can use the key without restarting R.
 #' readRenviron("~/.Renviron")
 #' # You can check it with:
-#' Sys.getenv("CENSUS_KEY")
+#' Sys.getenv("CENSUS_API_KEY")
 #' }
 #' @export
 
@@ -141,21 +141,21 @@ census_api_key <- function(key=NA, overwrite=NA){
     if(isTRUE(overwrite)){
       message("Your original .Renviron will be backed up and stored in your R HOME directory if needed.")
       oldenv=read.table(".Renviron", stringsAsFactors = FALSE)
-      newenv <- oldenv[-grep("CENSUS_KEY", oldenv),]
+      newenv <- oldenv[-grep("CENSUS_API_KEY", oldenv),]
       write.table(newenv, ".Renviron", quote = FALSE, sep = "\n",
                   col.names = FALSE, row.names = FALSE)
     }
     else{
       tv <- readLines(".Renviron")
-      if(isTRUE(any(grepl("CENSUS_KEY",tv)))){
-        stop("A CENSUS_KEY already exists. You can overwrite it with the argument overwrite=TRUE", call.=FALSE)
+      if(isTRUE(any(grepl("CENSUS_API_KEY",tv)))){
+        stop("A CENSUS_API_KEY already exists. You can overwrite it with the argument overwrite=TRUE", call.=FALSE)
       }
     }
   }
 
-  keyconcat <- paste("CENSUS_KEY=","'",key,"'", sep = "")
+  keyconcat <- paste("CENSUS_API_KEY=","'",key,"'", sep = "")
   # Append API key to .Renviron file
   write(keyconcat, ".Renviron", sep = "\n", append = TRUE)
-  message('Your API key has been stored in your .Renviron and can be accessed by Sys.getenv("CENSUS_KEY")')
+  message('Your API key has been stored in your .Renviron and can be accessed by Sys.getenv("CENSUS_API_KEY")')
   return(key)
 }
