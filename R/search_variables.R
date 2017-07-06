@@ -16,7 +16,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
 
   rds <- paste0(dataset, "_", year, ".rds")
 
-  if (dataset == "acs5/profile") {
+  if (dataset == "acs5/profile" | dataset == "acs5/subject") {
     rds <- gsub("/", "_", rds)
   }
 
