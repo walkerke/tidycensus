@@ -28,9 +28,14 @@ load_data_acs <- function(geography, formatted_variables, key, endyear, state = 
                  as.character(endyear),
                  "/acs5")
 
-  if (grepl("DP", formatted_variables)) {
+  if (grepl("^DP", formatted_variables)) {
     message("Using the ACS Data Profile")
     base <- paste0(base, "/profile")
+  }
+
+  if (grepl("^S[0-9].", formatted_variables)) {
+    message("Using the ACS Subject Tables")
+    base <- paste0(base, "/subject")
   }
 
   if (!is.null(state)) {

@@ -4,36 +4,38 @@
 \alias{census_api_key}
 \title{Install a CENSUS API Key in Your \code{.Renviron} File for Repeated Use}
 \usage{
-census_api_key(key = NA, overwrite = NA)
+census_api_key(key, overwrite = FALSE, install = FALSE)
 }
 \arguments{
 \item{key}{The API key provided to you from the Census formated in quotes. A key can be acquired at \url{http://api.census.gov/data/key_signup.html}}
 
-\item{overwrite}{If this is set to TRUE, it will overwrite an existing CENSUS_KEY that you already have in your \code{.Renviron} file.}
+\item{overwrite}{If this is set to TRUE, it will overwrite an existing CENSUS_API_KEY that you already have in your \code{.Renviron} file.}
+
+\item{install}{if TRUE, will install the key in your \code{.Renviron} file for use in future sessions.  Defaults to FALSE.}
 }
 \description{
 This function will add your CENSUS API key to your \code{.Renviron} file so it can be called securely without being stored
-in your code. After you have installed your key, it can be called any time by typing \code{Sys.getenv("CENSUS_KEY")} and can be
-used in package functions by simply typing CENSUS_KEY If you do not have an \code{.Renviron} file, the function will create on for you.
+in your code. After you have installed your key, it can be called any time by typing \code{Sys.getenv("CENSUS_API_KEY")} and can be
+used in package functions by simply typing CENSUS_API_KEY If you do not have an \code{.Renviron} file, the function will create on for you.
 If you already have an \code{.Renviron} file, the function will append the key to your existing file, while making a backup of your
 original file for disaster recovery purposes.
 }
 \examples{
 
 \dontrun{
-census_api_key("111111abc")
-# First time, relead your enviornment so you can use the key without restarting R.
+census_api_key("111111abc", install = TRUE)
+# First time, reload your environment so you can use the key without restarting R.
 readRenviron("~/.Renviron")
 # You can check it with:
-Sys.getenv("CENSUS_KEY")
+Sys.getenv("CENSUS_API_KEY")
 }
 
 \dontrun{
 # If you need to overwrite an existing key:
-census_api_key("111111abc", overwrite = TRUE)
-# First time, relead your enviornment so you can use the key without restarting R.
+census_api_key("111111abc", overwrite = TRUE, install = TRUE)
+# First time, relead your environment so you can use the key without restarting R.
 readRenviron("~/.Renviron")
 # You can check it with:
-Sys.getenv("CENSUS_KEY")
+Sys.getenv("CENSUS_API_KEY")
 }
 }
