@@ -226,7 +226,7 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
   if (geometry == TRUE) {
 
     geom <- suppressMessages(use_tigris(geography = geography, year = endyear,
-                                        state = state, county = county, ...))
+                                        state = state, county = county))
 
     if (keep_geo_vars == FALSE) {
 
