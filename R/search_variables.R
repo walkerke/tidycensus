@@ -16,7 +16,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
 
   if (dataset=="acs3") {
     if (year > 2013 | year < 2012)
-      warning("The current acs3 survey contains data from 2012-2013. Please select a different year.")
+      stop("The current acs3 survey contains data from 2012-2013. Please select a different year.")
   }
 
   rds <- paste0(dataset, "_", year, ".rds")
