@@ -14,9 +14,15 @@
 #' @export
 load_variables <- function(year, dataset, cache = FALSE) {
 
+  if (dataset=="acs3") {
+    if (year > 2013 | year < 2012)
+      warning("The current acs3 survey contains data from 2012-2013. Please select a different year.")
+  }
+
   rds <- paste0(dataset, "_", year, ".rds")
 
-  if (dataset == "acs5/profile" | dataset == "acs5/subject") {
+  if (dataset == "acs5/profile" | dataset == "acs5/subject" | dataset == "acs1/profile" | dataset == "acs1/subject" |
+      dataset == "acs3/profile" | dataset == "acs3/subject") {
     rds <- gsub("/", "_", rds)
   }
 
@@ -24,7 +30,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
     set <- paste(as.character(year), d, sep = "/")
 
     # If ACS, use JSON parsing to speed things up
-    if (grepl("acs5", d)) {
+    if (grepl("acs5", d) | grepl("acs1", d) | grepl("acs3", d)) {
       url <- paste("http://api.census.gov/data",
                    set,
                    "variables.json", sep = "/")
@@ -83,3 +89,4 @@ load_variables <- function(year, dataset, cache = FALSE) {
     return(get_dataset(dataset))
   }
 }
+
