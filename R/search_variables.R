@@ -32,6 +32,10 @@ load_variables <- function(year, dataset, cache = FALSE) {
       dat <- GET(url) %>%
         content(as = "text") %>%
         fromJSON() %>%
+        at_depth(2, function(x) {
+          x$validValues <- NULL
+          x
+        }) %>%
         flatten_df(.id = "name") %>%
         arrange(name)
 
