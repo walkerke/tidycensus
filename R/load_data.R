@@ -191,6 +191,15 @@ load_data_decennial <- function(geography, variables, key, year,
 
   content <- content(call, as = "text")
 
+  # Fix issue in SF3 2000 API - https://github.com/walkerke/tidycensus/issues/22
+  if (year == 2000 & sumfile == "sf3") {
+    content <- str_replace(content, 'O"Brien', "O'Brien")
+    content <- str_replace(content, 'Prince George"s', "Prince George's")
+    content <- str_replace(content, 'Queen Anne"s', "Queen Anne's")
+    content <- str_replace(content, 'St. Mary"s', "St. Mary's")
+
+  }
+
   validate_call(content = content, geography = geography, year = year,
                 dataset = sumfile)
 
