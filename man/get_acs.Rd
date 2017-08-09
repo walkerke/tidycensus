@@ -6,7 +6,7 @@
 \usage{
 get_acs(geography, variables, endyear = 2015, output = "tidy",
   state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
-  summary_var = NULL, key = NULL, moe_level = 90, ...)
+  summary_var = NULL, key = NULL, moe_level = 90, survey = "acs5", ...)
 }
 \arguments{
 \item{geography}{The geography of your data.}
@@ -48,6 +48,9 @@ that you'll want to use as a denominator or comparison.}
 Obtain one at \url{http://api.census.gov/data/key_signup.html}}
 
 \item{moe_level}{The confidence level of the returned margin of error.  One of 90 (the default), 95, or 99.}
+
+\item{survey}{The ACS contains one-year, three-year, and five-year surveys expressed as "acs1", "acs3", and "acs5".
+The default selection is "acs5."}
 
 \item{...}{Other keyword arguments}
 }

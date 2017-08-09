@@ -22,11 +22,11 @@ format_variables_acs <- function(variables) {
 
 }
 
-load_data_acs <- function(geography, formatted_variables, key, endyear, state = NULL, county = NULL) {
+load_data_acs <- function(geography, formatted_variables, key, endyear, state = NULL, county = NULL, survey = "acs5") {
 
   base <- paste0("https://api.census.gov/data/",
                  as.character(endyear),
-                 "/acs5")
+                 paste0("/",as.character(survey)))
 
   if (grepl("^DP", formatted_variables)) {
     message("Using the ACS Data Profile")
@@ -89,7 +89,7 @@ load_data_acs <- function(geography, formatted_variables, key, endyear, state = 
   content <- content(call, as = "text")
 
   validate_call(content = content, geography = geography, year = endyear,
-                dataset = "acs5")
+                dataset = survey)
 
   dat <- tbl_df(fromJSON(content))
 
@@ -247,5 +247,5 @@ load_data_decennial <- function(geography, variables, key, year,
 
   return(dat)
 
-
 }
+

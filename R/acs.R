@@ -29,6 +29,8 @@
 #' @param key Your Census API key.
 #'            Obtain one at \url{http://api.census.gov/data/key_signup.html}
 #' @param moe_level The confidence level of the returned margin of error.  One of 90 (the default), 95, or 99.
+#' @param survey The ACS contains one-year, three-year, and five-year surveys expressed as "acs1", "acs3", and "acs5".
+#'               The default selection is "acs5."
 #' @param ... Other keyword arguments
 #'
 #' @return A tibble or sf tibble of ACS data
@@ -64,7 +66,7 @@
 #' @export
 get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
                     state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
-                    summary_var = NULL, key = NULL, moe_level = 90, ...) {
+                    summary_var = NULL, key = NULL, moe_level = 90, survey = "acs5", ...) {
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 
@@ -75,11 +77,18 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
     stop('A Census API key is required.  Obtain one at http://api.census.gov/data/key_signup.html, and then supply the key to the `census_api_key` function to use it throughout your tidycensus session.')
 
   }
-#
-#   if (length(variables) > 24) {
-#     stop("The maximum number of variables supported by `get_acs` at one time is 25 at the moment.  I'm working on a fix; in the meantime consider splitting your variables into multiple calls and using cbind/rbind to combine them.",
-#          call. = FALSE)
-#   }
+  #
+  #   if (length(variables) > 24) {
+  #     stop("The maximum number of variables supported by `get_acs` at one time is 25 at the moment.  I'm working on a fix; in the meantime consider splitting your variables into multiple calls and using cbind/rbind to combine them.",
+  #          call. = FALSE)
+  #   }
+  #
+
+  if (survey == "acs3") {
+    if (geography == "block group") {
+      warning("The acs1 and acs3 surveys do not support block group geographies. Please select 'acs5' for block groups.")
+    }
+  }
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
@@ -175,13 +184,13 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
 
     dat <- map(l, function(x) {
       vars <- format_variables_acs(x)
-      suppressWarnings(load_data_acs(geography, vars, key, endyear, state, county))
+      suppressWarnings(load_data_acs(geography, vars, key, endyear, state, county, survey))
     }) %>%
       bind_cols()
   } else {
     vars <- format_variables_acs(variables)
 
-    dat <- suppressWarnings(load_data_acs(geography, vars, key, endyear, state, county))
+    dat <- suppressWarnings(load_data_acs(geography, vars, key, endyear, state, county, survey))
   }
 
   vars2 <- format_variables_acs(variables)
@@ -222,7 +231,7 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
 
     sumvar <- format_variables_acs(summary_var)
 
-    sumdat <- suppressMessages(load_data_acs(geography, sumvar, key, endyear, state, county))
+    sumdat <- suppressMessages(load_data_acs(geography, sumvar, key, endyear, state, county, survey))
 
     sumest <- paste0(summary_var, "E")
 
@@ -241,7 +250,7 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
   if (geometry == TRUE) {
 
     geom <- suppressMessages(use_tigris(geography = geography, year = endyear,
-                       state = state, county = county, ...))
+                                        state = state, county = county))
 
     if (keep_geo_vars == FALSE) {
 
