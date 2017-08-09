@@ -77,18 +77,30 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
     stop('A Census API key is required.  Obtain one at http://api.census.gov/data/key_signup.html, and then supply the key to the `census_api_key` function to use it throughout your tidycensus session.')
 
   }
-  #
-  #   if (length(variables) > 24) {
-  #     stop("The maximum number of variables supported by `get_acs` at one time is 25 at the moment.  I'm working on a fix; in the meantime consider splitting your variables into multiple calls and using cbind/rbind to combine them.",
-  #          call. = FALSE)
-  #   }
-  #
 
   if (survey == "acs3") {
-    if (geography == "block group") {
-      warning("The acs1 and acs3 surveys do not support block group geographies. Please select 'acs5' for block groups.")
+    if (endyear > 2013) {
+      stop("The three-year ACS ended in 2013. For newer data, use the 1-year or 5-year ACS.", call. = FALSE)
+    } else {
+      message("The three-year ACS provides data for geographies with populations of 20,000 and greater.")
     }
   }
+
+  if (survey == "acs1") {
+    message("The one-year ACS provides data for geographies with populations of 65,000 and greater.")
+  }
+
+  cache <- getOption("tigris_use_cache", FALSE)
+
+  if (cache == FALSE & geometry == TRUE) {
+    message("Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.")
+  }
+
+  # if (survey == "acs3" | survey == "acs1") {
+  #   if (geography == "block group") {
+  #     warning("The acs1 and acs3 surveys do not support block group geographies. Please select 'acs5' for block groups.")
+  #   }
+  # }
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
@@ -250,7 +262,7 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
   if (geometry == TRUE) {
 
     geom <- suppressMessages(use_tigris(geography = geography, year = endyear,
-                                        state = state, county = county))
+                                        state = state, county = county, ...))
 
     if (keep_geo_vars == FALSE) {
 

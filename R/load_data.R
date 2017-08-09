@@ -22,11 +22,15 @@ format_variables_acs <- function(variables) {
 
 }
 
-load_data_acs <- function(geography, formatted_variables, key, endyear, state = NULL, county = NULL, survey = "acs5") {
+load_data_acs <- function(geography, formatted_variables, key, endyear, state = NULL, county = NULL, survey) {
 
-  base <- paste0("https://api.census.gov/data/",
+  if (survey == "acs1") {
+    survey <- "acs/acs1"
+  }
+
+  base <- paste("https://api.census.gov/data",
                  as.character(endyear),
-                 paste0("/",as.character(survey)))
+                 survey, sep = "/")
 
   if (grepl("^DP", formatted_variables)) {
     message("Using the ACS Data Profile")
@@ -35,7 +39,15 @@ load_data_acs <- function(geography, formatted_variables, key, endyear, state = 
 
   if (grepl("^S[0-9].", formatted_variables)) {
     message("Using the ACS Subject Tables")
-    base <- paste0(base, "/subject")
+    if (survey == "acs1") {
+      base <- paste("https://api.census.gov/data",
+                    as.character(endyear),
+                    "subject",
+                    sep = "/")
+    } else {
+      base <- paste0(base, "/subject")
+
+    }
   }
 
   if (!is.null(state)) {
