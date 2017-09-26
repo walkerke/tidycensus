@@ -24,7 +24,7 @@ To keep up with on-going development of __tidycensus__ and get even more example
 
 You can also follow my blog at https://walkerke.github.io.  
 
-My development focus is on making the current datasets as accessible as possible; if you need other approaches or datasets, I recommend the [censusapi](https://github.com/hrecht/censusapi) and [acs](https://cran.r-project.org/web/packages/acs/index.html) packages.
+My development focus is on making the current datasets as accessible as possible; if you need other approaches or datasets, I recommend the [censusapi](https://github.com/hrecht/censusapi) and [acs](https://cran.r-project.org/package=acs) packages.
 
 If you find this project useful, you can support package development in the following ways: 
 

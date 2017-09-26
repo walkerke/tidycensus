@@ -25,7 +25,9 @@ format_variables_acs <- function(variables) {
 load_data_acs <- function(geography, formatted_variables, key, endyear, state = NULL, county = NULL, survey) {
 
   if (survey == "acs1") {
-    survey <- "acs/acs1"
+    if (endyear > 2014) {
+      survey <- "acs/acs1"
+    }
   }
 
   base <- paste("https://api.census.gov/data",

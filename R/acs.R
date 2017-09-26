@@ -5,7 +5,8 @@
 #'                  IDs. tidycensus automatically returns the estimate and the
 #'                  margin of error associated with the variable.
 #' @param endyear The endyear of the ACS sample.  2010 through 2015 are
-#'                available. Defaults to 2015 (for 2011-2015)
+#'                available for five-year data; 2016 is also available for 1-year data.
+#'                Defaults to 2015.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'               enumeration unit-variable combination, or "wide" in which each
 #'               row represents an enumeration unit and the variables are in the
