@@ -221,12 +221,18 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
       spread(type, value) %>%
       mutate(moe = moe * moe_factor)
 
+    # Convert -555555555 values to NA (ACS1 issue)
+    dat2[dat2 == -555555555] <- NA
+
 
   } else if (output == "wide") {
 
     # Remove duplicated columns
 
     dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
+
+    # Convert -555555555 values to NA (ACS1 issue)
+    dat[dat == -555555555] <- NA
 
     # Find MOE vars
     # moe_vars <- grep("*M", names(dat))
@@ -257,6 +263,9 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
               NAME = "NAME.x") %>%
       select(-NAME.y) %>%
       mutate(summary_moe = round(summary_moe * moe_factor, 0))
+
+    # Convert -555555555 values to NA (ACS1 issue)
+    dat2[dat2 == -555555555] <- NA
 
   }
 
