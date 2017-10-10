@@ -4,9 +4,17 @@
 #' @param variables Character string or vector of character strings of variable
 #'                  IDs. tidycensus automatically returns the estimate and the
 #'                  margin of error associated with the variable.
-#' @param endyear The endyear of the ACS sample.  2010 through 2015 are
+#' @param table   The ACS table for which you would like to request all variables.  Uses
+#'                lookup tables to identify the variables; performs faster when variable
+#'                table already exists through \code{load_variables(cache = TRUE)}.
+#' @param cache_table Whether or not to cache table names for faster future access.
+#'                    Defaults to FALSE; if TRUE, only needs to be called once per
+#'                    dataset.  If variables dataset is already cached via the
+#'                    \code{load_variables} function, this can be bypassed.
+#' @param year The year, or endyear, of the ACS sample. 2010 through 2015 are
 #'                available for five-year data; 2016 is also available for 1-year data.
 #'                Defaults to 2015.
+#' @param endyear Deprecated and will be removed in a future release.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'               enumeration unit-variable combination, or "wide" in which each
 #'               row represents an enumeration unit and the variables are in the
@@ -65,7 +73,9 @@
 #'
 #' }
 #' @export
-get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
+get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FALSE,
+                    year = 2015, endyear = NULL,
+                    output = "tidy",
                     state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
                     summary_var = NULL, key = NULL, moe_level = 90, survey = "acs5", ...) {
 
@@ -79,13 +89,20 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
 
   }
 
+  if (!is.null(endyear)) {
+    year <- endyear
+    message("The `endyear` parameter is deprecated and will be removed in a future release.  Please use `year` instead.")
+  }
+
   if (survey == "acs3") {
-    if (endyear > 2013) {
+    if (year > 2013) {
       stop("The three-year ACS ended in 2013. For newer data, use the 1-year or 5-year ACS.", call. = FALSE)
     } else {
       message("The three-year ACS provides data for geographies with populations of 20,000 and greater.")
     }
   }
+
+
 
   if (survey == "acs1") {
     message("The one-year ACS provides data for geographies with populations of 65,000 and greater.")
@@ -102,6 +119,15 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
   #     warning("The acs1 and acs3 surveys do not support block group geographies. Please select 'acs5' for block groups.")
   #   }
   # }
+
+  if (is.null(variables) & is.null(table)) {
+    stop("Either a vector of variables or an ACS table must be specified.", call. = FALSE)
+  }
+
+  if (!is.null(variables) & !is.null(table)) {
+    stop("Specify variables or a table to retrieve; they cannot be combined.",
+         call. = FALSE)
+  }
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
@@ -190,6 +216,11 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
     stop("`moe_level` must be one of 90, 95, or 99.", call. = FALSE)
   }
 
+  # Logic for fetching data tables
+  if (!is.null(table)) {
+    variables <- variables_from_table(table, year, survey, cache_table)
+  }
+
 
   # Allow for as many variables in a call as desired
   if (length(variables) > 24) {
@@ -197,13 +228,13 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
 
     dat <- map(l, function(x) {
       vars <- format_variables_acs(x)
-      suppressWarnings(load_data_acs(geography, vars, key, endyear, state, county, survey))
+      suppressWarnings(load_data_acs(geography, vars, key, year, state, county, survey))
     }) %>%
       bind_cols()
   } else {
     vars <- format_variables_acs(variables)
 
-    dat <- suppressWarnings(load_data_acs(geography, vars, key, endyear, state, county, survey))
+    dat <- suppressWarnings(load_data_acs(geography, vars, key, year, state, county, survey))
   }
 
   vars2 <- format_variables_acs(variables)
@@ -250,7 +281,7 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
 
     sumvar <- format_variables_acs(summary_var)
 
-    sumdat <- suppressMessages(load_data_acs(geography, sumvar, key, endyear, state, county, survey))
+    sumdat <- suppressMessages(load_data_acs(geography, sumvar, key, year, state, county, survey))
 
     sumest <- paste0(summary_var, "E")
 
@@ -271,7 +302,7 @@ get_acs <- function(geography, variables, endyear = 2015, output = "tidy",
 
   if (geometry == TRUE) {
 
-    geom <- suppressMessages(use_tigris(geography = geography, year = endyear,
+    geom <- suppressMessages(use_tigris(geography = geography, year = year,
                                         state = state, county = county, ...))
 
     if (keep_geo_vars == FALSE) {

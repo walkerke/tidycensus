@@ -168,3 +168,45 @@ census_api_key <- function(key, overwrite = FALSE, install = FALSE){
 }
 
 
+# Function to generate a vector of variables from an ACS table
+variables_from_table <- function(table, year, survey, cache_table) {
+
+  if (grepl("^DP", table) | grepl("^S[0-9].", table)) {
+    stop("The `table` parameter is only available for ACS detailed tables.", call. = FALSE)
+  }
+
+  # Look to see if table exists in cache dir
+  cache_dir <- user_cache_dir("tidycensus")
+
+  dset <- paste0(survey, "_", year, ".rds")
+
+
+
+  if (cache_table == TRUE) {
+    message(sprintf("Loading %s variables for %s from table %s and caching the dataset for faster future access.", toupper(survey), year, table))
+    df <- load_variables(year, survey, cache = TRUE)
+  } else {
+    if (file.exists(file.path(cache_dir, dset))) {
+      df <- load_variables(year, survey, cache = TRUE)
+    } else {
+      message(sprintf("Loading %s variables for %s from table %s. To cache this dataset for faster access to ACS tables in the future, run this function with `cache_table = TRUE`. You only need to do this once per ACS dataset.", toupper(survey), year, table))
+      df <- load_variables(year, survey, cache = FALSE)
+    }
+  }
+
+  specific <- paste0(table, "_")
+
+  # Find all variables that match the table
+  vars <- df %>%
+    filter(grepl(specific, name)) %>%
+    pull(name)
+
+  vars <- substr(vars, 1, nchar(vars) - 1)
+
+  vars <- unique(vars)
+
+  return(vars)
+
+}
+
+
