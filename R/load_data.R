@@ -22,16 +22,16 @@ format_variables_acs <- function(variables) {
 
 }
 
-load_data_acs <- function(geography, formatted_variables, key, endyear, state = NULL, county = NULL, survey) {
+load_data_acs <- function(geography, formatted_variables, key, year, state = NULL, county = NULL, survey) {
 
   if (survey == "acs1") {
-    if (endyear > 2014) {
+    if (year > 2014) {
       survey <- "acs/acs1"
     }
   }
 
   base <- paste("https://api.census.gov/data",
-                 as.character(endyear),
+                 as.character(year),
                  survey, sep = "/")
 
   if (grepl("^DP", formatted_variables)) {
@@ -43,7 +43,7 @@ load_data_acs <- function(geography, formatted_variables, key, endyear, state = 
     message("Using the ACS Subject Tables")
     if (survey == "acs1") {
       base <- paste("https://api.census.gov/data",
-                    as.character(endyear),
+                    as.character(year),
                     "subject",
                     sep = "/")
     } else {
@@ -102,7 +102,7 @@ load_data_acs <- function(geography, formatted_variables, key, endyear, state = 
 
   content <- content(call, as = "text")
 
-  validate_call(content = content, geography = geography, year = endyear,
+  validate_call(content = content, geography = geography, year = year,
                 dataset = survey)
 
   dat <- tbl_df(fromJSON(content))

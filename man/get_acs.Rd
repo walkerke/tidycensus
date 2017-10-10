@@ -4,8 +4,9 @@
 \alias{get_acs}
 \title{Obtain data and feature geometry for the five-year American Community Survey}
 \usage{
-get_acs(geography, variables, endyear = 2015, output = "tidy",
-  state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
+get_acs(geography, variables = NULL, table = NULL, cache_table = FALSE,
+  year = 2015, endyear = NULL, output = "tidy", state = NULL,
+  county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
   summary_var = NULL, key = NULL, moe_level = 90, survey = "acs5", ...)
 }
 \arguments{
@@ -15,9 +16,20 @@ get_acs(geography, variables, endyear = 2015, output = "tidy",
 IDs. tidycensus automatically returns the estimate and the
 margin of error associated with the variable.}
 
-\item{endyear}{The endyear of the ACS sample.  2010 through 2015 are
+\item{table}{The ACS table for which you would like to request all variables.  Uses
+lookup tables to identify the variables; performs faster when variable
+table already exists through \code{load_variables(cache = TRUE)}.}
+
+\item{cache_table}{Whether or not to cache table names for faster future access.
+Defaults to FALSE; if TRUE, only needs to be called once per
+dataset.  If variables dataset is already cached via the
+\code{load_variables} function, this can be bypassed.}
+
+\item{year}{The year, or endyear, of the ACS sample. 2010 through 2015 are
 available for five-year data; 2016 is also available for 1-year data.
 Defaults to 2015.}
+
+\item{endyear}{Deprecated and will be removed in a future release.}
 
 \item{output}{One of "tidy" (the default) in which each row represents an
 enumeration unit-variable combination, or "wide" in which each
