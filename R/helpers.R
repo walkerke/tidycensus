@@ -194,9 +194,6 @@ variables_from_table <- function(table, year, survey, cache_table) {
     }
   }
 
-  # Use `load_variables()` to look up variables
-  df <- load_variables(year, survey, cache = TRUE)
-
   specific <- paste0(table, "_")
 
   # Find all variables that match the table
