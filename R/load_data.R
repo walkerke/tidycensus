@@ -25,6 +25,7 @@ format_variables_acs <- function(variables) {
 load_data_acs <- function(geography, formatted_variables, key, endyear, state = NULL, county = NULL, survey) {
 
   if (survey == "acs1") {
+    if (endyear <= 2010) print("The acs1 data is currently available beginning in 2011. Please select a different year.")
     if (endyear > 2014) {
       survey <- "acs/acs1"
     }
@@ -98,9 +99,13 @@ load_data_acs <- function(geography, formatted_variables, key, endyear, state = 
                                    key = key))
   }
 
-
-
-  content <- content(call, as = "text")
+  # Make sure call status returns 200, else, print the error message for the user.
+  callStatus <- http_status(call)
+  if (callStatus$reason != "OK") {
+    print(paste0(callStatus$category, " ", callStatus$reason, " ", callStatus$message))
+  } else {
+    content <- content(call, as = "text")
+  }
 
   validate_call(content = content, geography = geography, year = endyear,
                 dataset = survey)
@@ -201,9 +206,13 @@ load_data_decennial <- function(geography, variables, key, year,
                                    key = key))
   }
 
-
-
-  content <- content(call, as = "text")
+  # Make sure call status returns 200, else, print the error message for the user.
+  callStatus <- http_status(call)
+  if (callStatus$reason != "OK") {
+    print(paste0(callStatus$category, " ", callStatus$reason, " ", callStatus$message))
+  } else {
+    content <- content(call, as = "text")
+  }
 
   # Fix issue in SF3 2000 API - https://github.com/walkerke/tidycensus/issues/22
   if (year == 2000 & sumfile == "sf3") {
