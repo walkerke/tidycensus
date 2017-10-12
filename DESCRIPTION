@@ -29,5 +29,5 @@ Imports:
     rappdirs, 
     readr, 
     xml2, 
-    units
+    units 
 RoxygenNote: 6.0.1
