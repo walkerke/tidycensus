@@ -4,15 +4,25 @@
 \alias{get_decennial}
 \title{Obtain data and feature geometry for the decennial Census}
 \usage{
-get_decennial(geography, variables, year = 2010, sumfile = "sf1",
-  state = NULL, county = NULL, geometry = FALSE, output = "tidy",
+get_decennial(geography, variables = NULL, table = NULL,
+  cache_table = FALSE, year = 2010, sumfile = "sf1", state = NULL,
+  county = NULL, geometry = FALSE, output = "tidy",
   keep_geo_vars = FALSE, summary_var = NULL, key = NULL, ...)
 }
 \arguments{
 \item{geography}{The geography of your data.}
 
 \item{variables}{Character string or vector of character strings of variable
-IDs.#'}
+IDs.}
+
+\item{table}{The Census table for which you would like to request all variables.  Uses
+lookup tables to identify the variables; performs faster when variable
+table already exists through \code{load_variables(cache = TRUE)}.}
+
+\item{cache_table}{Whether or not to cache table names for faster future access.
+Defaults to FALSE; if TRUE, only needs to be called once per
+dataset.  If variables dataset is already cached via the
+\code{load_variables} function, this can be bypassed.}
 
 \item{year}{The year for which you are requesting data.  1990, 2000, and 2010 are available.}
 

@@ -218,7 +218,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   # Logic for fetching data tables
   if (!is.null(table)) {
-    variables <- variables_from_table(table, year, survey, cache_table)
+    variables <- variables_from_table_acs(table, year, survey, cache_table)
   }
 
 

@@ -2,7 +2,14 @@
 #'
 #' @param geography The geography of your data.
 #' @param variables Character string or vector of character strings of variable
-#'                  IDs.#'
+#'                  IDs.
+#' @param table   The Census table for which you would like to request all variables.  Uses
+#'                lookup tables to identify the variables; performs faster when variable
+#'                table already exists through \code{load_variables(cache = TRUE)}.
+#' @param cache_table Whether or not to cache table names for faster future access.
+#'                    Defaults to FALSE; if TRUE, only needs to be called once per
+#'                    dataset.  If variables dataset is already cached via the
+#'                    \code{load_variables} function, this can be bypassed.
 #' @param year The year for which you are requesting data.  1990, 2000, and 2010 are available.
 #' @param sumfile The Census summary file.  Defaults to sf1; the function will look in sf3 if it
 #'                cannot find a variable in sf1.
@@ -49,9 +56,9 @@
 #'
 #' }
 #' @export
-get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
-                   state = NULL, county = NULL, geometry = FALSE, output = "tidy",
-                   keep_geo_vars = FALSE, summary_var = NULL, key = NULL, ...) {
+get_decennial <- function(geography, variables = NULL, table = NULL, cache_table = FALSE, year = 2010,
+                          sumfile = "sf1", state = NULL, county = NULL, geometry = FALSE, output = "tidy",
+                          keep_geo_vars = FALSE, summary_var = NULL, key = NULL, ...) {
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 
@@ -63,14 +70,19 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
 
   }
 
+  if (is.null(variables) & is.null(table)) {
+    stop("Either a vector of variables or an table must be specified.", call. = FALSE)
+  }
+
+  if (!is.null(variables) & !is.null(table)) {
+    stop("Specify variables or a table to retrieve; they cannot be combined.",
+         call. = FALSE)
+  }
+
   if (geography %in% c("tract", "block group") & year == 1990 & is.null(county)) {
     stop("At the moment, tracts and block groups for 1990 require specifying a county.",
          call. = FALSE)
   }
-
-  # if (length(variables) > 50) {
-  #   stop("The maximum number of variables supported by the Census API at one time is 50. I'm working on a fix; in the meantime consider splitting your variables into multiple calls and using cbind/rbind to combine them.", call. = FALSE)
-  # }
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
@@ -134,6 +146,12 @@ get_decennial <- function(geography, variables, year = 2010, sumfile = "sf1",
     }
     return(result)
   }
+
+  # Get data for an entire table if needed
+  if (!is.null(table)) {
+    variables <- variables_from_table_decennial(table, year, sumfile, cache_table)
+  }
+
 
   if (length(variables) > 48) {
     l <- split(variables, ceiling(seq_along(variables) / 48))
