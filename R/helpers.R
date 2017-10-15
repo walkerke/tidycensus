@@ -264,7 +264,7 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
 
   # Find all variables that match the table
   vars <- df %>%
-    filter(grepl(table, name)) %>%
+    filter(grepl(paste0(table, "[0-9]+"), name)) %>%
     pull(name)
 
   return(vars)
