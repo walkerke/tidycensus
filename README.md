@@ -8,6 +8,19 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
+## New in version 0.3: 
+
+* Get an entire table of decennial Census or ACS data by supplying the table name.  For example, to get the entire ACS table __B01001__ from the 2016 1-year ACS (assuming here that you've already installed your Census API key with `census_api_key("KEY", install = TRUE)`: 
+
+```
+library(tidycensus)
+
+df <- get_acs(geography = "state", table = "B01001", survey = "acs1", year = 2016)
+
+```
+
+The `table` parameter fetches a variable list from the Census Bureau website to perform table lookup.  To cache the variable list on your computer for faster use of the `table` parameter in the future, set `cache_table = TRUE` the first time you fetch a table for a particular dataset.  
+
 ## Why tidycensus? 
 
 My work heavily involves the use of data from the US Census Bureau, and like many R users, I do most of my work within the __tidyverse__.  Beyond this, the __sf__ package now allows R users to work with spatial data in an integrated way with __tidyverse__ tools, and updates to the __tigris__ package provide access to Census boundary data as `sf` objects.  Recently, I've found myself writing the same routines over and over to get Census data ready for use with __tidyverse__ packages and __sf__.  This motivated me to wrap these functions in a package and open-source in case other R users find them useful.  
