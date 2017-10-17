@@ -236,7 +236,7 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
       names(df) <- tolower(names(df))
     }
 
-    message(sprintf("Loading %s variables for %s from table %s and caching the dataset for faster future access.", toupper(survey), year, table))
+    message(sprintf("Loading %s variables for %s from table %s and caching the dataset for faster future access.", toupper(sumfile), year, table))
 
   } else {
     if (file.exists(file.path(cache_dir, dset))) {
@@ -251,7 +251,7 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
 
     } else {
       message(sprintf("Loading %s variables for %s from table %s. To cache this dataset for faster access to Census tables in the future, run this function with `cache_table = TRUE`. You only need to do this once per Census dataset.", toupper(sumfile), year, table))
-      df <- load_variables(year, survey, cache = FALSE)
+      df <- load_variables(year, sumfile, cache = FALSE)
       names(df) <- tolower(names(df))
 
       # Check to see if we need to look in sf3
