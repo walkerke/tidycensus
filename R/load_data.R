@@ -207,9 +207,14 @@ load_data_decennial <- function(geography, variables, key, year,
   }
 
   # Make sure call status returns 200, else, print the error message for the user.
+
   callStatus <- http_status(call)
   if (callStatus$reason != "OK") {
-    print(paste0(callStatus$category, " ", callStatus$reason, " ", callStatus$message))
+    if (sumfile == "sf1") {
+      print("Checking SF3 API for data...")
+    } else {
+      print(paste0(callStatus$category, " ", callStatus$reason, " ", callStatus$message))
+    }
   } else {
     content <- content(call, as = "text")
   }
