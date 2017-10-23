@@ -11,8 +11,19 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     if (year == 1990) {
       st <- mutate(st, GEOID = ST)
+      st <- st %>%
+        group_by(GEOID) %>%
+        summarize() %>%
+        st_cast("MULTIPOLYGON")
+
     } else if (year %in% c(2000, 2010)) {
       st <- mutate(st, GEOID = STATE)
+      if (cb == TRUE & year == 2000) {
+        st <- st %>%
+          group_by(GEOID) %>%
+          summarize() %>%
+          st_cast("MULTIPOLYGON")
+      }
     }
 
     return(st)
@@ -24,8 +35,18 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     if (year == 1990) {
       ct <- mutate(ct, GEOID = paste0(ST, CO))
+      ct <- ct %>%
+        group_by(GEOID) %>%
+        summarize() %>%
+        st_cast("MULTIPOLYGON")
     } else if (year %in% c(2000, 2010)) {
       ct <- mutate(ct, GEOID = paste0(STATE, COUNTY))
+      if (cb == TRUE & year == 2000) {
+        ct <- ct %>%
+          group_by(GEOID) %>%
+          summarize() %>%
+          st_cast("MULTIPOLYGON")
+      }
     }
 
     return(ct)
@@ -89,6 +110,8 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     } else if (year == 2000) {
       bl <- rename(bl, GEOID = BLKIDFP00)
     }
+
+    return(bl)
 
   } else {
 
