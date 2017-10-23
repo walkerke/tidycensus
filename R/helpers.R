@@ -66,6 +66,13 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
       }
       tr <- mutate(tr, GEOID = paste0(STATE, COUNTY, TRACT))
     }
+    if (any(duplicated(tr$GEOID))) {
+      tr <- tr %>%
+        group_by(GEOID) %>%
+        summarize() %>%
+        st_cast("MULTIPOLYGON")
+    }
+
     return(tr)
 
   } else if (geography == "block group") {
@@ -79,6 +86,13 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
         mutate(GEOID = paste0(STATE, COUNTY, TRACT, BLKGROUP))
     } else if (year == 2010) {
       bg <- mutate(bg, GEOID = paste0(STATE, COUNTY, TRACT, BLKGRP))
+    }
+
+    if (any(duplicated(bg$GEOID))) {
+      bg <- bg %>%
+        group_by(GEOID) %>%
+        summarize() %>%
+        st_cast("MULTIPOLYGON")
     }
 
     return(bg)
