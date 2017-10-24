@@ -168,7 +168,8 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 census_api_key <- function(key, overwrite = FALSE, install = FALSE){
 
   if (install == TRUE) {
-    setwd(Sys.getenv("HOME"))
+    old_wd <- setwd(Sys.getenv("HOME"))
+    on.exit(setwd(old_wd))
     if(file.exists(".Renviron")){
       # Backup original .Renviron before doing anything else here.
       file.copy(".Renviron", ".Renviron_backup")
