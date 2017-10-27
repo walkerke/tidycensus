@@ -8,6 +8,10 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
+## In version 0.3.1: 
+
+* Error fixed due to duplicated county polygons in the 1990 and 2000 Census geometries
+
 ## New in version 0.3: 
 
 * Get an entire table of decennial Census or ACS data by supplying the table name.  For example, to get the entire ACS table __B01001__ from the 2016 1-year ACS (assuming here that you've already installed your Census API key with `census_api_key("KEY", install = TRUE)`: 

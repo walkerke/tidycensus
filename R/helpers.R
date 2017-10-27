@@ -168,25 +168,25 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 census_api_key <- function(key, overwrite = FALSE, install = FALSE){
 
   if (install == TRUE) {
-    old_wd <- setwd(Sys.getenv("HOME"))
-    on.exit(setwd(old_wd))
-    if(file.exists(".Renviron")){
+    home <- Sys.getenv("HOME")
+    renv <- file.path(home, ".Renviron")
+    if(file.exists(renv)){
       # Backup original .Renviron before doing anything else here.
-      file.copy(".Renviron", ".Renviron_backup")
+      file.copy(renv, file.path(home, ".Renviron_backup"))
     }
-    if(!file.exists(".Renviron")){
-      file.create(".Renviron")
+    if(!file.exists(renv)){
+      file.create(renv)
     }
     else{
       if(isTRUE(overwrite)){
         message("Your original .Renviron will be backed up and stored in your R HOME directory if needed.")
-        oldenv=read.table(".Renviron", stringsAsFactors = FALSE)
+        oldenv=read.table(renv, stringsAsFactors = FALSE)
         newenv <- oldenv[-grep("CENSUS_API_KEY", oldenv),]
-        write.table(newenv, ".Renviron", quote = FALSE, sep = "\n",
+        write.table(newenv, renv, quote = FALSE, sep = "\n",
                     col.names = FALSE, row.names = FALSE)
       }
       else{
-        tv <- readLines(".Renviron")
+        tv <- readLines(renv)
         if(isTRUE(any(grepl("CENSUS_API_KEY",tv)))){
           stop("A CENSUS_API_KEY already exists. You can overwrite it with the argument overwrite=TRUE", call.=FALSE)
         }
@@ -195,7 +195,7 @@ census_api_key <- function(key, overwrite = FALSE, install = FALSE){
 
     keyconcat <- paste("CENSUS_API_KEY=","'",key,"'", sep = "")
     # Append API key to .Renviron file
-    write(keyconcat, ".Renviron", sep = "\n", append = TRUE)
+    write(keyconcat, renv, sep = "\n", append = TRUE)
     message('Your API key has been stored in your .Renviron and can be accessed by Sys.getenv("CENSUS_API_KEY"). \nTo use now, restart R or run `readRenviron("~/.Renviron")`')
     return(key)
   } else {
