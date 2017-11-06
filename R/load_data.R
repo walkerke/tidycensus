@@ -16,7 +16,7 @@ format_variables_acs <- function(variables) {
   variables3 <- map_chr(variables2, function(y) paste0(y, c("E", "M"), collapse = ","))
 
   # Now, put together all these strings if need be
-  var <- paste(variables3, sep = "", collapse = ",")
+  var <- paste0(variables3, collapse = ",")
 
   return(var)
 
@@ -25,7 +25,7 @@ format_variables_acs <- function(variables) {
 load_data_acs <- function(geography, formatted_variables, key, year, state = NULL, county = NULL, survey) {
 
   if (survey == "acs1") {
-    if (year <= 2010) print("The acs1 data is currently available beginning in 2011. Please select a different year.")
+    if (year <= 2010) message("The acs1 data is currently available beginning in 2011. Please select a different year.")
     if (year > 2014) {
       survey <- "acs/acs1"
     }
@@ -60,7 +60,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
     })
 
     if (length(state) > 1) {
-      state <- paste(state, sep = "", collapse = ",")
+      state <- paste0(state, collapse = ",")
     }
 
     if (!is.null(county)) {
@@ -70,7 +70,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
       })
 
       if (length(county) > 1) {
-        county <- paste(county, sep = "", collapse = ",")
+        county <- paste0(county, collapse = ",")
       }
 
       in_area <- paste0("state:", state,
@@ -102,7 +102,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
   # Make sure call status returns 200, else, print the error message for the user.
   callStatus <- http_status(call)
   if (callStatus$reason != "OK") {
-    print(paste0(callStatus$category, " ", callStatus$reason, " ", callStatus$message))
+    message(callStatus$category, " ", callStatus$reason, " ", callStatus$message)
   } else {
     content <- content(call, as = "text")
   }
@@ -150,7 +150,7 @@ load_data_decennial <- function(geography, variables, key, year,
                                 sumfile, state = NULL, county = NULL) {
 
 
-  var <- paste(variables, sep = "", collapse = ",")
+  var <- paste0(variables, collapse = ",")
 
   if (year == 1990) {
     vars_to_get <- paste0(var, ",ANPSADPI")
@@ -160,7 +160,7 @@ load_data_decennial <- function(geography, variables, key, year,
 
 
   base <- paste0("https://api.census.gov/data/",
-                 as.character(year),
+                 year,
                  "/",
                  sumfile)
 
@@ -171,7 +171,7 @@ load_data_decennial <- function(geography, variables, key, year,
     })
 
     if (length(state) > 1) {
-      state <- paste(state, sep = "", collapse = ",")
+      state <- paste0(state, collapse = ",")
     }
 
     if (!is.null(county)) {
@@ -181,7 +181,7 @@ load_data_decennial <- function(geography, variables, key, year,
       })
 
       if (length(county) > 1) {
-        county <- paste(county, sep = "", collapse = ",")
+        county <- paste0(county, collapse = ",")
       }
 
       in_area <- paste0("state:", state,
@@ -211,16 +211,16 @@ load_data_decennial <- function(geography, variables, key, year,
   callStatus <- http_status(call)
   if (callStatus$reason != "OK") {
     if (sumfile == "sf1") {
-      print("Checking SF3 API for data...")
+      message("Checking SF3 API for data...")
     } else {
-      print(paste0(callStatus$category, " ", callStatus$reason, " ", callStatus$message))
+      message(callStatus$category, " ", callStatus$reason, " ", callStatus$message)
     }
   } else {
     content <- content(call, as = "text")
   }
 
   # Fix issue in SF3 2000 API - https://github.com/walkerke/tidycensus/issues/22
-  if (year == 2000 & sumfile == "sf3") {
+  if (year == 2000 && sumfile == "sf3") {
     content <- str_replace(content, 'O"Brien', "O'Brien")
     content <- str_replace(content, 'Prince George"s', "Prince George's")
     content <- str_replace(content, 'Queen Anne"s', "Queen Anne's")

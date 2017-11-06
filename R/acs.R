@@ -110,21 +110,21 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   cache <- getOption("tigris_use_cache", FALSE)
 
-  if (cache == FALSE & geometry == TRUE) {
+  if (! cache && geometry) {
     message("Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.")
   }
 
-  # if (survey == "acs3" | survey == "acs1") {
+  # if (survey == "acs3" || survey == "acs1") {
   #   if (geography == "block group") {
   #     warning("The acs1 and acs3 surveys do not support block group geographies. Please select 'acs5' for block groups.")
   #   }
   # }
 
-  if (is.null(variables) & is.null(table)) {
+  if (is.null(variables) && is.null(table)) {
     stop("Either a vector of variables or an ACS table must be specified.", call. = FALSE)
   }
 
-  if (!is.null(variables) & !is.null(table)) {
+  if (!is.null(variables) && !is.null(table)) {
     stop("Specify variables or a table to retrieve; they cannot be combined.",
          call. = FALSE)
   }
@@ -134,9 +134,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   # If more than one state specified for tracts - or more than one county
   # for block groups - take care of this under the hood by having the function
   # call itself and return the result
-  if (geography == "tract" & length(state) > 1) {
+  if (geography == "tract" && length(state) > 1) {
     mc <- match.call(expand.dots = TRUE)
-    if (geometry == TRUE) {
+    if (geometry) {
       result <- map(state, function(x) {
         mc[["state"]] <- x
         eval(mc)
@@ -158,9 +158,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     return(result)
   }
 
-  if (geography == "block group" & length(county) > 1) {
+  if (geography == "block group" && length(county) > 1) {
     mc <- match.call(expand.dots = TRUE)
-    if (geometry == TRUE) {
+    if (geometry) {
       result <- map(county, function(x) {
         mc[["county"]] <- x
         eval(mc)
@@ -182,9 +182,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     return(result)
   }
 
-  if (geography == "block group" & length(county) > 1) {
+  if (geography == "block group" && length(county) > 1) {
     mc <- match.call(expand.dots = TRUE)
-    if (geometry == TRUE) {
+    if (geometry) {
       result <- map(county, function(x) {
         mc[["county"]] <- x
         eval(mc)
@@ -300,12 +300,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   }
 
-  if (geometry == TRUE) {
+  if (geometry) {
 
     geom <- suppressMessages(use_tigris(geography = geography, year = year,
                                         state = state, county = county, ...))
 
-    if (keep_geo_vars == FALSE) {
+    if (keep_geo_vars) {
 
       geom <- select(geom, GEOID, geometry)
 
