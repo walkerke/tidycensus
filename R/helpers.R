@@ -18,7 +18,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     } else if (year %in% c(2000, 2010)) {
       st <- mutate(st, GEOID = STATE)
-      if (cb && year) {
+      if (cb && year == 2000) {
         st <- st %>%
           group_by(GEOID) %>%
           summarize() %>%
@@ -41,7 +41,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
         st_cast("MULTIPOLYGON")
     } else if (year %in% c(2000, 2010)) {
       ct <- mutate(ct, GEOID = paste0(STATE, COUNTY))
-      if (cb && year) {
+      if (cb && year == 2000) {
         ct <- ct %>%
           group_by(GEOID) %>%
           summarize() %>%
@@ -58,7 +58,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     if (year == 1990) {
       tr <- tr %>%
-        mutate(TRACTSUF = if (is.na(TRACTSUF)) "00" else TRACTSUF) %>%
+        mutate(TRACTSUF = ifelse(is.na(TRACTSUF), "00", TRACTSUF)) %>%
         mutate(GEOID = paste0(ST, CO, TRACTBASE, TRACTSUF))
     } else if (year %in% c(2000, 2010)) {
       if (year == 2000) {

@@ -141,14 +141,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         mc[["state"]] <- x
         eval(mc)
       }) %>%
-        reduce(rbind)
+        reduce(bind_rows)
       geoms <- unique(st_geometry_type(result))
       if (length(geoms) > 1) {
         result <- st_cast(result, "MULTIPOLYGON")
       }
-      result <- result %>%
-        as_tibble() %>%
-        st_as_sf()
+      result <- st_as_sf(result)
     } else {
       result <- map_df(state, function(x) {
         mc[["state"]] <- x
@@ -165,14 +163,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         mc[["county"]] <- x
         eval(mc)
       }) %>%
-        reduce(rbind)
+        reduce(bind_rows)
       geoms <- unique(st_geometry_type(result))
       if (length(geoms) > 1) {
         result <- st_cast(result, "MULTIPOLYGON")
       }
-      result <- result %>%
-        as_tibble() %>%
-        st_as_sf()
+      result <- st_as_sf(result)
     } else {
       result <- map_df(county, function(x) {
         mc[["county"]] <- x
@@ -189,14 +185,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         mc[["county"]] <- x
         eval(mc)
       }) %>%
-        reduce(rbind)
+        reduce(bind_rows)
       geoms <- unique(st_geometry_type(result))
       if (length(geoms) > 1) {
         result <- st_cast(result, "MULTIPOLYGON")
       }
-      result <- result %>%
-        as_tibble() %>%
-        st_as_sf()
+      result <- st_as_sf(result)
     } else {
       result <- map_df(county, function(x) {
         mc[["county"]] <- x
@@ -289,9 +283,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     dat2 <- dat2 %>%
       inner_join(sumdat, by = "GEOID") %>%
-      rename_(summary_est = sumest,
-              summary_moe = summoe,
-              NAME = "NAME.x") %>%
+      rename(summary_est = !! sumest,
+             summary_moe = !! summoe,
+             NAME = "NAME.x") %>%
       select(-NAME.y) %>%
       mutate(summary_moe = round(summary_moe * moe_factor, 0))
 
@@ -305,7 +299,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     geom <- suppressMessages(use_tigris(geography = geography, year = year,
                                         state = state, county = county, ...))
 
-    if (keep_geo_vars) {
+    if (! keep_geo_vars) {
 
       geom <- select(geom, GEOID, geometry)
 
@@ -313,7 +307,6 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     # Merge and return the output
     out <- inner_join(geom, dat2, by = "GEOID") %>%
-      as_tibble() %>%
       st_as_sf()
 
     return(out)

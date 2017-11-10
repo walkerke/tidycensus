@@ -106,14 +106,12 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
         mc[["state"]] <- x
         eval(mc)
       }) %>%
-        reduce(rbind)
+        reduce(bind_rows)
       geoms <- unique(st_geometry_type(result))
       if (length(geoms) > 1) {
         result <- st_cast(result, "MULTIPOLYGON")
       }
-      result <- result %>%
-        as_tibble() %>%
-        st_as_sf()
+      result <- st_as_sf(result)
     } else {
       result <- map_df(state, function(x) {
         mc[["state"]] <- x
@@ -130,14 +128,12 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
         mc[["county"]] <- x
         eval(mc)
       }) %>%
-        reduce(rbind)
+        reduce(bind_rows)
       geoms <- unique(st_geometry_type(result))
       if (length(geoms) > 1) {
         st_cast(result, "MULTIPOLYGON")
       }
-      result <- result %>%
-        as_tibble() %>%
-        st_as_sf()
+      result <- st_as_sf(result)
     } else {
       result <- map_df(county, function(x) {
         mc[["county"]] <- x
@@ -205,8 +201,8 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
     dat2 <- dat2 %>%
       inner_join(sumdat, by = "GEOID") %>%
-      rename_("summary_value" = summary_var,
-              NAME = "NAME.x") %>%
+      rename("summary_value" = !! summary_var,
+             NAME = "NAME.x") %>%
       select(-NAME.y)
 
   }

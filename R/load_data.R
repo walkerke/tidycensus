@@ -120,15 +120,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
   l <- length(var_vector)
 
-  if (length(var_vector) > 1) {
-
-    dat[,var_vector] <- apply(dat[,var_vector], 2, function(x) as.numeric(x))
-
-  } else if (length(var_vector) == 1) {
-
-    dat[[var_vector]] <- as.numeric(dat[[var_vector]])
-
-  }
+  if (l) dat[var_vector] <- map_df(dat[var_vector], as.numeric)
 
   v2 <- c(var_vector, "NAME")
 
@@ -243,15 +235,7 @@ load_data_decennial <- function(geography, variables, key, year,
 
   l <- length(variables)
 
-  if (length(variables) > 1) {
-
-    dat[,variables] <- apply(dat[,variables], 2, function(x) as.numeric(x))
-
-  } else if (length(variables) == 1) {
-
-    dat[[variables]] <- as.numeric(dat[[variables]])
-
-  }
+  if (l) dat[variables] <- map_df(dat[variables], as.numeric)
 
   v2 <- c(variables, "NAME")
 
