@@ -22,7 +22,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
 
   rds <- paste0(dataset, "_", year, ".rds")
 
-  if (grepl("acs[135]/(profile|subject)", dataset)) {
+  if (grepl("^acs[135]/(profile|subject)$", dataset)) {
     rds <- gsub("/", "_", rds)
   }
 

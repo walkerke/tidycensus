@@ -97,7 +97,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(bg)
 
-  } else if (geography == "zcta" || geography == "zip code tabulation area") {
+  } else if (geography %in% c("zcta", "zip code tabulation area")) {
 
     # For right now, to get it to work, it has to be cb = FALSE for 2010
     # Re-visit this in the future.
@@ -209,7 +209,7 @@ census_api_key <- function(key, overwrite = FALSE, install = FALSE){
 # Function to generate a vector of variables from an ACS table
 variables_from_table_acs <- function(table, year, survey, cache_table) {
 
-  if (grepl("^DP", table) || grepl("^S[0-9].", table)) {
+  if (grepl("^((DP)|(S[0-9].))", table)) {
     stop("The `table` parameter is only available for ACS detailed tables.", call. = FALSE)
   }
 
@@ -254,7 +254,7 @@ variables_from_table_acs <- function(table, year, survey, cache_table) {
 # Function to generate a vector of variables from an Census table
 variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
 
-  if (grepl("^DP", table) || grepl("^S[0-9].", table)) {
+  if (grepl("^((DP)|(S[0-9].))", table)) {
     stop("The `table` parameter is only available for ACS detailed tables.", call. = FALSE)
   }
 
