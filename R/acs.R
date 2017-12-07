@@ -110,7 +110,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   cache <- getOption("tigris_use_cache", FALSE)
 
-  if (cache == FALSE & geometry == TRUE) {
+  if (cache == FALSE && geometry == TRUE) {
     message("Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.")
   }
 

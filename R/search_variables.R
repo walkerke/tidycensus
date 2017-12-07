@@ -27,8 +27,8 @@ load_variables <- function(year, dataset, cache = FALSE) {
     rds <- gsub("/", "_", rds)
   }
 
-  if (grepl("acs1", dataset)) {
-    if (year %in% 2015:2016) {
+  if (grepl("acs1", dataset) || grepl("acs5", dataset)) {
+    if (year > 2014) {
       dataset <- paste0("acs/", dataset)
     }
   }
