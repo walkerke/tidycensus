@@ -31,6 +31,10 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
     }
   }
 
+  if (survey == "acs5" && year > 2014) {
+    survey <- "acs/acs5"
+  }
+
   base <- paste("https://api.census.gov/data",
                  as.character(year),
                  survey, sep = "/")
