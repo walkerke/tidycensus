@@ -252,8 +252,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       spread(type, value) %>%
       mutate(moe = moe * moe_factor)
 
-    # Convert -555555555, -666666666, or -222222222 values to NA
-    dat2[dat2 == -555555555 | dat2 == -666666666 | dat2 == -222222222] <- NA
+    # Convert missing values to NA
+    dat2[dat2 < -100000000] <- NA
 
 
   } else if (output == "wide") {
@@ -262,8 +262,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
 
-    # Convert -555555555, -666666666, or -222222222 values to NA
-    dat[dat == -555555555 | dat == -666666666 | dat == -222222222] <- NA
+    # Convert missing values values to NA
+    dat[dat < -100000000] <- NA
 
     # Find MOE vars
     # moe_vars <- grep("*M", names(dat))
