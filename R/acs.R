@@ -105,6 +105,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
 
   if (survey == "acs1") {
+    if (year < 2012) {
+      stop("The acs1 data is currently available beginning in 2012. Please select a different year.", call. = FALSE)
+    }
     message("The one-year ACS provides data for geographies with populations of 65,000 and greater.")
   }
 
@@ -252,8 +255,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       spread(type, value) %>%
       mutate(moe = moe * moe_factor)
 
-    # Convert -555555555 values to NA (ACS1 issue)
-    dat2[dat2 == -555555555] <- NA
+    # Convert missing values to NA
+    dat2[dat2 < -100000000] <- NA
 
 
   } else if (output == "wide") {
@@ -262,8 +265,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
 
-    # Convert -555555555 values to NA (ACS1 issue)
-    dat[dat == -555555555] <- NA
+    # Convert missing values values to NA
+    dat[dat < -100000000] <- NA
 
     # Find MOE vars
     # moe_vars <- grep("*M", names(dat))
@@ -295,8 +298,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       select(-NAME.y) %>%
       mutate(summary_moe = round(summary_moe * moe_factor, 0))
 
-    # Convert -555555555 values to NA (ACS1 issue)
-    dat2[dat2 == -555555555] <- NA
+    # Convert -555555555, -666666666, or -222222222 values to NA
+    dat2[dat2 == -555555555 | dat2 == -666666666 | dat2 == -222222222] <- NA
+
 
   }
 
