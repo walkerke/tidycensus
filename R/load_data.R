@@ -25,7 +25,6 @@ format_variables_acs <- function(variables) {
 load_data_acs <- function(geography, formatted_variables, key, year, state = NULL, county = NULL, survey) {
 
   if (survey == "acs1") {
-    if (year <= 2010) print("The acs1 data is currently available beginning in 2011. Please select a different year.")
     if (year > 2014) {
       survey <- "acs/acs1"
     }
