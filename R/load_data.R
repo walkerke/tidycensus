@@ -16,7 +16,7 @@ format_variables_acs <- function(variables) {
   variables3 <- map_chr(variables2, function(y) paste0(y, c("E", "M"), collapse = ","))
 
   # Now, put together all these strings if need be
-  var <- paste(variables3, sep = "", collapse = ",")
+  var <- paste0(variables3, collapse = ",")
 
   return(var)
 
@@ -63,7 +63,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
     })
 
     if (length(state) > 1) {
-      state <- paste(state, sep = "", collapse = ",")
+      state <- paste0(state, collapse = ",")
     }
 
     if (!is.null(county)) {
@@ -73,7 +73,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
       })
 
       if (length(county) > 1) {
-        county <- paste(county, sep = "", collapse = ",")
+        county <- paste0(county, collapse = ",")
       }
 
       in_area <- paste0("state:", state,
@@ -105,7 +105,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
   # Make sure call status returns 200, else, print the error message for the user.
   callStatus <- http_status(call)
   if (callStatus$reason != "OK") {
-    print(paste0(callStatus$category, " ", callStatus$reason, " ", callStatus$message))
+    message(callStatus$category, " ", callStatus$reason, " ", callStatus$message)
   } else {
     content <- content(call, as = "text")
   }
@@ -121,17 +121,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
   var_vector <- unlist(strsplit(formatted_variables, split = ","))
 
-  l <- length(var_vector)
-
-  if (length(var_vector) > 1) {
-
-    dat[,var_vector] <- apply(dat[,var_vector], 2, function(x) as.numeric(x))
-
-  } else if (length(var_vector) == 1) {
-
-    dat[[var_vector]] <- as.numeric(dat[[var_vector]])
-
-  }
+  dat[var_vector] <- lapply(dat[var_vector], as.numeric)
 
   v2 <- c(var_vector, "NAME")
 
@@ -153,7 +143,7 @@ load_data_decennial <- function(geography, variables, key, year,
                                 sumfile, state = NULL, county = NULL) {
 
 
-  var <- paste(variables, sep = "", collapse = ",")
+  var <- paste0(variables, collapse = ",")
 
   if (year == 1990) {
     vars_to_get <- paste0(var, ",ANPSADPI")
@@ -163,7 +153,7 @@ load_data_decennial <- function(geography, variables, key, year,
 
 
   base <- paste0("https://api.census.gov/data/",
-                 as.character(year),
+                 year,
                  "/",
                  sumfile)
 
@@ -174,7 +164,7 @@ load_data_decennial <- function(geography, variables, key, year,
     })
 
     if (length(state) > 1) {
-      state <- paste(state, sep = "", collapse = ",")
+      state <- paste0(state, collapse = ",")
     }
 
     if (!is.null(county)) {
@@ -184,7 +174,7 @@ load_data_decennial <- function(geography, variables, key, year,
       })
 
       if (length(county) > 1) {
-        county <- paste(county, sep = "", collapse = ",")
+        county <- paste0(county, collapse = ",")
       }
 
       in_area <- paste0("state:", state,
@@ -214,16 +204,16 @@ load_data_decennial <- function(geography, variables, key, year,
   callStatus <- http_status(call)
   if (callStatus$reason != "OK") {
     if (sumfile == "sf1") {
-      print("Checking SF3 API for data...")
+      message("Checking SF3 API for data...")
     } else {
-      print(paste0(callStatus$category, " ", callStatus$reason, " ", callStatus$message))
+      message(callStatus$category, " ", callStatus$reason, " ", callStatus$message)
     }
   } else {
     content <- content(call, as = "text")
   }
 
   # Fix issue in SF3 2000 API - https://github.com/walkerke/tidycensus/issues/22
-  if (year == 2000 & sumfile == "sf3") {
+  if (year == 2000 && sumfile == "sf3") {
     content <- str_replace(content, 'O"Brien', "O'Brien")
     content <- str_replace(content, 'Prince George"s', "Prince George's")
     content <- str_replace(content, 'Queen Anne"s', "Queen Anne's")
@@ -244,17 +234,7 @@ load_data_decennial <- function(geography, variables, key, year,
     dat <- rename(dat, NAME = ANPSADPI)
   }
 
-  l <- length(variables)
-
-  if (length(variables) > 1) {
-
-    dat[,variables] <- apply(dat[,variables], 2, function(x) as.numeric(x))
-
-  } else if (length(variables) == 1) {
-
-    dat[[variables]] <- as.numeric(dat[[variables]])
-
-  }
+  dat[variables] <- lapply(dat[variables], as.numeric)
 
   v2 <- c(variables, "NAME")
 

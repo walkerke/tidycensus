@@ -33,7 +33,7 @@ validate_state <- function(state, .msg=interactive()) {
 
   } else if (grepl("^[[:alpha:]]+", state)) { # we might have state abbrev or name
 
-    if (nchar(state) == 2 & state %in% fips_state_table$abb) { # yay, an abbrev!
+    if (nchar(state) == 2 && state %in% fips_state_table$abb) { # yay, an abbrev!
 
       if (.msg)
         message(sprintf("Using FIPS code '%s' for state '%s'",
@@ -41,7 +41,7 @@ validate_state <- function(state, .msg=interactive()) {
                         toupper(state)))
       return(fips_state_table[fips_state_table$abb == state, "fips"])
 
-    } else if (nchar(state) > 2 & state %in% fips_state_table$name) { # yay, a name!
+    } else if (nchar(state) > 2 && state %in% fips_state_table$name) { # yay, a name!
 
       if (.msg)
         message(sprintf("Using FIPS code '%s' for state '%s'",
@@ -66,9 +66,7 @@ validate_state <- function(state, .msg=interactive()) {
 #
 validate_county <- function(state, county, .msg = interactive()) {
 
-  if (is.null(state)) return(NULL)
-
-  if (is.null(county)) return(NULL)
+  if (is.null(state) || is.null(county)) return(NULL)
 
   state <- validate_state(state) # Get the state of the county
 
@@ -113,7 +111,7 @@ validate_county <- function(state, county, .msg = interactive()) {
 
       ctys <- format_vec(matching_counties)
 
-      warning(paste0("Your county string matches ", ctys, " Please refine your selection."), call. = FALSE)
+      warning("Your county string matches ", ctys, " Please refine your selection.", call. = FALSE)
       return(NULL)
 
     }
@@ -143,6 +141,6 @@ format_vec <- function(vec) {
 
 simpleCapSO <- function(x) {
   s <- strsplit(x, " ")[[1]]
-  paste(toupper(substring(s, 1,1)), substring(s, 2),
-        sep="", collapse=" ")
+  paste0(toupper(substring(s, 1,1)), substring(s, 2),
+         collapse=" ")
 }
