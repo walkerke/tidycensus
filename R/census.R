@@ -79,6 +79,10 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
          call. = FALSE)
   }
 
+  if (geography == "block" && year != 2010) {
+    stop("At the moment, block data is only available for 2010. I recommend using NHGIS (http://www.nhgis.org) and the ipumsr package for block data for other years.", call. = FALSE)
+  }
+
   if (geography %in% c("tract", "block group") && year == 1990 && is.null(county)) {
     stop("At the moment, tracts and block groups for 1990 require specifying a county.",
          call. = FALSE)
@@ -185,11 +189,23 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
     dat2 <- sub %>%
       gather(key = variable, value = value, -GEOID, -NAME)
 
+    if (!is.null(names(variables))) {
+      for (i in 1:length(variables)) {
+        dat2[dat2 == variables[i]] <- names(variables)[i]
+      }
+    }
+
   } else if (output == "wide") {
 
     dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
 
     dat2 <- dat
+
+    if (!is.null(names(variables))) {
+      for (i in 1:length(variables)) {
+        names(dat2) <- str_replace(names(dat2), variables[i], names(variables)[i])
+      }
+    }
 
   }
 

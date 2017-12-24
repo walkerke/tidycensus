@@ -258,6 +258,13 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     # Convert missing values to NA
     dat2[dat2 < -100000000] <- NA
 
+    # Change names if supplied
+    if (!is.null(names(variables))) {
+      for (i in 1:length(variables)) {
+        dat2[dat2 == variables[i]] <- names(variables)[i]
+      }
+    }
+
 
   } else if (output == "wide") {
 
@@ -277,6 +284,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     dat2 <- dat %>%
       mutate_if(grepl("*M$", names(.)), funs(moex))
+
+    if (!is.null(names(variables))) {
+      for (i in 1:length(variables)) {
+        names(dat2) <- str_replace(names(dat2), variables[i], names(variables)[i])
+      }
+    }
 
   }
 
@@ -299,8 +312,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       mutate(summary_moe = round(summary_moe * moe_factor, 0))
 
     # Convert -555555555, -666666666, or -222222222 values to NA
-    dat2[dat2 == -555555555 | dat2 == -666666666 | dat2 == -222222222] <- NA
-
+    dat2[dat2 < -100000000] <- NA
 
   }
 
