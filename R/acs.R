@@ -134,6 +134,16 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
+  # Allow users to get all block groups in a state
+
+  if (geography == "block group" && is.null(county)) {
+    st <- suppressMessages(validate_state(state))
+
+    county <- fips_codes[fips_codes$state_code == st, ]$county_code
+
+
+  }
+
   # If more than one state specified for tracts - or more than one county
   # for block groups - take care of this under the hood by having the function
   # call itself and return the result
