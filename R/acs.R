@@ -252,8 +252,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       gather(key = variable, value = value, -GEOID, -NAME) %>%
       separate(variable, into = c("variable", "type"), sep = -2) %>%
       mutate(type = ifelse(type == "E", "estimate", "moe")) %>%
-      spread(type, value) %>%
-      mutate(moe = moe * moe_factor)
+      spread(type, value)
+
+    if ("moe" %in% names(dat2)) {
+      dat2 <- mutate(dat2, moe = moe * moe_factor)
+    }
+
 
     # Convert missing values to NA
     dat2[dat2 < -100000000] <- NA

@@ -1,6 +1,7 @@
 format_variables_acs <- function(variables) {
 
-  no_moes <- c("B00001_001", "B00001_002", "B98002_003", "B99053_001", "B99053_002", "B99053_003", "B99122_001",
+  no_moes <- c("B00001_001", "B00002_001", "B98001_001", "B98001_002", "B98002_001",
+               "B98002_002", "B98002_003", "B99053_001", "B99053_002", "B99053_003", "B99122_001",
                "B99122_002", "B99122_003", "B99123_001", "B99123_002", "B99123_003",
                "B99124_001", "B99124_002", "B99124_003", "B99125_001", "B99125_002",
                "B99125_003", "B99126_001", "B99126_002", "B99126_003", "B99152_001",
@@ -29,7 +30,6 @@ format_variables_acs <- function(variables) {
   variables2 <- unique(variables1)
 
   # Next, separate into vars with and without MOEs
-
   variables2a <- variables2[!variables2 %in% no_moes]
 
   variables2_nomoe <- variables2[variables2 %in% no_moes]
@@ -37,12 +37,14 @@ format_variables_acs <- function(variables) {
   # Now, expand with both E and M if MOE is applicable
   variables3 <- map_chr(variables2a, function(y) paste0(y, c("E", "M"), collapse = ","))
 
-  variables3_nomoe <- paste0(variables2_nomoe, "E")
+  if (length(variables2_nomoe)) {
+    variables3_nomoe <- paste0(variables2_nomoe, "E")
 
-  variables4 <- c(variables3, variables3_nomoe)
+    variables3 <- c(variables3, variables3_nomoe)
+  }
 
   # Now, put together all these strings if need be
-  var <- paste0(variables4, collapse = ",")
+  var <- paste0(variables3, collapse = ",")
 
   return(var)
 
