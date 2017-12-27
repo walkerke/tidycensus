@@ -100,6 +100,12 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
          call. = FALSE)
   }
 
+  cache <- getOption("tigris_use_cache", FALSE)
+
+  if (!cache && geometry) {
+    message("Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.")
+  }
+
   # Allow users to get all block groups in a state
   if (geography == "block group" && is.null(county)) {
     st <- suppressMessages(validate_state(state))

@@ -94,6 +94,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     message("The `endyear` parameter is deprecated and will be removed in a future release.  Please use `year` instead.")
   }
 
+  if (geography == "block") {
+    stop("Block data are not available in the ACS. Use `get_decennial()` to access block data from the 2010 Census.", call. = FALSE)
+  }
+
   if (survey == "acs3") {
     if (year > 2013) {
       stop("The three-year ACS ended in 2013. For newer data, use the 1-year or 5-year ACS.", call. = FALSE)

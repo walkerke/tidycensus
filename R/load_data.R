@@ -130,7 +130,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
                                    key = key))
   }
 
-  # Make sure call status returns 200, else, print the error message for the user.
+ # Make sure call status returns 200, else, print the error message for the user.
   callStatus <- http_status(call)
   if (callStatus$reason != "OK") {
     message(callStatus$category, " ", callStatus$reason, " ", callStatus$message)
