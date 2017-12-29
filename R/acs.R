@@ -11,9 +11,8 @@
 #'                    Defaults to FALSE; if TRUE, only needs to be called once per
 #'                    dataset.  If variables dataset is already cached via the
 #'                    \code{load_variables} function, this can be bypassed.
-#' @param year The year, or endyear, of the ACS sample. 2010 through 2015 are
-#'                available for five-year data; 2016 is also available for 1-year data.
-#'                Defaults to 2015.
+#' @param year The year, or endyear, of the ACS sample. 2010 through 2016 are
+#'                available. Defaults to 2016.
 #' @param endyear Deprecated and will be removed in a future release.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'               enumeration unit-variable combination, or "wide" in which each
@@ -67,14 +66,14 @@
 #'   geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
 #'   geom_point(color = "red", size = 3) +
 #'   labs(title = "Household income by county in Vermont",
-#'        subtitle = "2011-2015 American Community Survey",
+#'        subtitle = "2012-2016 American Community Survey",
 #'        y = "",
 #'        x = "ACS estimate (bars represent margin of error)")
 #'
 #' }
 #' @export
 get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FALSE,
-                    year = 2015, endyear = NULL,
+                    year = 2016, endyear = NULL,
                     output = "tidy",
                     state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
                     summary_var = NULL, key = NULL, moe_level = 90, survey = "acs5", ...) {
