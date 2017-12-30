@@ -84,6 +84,8 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
     }
   }
 
+  for_area <- paste0(geography, ":*")
+
   if (!is.null(state)) {
 
     state <- map_chr(state, function(x) {
@@ -92,6 +94,10 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
     if (length(state) > 1) {
       state <- paste0(state, collapse = ",")
+    }
+
+    if (geography == "state") {
+      for_area <- paste0("state:", state)
     }
 
     if (!is.null(county)) {
@@ -104,8 +110,17 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
         county <- paste0(county, collapse = ",")
       }
 
-      in_area <- paste0("state:", state,
-                        "+county:", county)
+      if (geography == "county") {
+
+        for_area <- paste0("county:", county)
+        in_area <- paste0("state:", state)
+
+      } else {
+
+        in_area <- paste0("state:", state,
+                          "+county:", county)
+
+      }
 
     } else {
 
@@ -115,10 +130,20 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
     vars_to_get <- paste0(formatted_variables, ",NAME")
 
-    call <- GET(base, query = list(get = vars_to_get,
-                                   "for" = paste0(geography, ":*"),
-                                   "in" = in_area,
-                                   key = key))
+    if (geography == "state" && !is.null(state)) {
+
+      call <- GET(base, query = list(get = vars_to_get,
+                                     "for" = for_area,
+                                     key = key))
+    } else {
+
+      call <- GET(base, query = list(get = vars_to_get,
+                                     "for" = for_area,
+                                     "in" = in_area,
+                                     key = key))
+    }
+
+
   }
 
   else {
