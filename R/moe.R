@@ -1,14 +1,32 @@
 #' Calculate the margin of error for a derived sum
 #'
-#' @param ... The margins of error of the variables involved in the sum calculation
+#' Generates a margin of error for a derived sum.  The function requires a vector of margins of error involved in a sum calculation, and optionally a vector of estimates associated with the margins of error.  If the associated estimates are not specified, the user risks inflating the derived margin of error in the event of multiple zero estimates.  It is recommended to inspect your data for multiple zero estimates before using this function and setting the inputs accordingly.
+#'
+#' @param moe A vector of margins of error involved in the sum calculation
+#' @param estimate A vector of estimates, the same length as \code{moe}, associated with the margins of error
+#' @seealso \url{https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/MultiyearACSAccuracyofData2015.pdf}
 #'
 #' @return A margin of error for a derived sum
 #' @export
-moe_sum <- function(...) {
+moe_sum <- function(moe, estimate = NULL) {
 
-  inputs <- c(...)
+  if (!is.null(estimate)) {
+    # ID those MOE values with 0 estimates
+    zeros <- estimate == 0
 
-  squared <- map_dbl(inputs, function(x) x^2)
+    # Reduce the vector and keep the first one
+    onezero <- unique(moe[zeros])
+
+    # Combine with the non-zeros
+    forcalc <- c(onezero, moe[!zeros])
+
+  } else if (is.null(estimate)) {
+    warning("You have not specified the estimates associated with the margins of error.  In the event that your calculation involves multiple zero estimates, this will unnaturally inflate the derived margin of error.", call. = FALSE)
+
+    forcalc <- moe
+  }
+
+  squared <- map_dbl(forcalc, function(x) x^2)
 
   result <- sqrt(sum(squared))
 

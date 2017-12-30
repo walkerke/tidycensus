@@ -4,14 +4,19 @@
 \alias{moe_sum}
 \title{Calculate the margin of error for a derived sum}
 \usage{
-moe_sum(...)
+moe_sum(moe, estimate = NULL)
 }
 \arguments{
-\item{...}{The margins of error of the variables involved in the sum calculation}
+\item{moe}{A vector of margins of error involved in the sum calculation}
+
+\item{estimate}{A vector of estimates, the same length as \code{moe}, associated with the margins of error}
 }
 \value{
 A margin of error for a derived sum
 }
 \description{
-Calculate the margin of error for a derived sum
+Generates a margin of error for a derived sum.  The function requires a vector of margins of error involved in a sum calculation, and optionally a vector of estimates associated with the margins of error.  If the associated estimates are not specified, the user risks inflating the derived margin of error in the event of multiple zero estimates.  It is recommended to inspect your data for multiple zero estimates before using this function and setting the inputs accordingly.
+}
+\seealso{
+\url{https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/MultiyearACSAccuracyofData2015.pdf}
 }

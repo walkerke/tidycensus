@@ -78,6 +78,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                     state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
                     summary_var = NULL, key = NULL, moe_level = 90, survey = "acs5", ...) {
 
+  message("Please note: `get_acs()` now defaults to a year or endyear of 2016.")
+
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 
     key <- Sys.getenv('CENSUS_API_KEY')
@@ -355,5 +357,19 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     return(dat2)
 
   }
+
+  # Allow users to get data for specific state, or specific county
+  # Update for more geographies if requested
+  # if (geography == "state" && !is.null(state)) {
+  #   statev <- map_chr(state, function(x) { validate_state(x) })
+  #   return(dat2[dat2$GEOID %in% statev, ])
+  # }
+  #
+  # if (geography == "county" && !is.null(county)) {
+  #   state1 <- validate_state(state)
+  #   countyv <- map_chr(county, function(x) { validate_county(x) })
+  #   ctys <- paste0(state1, countyv)
+  #   return(dat2[dat2$GEOID %in% ctys, ])
+  # }
 
 }
