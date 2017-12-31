@@ -8,6 +8,48 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
+## In version 0.4: 
+
+* tidycensus now defaults to the new 2012-2016 five-year ACS estimates in `get_acs()`. 
+
+* By passing a named vector to the `variables` parameter in `get_acs()` or `get_decennial()`, tidycensus will let you define your own variable names rather than the Census ID codes.  For example: 
+
+```r
+racevars <- c(White = "P0050003", 
+              Black = "P0050004", 
+              Asian = "P0050006", 
+              Hispanic = "P0040003")
+
+harris <- get_decennial(geography = "tract", variables = racevars, 
+                  state = "TX", county = "Harris County", geometry = TRUE,
+                  summary_var = "P0010001") 
+
+head(harris)
+
+## Simple feature collection with 6 features and 5 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -95.37457 ymin: 29.74486 xmax: -95.32409 ymax: 29.80907
+## epsg (SRID):    4269
+## proj4string:    +proj=longlat +datum=NAD83 +no_defs
+## # A tibble: 6 x 6
+##         GEOID              NAME variable value summary_value
+##         <chr>             <chr>    <chr> <dbl>         <dbl>
+## 1 48201100000 Census Tract 1000    White  2082          4690
+## 2 48201100000 Census Tract 1000    Black  1047          4690
+## 3 48201100000 Census Tract 1000    Asian   134          4690
+## 4 48201100000 Census Tract 1000 Hispanic  1070          4690
+## 5 48201210900 Census Tract 2109    White    35          1620
+## 6 48201210900 Census Tract 2109    Black  1195          1620
+## # ... with 1 more variables: geometry <S3: sfc_MULTIPOLYGON>
+```
+
+* The `county` and `state` parameters now work when `geography` is set to `"county"` and `"state"`, respectively.  
+
+* The `moe_sum()` function now avoids inflating the derived margin of error when multiple zero estimates are involved. 
+
+* Variables without associated margins of error (e.g. B00001_001) can now be obtained with `get_acs()`.  
+
 ## In version 0.3.1: 
 
 * Error fixed due to duplicated county polygons in the 1990 and 2000 Census geometries
