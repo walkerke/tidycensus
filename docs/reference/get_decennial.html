@@ -90,8 +90,9 @@
     <p>Obtain data and feature geometry for the decennial Census</p>
     
 
-    <pre class="usage"><span class='fu'>get_decennial</span>(<span class='no'>geography</span>, <span class='no'>variables</span>, <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2010</span>, <span class='kw'>sumfile</span> <span class='kw'>=</span> <span class='st'>"sf1"</span>,
-  <span class='kw'>state</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>county</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"tidy"</span>,
+    <pre class="usage"><span class='fu'>get_decennial</span>(<span class='no'>geography</span>, <span class='kw'>variables</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>cache_table</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2010</span>, <span class='kw'>sumfile</span> <span class='kw'>=</span> <span class='st'>"sf1"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>county</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"tidy"</span>,
   <span class='kw'>keep_geo_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>summary_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -104,7 +105,20 @@
     <tr>
       <th>variables</th>
       <td><p>Character string or vector of character strings of variable
-IDs.#'</p></td>
+IDs.</p></td>
+    </tr>
+    <tr>
+      <th>table</th>
+      <td><p>The Census table for which you would like to request all variables.  Uses
+lookup tables to identify the variables; performs faster when variable
+table already exists through <code>load_variables(cache = TRUE)</code>.</p></td>
+    </tr>
+    <tr>
+      <th>cache_table</th>
+      <td><p>Whether or not to cache table names for faster future access.
+Defaults to FALSE; if TRUE, only needs to be called once per
+dataset.  If variables dataset is already cached via the
+<code>load_variables</code> function, this can be bypassed.</p></td>
     </tr>
     <tr>
       <th>year</th>

@@ -30,7 +30,7 @@ library(tidyverse)
 # We need to construct a vector of variables for males and females age 65 and up
 # purrr can help us with this (I may build this in to tidycensus in the future)
 
-vars <- map_chr(c(20:25, 44:49), function(x) paste0("B01001_0", x))
+vars <- paste0("B01001_0", c(20:25, 44:49))
 
 ramsey <- get_acs(geography = "tract", variables = vars, state = "MN", county = "Ramsey")
 
@@ -44,8 +44,8 @@ The US Census Bureau publishes guidelines on how to calculate margins of error f
 ```{r}
 ramsey65 <- ramsey %>%
   group_by(GEOID) %>%
-  summarize(estimate = sum(estimate), 
-            moe = moe_sum(moe))
+  summarize(sumest = sum(estimate), 
+            summoe = moe_sum(moe, estimate))
 
 head(ramsey65)
 ```

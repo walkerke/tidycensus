@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Set the Census API key — census_api_key â€¢ tidycensus</title>
+<title>Install a CENSUS API Key in Your <code>.Renviron</code> File for Repeated Use — census_api_key â€¢ tidycensus</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -83,31 +83,63 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Set the Census API key</h1>
+    <h1>Install a CENSUS API Key in Your <code>.Renviron</code> File for Repeated Use</h1>
     </div>
 
     
-    <p>Set the Census API key</p>
+    <p>This function will add your CENSUS API key to your <code>.Renviron</code> file so it can be called securely without being stored
+in your code. After you have installed your key, it can be called any time by typing <code>Sys.getenv("CENSUS_API_KEY")</code> and can be
+used in package functions by simply typing CENSUS_API_KEY If you do not have an <code>.Renviron</code> file, the function will create on for you.
+If you already have an <code>.Renviron</code> file, the function will append the key to your existing file, while making a backup of your
+original file for disaster recovery purposes.</p>
     
 
-    <pre class="usage"><span class='fu'>census_api_key</span>(<span class='no'>api_key</span>)</pre>
+    <pre class="usage"><span class='fu'>census_api_key</span>(<span class='no'>key</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>install</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>api_key</th>
-      <td><p>A character string representing a user's Census API key.</p></td>
+      <th>key</th>
+      <td><p>The API key provided to you from the Census formated in quotes. A key can be acquired at <a href = 'http://api.census.gov/data/key_signup.html'>http://api.census.gov/data/key_signup.html</a></p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>If this is set to TRUE, it will overwrite an existing CENSUS_API_KEY that you already have in your <code>.Renviron</code> file.</p></td>
+    </tr>
+    <tr>
+      <th>install</th>
+      <td><p>if TRUE, will install the key in your <code>.Renviron</code> file for use in future sessions.  Defaults to FALSE.</p></td>
     </tr>
     </table>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'>not_run</span>({
+  <span class='fu'>census_api_key</span>(<span class='st'>"111111abc"</span>, <span class='kw'>install</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='co'># First time, reload your environment so you can use the key without restarting R.</span>
+  <span class='fu'>readRenviron</span>(<span class='st'>"~/.Renviron"</span>)
+  <span class='co'># You can check it with:</span>
+  <span class='fu'>Sys.getenv</span>(<span class='st'>"CENSUS_API_KEY"</span>)
+})
+
+<span class='fu'>not_run</span>({
+  <span class='co'># If you need to overwrite an existing key:</span>
+  <span class='fu'>census_api_key</span>(<span class='st'>"111111abc"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>install</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='co'># First time, relead your environment so you can use the key without restarting R.</span>
+  <span class='fu'>readRenviron</span>(<span class='st'>"~/.Renviron"</span>)
+  <span class='co'># You can check it with:</span>
+  <span class='fu'>Sys.getenv</span>(<span class='st'>"CENSUS_API_KEY"</span>)
+})</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+            
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

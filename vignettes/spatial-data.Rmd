@@ -43,7 +43,10 @@ orange %>%
 One of the most powerful features of __ggplot2__ is its support for small multiples, which works very well with the tidy data format returned by __tidycensus__.  Many Census and ACS variables return _counts_, however, which are generally inappropriate for choropleth mapping.  In turn, `get_decennial` and `get_acs` have an optional argument, `summary_var`, that can work as a multi-group denominator when appropriate.  Let's use the following example of the racial geography of Harris County, Texas.  First, we'll request data for non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and Hispanics by Census tract for the 2010 Census, and specify total population as the summary variable.  `year` is not necessary here as the default is 2010.   
 
 ```{r}
-racevars <- c("P0050003", "P0050004", "P0050006", "P0040003")
+racevars <- c(White = "P0050003", 
+              Black = "P0050004", 
+              Asian = "P0050006", 
+              Hispanic = "P0040003")
 
 harris <- get_decennial(geography = "tract", variables = racevars, 
                   state = "TX", county = "Harris County", geometry = TRUE,
@@ -57,15 +60,8 @@ We notice that there are four entries for each Census tract, with each entry rep
 With this information, we can set up an analysis pipeline in which we calculate a new percent-of-total column; recode the Census variable names into more intuitive labels; and visualize the result for each group in a faceted plot.  
 
 ```{r}
-library(forcats)
-
 harris %>%
-  mutate(pct = 100 * (value / summary_value),
-         variable = fct_recode(variable,
-                               White = "P0050003",
-                               Black = "P0050004",
-                               Asian = "P0050006",
-                               Hispanic = "P0040003")) %>%
+  mutate(pct = 100 * (value / summary_value)) %>%
   ggplot(aes(fill = pct, color = pct)) +
   facet_wrap(~variable) +
   geom_sf() +

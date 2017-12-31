@@ -79,37 +79,37 @@
 <span class="co"># We need to construct a vector of variables for males and females age 65 and up</span>
 <span class="co"># purrr can help us with this (I may build this in to tidycensus in the future)</span>
 
-vars &lt;-<span class="st"> </span><span class="kw">map_chr</span>(<span class="kw">c</span>(<span class="dv">20</span>:<span class="dv">25</span>, <span class="dv">44</span>:<span class="dv">49</span>), function(x) <span class="kw">paste0</span>(<span class="st">"B01001_0"</span>, x))
+vars &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"B01001_0"</span>, <span class="kw">c</span>(<span class="dv">20</span><span class="op">:</span><span class="dv">25</span>, <span class="dv">44</span><span class="op">:</span><span class="dv">49</span>))
 
 ramsey &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="dt">geography =</span> <span class="st">"tract"</span>, <span class="dt">variables =</span> vars, <span class="dt">state =</span> <span class="st">"MN"</span>, <span class="dt">county =</span> <span class="st">"Ramsey"</span>)
 
-<span class="kw">head</span>(ramsey %&gt;%<span class="st"> </span><span class="kw">select</span>(-NAME))</code></pre></div>
+<span class="kw">head</span>(ramsey <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>NAME))</code></pre></div>
 <pre><code>## # A tibble: 6 x 4
 ##         GEOID   variable estimate   moe
 ##         &lt;chr&gt;      &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
-## 1 27123030100 B01001_020       30    21
-## 2 27123030100 B01001_021       65    33
-## 3 27123030100 B01001_022       66    35
-## 4 27123030100 B01001_023       16    19
-## 5 27123030100 B01001_024       47    41
-## 6 27123030100 B01001_025       24    18</code></pre>
+## 1 27123030100 B01001_020       51    27
+## 2 27123030100 B01001_021       92    40
+## 3 27123030100 B01001_022       48    28
+## 4 27123030100 B01001_023        8    13
+## 5 27123030100 B01001_024       51    52
+## 6 27123030100 B01001_025       23    18</code></pre>
 <p>We can see the issue already: for Census Tract 301 in Ramsey County, the ACS estimates a male population aged between 75 and 79 of 16 - with a margin of error exceeding the estimate. One way to address this is through data aggregation. While the estimate for males age 75 to 79 in this Census tract may be unreliable, the estimate for the total population over age 65 in the tract is likely better, but is not available directly from the ACS API. In turn, we can summarize our data.</p>
 <p>The US Census Bureau publishes guidelines on how to calculate margins of error for derived estimates (see the footnotes). These formulas are implemented in <strong>tidycensus</strong> in the <code>moe_sum</code>, <code>moe_prop</code>, <code>moe_ratio</code>, and <code>moe_product</code> functions. The example below illustrates the use of <code>moe_sum</code> to calculate the margin of error around a derived estimate for Census tract population over age 65.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ramsey65 &lt;-<span class="st"> </span>ramsey %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(GEOID) %&gt;%
-<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">estimate =</span> <span class="kw">sum</span>(estimate), 
-            <span class="dt">moe =</span> <span class="kw"><a href="../reference/moe_sum.html">moe_sum</a></span>(moe))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ramsey65 &lt;-<span class="st"> </span>ramsey <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(GEOID) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">sumest =</span> <span class="kw">sum</span>(estimate), 
+            <span class="dt">summoe =</span> <span class="kw"><a href="../reference/moe_sum.html">moe_sum</a></span>(moe, estimate))
 
 <span class="kw">head</span>(ramsey65)</code></pre></div>
 <pre><code>## # A tibble: 6 x 3
-##         GEOID estimate       moe
-##         &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-## 1 27123030100      658 112.45888
-## 2 27123030201      882 208.49460
-## 3 27123030202      127  51.70106
-## 4 27123030300      690 148.41159
-## 5 27123030400      443 146.73105
-## 6 27123030500      458 126.14674</code></pre>
+##         GEOID sumest    summoe
+##         &lt;chr&gt;  &lt;dbl&gt;     &lt;dbl&gt;
+## 1 27123030100    677 124.14508
+## 2 27123030201    899 200.53678
+## 3 27123030202    149  53.76802
+## 4 27123030300    783 154.42474
+## 5 27123030400    423 131.10301
+## 6 27123030500    396 111.04504</code></pre>
 <p>The margins of error for this aggregate population are more reasonable. However, the Census Bureau does issue this warning:</p>
 <blockquote>
 <p>These methods do not consider the correlation or covariance between the basic estimates. They may be overestimates or underestimates of the derived estimate’s standard error, depending on whether the two basic estimates are highly correlated in either the positive or negative direction. As a result, the approximated standard error may not match direct calculations of standard errors or calculations obtained through other methods. <a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>

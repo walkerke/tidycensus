@@ -80,36 +80,42 @@ orange &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_
 <pre><code>## Simple feature collection with 6 features and 5 fields
 ## geometry type:  MULTIPOLYGON
 ## dimension:      XY
-## bbox:           xmin: -117.9594 ymin: 33.8592 xmax: -117.7601 ymax: 33.93685
+## bbox:           xmin: -117.968 ymin: 33.85418 xmax: -117.816 ymax: 33.93211
 ## epsg (SRID):    4269
 ## proj4string:    +proj=longlat +datum=NAD83 +no_defs
-## # A tibble: 6 x 6
 ##         GEOID                                           NAME   variable
-##         &lt;chr&gt;                                          &lt;chr&gt;      &lt;chr&gt;
-## 1 06059001201  Census Tract 12.01, Orange County, California B19013_001
-## 2 06059001503  Census Tract 15.03, Orange County, California B19013_001
-## 3 06059001902  Census Tract 19.02, Orange County, California B19013_001
-## 4 06059011504 Census Tract 115.04, Orange County, California B19013_001
-## 5 06059021817 Census Tract 218.17, Orange County, California B19013_001
-## 6 06059021824 Census Tract 218.24, Orange County, California B19013_001
-## # ... with 3 more variables: estimate &lt;dbl&gt;, moe &lt;dbl&gt;, geometry &lt;S3:
-## #   sfc_MULTIPOLYGON&gt;</code></pre>
+## 1 06059001304  Census Tract 13.04, Orange County, California B19013_001
+## 2 06059001507  Census Tract 15.07, Orange County, California B19013_001
+## 3 06059001903  Census Tract 19.03, Orange County, California B19013_001
+## 4 06059011601 Census Tract 116.01, Orange County, California B19013_001
+## 5 06059011718 Census Tract 117.18, Orange County, California B19013_001
+## 6 06059021820 Census Tract 218.20, Orange County, California B19013_001
+##   estimate   moe                       geometry
+## 1    62681  6958 MULTIPOLYGON (((-117.959178...
+## 2    74718  6773 MULTIPOLYGON (((-117.90654 ...
+## 3    66667 14114 MULTIPOLYGON (((-117.967999...
+## 4    48622  6312 MULTIPOLYGON (((-117.93305 ...
+## 5    96632 11050 MULTIPOLYGON (((-117.85496 ...
+## 6   132986 12673 MULTIPOLYGON (((-117.84374 ...</code></pre>
 <p>Our object <code>orange</code> looks much like the basic <strong>tidycensus</strong> output, but with a <code>geometry</code> list-column describing the geometry of each feature, using the geographic coordinate system NAD 1983 (EPSG: 4269) which is the default for Census shapefiles. <strong>tidycensus</strong> uses the Census <a href="https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html">cartographic boundary shapefiles</a> for faster processing; if you prefer the TIGER/Line shapefiles, set <code>cb = FALSE</code> in the function call.</p>
 <p>As the dataset is in a tidy format, it can be quickly visualized with the <code>geom_sf</code> functionality currently in the development version of <strong>ggplot2</strong>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(viridis)
 
-orange %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> estimate, <span class="dt">color =</span> estimate)) +<span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_sf</span>() +<span class="st"> </span>
-<span class="st">  </span><span class="kw">coord_sf</span>(<span class="dt">crs =</span> <span class="dv">26911</span>) +<span class="st"> </span>
-<span class="st">  </span><span class="kw">scale_fill_viridis</span>(<span class="dt">option =</span> <span class="st">"magma"</span>) +<span class="st"> </span>
+orange <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> estimate, <span class="dt">color =</span> estimate)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_sf</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">coord_sf</span>(<span class="dt">crs =</span> <span class="dv">26911</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_fill_viridis</span>(<span class="dt">option =</span> <span class="st">"magma"</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">scale_color_viridis</span>(<span class="dt">option =</span> <span class="st">"magma"</span>)</code></pre></div>
 <p><img src="spatial-data_files/figure-html/unnamed-chunk-2-1.png" width="768"></p>
 <div id="faceted-mapping" class="section level2">
 <h2 class="hasAnchor">
 <a href="#faceted-mapping" class="anchor"></a>Faceted mapping</h2>
 <p>One of the most powerful features of <strong>ggplot2</strong> is its support for small multiples, which works very well with the tidy data format returned by <strong>tidycensus</strong>. Many Census and ACS variables return <em>counts</em>, however, which are generally inappropriate for choropleth mapping. In turn, <code>get_decennial</code> and <code>get_acs</code> have an optional argument, <code>summary_var</code>, that can work as a multi-group denominator when appropriate. Let’s use the following example of the racial geography of Harris County, Texas. First, we’ll request data for non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and Hispanics by Census tract for the 2010 Census, and specify total population as the summary variable. <code>year</code> is not necessary here as the default is 2010.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">racevars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"P0050003"</span>, <span class="st">"P0050004"</span>, <span class="st">"P0050006"</span>, <span class="st">"P0040003"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">racevars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">White =</span> <span class="st">"P0050003"</span>, 
+              <span class="dt">Black =</span> <span class="st">"P0050004"</span>, 
+              <span class="dt">Asian =</span> <span class="st">"P0050006"</span>, 
+              <span class="dt">Hispanic =</span> <span class="st">"P0040003"</span>)
 
 harris &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_decennial.html">get_decennial</a></span>(<span class="dt">geography =</span> <span class="st">"tract"</span>, <span class="dt">variables =</span> racevars, 
                   <span class="dt">state =</span> <span class="st">"TX"</span>, <span class="dt">county =</span> <span class="st">"Harris County"</span>, <span class="dt">geometry =</span> <span class="ot">TRUE</span>,
@@ -125,29 +131,22 @@ harris &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_
 ## # A tibble: 6 x 6
 ##         GEOID              NAME variable value summary_value
 ##         &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt;         &lt;dbl&gt;
-## 1 48201100000 Census Tract 1000 P0050003  2082          4690
-## 2 48201100000 Census Tract 1000 P0050004  1047          4690
-## 3 48201100000 Census Tract 1000 P0050006   134          4690
-## 4 48201100000 Census Tract 1000 P0040003  1070          4690
-## 5 48201210900 Census Tract 2109 P0050003    35          1620
-## 6 48201210900 Census Tract 2109 P0050004  1195          1620
+## 1 48201100000 Census Tract 1000    White  2082          4690
+## 2 48201100000 Census Tract 1000    Black  1047          4690
+## 3 48201100000 Census Tract 1000    Asian   134          4690
+## 4 48201100000 Census Tract 1000 Hispanic  1070          4690
+## 5 48201210900 Census Tract 2109    White    35          1620
+## 6 48201210900 Census Tract 2109    Black  1195          1620
 ## # ... with 1 more variables: geometry &lt;S3: sfc_MULTIPOLYGON&gt;</code></pre>
 <p>We notice that there are four entries for each Census tract, with each entry representing one of our requested variables. The <code>summary_value</code> column represents the value of the summary variable, which is total population in this instance. When a summary variable is specified in <code>get_acs</code>, both <code>summary_est</code> and <code>summary_moe</code> columns will be returned.</p>
 <p>With this information, we can set up an analysis pipeline in which we calculate a new percent-of-total column; recode the Census variable names into more intuitive labels; and visualize the result for each group in a faceted plot.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(forcats)
-
-harris %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pct =</span> <span class="dv">100</span> *<span class="st"> </span>(value /<span class="st"> </span>summary_value),
-         <span class="dt">variable =</span> <span class="kw">fct_recode</span>(variable,
-                               <span class="dt">White =</span> <span class="st">"P0050003"</span>,
-                               <span class="dt">Black =</span> <span class="st">"P0050004"</span>,
-                               <span class="dt">Asian =</span> <span class="st">"P0050006"</span>,
-                               <span class="dt">Hispanic =</span> <span class="st">"P0040003"</span>)) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> pct, <span class="dt">color =</span> pct)) +
-<span class="st">  </span><span class="kw">facet_wrap</span>(~variable) +
-<span class="st">  </span><span class="kw">geom_sf</span>() +
-<span class="st">  </span><span class="kw">coord_sf</span>(<span class="dt">crs =</span> <span class="dv">26915</span>) +<span class="st"> </span>
-<span class="st">  </span><span class="kw">scale_fill_viridis</span>() +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">harris <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pct =</span> <span class="dv">100</span> <span class="op">*</span><span class="st"> </span>(value <span class="op">/</span><span class="st"> </span>summary_value)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> pct, <span class="dt">color =</span> pct)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>variable) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_sf</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_sf</span>(<span class="dt">crs =</span> <span class="dv">26915</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_fill_viridis</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_viridis</span>()</code></pre></div>
 <p><img src="spatial-data_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
 <p>Beyond this, you might be interested in writing your dataset to a shapefile or GeoJSON for use in external GIS or visualization applications. You can accomplish this with the <code>st_write</code> function in the <strong>sf</strong> package:</p>

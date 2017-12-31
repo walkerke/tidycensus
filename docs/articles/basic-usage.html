@@ -88,15 +88,15 @@
 ## 6    08   Colorado H043A001   418</code></pre>
 <p>The function returns a tibble with four columns by default: <code>GEOID</code>, which is an identifier for the geographical unit associated with the row; <code>NAME</code>, which is a descriptive name of the geographical unit; <code>variable</code>, which is the Census variable represented in the row; and <code>value</code>, which is the value of the variable for that unit. By default, <strong>tidycensus</strong> functions return tidy data frames in which rows represent unit-variable combinations; for a wide data frame with Census variable names in the columns, set <code>output = "wide"</code> in the function call.</p>
 <p>As the function has returned a tidy object, we can visualize it quickly with <strong>ggplot2</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m90 %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> <span class="kw">reorder</span>(NAME, value))) +<span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m90 <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> <span class="kw">reorder</span>(NAME, value))) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
 <p><img src="basic-usage_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
 <div id="searching-for-variables" class="section level2">
 <h2 class="hasAnchor">
 <a href="#searching-for-variables" class="anchor"></a>Searching for variables</h2>
 <p>Getting variables from the Census or ACS requires knowing the variable ID - and there are thousands of these IDs across the different Census files. To rapidly search for variables, use the <code>load_variables</code> function. The function takes two required arguments: the year of the Census or endyear of the ACS sample, and the dataset - one of <code>"sf1"</code>, <code>"sf3"</code>, or <code>"acs5"</code>. For ideal functionality, I recommend assigning the result of this function to a variable, setting <code>cache = TRUE</code> to store the result on your computer for future access, and using the <code>View</code> function in RStudio to interactively browse for variables.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v15 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_variables.html">load_variables</a></span>(<span class="dv">2015</span>, <span class="st">"acs5"</span>, <span class="dt">cache =</span> <span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v15 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_variables.html">load_variables</a></span>(<span class="dv">2016</span>, <span class="st">"acs5"</span>, <span class="dt">cache =</span> <span class="ot">TRUE</span>)
 
 <span class="kw">View</span>(v15)</code></pre></div>
 <p><img src="img/view.png" style="width: 100%"></p>
@@ -106,27 +106,37 @@
 <h2 class="hasAnchor">
 <a href="#working-with-acs-data" class="anchor"></a>Working with ACS data</h2>
 <p>American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population. In turn, ACS data points are <strong>estimates</strong> characterized by a <strong>margin of error</strong>. <strong>tidycensus</strong> will always return the estimate and margin of error together for any requested variables. In turn, when requesting ACS data with <strong>tidycensus</strong>, it is not necessary to specify the <code>"E"</code> or <code>"M"</code> suffix for a variable name. Let’s fetch median household income data from the 2011-2015 ACS for counties in Vermont; the endyear is not necessary here as the function defaults to 2015.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="dt">geography =</span> <span class="st">"county"</span>, <span class="dt">variables =</span> <span class="st">"B19013_001"</span>, <span class="dt">state =</span> <span class="st">"VT"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="dt">geography =</span> <span class="st">"county"</span>, 
+              <span class="dt">variables =</span> <span class="kw">c</span>(<span class="dt">medincome =</span> <span class="st">"B19013_001"</span>), 
+              <span class="dt">state =</span> <span class="st">"VT"</span>)
 
-<span class="kw">head</span>(vt)</code></pre></div>
-<pre><code>## # A tibble: 6 x 5
-##   GEOID                       NAME   variable estimate   moe
-##   &lt;chr&gt;                      &lt;chr&gt;      &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
-## 1 50001    Addison County, Vermont B19013_001    59688  2199
-## 2 50003 Bennington County, Vermont B19013_001    49573  2146
-## 3 50005  Caledonia County, Vermont B19013_001    45323  1559
-## 4 50007 Chittenden County, Vermont B19013_001    65350  1634
-## 5 50009      Essex County, Vermont B19013_001    36599  1779
-## 6 50011   Franklin County, Vermont B19013_001    58199  2034</code></pre>
+vt</code></pre></div>
+<pre><code>## # A tibble: 14 x 5
+##    GEOID                       NAME  variable estimate   moe
+##    &lt;chr&gt;                      &lt;chr&gt;     &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
+##  1 50001    Addison County, Vermont medincome    61020  2194
+##  2 50003 Bennington County, Vermont medincome    51489  3350
+##  3 50005  Caledonia County, Vermont medincome    46931  1876
+##  4 50007 Chittenden County, Vermont medincome    66414  2090
+##  5 50009      Essex County, Vermont medincome    39467  2540
+##  6 50011   Franklin County, Vermont medincome    58884  2002
+##  7 50013 Grand Isle County, Vermont medincome    64295  2932
+##  8 50015   Lamoille County, Vermont medincome    53316  4047
+##  9 50017     Orange County, Vermont medincome    54263  1743
+## 10 50019    Orleans County, Vermont medincome    43959  2047
+## 11 50021    Rutland County, Vermont medincome    50029  1717
+## 12 50023 Washington County, Vermont medincome    58171  1989
+## 13 50025    Windham County, Vermont medincome    50917  1775
+## 14 50027    Windsor County, Vermont medincome    54763  2123</code></pre>
 <p>The output is similar to a call to <code>get_decennial</code>, but instead of a <code>value</code> column, <code>get_acs</code> returns <code>estimate</code> and <code>moe</code> columns for the ACS estimate and margin of error, respectively. <code>moe</code> represents the default 90 percent confidence level around the estimate; this can be changed to 95 or 99 percent with the <code>moe_level</code> parameter in <code>get_acs</code> if desired.</p>
 <p>As we have the margin of error, we can visualize the uncertainty around the estimate:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vt %&gt;%
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">NAME =</span> <span class="kw">gsub</span>(<span class="st">" County, Vermont"</span>, <span class="st">""</span>, NAME)) %&gt;%
-<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> <span class="kw">reorder</span>(NAME, estimate))) +
-<span class="st">  </span><span class="kw">geom_errorbarh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> estimate -<span class="st"> </span>moe, <span class="dt">xmax =</span> estimate +<span class="st"> </span>moe)) +
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">size =</span> <span class="dv">3</span>) +
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vt <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">NAME =</span> <span class="kw">gsub</span>(<span class="st">" County, Vermont"</span>, <span class="st">""</span>, NAME)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> <span class="kw">reorder</span>(NAME, estimate))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_errorbarh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> estimate <span class="op">-</span><span class="st"> </span>moe, <span class="dt">xmax =</span> estimate <span class="op">+</span><span class="st"> </span>moe)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"Household income by county in Vermont"</span>,
-       <span class="dt">subtitle =</span> <span class="st">"2011-2015 American Community Survey"</span>,
+       <span class="dt">subtitle =</span> <span class="st">"2012-2016 American Community Survey"</span>,
        <span class="dt">y =</span> <span class="st">""</span>,
        <span class="dt">x =</span> <span class="st">"ACS estimate (bars represent margin of error)"</span>)</code></pre></div>
 <p><img src="basic-usage_files/figure-html/unnamed-chunk-7-1.png" width="768"></p>

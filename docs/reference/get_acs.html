@@ -90,9 +90,10 @@
     <p>Obtain data and feature geometry for the five-year American Community Survey</p>
     
 
-    <pre class="usage"><span class='fu'>get_acs</span>(<span class='no'>geography</span>, <span class='no'>variables</span>, <span class='kw'>endyear</span> <span class='kw'>=</span> <span class='fl'>2015</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"tidy"</span>,
-  <span class='kw'>state</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>county</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep_geo_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>summary_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>moe_level</span> <span class='kw'>=</span> <span class='fl'>90</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>get_acs</span>(<span class='no'>geography</span>, <span class='kw'>variables</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cache_table</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2016</span>, <span class='kw'>endyear</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"tidy"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>county</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep_geo_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>summary_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>moe_level</span> <span class='kw'>=</span> <span class='fl'>90</span>, <span class='kw'>survey</span> <span class='kw'>=</span> <span class='st'>"acs5"</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -108,9 +109,26 @@ IDs. tidycensus automatically returns the estimate and the
 margin of error associated with the variable.</p></td>
     </tr>
     <tr>
+      <th>table</th>
+      <td><p>The ACS table for which you would like to request all variables.  Uses
+lookup tables to identify the variables; performs faster when variable
+table already exists through <code>load_variables(cache = TRUE)</code>.</p></td>
+    </tr>
+    <tr>
+      <th>cache_table</th>
+      <td><p>Whether or not to cache table names for faster future access.
+Defaults to FALSE; if TRUE, only needs to be called once per
+dataset.  If variables dataset is already cached via the
+<code>load_variables</code> function, this can be bypassed.</p></td>
+    </tr>
+    <tr>
+      <th>year</th>
+      <td><p>The year, or endyear, of the ACS sample. 2010 through 2016 are
+available. Defaults to 2016.</p></td>
+    </tr>
+    <tr>
       <th>endyear</th>
-      <td><p>The endyear of the ACS sample.  2010 through 2015 are
-available. Defaults to 2015 (for 2011-2015)</p></td>
+      <td><p>Deprecated and will be removed in a future release.</p></td>
     </tr>
     <tr>
       <th>output</th>
@@ -160,6 +178,11 @@ Obtain one at <a href = 'http://api.census.gov/data/key_signup.html'>http://api.
       <td><p>The confidence level of the returned margin of error.  One of 90 (the default), 95, or 99.</p></td>
     </tr>
     <tr>
+      <th>survey</th>
+      <td><p>The ACS contains one-year, three-year, and five-year surveys expressed as "acs1", "acs3", and "acs5".
+The default selection is "acs5."</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Other keyword arguments</p></td>
     </tr>
@@ -195,7 +218,7 @@ Obtain one at <a href = 'http://api.census.gov/data/key_signup.html'>http://api.
     <span class='fu'>geom_errorbarh</span>(<span class='fu'>aes</span>(<span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>estimate</span> - <span class='no'>moe</span>, <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>estimate</span> + <span class='no'>moe</span>)) +
     <span class='fu'>geom_point</span>(<span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>3</span>) +
     <span class='fu'>labs</span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Household income by county in Vermont"</span>,
-         <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"2011-2015 American Community Survey"</span>,
+         <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"2012-2016 American Community Survey"</span>,
          <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>""</span>,
          <span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"ACS estimate (bars represent margin of error)"</span>)
 
