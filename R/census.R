@@ -222,6 +222,9 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
       }
     }
 
+    dat2 <- dat2 %>%
+      select(GEOID, NAME, everything())
+
   }
 
   if (!is.null(summary_var)) {
