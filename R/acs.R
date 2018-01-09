@@ -265,7 +265,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     dat2 <- sub %>%
       gather(key = variable, value = value, -GEOID, -NAME) %>%
-      separate(variable, into = c("variable", "type"), sep = -2) %>%
+      extract(variable, into = c("variable", "type"), regex = "^(.*?)([EM])") %>%
       mutate(type = ifelse(type == "E", "estimate", "moe")) %>%
       spread(type, value)
 
