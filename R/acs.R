@@ -263,11 +263,21 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     sub <- dat[c("GEOID", "NAME", var_vector)]
 
-    dat2 <- sub %>%
-      gather(key = variable, value = value, -GEOID, -NAME) %>%
-      separate(variable, into = c("variable", "type"), sep = -2) %>%
-      mutate(type = ifelse(type == "E", "estimate", "moe")) %>%
-      spread(type, value)
+    if (packageVersion("tidyr") > "0.7.2") {
+      dat2 <- sub %>%
+        gather(key = variable, value = value, -GEOID, -NAME) %>%
+        separate(variable, into = c("variable", "type"), sep = -1) %>%
+        mutate(type = ifelse(type == "E", "estimate", "moe")) %>%
+        spread(type, value)
+    } else {
+      dat2 <- sub %>%
+        gather(key = variable, value = value, -GEOID, -NAME) %>%
+        separate(variable, into = c("variable", "type"), sep = -2) %>%
+        mutate(type = ifelse(type == "E", "estimate", "moe")) %>%
+        spread(type, value)
+    }
+
+
 
     if ("moe" %in% names(dat2)) {
       dat2 <- mutate(dat2, moe = moe * moe_factor)
