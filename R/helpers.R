@@ -5,6 +5,10 @@
 use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
                        state = NULL, county = NULL, starts_with = NULL) {
 
+  if (year %in% 2011:2012) {
+    cb <- FALSE
+  }
+
   if (geography == "state") {
 
     st <- states(cb = cb, resolution = resolution, year = year, class = "sf")
