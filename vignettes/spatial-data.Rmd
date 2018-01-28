@@ -70,6 +70,69 @@ harris %>%
   scale_color_viridis()
 ```
 
+## Detailed shoreline mapping with tidycensus
+
+Geometries in tidycensus default to the Census Bureau's [cartographic boundary shapefiles](https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html).  Cartographic boundary shapefiles are preferred to the core [TIGER/Line shapefiles](https://www.census.gov/geo/maps-data/data/tiger-line.html) in tidycensus as their smaller size speeds up processing and because they are pre-clipped to the US coastline.
+
+However, there may be circumstances in which your mapping requires more detail.  A good example of this would be maps of New York City, in which even the cartographic boundary shapefiles include water area.  For example, take this example of median household income by Census tract in Manhattan (New York County), NY: 
+
+```{r, message = FALSE, warning = FALSE}
+library(tidycensus)
+library(mapview)
+options(tigris_use_cache = TRUE)
+
+ny <- get_acs(geography = "tract", 
+              variables = "B19013_001", 
+              state = "NY", 
+              county = "New York", 
+              geometry = TRUE)
+
+mapview(ny, zcol = "estimate", legend = TRUE)
+
+```
+
+As illustrated in the graphic, the boundaries of Manhattan include water boundaries - stretching into the Hudson and East Rivers.  In turn, a more accurate representation of Manhattan's land area might be desired.  To accomplish this, a tidycensus user can use the core TIGER/Line shapefiles instead, then erase water area from Manhattan's geometry.  
+
+tidycensus allows users to get TIGER/Line instead of cartographic boundary shapefiles with the keyword argument `cb = FALSE`.  This argument will be familiar to users of the tigris package, as it is used by tigris to distinguish between cartographic boundary and TIGER/Line shapefiles in the package.  
+
+```{r, message = FALSE, warning = FALSE}
+ny2 <- get_acs(geography = "tract", 
+              variables = "B19013_001", 
+              state = "NY", 
+              county = "New York", 
+              geometry = TRUE, 
+              cb = FALSE)
+```
+
+Next, tools in the tigris and [sf](https://github.com/r-spatial/sf) package can be used to remove the water area from Manhattan's Census tracts.  sf allows users to "erase" one geometry from another, [akin to tools available in desktop GIS software](http://pro.arcgis.com/en/pro-app/tool-reference/analysis/erase.htm).  The `st_erase()` function defined below is not exported by the package, but is defined in the documentation for `st_difference()`.  
+
+The geometry used to "erase" water area from the tract polygons is obtained by the `area_water()` function in tigris, making sure to choose the option `class = "sf"`.  
+
+```{r, message = FALSE, warning = FALSE}
+library(sf)
+library(tigris)
+
+st_erase <- function(x, y) {
+  st_difference(x, st_union(st_combine(y)))
+}
+
+ny_water <- area_water("NY", "New York", class = "sf")
+
+ny_erase <- st_erase(ny2, ny_water)
+
+```
+
+After performing this operation, we can visualize the result: 
+
+```{r, message = FALSE, warning = FALSE}
+mapview(ny_erase, zcol = "estimate", legend = TRUE)
+```
+
+The map appears as before, but instead the polygons now hug the shoreline of Manhattan.  
+
+
+## Writing to shapefiles
+
 Beyond this, you might be interested in writing your dataset to a shapefile or GeoJSON for use in external GIS or visualization applications.  You can accomplish this with the `st_write` function in the __sf__ package: 
 
 ```{r, eval = FALSE}

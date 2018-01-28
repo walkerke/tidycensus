@@ -78,14 +78,14 @@
 
 <span class="kw">head</span>(m90)</code></pre></div>
 <pre><code>## # A tibble: 6 x 4
-##   GEOID       NAME variable value
-##   &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt; &lt;dbl&gt;
-## 1    01    Alabama H043A001   325
-## 2    02     Alaska H043A001   559
-## 3    04    Arizona H043A001   438
-## 4    05   Arkansas H043A001   328
-## 5    06 California H043A001   620
-## 6    08   Colorado H043A001   418</code></pre>
+##   GEOID NAME       variable value
+##   &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;    &lt;dbl&gt;
+## 1 01    Alabama    H043A001   325
+## 2 02    Alaska     H043A001   559
+## 3 04    Arizona    H043A001   438
+## 4 05    Arkansas   H043A001   328
+## 5 06    California H043A001   620
+## 6 08    Colorado   H043A001   418</code></pre>
 <p>The function returns a tibble with four columns by default: <code>GEOID</code>, which is an identifier for the geographical unit associated with the row; <code>NAME</code>, which is a descriptive name of the geographical unit; <code>variable</code>, which is the Census variable represented in the row; and <code>value</code>, which is the value of the variable for that unit. By default, <strong>tidycensus</strong> functions return tidy data frames in which rows represent unit-variable combinations; for a wide data frame with Census variable names in the columns, set <code>output = "wide"</code> in the function call.</p>
 <p>As the function has returned a tidy object, we can visualize it quickly with <strong>ggplot2</strong>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m90 <span class="op">%&gt;%</span>
@@ -112,22 +112,22 @@
 
 vt</code></pre></div>
 <pre><code>## # A tibble: 14 x 5
-##    GEOID                       NAME  variable estimate   moe
-##    &lt;chr&gt;                      &lt;chr&gt;     &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
-##  1 50001    Addison County, Vermont medincome    61020  2194
+##    GEOID NAME                       variable  estimate   moe
+##    &lt;chr&gt; &lt;chr&gt;                      &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+##  1 50001 Addison County, Vermont    medincome    61020  2194
 ##  2 50003 Bennington County, Vermont medincome    51489  3350
-##  3 50005  Caledonia County, Vermont medincome    46931  1876
+##  3 50005 Caledonia County, Vermont  medincome    46931  1876
 ##  4 50007 Chittenden County, Vermont medincome    66414  2090
-##  5 50009      Essex County, Vermont medincome    39467  2540
-##  6 50011   Franklin County, Vermont medincome    58884  2002
+##  5 50009 Essex County, Vermont      medincome    39467  2540
+##  6 50011 Franklin County, Vermont   medincome    58884  2002
 ##  7 50013 Grand Isle County, Vermont medincome    64295  2932
-##  8 50015   Lamoille County, Vermont medincome    53316  4047
-##  9 50017     Orange County, Vermont medincome    54263  1743
-## 10 50019    Orleans County, Vermont medincome    43959  2047
-## 11 50021    Rutland County, Vermont medincome    50029  1717
+##  8 50015 Lamoille County, Vermont   medincome    53316  4047
+##  9 50017 Orange County, Vermont     medincome    54263  1743
+## 10 50019 Orleans County, Vermont    medincome    43959  2047
+## 11 50021 Rutland County, Vermont    medincome    50029  1717
 ## 12 50023 Washington County, Vermont medincome    58171  1989
-## 13 50025    Windham County, Vermont medincome    50917  1775
-## 14 50027    Windsor County, Vermont medincome    54763  2123</code></pre>
+## 13 50025 Windham County, Vermont    medincome    50917  1775
+## 14 50027 Windsor County, Vermont    medincome    54763  2123</code></pre>
 <p>The output is similar to a call to <code>get_decennial</code>, but instead of a <code>value</code> column, <code>get_acs</code> returns <code>estimate</code> and <code>moe</code> columns for the ACS estimate and margin of error, respectively. <code>moe</code> represents the default 90 percent confidence level around the estimate; this can be changed to 95 or 99 percent with the <code>moe_level</code> parameter in <code>get_acs</code> if desired.</p>
 <p>As we have the margin of error, we can visualize the uncertainty around the estimate:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vt <span class="op">%&gt;%</span>
