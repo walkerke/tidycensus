@@ -72,12 +72,9 @@
 <blockquote>
 <p>While the main function of the decennial census is to provide <em>counts</em> of people for the purpose of congressional apportionment and legislative redistricting, the primary purpose of the ACS is to measure the changing social and economic <em>characteristics</em> of the U.S. population. As a result, the ACS does not provide official counts of the population in between censuses. <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
 </blockquote>
-<p>In turn, ACS data <strong>do not</strong> represent precise counts of population subgroups, but are rather designed to give a general sense of how socioeconomic indicators vary across the country. In many cases, ACS margins of error can be quite large - at times exceeding the estimate. Let’s say we want to study aging populations in Ramsey County, Minnesota from the 2011-2015 ACS by Census tracts. We can pull up a dataset with <code>get_acs</code>:</p>
+<p>In turn, ACS data <strong>do not</strong> represent precise counts of population subgroups, but are rather designed to give a general sense of how socioeconomic indicators vary across the country. In many cases, ACS margins of error can be quite large - at times exceeding the estimate. Let’s say we want to study aging populations in Ramsey County, Minnesota from the 2012-2016 ACS by Census tracts. We can pull up a dataset with <code>get_acs</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidycensus)
 <span class="kw">library</span>(tidyverse)
-
-<span class="co"># We need to construct a vector of variables for males and females age 65 and up</span>
-<span class="co"># purrr can help us with this (I may build this in to tidycensus in the future)</span>
 
 vars &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"B01001_0"</span>, <span class="kw">c</span>(<span class="dv">20</span><span class="op">:</span><span class="dv">25</span>, <span class="dv">44</span><span class="op">:</span><span class="dv">49</span>))
 
@@ -93,7 +90,7 @@ ramsey &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_
 ## 4 27123030100 B01001_023     8.00  13.0
 ## 5 27123030100 B01001_024    51.0   52.0
 ## 6 27123030100 B01001_025    23.0   18.0</code></pre>
-<p>We can see the issue already: for Census Tract 301 in Ramsey County, the ACS estimates a male population aged between 75 and 79 of 16 - with a margin of error exceeding the estimate. One way to address this is through data aggregation. While the estimate for males age 75 to 79 in this Census tract may be unreliable, the estimate for the total population over age 65 in the tract is likely better, but is not available directly from the ACS API. In turn, we can summarize our data.</p>
+<p>We can see that in two instances the margin of error exceeds the estimate. One way to address this is through data aggregation. While the specific group estimates in this Census tract may be unreliable, the estimate for the total population over age 65 in the tract is likely better, but is not available directly from the ACS detailed tables. In turn, we can summarize our data.</p>
 <p>The US Census Bureau publishes guidelines on how to calculate margins of error for derived estimates (see the footnotes). These formulas are implemented in <strong>tidycensus</strong> in the <code>moe_sum</code>, <code>moe_prop</code>, <code>moe_ratio</code>, and <code>moe_product</code> functions. The example below illustrates the use of <code>moe_sum</code> to calculate the margin of error around a derived estimate for Census tract population over age 65.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ramsey65 &lt;-<span class="st"> </span>ramsey <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(GEOID) <span class="op">%&gt;%</span>
