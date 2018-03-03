@@ -53,10 +53,13 @@ get_economic <- function(geography, variables, naics_code, year = 2012,
 
     naics_yr <- paste0("NAICS", year)
 
-    sub <- dat[c("GEOID", "NAME", naics_yr, NAICS_DESC, variables)]
+    naics_ttl <- paste0("NAICS", year, "_TTL")
+
+    sub <- dat[c("GEOID", "NAME", "OPTAX", naics_yr, naics_ttl, variables)]
 
     dat2 <- sub %>%
-      gather(key = variable, value = value, -GEOID, -NAME, -!!naics_yr, -NAICS_DESC)
+      gather(key = variable, value = value, -GEOID, -NAME, -!!naics_yr, -!!naics_ttl, -OPTAX) %>%
+      select(GEOID, NAME, everything())
 
   } else if (output == "wide") {
 

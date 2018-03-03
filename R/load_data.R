@@ -339,9 +339,11 @@ load_data_decennial <- function(geography, variables, key, year,
 load_data_economic <- function(geography, variables, key, year,
                                naics_code, state = NULL, county = NULL) {
 
+  naicsyear <- paste0("NAICS", year)
+
   var <- paste0(variables, collapse = ",")
 
-  vars_to_get <- paste0("GEO_TTL,NAICS_TTL", vars)
+  vars_to_get <- paste0("OPTAX,GEO_TTL,NAICS", year, "_TTL,", var)
 
   base <- paste0("https://api.census.gov/data/",
                  year,
@@ -393,27 +395,40 @@ load_data_economic <- function(geography, variables, key, year,
 
     if (geography == "state" && !is.null(state)) {
 
-      call <- GET(base, query = list(get = vars_to_get,
-                                     "for" = for_area,
-                                     paste0("NAICS", year) = naics_code,
-                                     key = key))
+      query <- list(get = vars_to_get,
+                    "for" = for_area,
+                    key = key)
+
+      query[[naicsyear]] <- naics_code
+
+      call <- GET(base, query = query)
+
     } else {
 
-      call <- GET(base, query = list(get = vars_to_get,
-                                     "for" = for_area,
-                                     "in" = in_area,
-                                     paste0("NAICS", year) = naics_code,
-                                     key = key))
+      query <- list(get = vars_to_get,
+                    "for" = for_area,
+                    "in" = in_area,
+                    key = key)
+
+      query[[naicsyear]] <- naics_code
+
+      call <- GET(base, query = query)
     }
   }
 
   else {
 
-    call <- GET(base, query = list(get = vars_to_get,
-                                   "for" = paste0(geography, ":*"),
-                                   paste0("NAICS", year) = naics_code,
-                                   key = key))
+    query <- list(get = vars_to_get,
+         "for" = paste0(geography, ":*"),
+         key = key)
+
+    query[[naicsyear]] <- naics_code
+
+
+    call <- GET(base, query = query)
   }
+
+  content <- content(call, as = "text")
 
   dat <- tbl_df(fromJSON(content))
 
@@ -421,11 +436,12 @@ load_data_economic <- function(geography, variables, key, year,
 
   dat <- dat[-1,]
 
-  dat <- rename(dat, NAICS_DESC = NAICS_TTL, NAME = GEO_TTL)
+  dat <- rename(dat, NAME = GEO_TTL)
 
   dat[variables] <- lapply(dat[variables], as.numeric)
 
-  v2 <- c(variables, "NAME", "NAICS", "NAICS_DESC")
+  v2 <- c(variables, "NAME", "OPTAX", paste0("NAICS", year),
+          paste0("NAICS", year, "_TTL"))
 
   # Get the geography ID variables
   id_vars <- names(dat)[! names(dat) %in% v2]
