@@ -336,3 +336,111 @@ load_data_decennial <- function(geography, variables, key, year,
 
 }
 
+load_data_economic <- function(geography, variables, key, year,
+                               naics_code, state = NULL, county = NULL) {
+
+  var <- paste0(variables, collapse = ",")
+
+  vars_to_get <- paste0("GEO_TTL,NAICS_TTL", vars)
+
+  base <- paste0("https://api.census.gov/data/",
+                 year,
+                 "/ewks")
+
+  for_area <- paste0(geography, ":*")
+
+  if (!is.null(state)) {
+
+    state <- map_chr(state, function(x) {
+      validate_state(x)
+    })
+
+    if (length(state) > 1) {
+      state <- paste0(state, collapse = ",")
+    }
+
+    if (geography == "state") {
+      for_area <- paste0("state:", state)
+    }
+
+    if (!is.null(county)) {
+
+      county <- map_chr(county, function(x) {
+        validate_county(state, x)
+      })
+
+      if (length(county) > 1) {
+        county <- paste0(county, collapse = ",")
+      }
+
+      if (geography == "county") {
+
+        for_area <- paste0("county:", county)
+        in_area <- paste0("state:", state)
+
+      } else {
+
+        in_area <- paste0("state:", state,
+                          "+county:", county)
+
+      }
+
+    } else {
+
+      in_area <- paste0("state:", state)
+
+    }
+
+    if (geography == "state" && !is.null(state)) {
+
+      call <- GET(base, query = list(get = vars_to_get,
+                                     "for" = for_area,
+                                     paste0("NAICS", year) = naics_code,
+                                     key = key))
+    } else {
+
+      call <- GET(base, query = list(get = vars_to_get,
+                                     "for" = for_area,
+                                     "in" = in_area,
+                                     paste0("NAICS", year) = naics_code,
+                                     key = key))
+    }
+  }
+
+  else {
+
+    call <- GET(base, query = list(get = vars_to_get,
+                                   "for" = paste0(geography, ":*"),
+                                   paste0("NAICS", year) = naics_code,
+                                   key = key))
+  }
+
+  dat <- tbl_df(fromJSON(content))
+
+  colnames(dat) <- dat[1,]
+
+  dat <- dat[-1,]
+
+  dat <- rename(dat, NAICS_DESC = NAICS_TTL, NAME = GEO_TTL)
+
+  dat[variables] <- lapply(dat[variables], as.numeric)
+
+  v2 <- c(variables, "NAME", "NAICS", "NAICS_DESC")
+
+  # Get the geography ID variables
+  id_vars <- names(dat)[! names(dat) %in% v2]
+
+  # Paste into a GEOID column
+  dat$GEOID <- do.call(paste0, dat[id_vars])
+
+
+  # Now, remove them
+  dat <- dat[, !(names(dat) %in% id_vars)]
+
+  return(dat)
+
+
+
+}
+
+
