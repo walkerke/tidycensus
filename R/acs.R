@@ -303,7 +303,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
 
-    # Convert missing values values to NA
+    # Convert missing values to NA
     dat[dat == -222222222] <- NA
     dat[dat == -555555555] <- NA
     dat[dat == -888888888] <- NA
