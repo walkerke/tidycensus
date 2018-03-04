@@ -30,6 +30,8 @@
 #'                 block, and ZCTA geometry are supported.
 #' @param keep_geo_vars if TRUE, keeps all the variables from the Census
 #'                      shapefile obtained by tigris.  Defaults to FALSE.
+#' @param shift_geo if TRUE, returns geometry with Alaska and Hawaii shifted for thematic mapping of the entire US.
+#'                  Only available if the GitHub package "albersusa" is installed.
 #' @param summary_var Character string of a "summary variable" from the ACS
 #'                    to be included
 #'                    in your output. Usually a variable (e.g. total population)
@@ -76,6 +78,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                     year = 2016, endyear = NULL,
                     output = "tidy",
                     state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
+                    shift_geo = FALSE,
                     summary_var = NULL, key = NULL, moe_level = 90, survey = "acs5", ...) {
 
   message("Please note: `get_acs()` now defaults to a year or endyear of 2016.")
@@ -118,8 +121,14 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   cache <- getOption("tigris_use_cache", FALSE)
 
-  if (! cache && geometry) {
-    message("Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.")
+  if (geometry) {
+
+    if (shift_geo) {
+      message("Getting feature geometry from the albersusa package")
+    } else if (!shift_geo && !cache) {
+      message("Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.")
+    }
+
   }
 
   # if (survey == "acs3" || survey == "acs1") {
@@ -354,8 +363,42 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   if (geometry) {
 
-    geom <- suppressMessages(use_tigris(geography = geography, year = year,
-                                        state = state, county = county, ...))
+    if (shift_geo) {
+
+      if (!"albersusa" %in% installed.packages()) {
+        stop("`shift_geo` requires the GitHub package albersusa.  Please install from GitHub with `devtools::install_github('hrbrmstr/albersusa') first.", call. = FALSE)
+      }
+
+      if (!is.null(state)) {
+        stop("`shift_geo` is only available when requesting geometry for the entire US", call. = FALSE)
+      }
+
+      if (geography == "state") {
+
+        geom <- albersusa::usa_sf("laea") %>%
+          select(GEOID = fips_state, geometry) %>%
+          mutate(GEOID = as.character(GEOID))
+
+      } else if (geography == "county") {
+
+        geom <- albersusa::counties_sf("laea") %>%
+          select(GEOID = fips, geometry) %>%
+          mutate(GEOID = as.character(GEOID))
+
+        if (year > 2014) {
+          # Account for change from Shannon County, SD to Oglala Lakota County
+          geom$GEOID[geom$GEOID == "46113"] <- "46102"
+        }
+
+      } else {
+        stop("`shift_geo` is only available for states and counties", call. = FALSE)
+      }
+
+    } else {
+
+      geom <- suppressMessages(use_tigris(geography = geography, year = year,
+                                          state = state, county = county, ...))
+    }
 
     if (! keep_geo_vars) {
 
