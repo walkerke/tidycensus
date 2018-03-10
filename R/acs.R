@@ -387,7 +387,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
         if (year > 2014) {
           # Account for change from Shannon County, SD to Oglala Lakota County
+          # and the new Kusilvak Census Area in AK
           geom$GEOID[geom$GEOID == "46113"] <- "46102"
+          geom$GEOID[geom$GEOID == "02270"] <- "02158"
         }
 
       } else {
