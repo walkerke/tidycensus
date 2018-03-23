@@ -294,9 +294,15 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
 
     # Convert missing values to NA
+    dat2[dat2 == -111111111] <- NA
     dat2[dat2 == -222222222] <- NA
+    dat2[dat2 == -333333333] <- NA
+    dat2[dat2 == -444444444] <- NA
     dat2[dat2 == -555555555] <- NA
+    dat2[dat2 == -666666666] <- NA
+    dat2[dat2 == -777777777] <- NA
     dat2[dat2 == -888888888] <- NA
+    dat2[dat2 == -999999999] <- NA
 
     # Change names if supplied
     if (!is.null(names(variables))) {
@@ -313,9 +319,15 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
 
     # Convert missing values to NA
+    dat[dat == -111111111] <- NA
     dat[dat == -222222222] <- NA
+    dat[dat == -333333333] <- NA
+    dat[dat == -444444444] <- NA
     dat[dat == -555555555] <- NA
+    dat[dat == -666666666] <- NA
+    dat[dat == -777777777] <- NA
     dat[dat == -888888888] <- NA
+    dat[dat == -999999999] <- NA
 
     # Find MOE vars
     # moe_vars <- grep("*M", names(dat))
