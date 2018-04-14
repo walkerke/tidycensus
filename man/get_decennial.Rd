@@ -7,7 +7,8 @@
 get_decennial(geography, variables = NULL, table = NULL,
   cache_table = FALSE, year = 2010, sumfile = "sf1", state = NULL,
   county = NULL, geometry = FALSE, output = "tidy",
-  keep_geo_vars = FALSE, summary_var = NULL, key = NULL, ...)
+  keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL,
+  key = NULL, ...)
 }
 \arguments{
 \item{geography}{The geography of your data.}
@@ -49,6 +50,9 @@ columns.}
 
 \item{keep_geo_vars}{if TRUE, keeps all the variables from the Census
 shapefile obtained by tigris.  Defaults to FALSE.}
+
+\item{shift_geo}{if TRUE, returns geometry with Alaska and Hawaii shifted for thematic mapping of the entire US.
+Only available if the GitHub package "albersusa" is installed.  Only available for 2010 data.}
 
 \item{summary_var}{Character string of a "summary variable" from the decennial Census
 to be included in your output. Usually a variable (e.g. total population)

@@ -81,7 +81,20 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                     shift_geo = FALSE,
                     summary_var = NULL, key = NULL, moe_level = 90, survey = "acs5", ...) {
 
-  message("Please note: `get_acs()` now defaults to a year or endyear of 2016.")
+  if (!is.null(endyear)) {
+    year <- endyear
+    message("The `endyear` parameter is deprecated and will be removed in a future release.  Please use `year` instead.")
+  }
+
+  if (survey == "acs1") {
+    message(sprintf("Getting data from the %s 1-year ACS", year))
+  } else if (survey == "acs3") {
+    startyear <- year - 2
+    message(sprintf("Getting data from the %s-%s 3-year ACS", startyear, year))
+  } else if (survey == "acs5") {
+    startyear <- year - 4
+    message(sprintf("Getting data from the %s-%s 5-year ACS", startyear, year))
+  }
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 
@@ -93,10 +106,6 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   }
 
-  if (!is.null(endyear)) {
-    year <- endyear
-    message("The `endyear` parameter is deprecated and will be removed in a future release.  Please use `year` instead.")
-  }
 
   if (geography == "block") {
     stop("Block data are not available in the ACS. Use `get_decennial()` to access block data from the 2010 Census.", call. = FALSE)
@@ -109,8 +118,6 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       message("The three-year ACS provides data for geographies with populations of 20,000 and greater.")
     }
   }
-
-
 
   if (survey == "acs1") {
     if (year < 2012) {
@@ -131,11 +138,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   }
 
-  # if (survey == "acs3" || survey == "acs1") {
-  #   if (geography == "block group") {
-  #     warning("The acs1 and acs3 surveys do not support block group geographies. Please select 'acs5' for block groups.")
-  #   }
-  # }
+  if (shift_geo && !geometry) {
+    stop("`shift_geo` is only available when requesting feature geometry with `geometry = TRUE`",
+         call. = FALSE)
+  }
 
   if (is.null(variables) && is.null(table)) {
     stop("Either a vector of variables or an ACS table must be specified.", call. = FALSE)
@@ -368,9 +374,16 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       select(-NAME.y) %>%
       mutate(summary_moe = round(summary_moe * moe_factor, 0))
 
-    # Convert -555555555, -666666666, or -222222222 values to NA
-    dat2[dat2 < -100000000] <- NA
-
+    # Convert missing values to NA
+    dat2[dat2 == -111111111] <- NA
+    dat2[dat2 == -222222222] <- NA
+    dat2[dat2 == -333333333] <- NA
+    dat2[dat2 == -444444444] <- NA
+    dat2[dat2 == -555555555] <- NA
+    dat2[dat2 == -666666666] <- NA
+    dat2[dat2 == -777777777] <- NA
+    dat2[dat2 == -888888888] <- NA
+    dat2[dat2 == -999999999] <- NA
   }
 
   if (geometry) {
@@ -384,6 +397,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       if (!is.null(state)) {
         stop("`shift_geo` is only available when requesting geometry for the entire US", call. = FALSE)
       }
+
+      message("Please note: Alaska and Hawaii are being shifted and are not to scale.")
 
       if (geography == "state") {
 

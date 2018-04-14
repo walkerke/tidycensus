@@ -18,5 +18,5 @@
 #' @importFrom readr read_rds write_rds
 #' @importFrom xml2 read_html
 #' @import units
-#' @importFrom utils packageVersion
+#' @importFrom utils packageVersion installed.packages
 NULL

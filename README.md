@@ -8,6 +8,35 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
+## In version 0.4.5: 
+
+* Bug fixed that was causing GEOIDs for some states to be converted to NA on certain Linux platforms
+
+* A new parameter, `shift_geo`, allows tidycensus users to get US state and county geometry using the __albersusa__ R package with Alaska and Hawaii shifted and re-scaled for better cartographic display of the entire US.  
+
+```r
+# Requires the installation of GitHub versions of albersusa and ggplot2
+# library(devtools)
+# install_github("hrbrmstr/albersusa")
+# install_github("tidyverse/ggplot2")
+
+library(tidycensus)
+library(tidyverse)
+library(viridis)
+
+us_county_income <- get_acs(geography = "county", variables = "B19013_001", 
+                            shift_geo = TRUE, geometry = TRUE)
+
+ggplot(us_county_income) + 
+  geom_sf(aes(fill = estimate), color = NA) + 
+  coord_sf(datum = NA) + 
+  theme_minimal() + 
+  scale_fill_viridis()
+
+```
+
+![income_plot](img/county_income.png)
+
 ## In version 0.4: 
 
 * tidycensus now defaults to the new 2012-2016 five-year ACS estimates in `get_acs()`. 
