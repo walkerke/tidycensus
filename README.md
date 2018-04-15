@@ -8,11 +8,11 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
-## In version 0.4.5: 
+## In version 0.4.6: 
 
 * Bug fixed that was causing GEOIDs for some states to be converted to NA on certain Linux platforms
 
-* A new parameter, `shift_geo`, allows tidycensus users to get US state and county geometry using the __albersusa__ R package with Alaska and Hawaii shifted and re-scaled for better cartographic display of the entire US.  
+* A new parameter, `shift_geo`, allows tidycensus users to get US state and county geometry originally obtained with the __albersusa__ R package with Alaska and Hawaii shifted and re-scaled for better cartographic display of the entire US.  
 
 ```r
 # Requires the installation of the GitHub version and ggplot2
