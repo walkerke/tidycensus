@@ -30,7 +30,7 @@
 #' @param keep_geo_vars if TRUE, keeps all the variables from the Census
 #'                      shapefile obtained by tigris.  Defaults to FALSE.
 #' @param shift_geo if TRUE, returns geometry with Alaska and Hawaii shifted for thematic mapping of the entire US.
-#'                  Only available if the GitHub package "albersusa" is installed.  Only available for 2010 data.
+#'                  Geometry was originally obtained from the albersusa R package.
 #' @param summary_var Character string of a "summary variable" from the decennial Census
 #'                    to be included in your output. Usually a variable (e.g. total population)
 #'                    that you'll want to use as a denominator or comparison.
@@ -114,7 +114,13 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
   if (geometry) {
 
     if (shift_geo) {
-      message("Getting feature geometry from the albersusa package")
+
+      if (year != 2010) {
+        stop("`shift_geo` is currently only available for 2010 data in `get_decennial()` due to county boundary changes.",
+             call. = FALSE)
+      }
+
+      message("Using feature geometry obtained from the albersusa package")
     } else if (!shift_geo && !cache) {
       message("Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.")
     }
@@ -265,33 +271,20 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
     if (shift_geo) {
 
-      if (!"albersusa" %in% installed.packages()) {
-        stop("`shift_geo` requires the GitHub package albersusa.  Please install from GitHub with `devtools::install_github('hrbrmstr/albersusa') first.", call. = FALSE)
-      }
 
       if (!is.null(state)) {
         stop("`shift_geo` is only available when requesting geometry for the entire US", call. = FALSE)
-      }
-
-      if (year != 2010) {
-        stop("`shift_geo` is currently only available for 2010 data in `get_decennial()` due to county boundary changes.",
-             call. = FALSE)
       }
 
       message("Please note: Alaska and Hawaii are being shifted and are not to scale.")
 
       if (geography == "state") {
 
-        geom <- albersusa::usa_sf("laea") %>%
-          select(GEOID = fips_state, geometry) %>%
-          mutate(GEOID = as.character(GEOID))
+        geom <- tidycensus::state_laea
 
       } else if (geography == "county") {
 
-        geom <- albersusa::counties_sf("laea") %>%
-          select(GEOID = fips, geometry) %>%
-          mutate(GEOID = as.character(GEOID))
-
+        geom <- tidycensus::county_laea
 
       } else {
         stop("`shift_geo` is only available for states and counties", call. = FALSE)

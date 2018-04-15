@@ -53,7 +53,7 @@ block, and ZCTA geometry are supported.}
 shapefile obtained by tigris.  Defaults to FALSE.}
 
 \item{shift_geo}{if TRUE, returns geometry with Alaska and Hawaii shifted for thematic mapping of the entire US.
-Only available if the GitHub package "albersusa" is installed.}
+Geometry was originally obtained from the albersusa R package.}
 
 \item{summary_var}{Character string of a "summary variable" from the ACS
 to be included

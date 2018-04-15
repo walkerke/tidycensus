@@ -31,7 +31,7 @@
 #' @param keep_geo_vars if TRUE, keeps all the variables from the Census
 #'                      shapefile obtained by tigris.  Defaults to FALSE.
 #' @param shift_geo if TRUE, returns geometry with Alaska and Hawaii shifted for thematic mapping of the entire US.
-#'                  Only available if the GitHub package "albersusa" is installed.
+#'                  Geometry was originally obtained from the albersusa R package.
 #' @param summary_var Character string of a "summary variable" from the ACS
 #'                    to be included
 #'                    in your output. Usually a variable (e.g. total population)
@@ -131,7 +131,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   if (geometry) {
 
     if (shift_geo) {
-      message("Getting feature geometry from the albersusa package")
+      message("Using feature geometry obtained from the albersusa package")
     } else if (!shift_geo && !cache) {
       message("Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.")
     }
@@ -390,10 +390,6 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     if (shift_geo) {
 
-      if (!"albersusa" %in% installed.packages()) {
-        stop("`shift_geo` requires the GitHub package albersusa.  Please install from GitHub with `devtools::install_github('hrbrmstr/albersusa') first.", call. = FALSE)
-      }
-
       if (!is.null(state)) {
         stop("`shift_geo` is only available when requesting geometry for the entire US", call. = FALSE)
       }
@@ -402,15 +398,11 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
       if (geography == "state") {
 
-        geom <- albersusa::usa_sf("laea") %>%
-          select(GEOID = fips_state, geometry) %>%
-          mutate(GEOID = as.character(GEOID))
+        geom <- tidycensus::state_laea
 
       } else if (geography == "county") {
 
-        geom <- albersusa::counties_sf("laea") %>%
-          select(GEOID = fips, geometry) %>%
-          mutate(GEOID = as.character(GEOID))
+        geom <- tidycensus::county_laea
 
         if (year > 2014) {
           # Account for change from Shannon County, SD to Oglala Lakota County
@@ -446,19 +438,5 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     return(dat2)
 
   }
-
-  # Allow users to get data for specific state, or specific county
-  # Update for more geographies if requested
-  # if (geography == "state" && !is.null(state)) {
-  #   statev <- map_chr(state, function(x) { validate_state(x) })
-  #   return(dat2[dat2$GEOID %in% statev, ])
-  # }
-  #
-  # if (geography == "county" && !is.null(county)) {
-  #   state1 <- validate_state(state)
-  #   countyv <- map_chr(county, function(x) { validate_county(x) })
-  #   ctys <- paste0(state1, countyv)
-  #   return(dat2[dat2$GEOID %in% ctys, ])
-  # }
 
 }

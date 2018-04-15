@@ -15,9 +15,8 @@ install.packages("tidycensus")
 * A new parameter, `shift_geo`, allows tidycensus users to get US state and county geometry using the __albersusa__ R package with Alaska and Hawaii shifted and re-scaled for better cartographic display of the entire US.  
 
 ```r
-# Requires the installation of GitHub versions of albersusa and ggplot2
+# Requires the installation of the GitHub version and ggplot2
 # library(devtools)
-# install_github("hrbrmstr/albersusa")
 # install_github("tidyverse/ggplot2")
 
 library(tidycensus)
