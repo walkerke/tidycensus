@@ -35,7 +35,7 @@ ggplot(us_county_income) +
 
 ```
 
-![income_plot](img/county_income.png)
+![income_plot](tools/readme/county_income.png)
 
 ## In version 0.4: 
 

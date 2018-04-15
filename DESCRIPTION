@@ -32,5 +32,6 @@ Imports:
     units, 
     utils
 Suggests: 
-    albersusa
+    albersusa, 
+    ggplot2
 RoxygenNote: 6.0.1

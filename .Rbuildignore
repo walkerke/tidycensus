@@ -7,4 +7,3 @@ _pkgdown.yml
 ^examples$
 index.Rmd
 .travis.yml
-^img$
