@@ -428,7 +428,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     }
 
     # Merge and return the output
-    out <- inner_join(geom, dat2, by = "GEOID") %>%
+    out <- right_join(geom, dat2, by = "GEOID") %>%
       st_as_sf()
 
     return(out)
