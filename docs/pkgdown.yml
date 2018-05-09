@@ -1,0 +1,8 @@
+pandoc: 2.1.3
+pkgdown: 1.0.0
+pkgdown_sha: ~
+articles:
+  basic-usage: basic-usage.html
+  margins-of-error: margins-of-error.html
+  spatial-data: spatial-data.html
+

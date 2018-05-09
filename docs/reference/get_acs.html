@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Obtain data and feature geometry for the five-year American Community Survey � get_acs • tidycensus</title>
+<title>Obtain data and feature geometry for the five-year American Community Survey — get_acs • tidycensus</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,11 +18,21 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
+<meta property="og:title" content="Obtain data and feature geometry for the five-year American Community Survey — get_acs" />
+
+<meta property="og:description" content="Obtain data and feature geometry for the five-year American Community Survey" />
+<meta name="twitter:card" content="summary" />
+
 
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
@@ -46,8 +56,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">tidycensus</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">tidycensus</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.6.9000</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -73,6 +87,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -80,22 +95,27 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Obtain data and feature geometry for the five-year American Community Survey</h1>
+    <small class="dont-index">Source: <a href='https://github.com/walkerke/tidycensus/blob/master/R/acs.R'><code>R/acs.R</code></a></small>
+    <div class="hidden name"><code>get_acs.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Obtain data and feature geometry for the five-year American Community Survey</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>get_acs</span>(<span class='no'>geography</span>, <span class='kw'>variables</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>table</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cache_table</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2016</span>, <span class='kw'>endyear</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"tidy"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>county</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>keep_geo_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>summary_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>moe_level</span> <span class='kw'>=</span> <span class='fl'>90</span>, <span class='kw'>survey</span> <span class='kw'>=</span> <span class='st'>"acs5"</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>shift_geo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>summary_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>moe_level</span> <span class='kw'>=</span> <span class='fl'>90</span>,
+  <span class='kw'>survey</span> <span class='kw'>=</span> <span class='st'>"acs5"</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -112,7 +132,7 @@ margin of error associated with the variable.</p></td>
       <th>table</th>
       <td><p>The ACS table for which you would like to request all variables.  Uses
 lookup tables to identify the variables; performs faster when variable
-table already exists through <code>load_variables(cache = TRUE)</code>.</p></td>
+table already exists through <code><a href='load_variables.html'>load_variables(cache = TRUE)</a></code>.</p></td>
     </tr>
     <tr>
       <th>cache_table</th>
@@ -162,6 +182,11 @@ block, and ZCTA geometry are supported.</p></td>
 shapefile obtained by tigris.  Defaults to FALSE.</p></td>
     </tr>
     <tr>
+      <th>shift_geo</th>
+      <td><p>if TRUE, returns geometry with Alaska and Hawaii shifted for thematic mapping of the entire US.
+Geometry was originally obtained from the albersusa R package.</p></td>
+    </tr>
+    <tr>
       <th>summary_var</th>
       <td><p>Character string of a "summary variable" from the ACS
 to be included
@@ -171,7 +196,7 @@ that you'll want to use as a denominator or comparison.</p></td>
     <tr>
       <th>key</th>
       <td><p>Your Census API key.
-Obtain one at <a href = 'http://api.census.gov/data/key_signup.html'>http://api.census.gov/data/key_signup.html</a></p></td>
+Obtain one at <a href='http://api.census.gov/data/key_signup.html'>http://api.census.gov/data/key_signup.html</a></p></td>
     </tr>
     <tr>
       <th>moe_level</th>
@@ -194,35 +219,35 @@ The default selection is "acs5."</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>not_run</span>({
-  <span class='fu'>library</span>(<span class='no'>tidycensus</span>)
-  <span class='fu'>library</span>(<span class='no'>tidyverse</span>)
-  <span class='fu'>library</span>(<span class='no'>viridis</span>)
-  <span class='fu'><a href='census_api_key.html'>census_api_key</a></span>(<span class='st'>"YOUR KEY GOES HERE"</span>)
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>library</span>(<span class='no'>tidycensus</span>)
+<span class='fu'>library</span>(<span class='no'>tidyverse</span>)
+<span class='fu'>library</span>(<span class='no'>viridis</span>)
+<span class='fu'><a href='census_api_key.html'>census_api_key</a></span>(<span class='st'>"YOUR KEY GOES HERE"</span>)
 
-  <span class='no'>tarr</span> <span class='kw'>&lt;-</span> <span class='fu'>get_acs</span>(<span class='kw'>geography</span> <span class='kw'>=</span> <span class='st'>"tract"</span>, <span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"B19013_001"</span>,
-                  <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"TX"</span>, <span class='kw'>county</span> <span class='kw'>=</span> <span class='st'>"Tarrant"</span>, <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>tarr</span> <span class='kw'>&lt;-</span> <span class='fu'>get_acs</span>(<span class='kw'>geography</span> <span class='kw'>=</span> <span class='st'>"tract"</span>, <span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"B19013_001"</span>,
+                <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"TX"</span>, <span class='kw'>county</span> <span class='kw'>=</span> <span class='st'>"Tarrant"</span>, <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
-  <span class='fu'>ggplot</span>(<span class='no'>tarr</span>, <span class='fu'>aes</span>(<span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>estimate</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>estimate</span>)) +
-    <span class='fu'>geom_sf</span>() +
-    <span class='fu'>coord_sf</span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='fl'>26914</span>) +
-    <span class='fu'>scale_fill_viridis</span>(<span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"magma"</span>) +
-    <span class='fu'>scale_color_viridis</span>(<span class='kw'>options</span> <span class='kw'>=</span> <span class='st'>"magma"</span>)
+<span class='fu'>ggplot</span>(<span class='no'>tarr</span>, <span class='fu'>aes</span>(<span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>estimate</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>estimate</span>)) +
+  <span class='fu'>geom_sf</span>() +
+  <span class='fu'>coord_sf</span>(<span class='kw'>crs</span> <span class='kw'>=</span> <span class='fl'>26914</span>) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/viridis/topics/scale_viridis'>scale_fill_viridis</a></span>(<span class='kw'>option</span> <span class='kw'>=</span> <span class='st'>"magma"</span>) +
+  <span class='fu'><a href='http://www.rdocumentation.org/packages/viridis/topics/scale_viridis'>scale_color_viridis</a></span>(<span class='kw'>options</span> <span class='kw'>=</span> <span class='st'>"magma"</span>)
 
 
-  <span class='no'>vt</span> <span class='kw'>&lt;-</span> <span class='fu'>get_acs</span>(<span class='kw'>geography</span> <span class='kw'>=</span> <span class='st'>"county"</span>, <span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"B19013_001"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>)
+<span class='no'>vt</span> <span class='kw'>&lt;-</span> <span class='fu'>get_acs</span>(<span class='kw'>geography</span> <span class='kw'>=</span> <span class='st'>"county"</span>, <span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"B19013_001"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>)
 
-  <span class='no'>vt</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'>mutate</span>(<span class='kw'>NAME</span> <span class='kw'>=</span> <span class='fu'>gsub</span>(<span class='st'>" County, Vermont"</span>, <span class='st'>""</span>, <span class='no'>NAME</span>)) <span class='kw'>%&gt;%</span>
-   <span class='fu'>ggplot</span>(<span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>estimate</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>reorder</span>(<span class='no'>NAME</span>, <span class='no'>estimate</span>))) +
-    <span class='fu'>geom_errorbarh</span>(<span class='fu'>aes</span>(<span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>estimate</span> - <span class='no'>moe</span>, <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>estimate</span> + <span class='no'>moe</span>)) +
-    <span class='fu'>geom_point</span>(<span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>3</span>) +
-    <span class='fu'>labs</span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Household income by county in Vermont"</span>,
-         <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"2012-2016 American Community Survey"</span>,
-         <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>""</span>,
-         <span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"ACS estimate (bars represent margin of error)"</span>)
+<span class='no'>vt</span> <span class='kw'>%&gt;%</span>
+<span class='fu'>mutate</span>(<span class='kw'>NAME</span> <span class='kw'>=</span> <span class='fu'>gsub</span>(<span class='st'>" County, Vermont"</span>, <span class='st'>""</span>, <span class='no'>NAME</span>)) <span class='kw'>%&gt;%</span>
+ <span class='fu'>ggplot</span>(<span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>estimate</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>reorder</span>(<span class='no'>NAME</span>, <span class='no'>estimate</span>))) +
+  <span class='fu'>geom_errorbarh</span>(<span class='fu'>aes</span>(<span class='kw'>xmin</span> <span class='kw'>=</span> <span class='no'>estimate</span> - <span class='no'>moe</span>, <span class='kw'>xmax</span> <span class='kw'>=</span> <span class='no'>estimate</span> + <span class='no'>moe</span>)) +
+  <span class='fu'>geom_point</span>(<span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>3</span>) +
+  <span class='fu'>labs</span>(<span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Household income by county in Vermont"</span>,
+       <span class='kw'>subtitle</span> <span class='kw'>=</span> <span class='st'>"2012-2016 American Community Survey"</span>,
+       <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>""</span>,
+       <span class='kw'>x</span> <span class='kw'>=</span> <span class='st'>"ACS estimate (bars represent margin of error)"</span>)
 
-})</div></pre>
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -243,11 +268,14 @@ The default selection is "acs5."</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

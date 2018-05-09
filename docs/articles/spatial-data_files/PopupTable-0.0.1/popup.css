@@ -91,11 +91,13 @@ div::-webkit-scrollbar-corner {
 }
 
 .leaflet-popup-tip-container {
-	margin: auto;
 	width: 40px;
 	height: 20px;
-	position: relative;
+	position: absolute;
+	left: 50%;
+	margin-left: -20px;
 	overflow: hidden;
+	pointer-events: none;
 }
 
 .leaflet-popup-tip {
@@ -111,6 +113,29 @@ div::-webkit-scrollbar-corner {
 	     -o-transform: rotate(45deg);
 	        transform: rotate(45deg);
 }
+
+/* legacy
+.leaflet-popup-tip-container {
+	margin: 0 -10px;
+	width: 40px;
+	height: 20px;
+	position: relative;
+	overflow: hidden;
+}
+
+.leaflet-popup-tip {
+	width: 15px;
+	height: 15px;
+	padding: 0px;
+	margin: -10px 0;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	     -o-transform: rotate(45deg);
+	        transform: rotate(45deg);
+}
+*/
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
 	background: #4c4c4c;

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Install a CENSUS API Key in Your <code>.Renviron</code> File for Repeated Use � census_api_key • tidycensus</title>
+<title>Install a CENSUS API Key in Your <code>.Renviron</code> File for Repeated Use — census_api_key • tidycensus</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,11 +18,25 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
+<meta property="og:title" content="Install a CENSUS API Key in Your <code>.Renviron</code> File for Repeated Use — census_api_key" />
+
+<meta property="og:description" content="This function will add your CENSUS API key to your .Renviron file so it can be called securely without being stored
+in your code. After you have installed your key, it can be called any time by typing Sys.getenv("CENSUS_API_KEY") and can be
+used in package functions by simply typing CENSUS_API_KEY If you do not have an .Renviron file, the function will create on for you.
+If you already have an .Renviron file, the function will append the key to your existing file, while making a backup of your
+original file for disaster recovery purposes." />
+<meta name="twitter:card" content="summary" />
+
 
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
@@ -46,8 +60,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">tidycensus</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">tidycensus</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.6.9000</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -73,6 +91,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -80,12 +99,15 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Install a CENSUS API Key in Your <code>.Renviron</code> File for Repeated Use</h1>
+    <small class="dont-index">Source: <a href='https://github.com/walkerke/tidycensus/blob/master/R/helpers.R'><code>R/helpers.R</code></a></small>
+    <div class="hidden name"><code>census_api_key.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>This function will add your CENSUS API key to your <code>.Renviron</code> file so it can be called securely without being stored
 in your code. After you have installed your key, it can be called any time by typing <code>Sys.getenv("CENSUS_API_KEY")</code> and can be
@@ -93,15 +115,16 @@ used in package functions by simply typing CENSUS_API_KEY If you do not have an 
 If you already have an <code>.Renviron</code> file, the function will append the key to your existing file, while making a backup of your
 original file for disaster recovery purposes.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>census_api_key</span>(<span class='no'>key</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>install</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>key</th>
-      <td><p>The API key provided to you from the Census formated in quotes. A key can be acquired at <a href = 'http://api.census.gov/data/key_signup.html'>http://api.census.gov/data/key_signup.html</a></p></td>
+      <td><p>The API key provided to you from the Census formated in quotes. A key can be acquired at <a href='http://api.census.gov/data/key_signup.html'>http://api.census.gov/data/key_signup.html</a></p></td>
     </tr>
     <tr>
       <th>overwrite</th>
@@ -116,22 +139,21 @@ original file for disaster recovery purposes.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'>not_run</span>({
-  <span class='fu'>census_api_key</span>(<span class='st'>"111111abc"</span>, <span class='kw'>install</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='co'># First time, reload your environment so you can use the key without restarting R.</span>
-  <span class='fu'>readRenviron</span>(<span class='st'>"~/.Renviron"</span>)
-  <span class='co'># You can check it with:</span>
-  <span class='fu'>Sys.getenv</span>(<span class='st'>"CENSUS_API_KEY"</span>)
-})
-
-<span class='fu'>not_run</span>({
-  <span class='co'># If you need to overwrite an existing key:</span>
-  <span class='fu'>census_api_key</span>(<span class='st'>"111111abc"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>install</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='co'># First time, relead your environment so you can use the key without restarting R.</span>
-  <span class='fu'>readRenviron</span>(<span class='st'>"~/.Renviron"</span>)
-  <span class='co'># You can check it with:</span>
-  <span class='fu'>Sys.getenv</span>(<span class='st'>"CENSUS_API_KEY"</span>)
-})</div></pre>
+</div><span class='co'># NOT RUN {</span>
+<span class='fu'>census_api_key</span>(<span class='st'>"111111abc"</span>, <span class='kw'>install</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># First time, reload your environment so you can use the key without restarting R.</span>
+<span class='fu'>readRenviron</span>(<span class='st'>"~/.Renviron"</span>)
+<span class='co'># You can check it with:</span>
+<span class='fu'>Sys.getenv</span>(<span class='st'>"CENSUS_API_KEY"</span>)
+<span class='co'># }</span><div class='input'>
+</div><span class='co'># NOT RUN {</span>
+<span class='co'># If you need to overwrite an existing key:</span>
+<span class='fu'>census_api_key</span>(<span class='st'>"111111abc"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>install</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># First time, relead your environment so you can use the key without restarting R.</span>
+<span class='fu'>readRenviron</span>(<span class='st'>"~/.Renviron"</span>)
+<span class='co'># You can check it with:</span>
+<span class='fu'>Sys.getenv</span>(<span class='st'>"CENSUS_API_KEY"</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -150,11 +172,14 @@ original file for disaster recovery purposes.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+
