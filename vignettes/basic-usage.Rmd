@@ -45,7 +45,7 @@ m90 %>%
 
 To get decennial Census data or American Community Survey data, tidycensus users supply an argument to the required `geography` parameter.  Arguments are formatted as consumed by the Census API, and specified in the table below.  Not all geographies are available for all surveys, all years, and all variables.  Most Census geographies are supported in tidycensus at the moment; if you require a geography that is missing from the table below, please file an issue at https://github.com/walkerke/tidycensus/issues.  
 
-If __state__ or __county__ is in bold face in "Available by" is means that you are required to supply a state and/or county for the given geography.  
+If __state__ or __county__ is in bold face in "Available by", you are required to supply a state and/or county for the given geography.  
 
 |Geography|Definition|Available by|Available in|
 |---------|----------|------------|------------|
