@@ -12,8 +12,6 @@ To get started working with __tidycensus__, users should load the package along 
 ```{r, echo = FALSE}
 library(tidycensus)
 library(tidyverse)
-
-census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
 ```
 
 ```{r, eval = FALSE}
