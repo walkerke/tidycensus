@@ -119,16 +119,19 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography %in% c("zcta", "zip code tabulation area")) {
 
-    # For right now, to get it to work, it has to be cb = FALSE for 2010
+    # For right now, to get it to work, it has to be cb = FALSE for 2010, 2011, and 2012
     # Re-visit this in the future.
 
-    if (year == 2010) cb <- FALSE
+    if (year %in% 2010:2012) cb <- FALSE
+
+    # No ZCTA geometry for 2011, so use 2010 instead
+    if (year == 2011) year <- 2010
 
     z <- zctas(cb = cb, starts_with = starts_with, year = year,
                class = "sf", state = state)
 
-    if (year %in% c(2000, 2010)) {
-      z <- mutate(z, GEOID = NAME)
+    if (year == 2000) {
+      z <- rename(z, GEOID = GEOID00)
     } else {
       z <- rename(z, GEOID = GEOID10)
     }
