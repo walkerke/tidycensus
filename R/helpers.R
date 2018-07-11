@@ -30,6 +30,10 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
       }
     }
 
+    if (year == 2014) {
+      st <- st_zm(st)
+    }
+
     return(st)
 
   } else if (geography == "county") {
@@ -51,6 +55,10 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
           summarize() %>%
           st_cast("MULTIPOLYGON")
       }
+    }
+
+    if (year == 2014) {
+      ct <- st_zm(ct)
     }
 
     return(ct)
@@ -77,6 +85,10 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
         st_cast("MULTIPOLYGON")
     }
 
+    if (year == 2014) {
+      tr <- st_zm(tr)
+    }
+
     return(tr)
 
   } else if (geography == "block group") {
@@ -97,6 +109,10 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
         group_by(GEOID) %>%
         summarize() %>%
         st_cast("MULTIPOLYGON")
+    }
+
+    if (year == 2014) {
+      bg <- st_zm(bg)
     }
 
     return(bg)
