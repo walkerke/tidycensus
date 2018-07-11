@@ -53,7 +53,15 @@ load_variables <- function(year, dataset, cache = FALSE) {
 
       out <- dat[,1:3]
 
-      return(tbl_df(out))
+      names(out) <- tolower(names(out))
+
+      out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P[0-9]|^H[0-9]", out$name), ]
+
+      out1$name <- str_replace(out1$name, "E$|M$", "")
+
+      out2 <- out1[!grepl("Margin Of Error|Margin of Error", out1$label), ]
+
+      return(tbl_df(out2))
     # Otherwise use HTML scraping as JSON is not available for decennial Census
     } else {
       url <- paste("http://api.census.gov/data",
@@ -73,7 +81,13 @@ load_variables <- function(year, dataset, cache = FALSE) {
 
       names(out) <- tolower(names(out))
 
-      return(tbl_df(out))
+      out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P[0-9]|^H[0-9]", out$name), ]
+
+      out1$name <- str_replace(out1$name, "E$|M$", "")
+
+      out2 <- out1[!grepl("Margin Of Error|Margin of Error", out1$label), ]
+
+      return(tbl_df(out2))
 
     }
 
@@ -88,7 +102,14 @@ load_variables <- function(year, dataset, cache = FALSE) {
     if (file.exists(cache_dir)) {
       file_loc <- file.path(cache_dir, rds)
       if (file.exists(file_loc)) {
-        return(read_rds(file_loc))
+        out <- file_loc
+
+        out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P[0-9]|^H[0-9]", out$name), ]
+
+        out1$name <- str_replace(out1$name, "E$|M$", "")
+
+        out2 <- out1[!grepl("Margin Of Error|Margin of Error", out1$label), ]
+        return(read_rds(out2))
       } else {
         df <- get_dataset(dataset)
         write_rds(df, file_loc)
