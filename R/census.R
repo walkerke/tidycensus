@@ -302,10 +302,15 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
     }
 
-    # Merge and return the output
-    out <- right_join(geom, dat2, by = "GEOID") %>%
-      as_tibble() %>%
-      st_as_sf()
+    if (shift_geo) {
+      out <- inner_join(geom, dat2, by = "GEOID") %>%
+        as_tibble() %>%
+        st_as_sf()
+    } else {
+      out <- right_join(geom, dat2, by = "GEOID") %>%
+        as_tibble() %>%
+        st_as_sf()
+    }
 
     return(out)
 
