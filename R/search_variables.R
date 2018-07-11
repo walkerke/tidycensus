@@ -102,14 +102,14 @@ load_variables <- function(year, dataset, cache = FALSE) {
     if (file.exists(cache_dir)) {
       file_loc <- file.path(cache_dir, rds)
       if (file.exists(file_loc)) {
-        out <- file_loc
+        out <- read_rds(file_loc)
 
         out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P[0-9]|^H[0-9]", out$name), ]
 
         out1$name <- str_replace(out1$name, "E$|M$", "")
 
         out2 <- out1[!grepl("Margin Of Error|Margin of Error", out1$label), ]
-        return(read_rds(out2))
+        return(out2)
       } else {
         df <- get_dataset(dataset)
         write_rds(df, file_loc)

@@ -258,13 +258,9 @@ variables_from_table_acs <- function(table, year, survey, cache_table) {
   specific <- paste0(table, "_")
 
   # Find all variables that match the table
-  vars <- df %>%
-    filter(grepl(specific, name)) %>%
-    pull(name)
+  sub <- df[grepl(specific, df$name), ]
 
-  vars <- substr(vars, 1, nchar(vars) - 1)
-
-  vars <- unique(vars)
+  vars <- sub$name
 
   return(vars)
 
