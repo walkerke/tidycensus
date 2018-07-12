@@ -397,4 +397,121 @@ load_data_decennial <- function(geography, variables, key, year,
 }
 
 
+load_data_estimates <- function(geography, product, variables,
+                                key, year, state = NULL, county = NULL) {
 
+  if (product == "monthly") product <- "natmonthly"
+
+  if (product == "age groups") product <- "charagegroups"
+
+  base <- sprintf("https://api.census.gov/data/%s/pep/%s", year, product)
+
+  for_area <- paste0(geography, ":*")
+
+  vars_to_get <- function(product) {
+
+    # Add variables functionality after the function is working
+    if (product == "population") {
+      return("GEONAME,POP,DENSITY")
+    } else if (product == "components") {
+      return("GEONAME,BIRTHS,DEATHS,DOMESTICMIG,INTERNATIONALMIG,NATURALINC,NETMIG,RBIRTH,RDEATH,RDOMESTICMIG,RINTERNATIONALMIG,RNATURALINC,RNETMIG")
+    } else if (product == "housing") {
+      return("GEONAME,HUEST")
+    } else {
+      stop("Other products are not yet supported.", call. = FALSE)
+    }
+
+  }
+
+  if (!is.null(state)) {
+
+    state <- map_chr(state, function(x) {
+      validate_state(x)
+    })
+
+    if (length(state) > 1) {
+      state <- paste0(state, collapse = ",")
+    }
+
+    if (geography == "state") {
+      for_area <- paste0("state:", state)
+    }
+
+    if (!is.null(county)) {
+
+      county <- map_chr(county, function(x) {
+        validate_county(state, x)
+      })
+
+      if (length(county) > 1) {
+        county <- paste0(county, collapse = ",")
+      }
+
+      if (geography == "county") {
+
+        for_area <- paste0("county:", county)
+        in_area <- paste0("state:", state)
+
+      } else {
+
+        in_area <- paste0("state:", state,
+                          "+county:", county)
+      }
+
+    } else {
+      in_area <- paste0("state:", state)
+    }
+
+
+
+
+    if (geography == "state" && !is.null(state)) {
+
+      call <- GET(base, query = list(get = vars_to_get(product),
+                                     "for" = for_area,
+                                     key = key))
+    } else {
+
+      call <- GET(base, query = list(get = vars_to_get(product),
+                                     "for" = for_area,
+                                     "in" = in_area,
+                                     key = key))
+    }
+
+
+  }
+
+  else {
+
+    call <- GET(base, query = list(get = vars_to_get(product),
+                                   "for" = paste0(geography, ":*"),
+                                   key = key))
+  }
+
+  content <- content(call, as = "text")
+
+  dat <- tbl_df(fromJSON(content))
+
+  colnames(dat) <- dat[1,]
+
+  dat <- dat[-1,]
+
+  var_vector <- unlist(strsplit(vars_to_get(product), split = ","))
+
+  var_vector <- var_vector[var_vector != "GEONAME"]
+
+  dat[var_vector] <- lapply(dat[var_vector], as.numeric)
+
+  v2 <- c(var_vector, "GEONAME")
+
+  # Get the geography ID variables
+  id_vars <- names(dat)[! names(dat) %in% v2]
+
+  # Paste into a GEOID column
+  dat$GEOID <- do.call(paste0, dat[id_vars])
+
+  # Now, remove them
+  dat <- dat[, !(names(dat) %in% id_vars)]
+
+  return(dat)
+}
