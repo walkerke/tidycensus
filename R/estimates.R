@@ -44,6 +44,10 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
         load_data_estimates(geography = geography, product = NULL, variables = eachvar,
                             year = year, state = state, county = county, key = key)
       })
+
+      # Remove any extra GEOID or GEONAME columns
+      dat <- dat[, -grep("GEOID[0-9]|GEONAME[0-9]", colnames(dat))]
+
     } else {
       dat <- load_data_estimates(geography = geography, product = product,
                                  variables = variables,
@@ -59,11 +63,6 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
   if (output == "tidy") {
 
-    # Remove any extra GEOID or GEONAME columns
-    dat <- dat[, -grep("GEOID[0-9]|GEONAME[0-9]", colnames(dat))]
-
-    # sub <- dat[c("GEOID", "GEONAME", variables)]
-
     dat2 <- dat %>%
       rename(NAME = GEONAME) %>%
       gather(key = variable, value = value, -GEOID, -NAME)
@@ -77,9 +76,6 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
   } else if (output == "wide") {
 
     dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
-
-    # Remove any extra GEOID or GEONAME columns
-    dat <- dat[, -grep("GEOID[0-9]|GEONAME[0-9]", colnames(dat))]
 
     dat2 <- dat
 
