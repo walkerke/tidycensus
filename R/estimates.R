@@ -20,10 +20,7 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, ...) {
 
-  if (!product %in% c("population", "components", "monthly",
-                      "age groups","housing")) {
-    stop("You have selected an invalid product.  Valid requests are 'population', 'components', 'monthly', 'age groups', and 'housing'.", call. = FALSE)
-  }
+
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 
@@ -35,11 +32,35 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
   }
 
+  # For a variables vector, check to see if the variables cut across multiple products
+  if (!is.null(variables) && length(variables) > 1) {
+    check <- c(any(variables %in% population_estimates_variables),
+               any(variables %in% components_estimates_variables),
+               any(variables %in% housing_estimates_variables))
 
-  dat <- load_data_estimates(geography = geography, product = product, variables = variables,
-                             year = year, state = state, county = county, key = key)
+    # if there is more than one TRUE, grab data by variable
+    if (length(which(check)) > 1) {
+      dat <- map_dfc(variables, function(eachvar) {
+        load_data_estimates(geography = geography, product = NULL, variables = eachvar,
+                            year = year, state = state, county = county, key = key)
+      })
+    } else {
+      dat <- load_data_estimates(geography = geography, product = product,
+                                 variables = variables,
+                                 year = year, state = state,
+                                 county = county, key = key)
+    }
+  } else {
+    dat <- load_data_estimates(geography = geography, product = product,
+                               variables = variables,
+                               year = year, state = state,
+                               county = county, key = key)
+  }
 
   if (output == "tidy") {
+
+    # Remove any extra GEOID or GEONAME columns
+    dat <- dat[, -grep("GEOID[0-9]|GEONAME[0-9]", colnames(dat))]
 
     # sub <- dat[c("GEOID", "GEONAME", variables)]
 
@@ -56,6 +77,9 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
   } else if (output == "wide") {
 
     dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
+
+    # Remove any extra GEOID or GEONAME columns
+    dat <- dat[, -grep("GEOID[0-9]|GEONAME[0-9]", colnames(dat))]
 
     dat2 <- dat
 

@@ -29,6 +29,10 @@ fips_state_table <- structure(list(abb = c("ak", "al", "ar", "as", "az", "ca", "
 )), .Names = c("abb", "fips", "name"), row.names = c(NA, -56L
 ), class = "data.frame")
 
+population_estimates_variables <- c("POP", "DENSITY")
+components_estimates_variables <- c("BIRTHS", "DEATHS","DOMESTICMIG","INTERNATIONALMIG","NATURALINC","NETMIG","RBIRTH","RDEATH","RDOMESTICMIG","RINTERNATIONALMIG","RNATURALINC","RNETMIG")
+housing_estimates_variables <- "HUEST"
+
 
 .onLoad <- function(libname, pkgname) {
   utils::data("fips_codes", package=pkgname, envir=parent.env(environment()))
