@@ -2,40 +2,55 @@
 % Please edit documentation in R/estimates.R
 \name{get_estimates}
 \alias{get_estimates}
-\title{Title}
+\title{Get data from the US Census Bureau Population Estimates APIs}
 \usage{
 get_estimates(geography, product = NULL, variables = NULL, year = 2017,
   state = NULL, county = NULL, output = "tidy", geometry = FALSE,
   keep_geo_vars = FALSE, shift_geo = FALSE, key = NULL, ...)
 }
 \arguments{
-\item{geography}{geography}
+\item{geography}{The geography of your data.}
 
-\item{product}{product}
+\item{product}{The data product (optional). \code{"population"}, \code{"components"}
+\code{"housing"}, and \code{"characteristics"} are supported.}
 
-\item{variables}{variables}
+\item{variables}{A character string of requested variables to get specific
+variables from the population, components, and housing APIs.}
 
-\item{year}{year}
+\item{year}{The data year (defaults to 2017)}
 
-\item{state}{state}
+\item{state}{The state for which you are requesting data. State
+names, postal codes, and FIPS codes are accepted.
+Defaults to NULL.}
 
-\item{county}{county}
+\item{county}{The county for which you are requesting data. County names and
+FIPS codes are accepted. Must be combined with a value supplied
+to `state`.  Defaults to NULL.}
 
-\item{output}{output}
+\item{output}{One of "tidy" (the default) in which each row represents an
+enumeration unit-variable combination, or "wide" in which each
+row represents an enumeration unit and the variables are in the
+columns.}
 
-\item{geometry}{geometry}
+\item{geometry}{if FALSE (the default), return a regular tibble of ACS data.
+if TRUE, uses the tigris package to return an sf tibble
+with simple feature geometry in the `geometry` column.}
 
-\item{keep_geo_vars}{TRUE or FALSE}
+\item{keep_geo_vars}{if TRUE, keeps all the variables from the Census
+shapefile obtained by tigris.  Defaults to FALSE.}
 
-\item{shift_geo}{TRUE or FALSE}
+\item{shift_geo}{if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
+mapping of the entire US.}
 
-\item{key}{The Census API key}
+\item{key}{Your Census API key.
+Obtain one at \url{http://api.census.gov/data/key_signup.html}.  Can be stored
+in your .Renviron with \code{census_api_key("YOUR KEY", install = TRUE)}}
 
 \item{...}{other keyword arguments}
 }
 \value{
-population estimates
+A tibble, or sf tibble, of population estimates data
 }
 \description{
-Title
+Get data from the US Census Bureau Population Estimates APIs
 }

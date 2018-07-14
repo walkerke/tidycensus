@@ -1,19 +1,34 @@
-#' Title
+#' Get data from the US Census Bureau Population Estimates APIs
 #'
-#' @param geography geography
-#' @param product product
-#' @param variables variables
-#' @param year year
-#' @param state state
-#' @param county county
-#' @param output output
-#' @param geometry geometry
-#' @param keep_geo_vars TRUE or FALSE
-#' @param shift_geo TRUE or FALSE
-#' @param key The Census API key
+#' @param geography The geography of your data.
+#' @param product The data product (optional). \code{"population"}, \code{"components"}
+#'                \code{"housing"}, and \code{"characteristics"} are supported.
+#' @param variables A character string of requested variables to get specific
+#'                  variables from the population, components, and housing APIs.
+#' @param year The data year (defaults to 2017)
+#' @param state The state for which you are requesting data. State
+#'              names, postal codes, and FIPS codes are accepted.
+#'              Defaults to NULL.
+#' @param county The county for which you are requesting data. County names and
+#'               FIPS codes are accepted. Must be combined with a value supplied
+#'               to `state`.  Defaults to NULL.
+#' @param output One of "tidy" (the default) in which each row represents an
+#'               enumeration unit-variable combination, or "wide" in which each
+#'               row represents an enumeration unit and the variables are in the
+#'               columns.
+#' @param geometry if FALSE (the default), return a regular tibble of ACS data.
+#'                 if TRUE, uses the tigris package to return an sf tibble
+#'                 with simple feature geometry in the `geometry` column.
+#' @param keep_geo_vars if TRUE, keeps all the variables from the Census
+#'                      shapefile obtained by tigris.  Defaults to FALSE.
+#' @param shift_geo if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
+#'                  mapping of the entire US.
+#' @param key Your Census API key.
+#'            Obtain one at \url{http://api.census.gov/data/key_signup.html}.  Can be stored
+#'            in your .Renviron with \code{census_api_key("YOUR KEY", install = TRUE)}
 #' @param ... other keyword arguments
 #'
-#' @return population estimates
+#' @return A tibble, or sf tibble, of population estimates data
 #' @export
 get_estimates <- function(geography, product = NULL, variables = NULL,
                           year = 2017, state = NULL, county = NULL,
