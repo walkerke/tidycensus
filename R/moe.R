@@ -4,11 +4,12 @@
 #'
 #' @param moe A vector of margins of error involved in the sum calculation
 #' @param estimate A vector of estimates, the same length as \code{moe}, associated with the margins of error
+#' @param na.rm A logical value indicating whether missing values (including NaN) should be removed
 #' @seealso \url{https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/MultiyearACSAccuracyofData2015.pdf}
 #'
 #' @return A margin of error for a derived sum
 #' @export
-moe_sum <- function(moe, estimate = NULL) {
+moe_sum <- function(moe, estimate = NULL, na.rm = FALSE) {
 
   if (!is.null(estimate)) {
     # ID those MOE values with 0 estimates
@@ -28,7 +29,7 @@ moe_sum <- function(moe, estimate = NULL) {
 
   squared <- map_dbl(forcalc, function(x) x^2)
 
-  result <- sqrt(sum(squared))
+  result <- sqrt(sum(squared, na.rm = na.rm))
 
   return(result)
 

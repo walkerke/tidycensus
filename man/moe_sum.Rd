@@ -4,12 +4,14 @@
 \alias{moe_sum}
 \title{Calculate the margin of error for a derived sum}
 \usage{
-moe_sum(moe, estimate = NULL)
+moe_sum(moe, estimate = NULL, na.rm = FALSE)
 }
 \arguments{
 \item{moe}{A vector of margins of error involved in the sum calculation}
 
 \item{estimate}{A vector of estimates, the same length as \code{moe}, associated with the margins of error}
+
+\item{na.rm}{A logical value indicating whether missing values (including NaN) should be removed}
 }
 \value{
 A margin of error for a derived sum
