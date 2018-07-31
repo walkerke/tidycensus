@@ -112,18 +112,19 @@ format_variables_acs <- function(variables) {
 
 load_data_acs <- function(geography, formatted_variables, key, year, state = NULL, county = NULL, survey) {
 
-  if (survey == "acs1") {
-    if (year > 2014) {
-      survey <- "acs/acs1"
-    }
-  }
-
-  if (survey == "acs5" && year > 2014) {
-    survey <- "acs/acs5"
-  }
+  # No longer necessary: see https://www.census.gov/content/dam/Census/data/developers/acs/acs-data-variables-guide.pdf
+  # if (survey == "acs1") {
+  #   if (year > 2014) {
+  #     survey <- "acs/acs1"
+  #   }
+  # }
+  #
+  # if (survey == "acs5" && year > 2014) {
+  #   survey <- "acs/acs5"
+  # }
 
   base <- paste("https://api.census.gov/data",
-                 as.character(year),
+                 as.character(year), "acs",
                  survey, sep = "/")
 
   if (grepl("^DP", formatted_variables)) {
@@ -267,7 +268,7 @@ load_data_decennial <- function(geography, variables, key, year,
 
   base <- paste0("https://api.census.gov/data/",
                  year,
-                 "/",
+                 "/dec/",
                  sumfile)
 
   for_area <- paste0(geography, ":*")
