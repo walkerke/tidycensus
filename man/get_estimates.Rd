@@ -18,6 +18,12 @@ get_estimates(geography, product = NULL, variables = NULL,
 \item{variables}{A character string of requested variables to get specific
 variables from the population, components, and housing APIs.}
 
+\item{breakdown}{The population breakdown used when \code{product = "characteristics"}.
+Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
+\code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
+a vector, returning population estimates in the \code{value} column for all
+combinations of these breakdowns.}
+
 \item{year}{The data year (defaults to 2017)}
 
 \item{state}{The state for which you are requesting data. State
