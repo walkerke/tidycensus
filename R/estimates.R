@@ -31,6 +31,7 @@
 #' @return A tibble, or sf tibble, of population estimates data
 #' @export
 get_estimates <- function(geography, product = NULL, variables = NULL,
+                          breakdown = NULL,
                           year = 2017, state = NULL, county = NULL,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, ...) {
@@ -47,11 +48,32 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
   }
 
+  if (product == "characteristics") {
+    product <- "charagegroups"
+  }
+
+  # If the product is "characteristics", we'll need to do some unique things
+  if (product == "charagegroups") {
+    if (!is.null(variables)) {
+      stop("Use the `breakdown` argument instead of `variables` when requesting population characteristics.", call. = FALSE)
+    }
+    if (!is.null(breakdown)) {
+      variables <- c("POP", breakdown)
+    } else {
+      stop("Please specify the population breakdown in a vector.  Options include 'SEX', 'AGEGROUP', 'RACE', and 'HISP'.", call. = FALSE)
+    }
+  }
+
   # For a variables vector, check to see if the variables cut across multiple products
   if (!is.null(variables) && length(variables) > 1) {
-    check <- c(any(variables %in% population_estimates_variables),
-               any(variables %in% components_estimates_variables),
-               any(variables %in% housing_estimates_variables))
+
+    if (product != "charagegroups") {
+      check <- c(any(variables %in% population_estimates_variables),
+                 any(variables %in% components_estimates_variables),
+                 any(variables %in% housing_estimates_variables))
+    } else {
+      check <- FALSE
+    }
 
     # if there is more than one TRUE, grab data by variable
     if (length(which(check)) > 1) {
@@ -74,6 +96,10 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
                                variables = variables,
                                year = year, state = state,
                                county = county, key = key)
+  }
+
+  if (product == "charagegroups") {
+    output <- "wide"
   }
 
   if (output == "tidy") {
@@ -103,6 +129,10 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
     dat2 <- dat2 %>%
       select(GEOID, NAME = GEONAME, everything())
 
+  }
+
+  if (product == "charagegroups") {
+    dat2 <- rename(dat2, value = POP)
   }
 
   if (geometry) {

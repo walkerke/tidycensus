@@ -407,8 +407,8 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL,
 
   if (!is.null(product)) {
     if (!product %in% c("population", "components", "monthly",
-                        "age groups", "housing")) {
-      stop("You have selected an invalid product.  Valid requests are 'population', 'components', 'monthly', 'age groups', and 'housing'.", call. = FALSE)
+                        "charagegroups", "housing")) {
+      stop("You have selected an invalid product.  Valid requests are 'population', 'components', 'monthly', 'characteristics', and 'housing'.", call. = FALSE)
     }
   }
 
@@ -430,7 +430,9 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL,
     }
   } else {
     if (!is.null(product)) {
-      stop("Please specify either a product or a vector of variables, but not both.", call. = FALSE)
+      if (product != "charagegroups") {
+        stop("Please specify either a product or a vector of variables, but not both.", call. = FALSE)
+      }
     } else {
       if (all(variables %in% c("POP", "DENSITY"))) {
         product <- "population"

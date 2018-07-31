@@ -27,9 +27,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
   }
 
   if (grepl("acs1", dataset) || grepl("acs5", dataset)) {
-    if (year > 2014) {
-      dataset <- paste0("acs/", dataset)
-    }
+    dataset <- paste0("acs/", dataset)
   }
 
   get_dataset <- function(d) {
@@ -37,7 +35,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
 
     # If ACS, use JSON parsing to speed things up
     if (grepl("acs[135]", d)) {
-      url <- paste("http://api.census.gov/data",
+      url <- paste("https://api.census.gov/data",
                    set,
                    "variables.json", sep = "/")
 
