@@ -323,6 +323,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     # Remove duplicated columns
 
     dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
+    dat <- dat[c("GEOID", "NAME", var_vector)]
+
 
     # Convert missing values to NA
     dat[dat == -111111111] <- NA
