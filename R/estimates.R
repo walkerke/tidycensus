@@ -55,12 +55,12 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
   }
 
-  if (product == "characteristics") {
+  if (!is.null(product) && product == "characteristics") {
     product <- "charagegroups"
   }
 
   # If the product is "characteristics", we'll need to do some unique things
-  if (product == "charagegroups") {
+  if (!is.null(product) && product == "charagegroups") {
     if (!is.null(variables)) {
       stop("Use the `breakdown` argument instead of `variables` when requesting population characteristics.", call. = FALSE)
     }
@@ -74,7 +74,7 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
   # For a variables vector, check to see if the variables cut across multiple products
   if (!is.null(variables) && length(variables) > 1) {
 
-    if (product != "charagegroups") {
+    if (!is.null(product) && product != "charagegroups") {
       check <- c(any(variables %in% population_estimates_variables),
                  any(variables %in% components_estimates_variables),
                  any(variables %in% housing_estimates_variables))
@@ -105,7 +105,7 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
                                county = county, key = key)
   }
 
-  if (product == "charagegroups") {
+  if (!is.null(product) && product == "charagegroups") {
     output <- "wide"
   }
 
@@ -127,7 +127,7 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
     dat2 <- dat
 
-    if (product == "charagegroups") {
+    if (!is.null(product) && product == "charagegroups") {
       dat2 <- rename(dat2, value = POP)
     }
 
