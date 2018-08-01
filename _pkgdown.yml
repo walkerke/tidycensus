@@ -10,6 +10,8 @@ navbar:
     href: articles/spatial-data.html
   - text: Margins of error in the ACS
     href: articles/margins-of-error.html
+  - text: Other Census Bureau datasets
+    href: articles/other-datasets.html
   right:
   - text: Source
     href: http://github.com/walkerke/tidycensus

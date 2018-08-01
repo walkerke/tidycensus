@@ -26,6 +26,7 @@ __tidycensus__ is designed to help R users get Census data that is pre-prepared 
 * [Basic usage of __tidycensus__](articles/basic-usage.html)
 * [Spatial data in __tidycensus__](articles/spatial-data.html)
 * [Margins of error in the ACS](articles/margins-of-error.html)
+* [Other Census Bureau datasets](articles/other-datasets.html)
 
 ## Future development
 

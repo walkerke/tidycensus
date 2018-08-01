@@ -43,14 +43,14 @@ orange %>%
 One of the most powerful features of __ggplot2__ is its support for small multiples, which works very well with the tidy data format returned by __tidycensus__.  Many Census and ACS variables return _counts_, however, which are generally inappropriate for choropleth mapping.  In turn, `get_decennial` and `get_acs` have an optional argument, `summary_var`, that can work as a multi-group denominator when appropriate.  Let's use the following example of the racial geography of Harris County, Texas.  First, we'll request data for non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and Hispanics by Census tract for the 2010 Census, and specify total population as the summary variable.  `year` is not necessary here as the default is 2010.   
 
 ```{r}
-racevars <- c(White = "P0050003", 
-              Black = "P0050004", 
-              Asian = "P0050006", 
-              Hispanic = "P0040003")
+racevars <- c(White = "P005003", 
+              Black = "P005004", 
+              Asian = "P005006", 
+              Hispanic = "P004003")
 
 harris <- get_decennial(geography = "tract", variables = racevars, 
                   state = "TX", county = "Harris County", geometry = TRUE,
-                  summary_var = "P0010001") 
+                  summary_var = "P001001") 
 
 head(harris)
 ```

@@ -265,11 +265,20 @@ load_data_decennial <- function(geography, variables, key, year,
     vars_to_get <- paste0(var, ",NAME")
   }
 
+  if (year == 2010) {
+    base <- paste0("https://api.census.gov/data/",
+                   year,
+                   "/dec/",
+                   sumfile)
+  } else {
+    base <- paste0("https://api.census.gov/data/",
+                   year,
+                   "/",
+                   sumfile)
+  }
 
-  base <- paste0("https://api.census.gov/data/",
-                 year,
-                 "/dec/",
-                 sumfile)
+
+
 
   for_area <- paste0(geography, ":*")
 
