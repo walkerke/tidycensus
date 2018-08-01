@@ -138,6 +138,7 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
       }
 
       if ("AGEGROUP" %in% names(dat2)) {
+        dat2$AGEGROUP <- factor(dat2$AGEGROUP)
         dat2$AGEGROUP <- recode(dat2$AGEGROUP,
                                 `0` = "All ages", `1` = "Age 0 to 4 years",
                                 `2` = "Age 5 to 9 years",

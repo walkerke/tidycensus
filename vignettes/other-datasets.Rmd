@@ -1,5 +1,5 @@
 ---
-title: "Other Census Bureau datasets in tidycensus"
+title: "Other Census Bureau datasets"
 output: html_document
 ---
 
@@ -7,11 +7,122 @@ output: html_document
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8)
 ```
 
-The main intent of the tidycensus package is to return population characteristics of the United States in tidy format allowing for integration with simple feature geometries.  Its intent is not, and has never been, to wrap the universe of APIs and datasets available from the US Census Bureau. For datasets not included in tidycensus, I recommend Hannah Recht's excellent __censusapi__ package (https://github.com/hrecht/censusapi), which allows R users to access all Census APIs, and packages such as Jamaal Green's __lehdr__ package (https://github.com/jamgreen/lehdr) which grants R users access to Census Bureau LODES data.  
+__Please note: these features are currently available in the development version of tidycensus.  You can install with `devtools::install_github("walkerke/tidycensus")`.__
 
-However, tidycensus does incorporate a select number of Census Bureau datasets outside the decennial Census and ACS that are aligned with the basic goals of the package.  One such dataset is the __Population Estimates API__, which includes information on a wide variety of population characteristics that is updated annually.  
+The main intent of the tidycensus package is to return population characteristics of the United States in tidy format allowing for integration with simple feature geometries.  Its intent is not, and has never been, to wrap the universe of APIs and datasets available from the US Census Bureau. For datasets not included in tidycensus, I recommend Hannah Recht's __censusapi__ package (https://github.com/hrecht/censusapi), which allows R users to access all Census APIs, and packages such as Jamaal Green's __lehdr__ package (https://github.com/jamgreen/lehdr) which grants R users access to Census Bureau LODES data.  
 
-Population estimates are available in tidycensus through the `get_estimates()` function.  Estimates are organized into __products__, which in tidycensus include `"population"`, `"components"`, `"housing"`, and `"characteristics"`.  The population and housing products contain population/density and housing unit estimates, respectively.  The components and characteristics products, in contrast, include a wider range of possible variables.  
+However, tidycensus will ultimately incorporate a select number of Census Bureau datasets outside the decennial Census and ACS that are aligned with the basic goals of the package.  One such dataset is the __Population Estimates API__, which includes information on a wide variety of population characteristics that is updated annually.  
+
+Population estimates are available in tidycensus through the `get_estimates()` function.  Estimates are organized into __products__, which in tidycensus include `"population"`, `"components"`, `"housing"`, and `"characteristics"`.  The population and housing products contain population/density and housing unit estimates, respectively.  The components of change and characteristics products, in contrast, include a wider range of possible variables.  
+
+## Components of change population estimates
+
+By default, specifying `"population"`, `"components"`, or `"housing"` as the `product` in `get_estimates()` returns all variables associated with that component.  For example, we can request all components of change variables for US states in 2017: 
+
+```{r}
+library(tidycensus)
+library(tidyverse)
+options(tigris_use_cache = TRUE)
+
+us_components <- get_estimates(geography = "state", product = "components")
+
+us_components
+```
+
+The variables included in the components of change product consist of both estimates of _counts_ and _rates_.  Rates are preceded by an `R` in the variable name and are calculated per 1000 residents.  
+
+```{r}
+unique(us_components$variable)
+```
+
+Available geographies include `"us"`, `"state"`, `"county"`, `"metropolitan statistical area/micropolitan statistical area"`, and `"combined statistical area"`.  
+
+If desired, users can request a specific component or components by supplying a character vector to the `variables` parameter, as in other tidycensus functions.  `get_estimates()` also supports simple feature geometry integration to facilitate mapping.  In the example below, we'll acquire data on the net migration rate between 2016 and 2017 for all counties in the United States, and request shifted and re-scaled feature geometry for Alaska and Hawaii to facilitate national mapping.  
+
+```{r}
+
+net_migration <- get_estimates(geography = "county",
+                               variables = "RNETMIG",
+                               geometry = TRUE,
+                               shift_geo = TRUE)
+
+net_migration
+
+```
+
+We'll next use tidyverse tools to generate a `groups` column that bins the net migration rates into comprehensible categories, and plot the result using `geom_sf()` and ggplot2.  
+
+```{r}
+order = c("-15 and below", "-15 to -5", "-5 to +5", "+5 to +15", "+15 and up")
+
+net_migration <- net_migration %>%
+  mutate(groups = case_when(
+    value > 15 ~ "+15 and up",
+    value > 5 ~ "+5 to +15",
+    value > -5 ~ "-5 to +5",
+    value > -15 ~ "-15 to -5",
+    TRUE ~ "-15 and below"
+  )) %>%
+  mutate(groups = factor(groups, levels = order))
+
+ggplot() +
+  geom_sf(data = net_migration, aes(fill = groups, color = groups), lwd = 0.1) +
+  geom_sf(data = tidycensus::state_laea, fill = NA, color = "black", lwd = 0.1) +
+  scale_fill_brewer(palette = "PuOr", direction = -1) +
+  scale_color_brewer(palette = "PuOr", direction = -1, guide = FALSE) +
+  coord_sf(datum = NA) +
+  theme_minimal(base_family = "Roboto") +
+  labs(title = "Net migration per 1000 residents by county",
+       subtitle = "US Census Bureau 2017 Population Estimates",
+       fill = "Rate",
+       caption = "Data acquired with the R tidycensus package | @kyle_e_walker")
+```
+
+## Estimates of population characteristics
+
+The fourth population estimates product available in `get_estimates()`, `"characteristics"`, is formatted differently than the other three.  It returns population estimates broken down by categories of `AGEGROUP`, `SEX`, `RACE`, and `HISP`, for Hispanic origin.  Requested breakdowns should be specified as a character vector supplied to the `breakdown` parameter when the `product` is set to `"characteristics"`.  
+
+By default, the returned categories are formatted as integers that map onto the Census Bureau definitions explained here: https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html.  However, by specifying `breakdown_labels = TRUE`, the function will return the appropriate labels instead.  For example: 
+
+```{r}
+la_age_hisp <- get_estimates(geography = "county", 
+                             product = "characteristics", 
+                             breakdown = c("SEX", "AGEGROUP", "HISP"),  
+                             breakdown_labels = TRUE, 
+                             state = "CA", 
+                             county = "Los Angeles")
+
+la_age_hisp
+```
+
+With some additional data wrangling, the returned format facilitates analysis and visualization.  For example, we can compare population pyramids for Hispanic and non-Hispanic populations in Los Angeles County:  
+
+```{r}
+compare <- filter(la_age_hisp, str_detect(AGEGROUP, "^Age"), 
+                  HISP != "Both Hispanic Origins", 
+                  SEX != "Both sexes") %>%
+  mutate(value = ifelse(SEX == "Male", -value, value))
+
+ggplot(compare, aes(x = AGEGROUP, y = value, fill = SEX)) + 
+  geom_bar(stat = "identity", width = 1) + 
+  theme_minimal(base_family = "Roboto") + 
+  scale_y_continuous(labels = function(y) paste0(abs(y / 1000), "k")) + 
+  scale_x_discrete(labels = function(x) gsub("Age ", "", x)) + 
+  scale_fill_manual(values = c("darkred", "navy")) + 
+  coord_flip() + 
+  facet_wrap(~HISP) + 
+  labs(x = "", 
+       y = "2017 Census Bureau population estimate", 
+       title = "Population structure by Hispanic origin", 
+       subtitle = "Los Angeles County, California", 
+       fill = "", 
+       caption = "Data source: US Census Bureau population estimates & tidycensus R package")
+  
 
 
+```
 
+
+## ACS migration flows
+
+My next project prior to the 1.0 release of tidycensus is to incorporate access to the [American Community Survey Migration Flows API](https://www.census.gov/data/developers/data-sets/acs-migration-flows.html).  Flows data will come integrated with simple feature geometry allowing for visualization of migration flows.  Stay tuned!

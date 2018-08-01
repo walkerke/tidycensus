@@ -3,18 +3,33 @@ template:
     bootswatch: spacelab
 
 navbar:
-  left:
-  - text: Basic usage of tidycensus
-    href: articles/basic-usage.html
-  - text: Spatial data in tidycensus
-    href: articles/spatial-data.html
-  - text: Margins of error in the ACS
-    href: articles/margins-of-error.html
-  - text: Other Census Bureau datasets
-    href: articles/other-datasets.html
-  right:
-  - text: Source
-    href: http://github.com/walkerke/tidycensus
-    icon: fa-github fa-lg
-  - text: Reference
-    href: reference/index.html
+  structure:
+    left:
+    - home
+    - intro
+    - reference
+    - articles
+    - tutorials
+    - news
+    right: github
+  components:
+    home:
+      icon: fa-home fa-lg
+      href: index.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    articles:
+      text: Articles
+      menu:
+      - text: Basic usage of tidycensus
+        href: articles/basic-usage.html
+      - text: Spatial data in tidycensus
+        href: articles/spatial-data.html
+      - text: Margins of error in the ACS
+        href: articles/margins-of-error.html
+      - text: Other Census Bureau datasets
+        href: articles/other-datasets.html
+    github:
+      icon: fa-github fa-lg
+      href: https://github.com/walkerke/tidycensus

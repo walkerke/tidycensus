@@ -21,9 +21,11 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
@@ -32,6 +34,7 @@
 
 <meta property="og:description" content="Obtain data and feature geometry for the decennial Census" />
 <meta name="twitter:card" content="summary" />
+
 
 
 <!-- mathjax -->
@@ -58,33 +61,50 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.6.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.8.0.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../articles/basic-usage.html">Basic usage of tidycensus</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/spatial-data.html">Spatial data in tidycensus</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="../articles/margins-of-error.html">Margins of error in the ACS</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/basic-usage.html">Basic usage of tidycensus</a>
+    </li>
+    <li>
+      <a href="../articles/margins-of-error.html">Margins of error in the ACS</a>
+    </li>
+    <li>
+      <a href="../articles/other-datasets.html">Other Census Bureau datasets</a>
+    </li>
+    <li>
+      <a href="../articles/spatial-data.html">Spatial data in tidycensus</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/walkerke/tidycensus">
+  <a href="https://github.com/walkerke/tidycensus">
     <span class="fa fa-github fa-lg"></span>
      
-    Source
   </a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
       
@@ -214,10 +234,10 @@ Obtain one at <a href='http://api.census.gov/data/key_signup.html'>http://api.ce
 <span class='fu'>library</span>(<span class='no'>tidyverse</span>)
 <span class='fu'>library</span>(<span class='no'>viridis</span>)
 <span class='fu'><a href='census_api_key.html'>census_api_key</a></span>(<span class='st'>"YOUR KEY GOES HERE"</span>)
-<span class='no'>vars10</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='st'>"P0050003"</span>, <span class='st'>"P0050004"</span>, <span class='st'>"P0050006"</span>, <span class='st'>"P0040003"</span>)
+<span class='no'>vars10</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='st'>"P005003"</span>, <span class='st'>"P005004"</span>, <span class='st'>"P005006"</span>, <span class='st'>"P004003"</span>)
 
 <span class='no'>il</span> <span class='kw'>&lt;-</span> <span class='fu'>get_decennial</span>(<span class='kw'>geography</span> <span class='kw'>=</span> <span class='st'>"county"</span>, <span class='kw'>variables</span> <span class='kw'>=</span> <span class='no'>vars10</span>, <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2010</span>,
-                    <span class='kw'>summary_var</span> <span class='kw'>=</span> <span class='st'>"P0010001"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"IL"</span>, <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
+                    <span class='kw'>summary_var</span> <span class='kw'>=</span> <span class='st'>"P001001"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"IL"</span>, <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>%&gt;%</span>
   <span class='fu'>mutate</span>(<span class='kw'>pct</span> <span class='kw'>=</span> <span class='fl'>100</span> * (<span class='no'>value</span> / <span class='no'>summary_value</span>))
 
 <span class='fu'>ggplot</span>(<span class='no'>il</span>, <span class='fu'>aes</span>(<span class='kw'>fill</span> <span class='kw'>=</span> <span class='no'>pct</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='no'>pct</span>)) +
