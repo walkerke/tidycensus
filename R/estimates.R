@@ -10,6 +10,8 @@
 #'                  \code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
 #'                  a vector, returning population estimates in the \code{value} column for all
 #'                  combinations of these breakdowns.
+#' @param breakdown_labels Whether or not to label breakdown elements returned when
+#'                         \code{product = "characteristics"}. Defaults to FALSE.
 #' @param year The data year (defaults to 2017)
 #' @param state The state for which you are requesting data. State
 #'              names, postal codes, and FIPS codes are accepted.
@@ -36,7 +38,7 @@
 #' @return A tibble, or sf tibble, of population estimates data
 #' @export
 get_estimates <- function(geography, product = NULL, variables = NULL,
-                          breakdown = NULL,
+                          breakdown = NULL, breakdown_labels = FALSE,
                           year = 2017, state = NULL, county = NULL,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, ...) {
@@ -125,6 +127,66 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
     dat2 <- dat
 
+    if (product == "charagegroups") {
+      dat2 <- rename(dat2, value = POP)
+    }
+
+    # Handle recodes for breakdown labels if requested
+    if (breakdown_labels) {
+      if (is.null(breakdown)) {
+        stop("A breakdown of population characteristics must be specified for this option to be used.", call. = FALSE)
+      }
+
+      if ("AGEGROUP" %in% names(dat2)) {
+        dat2$AGEGROUP <- recode(dat2$AGEGROUP,
+                                `0` = "All ages", `1` = "Age 0 to 4 years",
+                                `2` = "Age 5 to 9 years",
+                                `3` = "Age 10 to 14 years",
+                                `4` = "Age 15 to 19 years", `5` = "Age 20 to 24 years",
+                                `6` = "Age 25 to 29 years",
+                                `7` = "Age 30 to 34 years", `8` = "Age 35 to 39 years",
+                                `9` = "Age 40 to 44 years",
+                                `10` = "Age 45 to 49 years", `11` = "Age 50 to 54 years",
+                                `12` = "Age 55 to 59 years",
+                                `13` = "Age 60 to 64 years", `14` = "Age 65 to 69 years",
+                                `15` = "Age 70 to 74 years",
+                                `16` = "Age 75 to 79 years", `17` = "Age 80 to 84 years",
+                                `18` = "Age 85 years and older",
+                                `19` = "Under 18 years", `20` = "5 to 13 years",
+                                `21` = "14 to 17 years", `22` = "18 to 64 years",
+                                `23` = "18 to 24 years", `24` = "25 to 44 years",
+                                `25` = "45 to 64 years", `26` = "65 years and over",
+                                `27` = "85 years and over", `28` = "16 years and over",
+                                `29` = "18 years and over",
+                                `30` = "15 to 44 years", `31` = "Median age")
+      }
+
+      if ("SEX" %in% names(dat2)) {
+        dat2$SEX <- recode(dat2$SEX, `0` = "Both sexes", `1` = "Male", `2` = "Female")
+      }
+
+      if ("RACE" %in% names(dat2)) {
+        dat2$RACE <- recode(dat2$RACE, `0` = "All races", `1` = "White alone",
+                            `2` = "Black alone",
+                            `3` = "American Indian and Alaska Native alone",
+                            `4` = "Asian alone",
+                            `5` = "Native Hawaiian and Other Pacific Islander alone",
+                            `6` = "Two or more races",
+                            `7` = "White alone or in combination",
+                            `8` = "Black alone or in combination",
+                            `9` = "American Indian and Alaska Native alone or in combination",
+                            `10` = "Asian alone or in combination",
+                            `11` = "Native Hawaiian and Other Pacific Islander alone or in combination")
+      }
+
+      if ("HISP" %in% names(dat2)) {
+        dat2$HISP <- recode(dat2$HISP, `0` = "Both Hispanic Origins",
+                            `1` = "Non-Hispanic",
+                            `2` = "Hispanic")
+      }
+
+    }
+
     if (!is.null(names(variables))) {
       for (i in 1:length(variables)) {
         names(dat2) <- str_replace(names(dat2), variables[i], names(variables)[i])
@@ -136,9 +198,9 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
   }
 
-  if (product == "charagegroups") {
-    dat2 <- rename(dat2, value = POP)
-  }
+
+
+
 
   if (geometry) {
 

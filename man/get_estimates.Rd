@@ -5,9 +5,9 @@
 \title{Get data from the US Census Bureau Population Estimates APIs}
 \usage{
 get_estimates(geography, product = NULL, variables = NULL,
-  breakdown = NULL, year = 2017, state = NULL, county = NULL,
-  output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
-  shift_geo = FALSE, key = NULL, ...)
+  breakdown = NULL, breakdown_labels = FALSE, year = 2017, state = NULL,
+  county = NULL, output = "tidy", geometry = FALSE,
+  keep_geo_vars = FALSE, shift_geo = FALSE, key = NULL, ...)
 }
 \arguments{
 \item{geography}{The geography of your data.}
@@ -23,6 +23,9 @@ Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
 \code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
 a vector, returning population estimates in the \code{value} column for all
 combinations of these breakdowns.}
+
+\item{breakdown_labels}{Whether or not to label breakdown elements returned when
+\code{product = "characteristics"}. Defaults to FALSE.}
 
 \item{year}{The data year (defaults to 2017)}
 

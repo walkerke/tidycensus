@@ -42,4 +42,5 @@ housing_estimates_variables <- "HUEST"
 utils::globalVariables(c("variable", "value", "GEOID", "NAME", "type", "moe",
                          ".", "NAME.y", "summary_moe", "TRACTBASE", "TRACT",
                          "ANPSADPI", "BLKGROUP", "BLKGRP", "BLKIDFP00", "CO", "COUNTY",
-                         "GEOID10", "ST", "STATE", "TRACTSUF", "name", ".data"))
+                         "GEOID10", "ST", "STATE", "TRACTSUF", "name", ".data", "GEONAME",
+                         "GEOID00", "POP"))
