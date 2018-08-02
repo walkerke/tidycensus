@@ -107,7 +107,7 @@ ggplot(compare, aes(x = AGEGROUP, y = value, fill = SEX)) +
   geom_bar(stat = "identity", width = 1) + 
   theme_minimal(base_family = "Roboto") + 
   scale_y_continuous(labels = function(y) paste0(abs(y / 1000), "k")) + 
-  scale_x_discrete(labels = function(x) gsub("Age ", "", x)) + 
+  scale_x_discrete(labels = function(x) gsub("Age | years", "", x)) + 
   scale_fill_manual(values = c("darkred", "navy")) + 
   coord_flip() + 
   facet_wrap(~HISP) + 
