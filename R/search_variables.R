@@ -31,10 +31,17 @@ load_variables <- function(year, dataset, cache = FALSE) {
   }
 
   get_dataset <- function(d) {
+
+    # Account for URL change for 2010 decennial Census
+    if (year == 2010 && dataset == "sf1") {
+      d <- paste0("dec/", d)
+    }
+
     set <- paste(year, d, sep = "/")
 
     # If ACS, use JSON parsing to speed things up
     if (grepl("acs[135]", d)) {
+
       url <- paste("https://api.census.gov/data",
                    set,
                    "variables.json", sep = "/")
@@ -62,6 +69,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
       return(tbl_df(out2))
     # Otherwise use HTML scraping as JSON is not available for decennial Census
     } else {
+
       url <- paste("http://api.census.gov/data",
                    set,
                    "variables.html", sep = "/")
@@ -100,7 +108,22 @@ load_variables <- function(year, dataset, cache = FALSE) {
     if (file.exists(cache_dir)) {
       file_loc <- file.path(cache_dir, rds)
       if (file.exists(file_loc)) {
+
         out <- read_rds(file_loc)
+
+        # For 2010 decennial Census, must get again if old
+        if (year == 2010 && dataset == "sf1") {
+
+          # Check if an erroring variable is in the file
+          if ("H00010001" %in% out$name) {
+            df <- get_dataset(dataset)
+            write_rds(df, file_loc)
+            return(df)
+
+          }
+
+        }
+
 
         out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P[0-9]|^H[0-9]", out$name), ]
 
