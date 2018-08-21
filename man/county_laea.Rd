@@ -3,7 +3,6 @@
 \docType{data}
 \name{county_laea}
 \alias{county_laea}
-\alias{county_laea}
 \title{County geometry with Alaska and Hawaii shifted and re-scaled}
 \format{An object of class \code{sf} (inherits from \code{data.frame}) with 3143 rows and 2 columns.}
 \usage{

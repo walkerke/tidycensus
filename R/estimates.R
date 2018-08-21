@@ -19,6 +19,11 @@
 #' @param county The county for which you are requesting data. County names and
 #'               FIPS codes are accepted. Must be combined with a value supplied
 #'               to `state`.  Defaults to NULL.
+#' @param time_series If \code{TRUE}, the function will return a time series of observations back to the decennial Census
+#'                    of 2010. The returned column is either "DATE", representing a particular estimate date, or "PERIOD",
+#'                    representing a time period (e.g. births between 2016 and 2017), and contains integers representing
+#'                    those values.  Integer to date or period mapping is available at
+#'                    \url{https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html}.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'               enumeration unit-variable combination, or "wide" in which each
 #'               row represents an enumeration unit and the variables are in the
@@ -40,6 +45,7 @@
 get_estimates <- function(geography, product = NULL, variables = NULL,
                           breakdown = NULL, breakdown_labels = FALSE,
                           year = 2017, state = NULL, county = NULL,
+                          time_series = FALSE,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, ...) {
 
@@ -86,7 +92,8 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
     if (length(which(check)) > 1) {
       dat <- map_dfc(variables, function(eachvar) {
         load_data_estimates(geography = geography, product = NULL, variables = eachvar,
-                            year = year, state = state, county = county, key = key)
+                            year = year, state = state, county = county,
+                            time_series = time_series, key = key)
       })
 
       # Remove any extra GEOID or GEONAME columns
@@ -96,12 +103,14 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
       dat <- load_data_estimates(geography = geography, product = product,
                                  variables = variables,
                                  year = year, state = state,
+                                 time_series = time_series,
                                  county = county, key = key)
     }
   } else {
     dat <- load_data_estimates(geography = geography, product = product,
                                variables = variables,
                                year = year, state = state,
+                               time_series = time_series,
                                county = county, key = key)
   }
 
@@ -111,9 +120,21 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
   if (output == "tidy") {
 
-    dat2 <- dat %>%
-      rename(NAME = GEONAME) %>%
-      gather(key = variable, value = value, -GEOID, -NAME)
+    if (time_series) {
+      if ("PERIOD" %in% names(dat)) {
+        dat2 <- dat %>%
+          rename(NAME = GEONAME) %>%
+          gather(key = variable, value = value, -GEOID, -NAME, -PERIOD)
+      } else {
+        dat2 <- dat %>%
+          rename(NAME = GEONAME) %>%
+          gather(key = variable, value = value, -GEOID, -NAME, -PERIOD)
+      }
+    } else {
+      dat2 <- dat %>%
+        rename(NAME = GEONAME) %>%
+        gather(key = variable, value = value, -GEOID, -NAME)
+    }
 
     if (!is.null(names(variables))) {
       for (i in 1:length(variables)) {

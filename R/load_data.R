@@ -408,16 +408,12 @@ load_data_decennial <- function(geography, variables, key, year,
 
 
 load_data_estimates <- function(geography, product = NULL, variables = NULL,
-                                key, year, state = NULL, county = NULL) {
-
-  # if (product == "monthly") product <- "natmonthly"
-  #
-  # if (product == "age groups") product <- "charagegroups"
+                                key, year, time_series, state = NULL, county = NULL) {
 
   if (!is.null(product)) {
-    if (!product %in% c("population", "components", "monthly",
+    if (!product %in% c("population", "components",
                         "charagegroups", "housing")) {
-      stop("You have selected an invalid product.  Valid requests are 'population', 'components', 'monthly', 'characteristics', and 'housing'.", call. = FALSE)
+      stop("You have selected an invalid product.  Valid requests are 'population', 'components', 'characteristics', and 'housing'.", call. = FALSE)
     }
   }
 
@@ -454,22 +450,15 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL,
     vars_to_get <- paste0("GEONAME,", paste0(variables, collapse = ","))
   }
 
-  base <- sprintf("https://api.census.gov/data/%s/pep/%s", year, product)
+  if (time_series) {
+    if (product == "components") {
+      vars_to_get <- paste0(vars_to_get, ",PERIOD")
+    } else {
+      vars_to_get <- paste0(vars_to_get, ",DATE")
+    }
+  }
 
-  # vars_to_get <- function(product) {
-  #
-  #   # Add variables functionality after the function is working
-  #   if (product == "population") {
-  #     return("GEONAME,POP,DENSITY")
-  #   } else if (product == "components") {
-  #     return("GEONAME,BIRTHS,DEATHS,DOMESTICMIG,INTERNATIONALMIG,NATURALINC,NETMIG,RBIRTH,RDEATH,RDOMESTICMIG,RINTERNATIONALMIG,RNATURALINC,RNETMIG")
-  #   } else if (product == "housing") {
-  #     return("GEONAME,HUEST")
-  #   } else {
-  #     stop("Other products are not yet supported.", call. = FALSE)
-  #   }
-  #
-  # }
+  base <- sprintf("https://api.census.gov/data/%s/pep/%s", year, product)
 
   if (!is.null(state)) {
 
