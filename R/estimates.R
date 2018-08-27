@@ -128,7 +128,7 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
       } else {
         dat2 <- dat %>%
           rename(NAME = GEONAME) %>%
-          gather(key = variable, value = value, -GEOID, -NAME, -PERIOD)
+          gather(key = variable, value = value, -GEOID, -NAME, -DATE)
       }
     } else {
       dat2 <- dat %>%

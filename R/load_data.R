@@ -216,16 +216,29 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
                                    key = key))
   }
 
- # Make sure call status returns 200, else, print the error message for the user.
-  callStatus <- http_status(call)
-  if (callStatus$reason != "OK") {
-    message(callStatus$category, " ", callStatus$reason, " ", callStatus$message)
-  } else {
-    content <- content(call, as = "text")
+  # Make sure call status returns 200, else, print the error message for the user.
+  if (call$status_code != 200) {
+    msg <- content(call, as = "text")
+
+    if (grepl("The requested resource is not available", msg)) {
+      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
+    } else {
+      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
+    }
+
   }
 
-  validate_call(content = content, geography = geography, year = year,
-                dataset = survey)
+  # callStatus <- http_status(call)
+  # if (callStatus$reason != "OK") {
+  #   message(callStatus$category, " ", callStatus$reason, " ", callStatus$message)
+  # } else {
+  #   content <- content(call, as = "text")
+  # }
+  #
+  # validate_call(content = content, geography = geography, year = year,
+  #               dataset = survey)
+
+  content <- content(call, as = "text")
 
   dat <- tbl_df(fromJSON(content))
 
@@ -346,17 +359,30 @@ load_data_decennial <- function(geography, variables, key, year,
   }
 
   # Make sure call status returns 200, else, print the error message for the user.
+  if (call$status_code != 200) {
+    msg <- content(call, as = "text")
 
-  callStatus <- http_status(call)
-  if (callStatus$reason != "OK") {
-    if (sumfile == "sf1") {
-      message("Checking SF3 API for data...")
+    if (grepl("The requested resource is not available", msg)) {
+      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
     } else {
-      message(callStatus$category, " ", callStatus$reason, " ", callStatus$message)
+      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
     }
-  } else {
-    content <- content(call, as = "text")
+
   }
+
+
+  # callStatus <- http_status(call)
+  # if (callStatus$reason != "OK") {
+  #   if (sumfile == "sf1") {
+  #     message("Checking SF3 API for data...")
+  #   } else {
+  #     message(callStatus$category, " ", callStatus$reason, " ", callStatus$message)
+  #   }
+  # } else {
+  #   content <- content(call, as = "text")
+  # }
+
+  content <- content(call, as = "text")
 
   # Fix issue in SF3 2000 API - https://github.com/walkerke/tidycensus/issues/22
   if (year == 2000 && sumfile == "sf3") {
@@ -366,9 +392,6 @@ load_data_decennial <- function(geography, variables, key, year,
     content <- str_replace(content, 'St. Mary"s', "St. Mary's")
 
   }
-
-  validate_call(content = content, geography = geography, year = year,
-                dataset = sumfile)
 
   dat <- tbl_df(fromJSON(content))
 
@@ -524,6 +547,19 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL,
                                    "for" = paste0(geography, ":*"),
                                    key = key))
   }
+
+  # Make sure call status returns 200, else, print the error message for the user.
+  if (call$status_code != 200) {
+    msg <- content(call, as = "text")
+
+    if (grepl("The requested resource is not available", msg)) {
+      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
+    } else {
+      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
+    }
+
+  }
+
 
   content <- content(call, as = "text")
 
