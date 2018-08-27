@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.8.0.9000</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.8.1</span>
       </span>
     </div>
 
@@ -95,7 +95,6 @@
 
     
     
-<p><strong>Please note: these features are currently available in the development version of tidycensus. You can install with <code><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">devtools::install_github("walkerke/tidycensus")</a></code>.</strong></p>
 <p>The main intent of the tidycensus package is to return population characteristics of the United States in tidy format allowing for integration with simple feature geometries. Its intent is not, and has never been, to wrap the universe of APIs and datasets available from the US Census Bureau. For datasets not included in tidycensus, I recommend Hannah Recht’s <strong>censusapi</strong> package (<a href="https://github.com/hrecht/censusapi" class="uri">https://github.com/hrecht/censusapi</a>), which allows R users to access all Census APIs, and packages such as Jamaal Green’s <strong>lehdr</strong> package (<a href="https://github.com/jamgreen/lehdr" class="uri">https://github.com/jamgreen/lehdr</a>) which grants R users access to Census Bureau LODES data.</p>
 <p>However, tidycensus will ultimately incorporate a select number of Census Bureau datasets outside the decennial Census and ACS that are aligned with the basic goals of the package. One such dataset is the <strong>Population Estimates API</strong>, which includes information on a wide variety of population characteristics that is updated annually.</p>
 <p>Population estimates are available in tidycensus through the <code><a href="../reference/get_estimates.html">get_estimates()</a></code> function. Estimates are organized into <strong>products</strong>, which in tidycensus include <code>"population"</code>, <code>"components"</code>, <code>"housing"</code>, and <code>"characteristics"</code>. The population and housing products contain population/density and housing unit estimates, respectively. The components of change and characteristics products, in contrast, include a wider range of possible variables.</p>

@@ -7,8 +7,6 @@ output: html_document
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8)
 ```
 
-__Please note: these features are currently available in the development version of tidycensus.  You can install with `devtools::install_github("walkerke/tidycensus")`.__
-
 The main intent of the tidycensus package is to return population characteristics of the United States in tidy format allowing for integration with simple feature geometries.  Its intent is not, and has never been, to wrap the universe of APIs and datasets available from the US Census Bureau. For datasets not included in tidycensus, I recommend Hannah Recht's __censusapi__ package (https://github.com/hrecht/censusapi), which allows R users to access all Census APIs, and packages such as Jamaal Green's __lehdr__ package (https://github.com/jamgreen/lehdr) which grants R users access to Census Bureau LODES data.  
 
 However, tidycensus will ultimately incorporate a select number of Census Bureau datasets outside the decennial Census and ACS that are aligned with the basic goals of the package.  One such dataset is the __Population Estimates API__, which includes information on a wide variety of population characteristics that is updated annually.  

@@ -8,6 +8,14 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
+## In version 0.8.1: 
+
+* tidycensus now includes support for the Census Bureau Population Estimates API.  Please see https://walkerke.github.io/tidycensus/articles/other-datasets.html for examples of how to use these new features.  
+
+* Important internal changes to ensure that tidycensus continues to work with upcoming changes to Census API endpoints.  
+
+* Several internal improvements and bug fixes.  Please see the closed issues at https://github.com/walkerke/tidycensus/issues for a list.  
+
 ## In version 0.4.6: 
 
 * Bug fixed that was causing GEOIDs for some states to be converted to NA on certain Linux platforms
