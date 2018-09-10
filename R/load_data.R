@@ -134,15 +134,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
   if (grepl("^S[0-9].", formatted_variables)) {
     message("Using the ACS Subject Tables")
-    if (survey == "acs1") {
-      base <- paste("https://api.census.gov/data",
-                    as.character(year),
-                    "subject",
-                    sep = "/")
-    } else {
-      base <- paste0(base, "/subject")
-
-    }
+    base <- paste0(base, "/subject")
   }
 
   for_area <- paste0(geography, ":*")
