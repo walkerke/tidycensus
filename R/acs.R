@@ -154,6 +154,11 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
+  if (geography == "zip code tabulation area" && (!is.null(state) || !is.null(county))) {
+    stop("ZCTAs can only be requested for the entire country, not within states or counties.",
+         call. = FALSE)
+  }
+
   # Allow users to get all block groups in a state
 
   if ((geography == "block group" && is.null(county)) || (geography == "tract" && is.null(county) && year < 2015)) {
