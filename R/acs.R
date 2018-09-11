@@ -266,7 +266,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   # Logic for fetching data tables
   if (!is.null(table)) {
-    variables <- variables_from_table_acs(table, year, survey, cache_table)
+    if (grepl("^S[0-9].", table)) {
+      survey2 <- paste0(survey, "/subject")
+    }
+    variables <- variables_from_table_acs(table, year, survey2, cache_table)
   }
 
 

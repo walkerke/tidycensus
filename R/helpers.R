@@ -232,14 +232,16 @@ census_api_key <- function(key, overwrite = FALSE, install = FALSE){
 # Function to generate a vector of variables from an ACS table
 variables_from_table_acs <- function(table, year, survey, cache_table) {
 
-  if (grepl("^((DP)|(S[0-9].))", table)) {
-    stop("The `table` parameter is only available for ACS detailed tables.", call. = FALSE)
+  if (grepl("^DP.*", table)) {
+    stop("The `table` parameter is not available for the ACS Data Profile.", call. = FALSE)
   }
 
   # Look to see if table exists in cache dir
   cache_dir <- user_cache_dir("tidycensus")
 
   dset <- paste0(survey, "_", year, ".rds")
+
+  dset <- gsub("/", "_", dset)
 
 
 
