@@ -268,6 +268,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   if (!is.null(table)) {
     if (grepl("^S[0-9].", table)) {
       survey2 <- paste0(survey, "/subject")
+    } else {
+      survey2 <- survey
     }
     variables <- variables_from_table_acs(table, year, survey2, cache_table)
   }
