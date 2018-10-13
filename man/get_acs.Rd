@@ -36,7 +36,7 @@ enumeration unit-variable combination, or "wide" in which each
 row represents an enumeration unit and the variables are in the
 columns.}
 
-\item{state}{The state for which you are requesting data. State
+\item{state}{An optional vector of states for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.
 Defaults to NULL.}
 
