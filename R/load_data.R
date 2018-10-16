@@ -232,6 +232,10 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
   content <- content(call, as = "text")
 
+  if (grepl("You included a key with this request", content)) {
+    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
+  }
+
   dat <- tbl_df(fromJSON(content))
 
   colnames(dat) <- dat[1,]
@@ -375,6 +379,10 @@ load_data_decennial <- function(geography, variables, key, year,
   # }
 
   content <- content(call, as = "text")
+
+  if (grepl("You included a key with this request", content)) {
+    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
+  }
 
   # Fix issue in SF3 2000 API - https://github.com/walkerke/tidycensus/issues/22
   if (year == 2000 && sumfile == "sf3") {
@@ -554,6 +562,10 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL,
 
 
   content <- content(call, as = "text")
+
+  if (grepl("You included a key with this request", content)) {
+    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
+  }
 
   dat <- tbl_df(fromJSON(content))
 
