@@ -66,7 +66,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
 
       out2 <- out1[!grepl("Margin Of Error|Margin of Error", out1$label), ]
 
-      return(tbl_df(out2))
+      return(as_tibble(out2))
     # Otherwise use HTML scraping as JSON is not available for decennial Census
     } else {
 
@@ -93,7 +93,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
 
       out2 <- out1[!grepl("Margin Of Error|Margin of Error", out1$label), ]
 
-      return(tbl_df(out2))
+      return(as_tibble(out2))
 
     }
 
