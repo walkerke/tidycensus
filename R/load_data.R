@@ -236,9 +236,11 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
     stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
   }
 
-  dat <- as_tibble(fromJSON(content), .name_repair = "minimal")
+  dat <- fromJSON(content)
 
   colnames(dat) <- dat[1,]
+
+  dat <- as_tibble(dat)
 
   dat <- dat[-1,]
 
@@ -393,9 +395,11 @@ load_data_decennial <- function(geography, variables, key, year,
 
   }
 
-  dat <- as_tibble(fromJSON(content), .name_repair = "minimal")
+  dat <- fromJSON(content)
 
   colnames(dat) <- dat[1,]
+
+  dat <- as_tibble(dat)
 
   dat <- dat[-1,]
 
@@ -567,9 +571,11 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL,
     stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
   }
 
-  dat <- as_tibble(fromJSON(content), .name_repair = "minimal")
+  dat <- fromJSON(content)
 
   colnames(dat) <- dat[1,]
+
+  dat <- as_tibble(dat)
 
   dat <- dat[-1,]
 
