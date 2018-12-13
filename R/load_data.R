@@ -123,9 +123,18 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
   #   survey <- "acs/acs5"
   # }
 
-  base <- paste("https://api.census.gov/data",
-                 as.character(year), "acs",
-                 survey, sep = "/")
+  if (year == 2009) {
+    # Only the old endpoint works right now for 2005-2009
+    base <- paste("https://api.census.gov/data",
+                  as.character(year),
+                  survey, sep = "/")
+  } else {
+    base <- paste("https://api.census.gov/data",
+                  as.character(year), "acs",
+                  survey, sep = "/")
+  }
+
+
 
   if (grepl("^DP", formatted_variables)) {
     message("Using the ACS Data Profile")
