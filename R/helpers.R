@@ -11,7 +11,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   if (geography == "state") {
 
-    st <- states(cb = cb, resolution = resolution, year = year, class = "sf")
+    st <- states(cb = cb, resolution = resolution, year = year, class = "sf", ...)
 
     if (year == 1990) {
       st <- mutate(st, GEOID = ST)
@@ -39,7 +39,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
   } else if (geography == "county") {
 
     ct <- counties(cb = cb, state = state, resolution = resolution, year = year,
-             class = "sf")
+             class = "sf", ...)
 
     if (year == 1990) {
       ct <- mutate(ct, GEOID = paste0(ST, CO))
@@ -66,7 +66,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
   } else if (geography == "tract") {
 
     tr <- tracts(cb = cb, state = state, county = county, year = year,
-           class = "sf")
+           class = "sf", ...)
 
     if (year == 1990) {
       tr <- tr %>%
@@ -94,7 +94,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
   } else if (geography == "block group") {
 
     bg <- block_groups(cb = cb, state = state, county = county, year = year,
-                 class = "sf")
+                 class = "sf", ...)
 
     if (year == 2000) {
       bg <- bg %>%
@@ -128,7 +128,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     if (year == 2011) year <- 2010
 
     z <- zctas(cb = cb, starts_with = starts_with, year = year,
-               class = "sf", state = state)
+               class = "sf", state = state, ...)
 
     if (year == 2000) {
       z <- rename(z, GEOID = GEOID00)
@@ -140,7 +140,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "block") {
 
-    bl <- blocks(state = state, county = county, year = year, class = "sf")
+    bl <- blocks(state = state, county = county, year = year, class = "sf", ...)
 
     if (year > 2000) {
       bl <- rename(bl, GEOID = GEOID10)
