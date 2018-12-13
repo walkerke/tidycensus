@@ -75,7 +75,7 @@
 #' }
 #' @export
 get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FALSE,
-                    year = 2016, endyear = NULL,
+                    year = 2017, endyear = NULL,
                     output = "tidy",
                     state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
                     shift_geo = FALSE,

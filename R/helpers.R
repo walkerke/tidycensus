@@ -3,7 +3,7 @@
 
 
 use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
-                       state = NULL, county = NULL, starts_with = NULL) {
+                       state = NULL, county = NULL, starts_with = NULL, ...) {
 
   if (year %in% 2011:2012) {
     cb <- FALSE
