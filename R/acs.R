@@ -11,8 +11,8 @@
 #'                    Defaults to FALSE; if TRUE, only needs to be called once per
 #'                    dataset.  If variables dataset is already cached via the
 #'                    \code{load_variables} function, this can be bypassed.
-#' @param year The year, or endyear, of the ACS sample. 2010 through 2016 are
-#'                available. Defaults to 2016.
+#' @param year The year, or endyear, of the ACS sample. 2010 through 2017 are
+#'                available. Defaults to 2017.
 #' @param endyear Deprecated and will be removed in a future release.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'               enumeration unit-variable combination, or "wide" in which each
