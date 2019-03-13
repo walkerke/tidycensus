@@ -26,8 +26,8 @@ Defaults to FALSE; if TRUE, only needs to be called once per
 dataset.  If variables dataset is already cached via the
 \code{load_variables} function, this can be bypassed.}
 
-\item{year}{The year, or endyear, of the ACS sample. 2010 through 2016 are
-available. Defaults to 2016.}
+\item{year}{The year, or endyear, of the ACS sample. 2010 through 2017 are
+available. Defaults to 2017.}
 
 \item{endyear}{Deprecated and will be removed in a future release.}
 
