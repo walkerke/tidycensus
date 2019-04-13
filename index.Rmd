@@ -17,8 +17,6 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
-__New:__ To learn how to use __tidycensus__, take the DataCamp course [Analyzing US Census Data in R](https://www.datacamp.com/courses/analyzing-us-census-data-in-r)!
-
 ## Why tidycensus? 
 
 My work heavily involves the use of data from the US Census Bureau, and like many R users, I do most of my work within the __tidyverse__.  Beyond this, the __sf__ package now allows R users to work with spatial data in an integrated way with __tidyverse__ tools, and updates to the __tigris__ package provide access to Census boundary data as `sf` objects.  Recently, I've found myself writing the same routines over and over to get Census data ready for use with __tidyverse__ packages and __sf__.  This motivated me to open-source these functions in a package in case other R users find them useful.  

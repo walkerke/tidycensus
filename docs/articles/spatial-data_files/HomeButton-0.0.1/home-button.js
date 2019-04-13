@@ -14,7 +14,7 @@ LeafletWidget.methods.addHomeButton = function (xmin, ymin, xmax, ymax,
             icon:      icon,          // and define its properties
             title:     label, // like its title
             onClick: function(btn, map){
-                map.fitBounds(bx);
+                map.fitBounds(bx, {maxZoom: 18});
                 btn.state(label);
             }
     }]
