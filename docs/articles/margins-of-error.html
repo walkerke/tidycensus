@@ -106,18 +106,22 @@
 <a class="sourceLine" id="cb1-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4">vars &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"B01001_0"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">20</span><span class="op">:</span><span class="dv">25</span>, <span class="dv">44</span><span class="op">:</span><span class="dv">49</span>))</a>
 <a class="sourceLine" id="cb1-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">ramsey &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="dt">geography =</span> <span class="st">"tract"</span>, <span class="dt">variables =</span> vars, <span class="dt">state =</span> <span class="st">"MN"</span>, <span class="dt">county =</span> <span class="st">"Ramsey"</span>)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(ramsey <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>NAME))</a></code></pre></div>
+<a class="sourceLine" id="cb1-6" data-line-number="6">ramsey &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="dt">geography =</span> <span class="st">"tract"</span>, </a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">                  <span class="dt">variables =</span> vars, </a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">                  <span class="dt">state =</span> <span class="st">"MN"</span>, </a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">                  <span class="dt">county =</span> <span class="st">"Ramsey"</span>, </a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">                  <span class="dt">year =</span> <span class="dv">2016</span>)</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(ramsey <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>NAME))</a></code></pre></div>
 <pre><code>## # A tibble: 6 x 4
 ##   GEOID       variable   estimate   moe
 ##   &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
-## 1 27123030100 B01001_020       31    25
-## 2 27123030100 B01001_021      105    32
-## 3 27123030100 B01001_022       74    42
-## 4 27123030100 B01001_023       17    22
-## 5 27123030100 B01001_024       71    72
-## 6 27123030100 B01001_025       41    27</code></pre>
+## 1 27123030100 B01001_020       51    27
+## 2 27123030100 B01001_021       92    40
+## 3 27123030100 B01001_022       48    28
+## 4 27123030100 B01001_023        8    13
+## 5 27123030100 B01001_024       51    52
+## 6 27123030100 B01001_025       23    18</code></pre>
 <p>We can see that in two instances the margin of error exceeds the estimate. One way to address this is through data aggregation. While the specific group estimates in this Census tract may be unreliable, the estimate for the total population over age 65 in the tract is likely better, but is not available directly from the ACS detailed tables. In turn, we can summarize our data.</p>
 <p>The US Census Bureau publishes guidelines on how to calculate margins of error for derived estimates (see the footnotes). These formulas are implemented in <strong>tidycensus</strong> in the <code>moe_sum</code>, <code>moe_prop</code>, <code>moe_ratio</code>, and <code>moe_product</code> functions. The example below illustrates the use of <code>moe_sum</code> to calculate the margin of error around a derived estimate for Census tract population over age 65.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">ramsey65 &lt;-<span class="st"> </span>ramsey <span class="op">%&gt;%</span></a>
@@ -129,12 +133,12 @@
 <pre><code>## # A tibble: 6 x 3
 ##   GEOID       sumest summoe
 ##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
-## 1 27123030100    776  143. 
-## 2 27123030201    970  227. 
-## 3 27123030202    158   58.2
-## 4 27123030300    807  159. 
-## 5 27123030400    439  136. 
-## 6 27123030500    408  122.</code></pre>
+## 1 27123030100    677  124. 
+## 2 27123030201    899  201. 
+## 3 27123030202    149   53.8
+## 4 27123030300    783  154. 
+## 5 27123030400    423  131. 
+## 6 27123030500    396  111.</code></pre>
 <p>The margins of error for this aggregate population are more reasonable. However, the Census Bureau does issue this warning:</p>
 <blockquote>
 <p>These methods do not consider the correlation or covariance between the basic estimates. They may be overestimates or underestimates of the derived estimate’s standard error, depending on whether the two basic estimates are highly correlated in either the positive or negative direction. As a result, the approximated standard error may not match direct calculations of standard errors or calculations obtained through other methods. <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>

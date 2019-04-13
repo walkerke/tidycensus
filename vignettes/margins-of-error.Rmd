@@ -29,7 +29,11 @@ library(tidyverse)
 
 vars <- paste0("B01001_0", c(20:25, 44:49))
 
-ramsey <- get_acs(geography = "tract", variables = vars, state = "MN", county = "Ramsey")
+ramsey <- get_acs(geography = "tract", 
+                  variables = vars, 
+                  state = "MN", 
+                  county = "Ramsey", 
+                  year = 2016)
 
 head(ramsey %>% select(-NAME))
 ```

@@ -10,7 +10,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8)
 census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
 ```
 
-If requested, __tidycensus__ can return simple feature geometry for geographic units along with variables from the decennial US Census or American Community survey.  By setting `geometry = TRUE` in a __tidycensus__ function call, __tidycensus__ will use the __tigris__ package to retrieve the corresponding geographic dataset from the US Census Bureau and pre-merge it with the tabular data obtained from the Census API.  The following example shows median household income from the 2011-2015 ACS for Census tracts in Orange County, California: 
+If requested, __tidycensus__ can return simple feature geometry for geographic units along with variables from the decennial US Census or American Community survey.  By setting `geometry = TRUE` in a __tidycensus__ function call, __tidycensus__ will use the __tigris__ package to retrieve the corresponding geographic dataset from the US Census Bureau and pre-merge it with the tabular data obtained from the Census API.  The following example shows median household income from the 2013-2017 ACS for Census tracts in Orange County, California: 
 
 ```{r}
 library(tidycensus)
@@ -28,14 +28,11 @@ Our object `orange` looks much like the basic __tidycensus__ output, but with a 
 As the dataset is in a tidy format, it can be quickly visualized with the `geom_sf` functionality currently in the development version of __ggplot2__: 
 
 ```{r}
-library(viridis)
-
 orange %>%
-  ggplot(aes(fill = estimate, color = estimate)) + 
-  geom_sf() + 
+  ggplot(aes(fill = estimate)) + 
+  geom_sf(color = NA) + 
   coord_sf(crs = 26911) + 
-  scale_fill_viridis(option = "magma") + 
-  scale_color_viridis(option = "magma")
+  scale_fill_viridis_c(option = "magma") 
 ```
 
 ## Faceted mapping
@@ -62,12 +59,11 @@ With this information, we can set up an analysis pipeline in which we calculate 
 ```{r}
 harris %>%
   mutate(pct = 100 * (value / summary_value)) %>%
-  ggplot(aes(fill = pct, color = pct)) +
+  ggplot(aes(fill = pct)) +
   facet_wrap(~variable) +
-  geom_sf() +
+  geom_sf(color = NA) +
   coord_sf(crs = 26915) + 
-  scale_fill_viridis() +
-  scale_color_viridis()
+  scale_fill_viridis_c()
 ```
 
 ## Detailed shoreline mapping with tidycensus
