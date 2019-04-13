@@ -13,8 +13,8 @@
 significance <- function(est1, est2, moe1, moe2, clevel = 0.9){
   # generate z score
   if(clevel == 0.9) z = 1.645
-  else if(clevel == 0.9) z = 1.960
-  else if(clevel == 0.9) z = 2.576
+  else if(clevel == 0.95) z = 1.960
+  else if(clevel == 0.99) z = 2.576
   else stop("clevel must be 0.9, 0.95, or 0.99")
 
   #ensure all variables are numeric
