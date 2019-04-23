@@ -183,10 +183,11 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   # for block groups - take care of this under the hood by having the function
   # call itself and return the result
   if (geography == "tract" && length(state) > 1 && year > 2014) {
+    message("Fetching tract data by state and combining the result.")
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
       result <- map(state,~{
-        get_acs(geography = geography,
+        suppressMessages(get_acs(geography = geography,
                 variables = variables,
                 table = table,
                 cache_table = cache_table,
@@ -196,7 +197,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 county = county,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE)
+                shift_geo = FALSE))
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -208,7 +209,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         st_as_sf()
     } else {
       result <- map_df(state, ~{
-        get_acs(geography = geography,
+        suppressMessages(get_acs(geography = geography,
                 variables = variables,
                 table = table,
                 cache_table = cache_table,
@@ -218,7 +219,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 county = county,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE)
+                shift_geo = FALSE))
       })
     }
     return(result)
@@ -228,7 +229,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
       result <- map(county, ~{
-        get_acs(geography = geography,
+        suppressMessages(get_acs(geography = geography,
                 variables = variables,
                 table = table,
                 cache_table = cache_table,
@@ -238,7 +239,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 county = .x,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE)
+                shift_geo = FALSE))
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -250,7 +251,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         st_as_sf()
     } else {
       result <- map_df(county, ~{
-        get_acs(geography = geography,
+        suppressMessages(get_acs(geography = geography,
                 variables = variables,
                 table = table,
                 cache_table = cache_table,
@@ -260,7 +261,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 county = .x,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE)
+                shift_geo = FALSE))
       })
     }
     return(result)
@@ -269,8 +270,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   if (geography == "block group" && length(county) > 1) {
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
+      message("Fetching block group data by county and combining the result.")
+
       result <- map(county, ~{
-        get_acs(geography = geography,
+        suppressMessages(get_acs(geography = geography,
                 variables = variables,
                 table = table,
                 cache_table = cache_table,
@@ -280,7 +283,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 county = .x,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE)
+                shift_geo = FALSE))
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -291,8 +294,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         as_tibble() %>%
         st_as_sf()
     } else {
+      message("Fetching block group data by county and combining the result.")
+
       result <- map_df(county, ~{
-        get_acs(geography = geography,
+        suppressMessages(get_acs(geography = geography,
                 variables = variables,
                 table = table,
                 cache_table = cache_table,
@@ -302,7 +307,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 county = .x,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE)
+                shift_geo = FALSE))
       })
     }
     return(result)
