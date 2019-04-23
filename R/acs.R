@@ -183,11 +183,20 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   # for block groups - take care of this under the hood by having the function
   # call itself and return the result
   if (geography == "tract" && length(state) > 1 && year > 2014) {
-    mc <- match.call(expand.dots = TRUE)
+    # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
-      result <- map(state, function(x) {
-        mc[["state"]] <- x
-        eval(mc)
+      result <- map(state,~{
+        get_acs(geography = geography,
+                variables = variables,
+                table = table,
+                cache_table = cache_table,
+                year = year,
+                output = output,
+                state = .x,
+                county = county,
+                geometry = geometry,
+                keep_geo_vars = keep_geo_vars,
+                shift_geo = FALSE)
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -198,20 +207,38 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         as_tibble() %>%
         st_as_sf()
     } else {
-      result <- map_df(state, function(x) {
-        mc[["state"]] <- x
-        eval(mc)
+      result <- map_df(state, ~{
+        get_acs(geography = geography,
+                variables = variables,
+                table = table,
+                cache_table = cache_table,
+                year = year,
+                output = output,
+                state = .x,
+                county = county,
+                geometry = geometry,
+                keep_geo_vars = keep_geo_vars,
+                shift_geo = FALSE)
       })
     }
     return(result)
   }
 
   if ((geography == "block group" && length(county) > 1) || (geography == "tract" && length(county) > 1 && year < 2015)) {
-    mc <- match.call(expand.dots = TRUE)
+    # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
-      result <- map(county, function(x) {
-        mc[["county"]] <- x
-        eval(mc)
+      result <- map(county, ~{
+        get_acs(geography = geography,
+                variables = variables,
+                table = table,
+                cache_table = cache_table,
+                year = year,
+                output = output,
+                state = state,
+                county = .x,
+                geometry = geometry,
+                keep_geo_vars = keep_geo_vars,
+                shift_geo = FALSE)
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -222,20 +249,38 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         as_tibble() %>%
         st_as_sf()
     } else {
-      result <- map_df(county, function(x) {
-        mc[["county"]] <- x
-        eval(mc)
+      result <- map_df(county, ~{
+        get_acs(geography = geography,
+                variables = variables,
+                table = table,
+                cache_table = cache_table,
+                year = year,
+                output = output,
+                state = state,
+                county = .x,
+                geometry = geometry,
+                keep_geo_vars = keep_geo_vars,
+                shift_geo = FALSE)
       })
     }
     return(result)
   }
 
   if (geography == "block group" && length(county) > 1) {
-    mc <- match.call(expand.dots = TRUE)
+    # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
-      result <- map(county, function(x) {
-        mc[["county"]] <- x
-        eval(mc)
+      result <- map(county, ~{
+        get_acs(geography = geography,
+                variables = variables,
+                table = table,
+                cache_table = cache_table,
+                year = year,
+                output = output,
+                state = state,
+                county = .x,
+                geometry = geometry,
+                keep_geo_vars = keep_geo_vars,
+                shift_geo = FALSE)
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -246,9 +291,18 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         as_tibble() %>%
         st_as_sf()
     } else {
-      result <- map_df(county, function(x) {
-        mc[["county"]] <- x
-        eval(mc)
+      result <- map_df(county, ~{
+        get_acs(geography = geography,
+                variables = variables,
+                table = table,
+                cache_table = cache_table,
+                year = year,
+                output = output,
+                state = state,
+                county = .x,
+                geometry = geometry,
+                keep_geo_vars = keep_geo_vars,
+                shift_geo = FALSE)
       })
     }
     return(result)
