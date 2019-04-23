@@ -4,3 +4,6 @@
 .Ruserdata
 examples
 examples/examples.R
+tidycensus.Rcheck/
+tidycensus*.tar.gz
+tidycensus*.tgz
