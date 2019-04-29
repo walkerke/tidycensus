@@ -80,9 +80,9 @@ validate_county <- function(state, county, .msg = interactive()) {
       return(county)
 
     } else {
-      warning(sprintf("'%s' is not a valid FIPS code for counties in %s", county, county_table$state_name[1]),
+      warning(sprintf("'%s' is not a current FIPS code for counties in %s", county, county_table$state_name[1]),
               call. = FALSE)
-      return(NULL)
+      return(county)
 
     }
 
