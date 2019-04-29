@@ -195,9 +195,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 output = output,
                 state = .x,
                 county = county,
+                summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE))
+                shift_geo = FALSE,
+                key = key,
+                moe_level = moe_level))
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -217,9 +220,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 output = output,
                 state = .x,
                 county = county,
+                summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE))
+                shift_geo = FALSE,
+                key = key,
+                moe_level = moe_level))
       })
     }
     return(result)
@@ -237,9 +243,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 output = output,
                 state = state,
                 county = .x,
+                summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE))
+                shift_geo = FALSE,
+                key = key,
+                moe_level = moe_level))
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -259,9 +268,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 output = output,
                 state = state,
                 county = .x,
+                summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE))
+                shift_geo = FALSE,
+                key = key,
+                moe_level = moe_level))
       })
     }
     return(result)
@@ -281,9 +293,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 output = output,
                 state = state,
                 county = .x,
+                summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE))
+                shift_geo = FALSE,
+                key = key,
+                moe_level = moe_level))
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -305,9 +320,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 output = output,
                 state = state,
                 county = .x,
+                summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE))
+                shift_geo = FALSE,
+                key = key,
+                moe_level = moe_level))
       })
     }
     return(result)
