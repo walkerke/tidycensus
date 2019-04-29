@@ -148,7 +148,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
   if (geography == "tract" && length(state) > 1) {
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
-      result <- map(state, function(x) {
+      result <- map(state, ~{
         suppressMessages(get_decennial(geography = geography,
                                        variables = variables,
                                        table = table,
@@ -173,7 +173,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
         as_tibble() %>%
         st_as_sf()
     } else {
-      result <- map_df(state, function(x) {
+      result <- map_df(state, ~{
         suppressMessages(get_decennial(geography = geography,
                                        variables = variables,
                                        table = table,
@@ -196,7 +196,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
   if ((geography %in% c("block group", "block") && length(county) > 1) || (geography == "tract" && length(county) > 1)) {
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
-      result <- map(county, function(x) {
+      result <- map(county, ~{
         suppressMessages(get_decennial(geography = geography,
                                        variables = variables,
                                        table = table,
@@ -221,7 +221,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
         as_tibble() %>%
         st_as_sf()
     } else {
-      result <- map_df(county, function(x) {
+      result <- map_df(county, ~{
         suppressMessages(get_decennial(geography = geography,
                                        variables = variables,
                                        table = table,
