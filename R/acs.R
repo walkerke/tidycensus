@@ -362,7 +362,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       vars <- format_variables_acs(x)
       suppressWarnings(load_data_acs(geography, vars, key, year, state, county, survey))
     }) %>%
-      bind_cols()
+    Reduce(function(x, y) full_join(x, y, by = "GEOID", suffix = c("", ".y")), .)
   } else {
     vars <- format_variables_acs(variables)
 
