@@ -2,7 +2,7 @@
 #
 # returns NULL if input is NULL
 # returns valid state FIPS code if input is even pseud-valid (i.e. single digit but w/in range)
-# returns NULL if input is not a valid FIPS code
+# returns error if input is not a valid FIPS code
 validate_state <- function(state, .msg=interactive()) {
 
   if (is.null(state)) return(NULL)
@@ -26,8 +26,8 @@ validate_state <- function(state, .msg=interactive()) {
                 call.=FALSE)
         return(state_sub)
       } else {
-        warning(sprintf("'%s' is not a valid FIPS code or state name/abbreviation", state), call.=FALSE)
-        return(NULL)
+        stop(sprintf("'%s' is not a valid FIPS code or state name/abbreviation", state), call.=FALSE)
+
       }
     }
 
@@ -50,13 +50,13 @@ validate_state <- function(state, .msg=interactive()) {
       return(fips_state_table[fips_state_table$name == state, "fips"])
 
     } else {
-      warning(sprintf("'%s' is not a valid FIPS code or state name/abbreviation", state), call.=FALSE)
-      return(NULL)
+      stop(sprintf("'%s' is not a valid FIPS code or state name/abbreviation", state), call.=FALSE)
+
     }
 
   } else {
-    warning(sprintf("'%s' is not a valid FIPS code or state name/abbreviation", state), call.=FALSE)
-    return(NULL)
+    stop(sprintf("'%s' is not a valid FIPS code or state name/abbreviation", state), call.=FALSE)
+
   }
 
 }
@@ -94,9 +94,8 @@ validate_county <- function(state, county, .msg = interactive()) {
 
     if (length(matching_counties) == 0) {
 
-      warning(sprintf("'%s' is not a valid name for counties in %s", county, county_table$state_name[1]),
+      stop(sprintf("'%s' is not a valid name for counties in %s", county, county_table$state_name[1]),
               call. = FALSE)
-      return(NULL)
 
     } else if (length(matching_counties) == 1) {
 
@@ -111,8 +110,8 @@ validate_county <- function(state, county, .msg = interactive()) {
 
       ctys <- format_vec(matching_counties)
 
-      warning("Your county string matches ", ctys, " Please refine your selection.", call. = FALSE)
-      return(NULL)
+      stop("Your county string matches ", ctys, " Please refine your selection.", call. = FALSE)
+
 
     }
 
