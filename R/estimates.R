@@ -118,6 +118,14 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
     output <- "wide"
   }
 
+  if ("PERIOD_CODE" %in% names(dat)) {
+    dat <- rename(dat, PERIOD = PERIOD_CODE)
+  }
+
+  if ("DATE_CODE" %in% names(dat)) {
+    dat <- rename(dat, DATE = DATE_CODE)
+  }
+
   if (output == "tidy") {
 
     if (time_series) {

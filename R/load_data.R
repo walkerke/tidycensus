@@ -488,9 +488,17 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL,
 
   if (time_series) {
     if (product == "components") {
-      vars_to_get <- paste0(vars_to_get, ",PERIOD")
+      if (year == 2018) {
+        vars_to_get <- paste0(vars_to_get, ",PERIOD_CODE")
+      } else {
+        vars_to_get <- paste0(vars_to_get, ",PERIOD")
+      }
     } else {
-      vars_to_get <- paste0(vars_to_get, ",DATE")
+      if (year == 2018) {
+        vars_to_get <- paste0(vars_to_get, ",DATE_CODE")
+      } else {
+        vars_to_get <- paste0(vars_to_get, ",DATE")
+      }
     }
   }
 
