@@ -41,6 +41,10 @@
 #' @param moe_level The confidence level of the returned margin of error.  One of 90 (the default), 95, or 99.
 #' @param survey The ACS contains one-year, three-year, and five-year surveys expressed as "acs1", "acs3", and "acs5".
 #'               The default selection is "acs5."
+#' @param show_call if TRUE, display call made to Census API. This can be very useful
+#'                  in debugging and determining if error messages returned are
+#'                  due to tidycensus or the Census API. Copy to the API call into
+#'                  a browser and see what is returned by the API directly. Defaults to FALSE.
 #' @param ... Other keyword arguments
 #'
 #' @return A tibble or sf tibble of ACS data
@@ -78,8 +82,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                     year = 2017, endyear = NULL,
                     output = "tidy",
                     state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
-                    shift_geo = FALSE,
-                    summary_var = NULL, key = NULL, moe_level = 90, survey = "acs5", ...) {
+                    shift_geo = FALSE, summary_var = NULL, key = NULL,
+                    moe_level = 90, survey = "acs5", show_call = FALSE, ...) {
 
   if (!is.null(endyear)) {
     year <- endyear
@@ -360,13 +364,15 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     dat <- map(l, function(x) {
       vars <- format_variables_acs(x)
-      suppressWarnings(load_data_acs(geography, vars, key, year, state, county, survey))
+      suppressWarnings(load_data_acs(geography, vars, key, year, state, county,
+                                     survey, show_call = show_call))
     }) %>%
     Reduce(function(x, y) full_join(x, y, by = "GEOID", suffix = c("", ".y")), .)
   } else {
     vars <- format_variables_acs(variables)
 
-    dat <- suppressWarnings(load_data_acs(geography, vars, key, year, state, county, survey))
+    dat <- suppressWarnings(load_data_acs(geography, vars, key, year, state, county,
+                                          survey, show_call = show_call))
   }
 
   vars2 <- format_variables_acs(variables)

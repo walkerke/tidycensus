@@ -36,6 +36,10 @@
 #'                    that you'll want to use as a denominator or comparison.
 #' @param key Your Census API key.
 #'            Obtain one at \url{http://api.census.gov/data/key_signup.html}
+#' @param show_call if TRUE, display call made to Census API. This can be very useful
+#'                  in debugging and determining if error messages returned are
+#'                  due to tidycensus or the Census API. Copy to the API call into
+#'                  a browser and see what is returned by the API directly. Defaults to FALSE.
 #' @param ... Other keyword arguments
 #'
 #' @return a tibble or sf tibble of decennial Census data
@@ -60,7 +64,7 @@
 #' @export
 get_decennial <- function(geography, variables = NULL, table = NULL, cache_table = FALSE, year = 2010,
                           sumfile = "sf1", state = NULL, county = NULL, geometry = FALSE, output = "tidy",
-                          keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL, key = NULL, ...) {
+                          keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL, key = NULL, show_call = FALSE, ...) {
 
   message(sprintf("Getting data from the %s decennial Census", year))
 
@@ -251,22 +255,22 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
     l <- split(variables, ceiling(seq_along(variables) / 48))
 
     dat <- map(l, function(x) {
-      d <- try(load_data_decennial(geography, x, key, year, sumfile, state, county),
+      d <- try(load_data_decennial(geography, x, key, year, sumfile, state, county, show_call = show_call),
                  silent = TRUE)
       # If sf1 fails, try to get it from sf3
       if (inherits(d, "try-error")) {
-        d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", state, county)))
+        d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", state, county, show_call = show_call)))
       }
       d
     }) %>%
       bind_cols()
   } else {
-    dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county),
+    dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county, show_call = show_call),
                silent = TRUE)
 
     # If sf1 fails, try to get it from sf3
     if (inherits(dat, "try-error")) {
-      dat <- try(suppressMessages(load_data_decennial(geography, variables, key, year, sumfile = "sf3", state, county)))
+      dat <- try(suppressMessages(load_data_decennial(geography, variables, key, year, sumfile = "sf3", state, county, show_call = show_call)))
     }
 
   }
@@ -305,11 +309,11 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
   if (!is.null(summary_var)) {
 
     sumdat <- suppressMessages(try(load_data_decennial(geography, summary_var, key, year,
-                                                   sumfile, state, county)))
+                                                   sumfile, state, county, show_call = show_call)))
 
     if (inherits(sumdat, "try-error")) {
       sumdat <- suppressMessages(try(load_data_decennial(geography, summary_var, key, year,
-                                        sumfile = "sf3", state, county)))
+                                        sumfile = "sf3", state, county, show_call = show_call)))
     }
 
     dat2 <- dat2 %>%

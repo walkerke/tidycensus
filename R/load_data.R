@@ -110,7 +110,8 @@ format_variables_acs <- function(variables) {
 
 }
 
-load_data_acs <- function(geography, formatted_variables, key, year, state = NULL, county = NULL, survey) {
+load_data_acs <- function(geography, formatted_variables, key, year, state = NULL,
+                          county = NULL, survey, show_call = FALSE) {
 
   # No longer necessary: see https://www.census.gov/content/dam/Census/data/developers/acs/acs-data-variables-guide.pdf
   # if (survey == "acs1") {
@@ -217,6 +218,11 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
                                    key = key))
   }
 
+  if (show_call) {
+    call_url <- gsub("&key.*", "", call$url)
+    message(paste("Census API call:", call_url))
+  }
+
   # Make sure call status returns 200, else, print the error message for the user.
   if (call$status_code != 200) {
     msg <- content(call, as = "text")
@@ -273,8 +279,8 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 }
 
 
-load_data_decennial <- function(geography, variables, key, year,
-                                sumfile, state = NULL, county = NULL) {
+load_data_decennial <- function(geography, variables, key, year, sumfile,
+                                state = NULL, county = NULL, show_call = FALSE) {
 
 
   var <- paste0(variables, collapse = ",")
@@ -365,6 +371,11 @@ load_data_decennial <- function(geography, variables, key, year,
                                    key = key))
   }
 
+  if (show_call) {
+    call_url <- gsub("&key.*", "", call$url)
+    message(paste("Census API call:", call_url))
+  }
+
   # Make sure call status returns 200, else, print the error message for the user.
   if (call$status_code != 200) {
     msg <- content(call, as = "text")
@@ -443,8 +454,8 @@ load_data_decennial <- function(geography, variables, key, year,
 }
 
 
-load_data_estimates <- function(geography, product = NULL, variables = NULL,
-                                key, year, time_series, state = NULL, county = NULL) {
+load_data_estimates <- function(geography, product = NULL, variables = NULL, key, year,
+                                time_series, state = NULL, county = NULL, show_call = FALSE) {
 
   if (!is.null(product)) {
     if (!product %in% c("population", "components",
@@ -567,6 +578,11 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL,
     call <- GET(base, query = list(get = vars_to_get,
                                    "for" = paste0(geography, ":*"),
                                    key = key))
+  }
+
+  if (show_call) {
+    call_url <- gsub("&key.*", "", call$url)
+    message(paste("Census API call:", call_url))
   }
 
   # Make sure call status returns 200, else, print the error message for the user.

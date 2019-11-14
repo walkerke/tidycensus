@@ -8,7 +8,7 @@ get_decennial(geography, variables = NULL, table = NULL,
   cache_table = FALSE, year = 2010, sumfile = "sf1", state = NULL,
   county = NULL, geometry = FALSE, output = "tidy",
   keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL,
-  key = NULL, ...)
+  key = NULL, show_call = FALSE, ...)
 }
 \arguments{
 \item{geography}{The geography of your data.}
@@ -60,6 +60,11 @@ that you'll want to use as a denominator or comparison.}
 
 \item{key}{Your Census API key.
 Obtain one at \url{http://api.census.gov/data/key_signup.html}}
+
+\item{show_call}{if TRUE, display call made to Census API. This can be very useful
+in debugging and determining if error messages returned are
+due to tidycensus or the Census API. Copy to the API call into
+a browser and see what is returned by the API directly. Defaults to FALSE.}
 
 \item{...}{Other keyword arguments}
 }

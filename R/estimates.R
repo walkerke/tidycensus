@@ -38,6 +38,10 @@
 #' @param key Your Census API key.
 #'            Obtain one at \url{http://api.census.gov/data/key_signup.html}.  Can be stored
 #'            in your .Renviron with \code{census_api_key("YOUR KEY", install = TRUE)}
+#' @param show_call if TRUE, display call made to Census API. This can be very useful
+#'                  in debugging and determining if error messages returned are
+#'                  due to tidycensus or the Census API. Copy to the API call into
+#'                  a browser and see what is returned by the API directly. Defaults to FALSE.
 #' @param ... other keyword arguments
 #'
 #' @return A tibble, or sf tibble, of population estimates data
@@ -47,8 +51,7 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
                           year = 2017, state = NULL, county = NULL,
                           time_series = FALSE,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
-                          shift_geo = FALSE, key = NULL, ...) {
-
+                          shift_geo = FALSE, key = NULL, show_call = FALSE, ...) {
 
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
@@ -93,7 +96,7 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
       dat <- map_dfc(variables, function(eachvar) {
         load_data_estimates(geography = geography, product = NULL, variables = eachvar,
                             year = year, state = state, county = county,
-                            time_series = time_series, key = key)
+                            time_series = time_series, key = key, show_call = show_call)
       })
 
       # Remove any extra GEOID or GEONAME columns
@@ -104,14 +107,14 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
                                  variables = variables,
                                  year = year, state = state,
                                  time_series = time_series,
-                                 county = county, key = key)
+                                 county = county, key = key, show_call = show_call)
     }
   } else {
     dat <- load_data_estimates(geography = geography, product = product,
                                variables = variables,
                                year = year, state = state,
                                time_series = time_series,
-                               county = county, key = key)
+                               county = county, key = key, show_call = show_call)
   }
 
   if (!is.null(product) && product == "charagegroups") {

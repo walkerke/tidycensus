@@ -8,7 +8,7 @@ get_estimates(geography, product = NULL, variables = NULL,
   breakdown = NULL, breakdown_labels = FALSE, year = 2017,
   state = NULL, county = NULL, time_series = FALSE,
   output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
-  shift_geo = FALSE, key = NULL, ...)
+  shift_geo = FALSE, key = NULL, show_call = FALSE, ...)
 }
 \arguments{
 \item{geography}{The geography of your data.}
@@ -62,6 +62,11 @@ mapping of the entire US.}
 \item{key}{Your Census API key.
 Obtain one at \url{http://api.census.gov/data/key_signup.html}.  Can be stored
 in your .Renviron with \code{census_api_key("YOUR KEY", install = TRUE)}}
+
+\item{show_call}{if TRUE, display call made to Census API. This can be very useful
+in debugging and determining if error messages returned are
+due to tidycensus or the Census API. Copy to the API call into
+a browser and see what is returned by the API directly. Defaults to FALSE.}
 
 \item{...}{other keyword arguments}
 }
