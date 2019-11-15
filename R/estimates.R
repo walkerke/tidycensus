@@ -12,7 +12,7 @@
 #'                  combinations of these breakdowns.
 #' @param breakdown_labels Whether or not to label breakdown elements returned when
 #'                         \code{product = "characteristics"}. Defaults to FALSE.
-#' @param year The data year (defaults to 2017)
+#' @param year The data year (defaults to 2018)
 #' @param state The state for which you are requesting data. State
 #'              names, postal codes, and FIPS codes are accepted.
 #'              Defaults to NULL.
@@ -44,7 +44,7 @@
 #' @export
 get_estimates <- function(geography, product = NULL, variables = NULL,
                           breakdown = NULL, breakdown_labels = FALSE,
-                          year = 2017, state = NULL, county = NULL,
+                          year = 2018, state = NULL, county = NULL,
                           time_series = FALSE,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, ...) {
