@@ -12,7 +12,7 @@
 #'                  combinations of these breakdowns.
 #' @param breakdown_labels Whether or not to label breakdown elements returned when
 #'                         \code{product = "characteristics"}. Defaults to FALSE.
-#' @param year The data year (defaults to 2017)
+#' @param year The data year (defaults to 2018)
 #' @param state The state for which you are requesting data. State
 #'              names, postal codes, and FIPS codes are accepted.
 #'              Defaults to NULL.
@@ -23,7 +23,7 @@
 #'                    of 2010. The returned column is either "DATE", representing a particular estimate date, or "PERIOD",
 #'                    representing a time period (e.g. births between 2016 and 2017), and contains integers representing
 #'                    those values.  Integer to date or period mapping is available at
-#'                    \url{https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html}.
+#'                    \url{https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2018.html}.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'               enumeration unit-variable combination, or "wide" in which each
 #'               row represents an enumeration unit and the variables are in the
@@ -48,7 +48,7 @@
 #' @export
 get_estimates <- function(geography, product = NULL, variables = NULL,
                           breakdown = NULL, breakdown_labels = FALSE,
-                          year = 2017, state = NULL, county = NULL,
+                          year = 2018, state = NULL, county = NULL,
                           time_series = FALSE,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, show_call = FALSE, ...) {
