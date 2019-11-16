@@ -16,9 +16,10 @@ get_decennial(geography, variables = NULL, table = NULL,
 \item{variables}{Character string or vector of character strings of variable
 IDs.}
 
-\item{table}{The Census table for which you would like to request all variables.  Uses
+\item{table}{The Census table for which you would like to request all variables. Uses
 lookup tables to identify the variables; performs faster when variable
-table already exists through \code{load_variables(cache = TRUE)}.}
+table already exists through \code{load_variables(cache = TRUE)}.
+Only one table may be requested per call.}
 
 \item{cache_table}{Whether or not to cache table names for faster future access.
 Defaults to FALSE; if TRUE, only needs to be called once per

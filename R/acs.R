@@ -4,9 +4,10 @@
 #' @param variables Character string or vector of character strings of variable
 #'                  IDs. tidycensus automatically returns the estimate and the
 #'                  margin of error associated with the variable.
-#' @param table   The ACS table for which you would like to request all variables.  Uses
+#' @param table   The ACS table for which you would like to request all variables. Uses
 #'                lookup tables to identify the variables; performs faster when variable
 #'                table already exists through \code{load_variables(cache = TRUE)}.
+#'                Only one table may be requested per call.
 #' @param cache_table Whether or not to cache table names for faster future access.
 #'                    Defaults to FALSE; if TRUE, only needs to be called once per
 #'                    dataset.  If variables dataset is already cached via the
@@ -88,6 +89,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   if (!is.null(endyear)) {
     year <- endyear
     message("The `endyear` parameter is deprecated and will be removed in a future release.  Please use `year` instead.")
+  }
+
+  if (length(table) > 1) {
+    stop("Only one table may be requested per call.", call. = FALSE)
   }
 
   if (survey == "acs1") {
