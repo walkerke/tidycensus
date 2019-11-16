@@ -8,7 +8,7 @@ get_decennial(geography, variables = NULL, table = NULL,
   cache_table = FALSE, year = 2010, sumfile = "sf1", state = NULL,
   county = NULL, geometry = FALSE, output = "tidy",
   keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL,
-  key = NULL, ...)
+  key = NULL, show_call = FALSE, ...)
 }
 \arguments{
 \item{geography}{The geography of your data.}
@@ -16,9 +16,10 @@ get_decennial(geography, variables = NULL, table = NULL,
 \item{variables}{Character string or vector of character strings of variable
 IDs.}
 
-\item{table}{The Census table for which you would like to request all variables.  Uses
+\item{table}{The Census table for which you would like to request all variables. Uses
 lookup tables to identify the variables; performs faster when variable
-table already exists through \code{load_variables(cache = TRUE)}.}
+table already exists through \code{load_variables(cache = TRUE)}.
+Only one table may be requested per call.}
 
 \item{cache_table}{Whether or not to cache table names for faster future access.
 Defaults to FALSE; if TRUE, only needs to be called once per
@@ -60,6 +61,11 @@ that you'll want to use as a denominator or comparison.}
 
 \item{key}{Your Census API key.
 Obtain one at \url{http://api.census.gov/data/key_signup.html}}
+
+\item{show_call}{if TRUE, display call made to Census API. This can be very useful
+in debugging and determining if error messages returned are
+due to tidycensus or the Census API. Copy to the API call into
+a browser and see what is returned by the API directly. Defaults to FALSE.}
 
 \item{...}{Other keyword arguments}
 }

@@ -20,6 +20,10 @@ load_variables <- function(year, dataset, cache = FALSE) {
       stop("The current acs3 survey contains data from 2012-2013. Please select a different year.")
   }
 
+  if (dataset == "sf3" && year > 2001) {
+    stop("Summary File 3 was not released in 2010. Use tables from the American Community Survey via get_acs() instead.", call. = FALSE)
+  }
+
   rds <- paste0(dataset, "_", year, ".rds")
 
   if (grepl("^acs[135]/(profile|subject)$", dataset)) {
