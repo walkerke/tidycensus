@@ -170,7 +170,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   # Allow users to get all block groups in a state
 
-  if ((geography == "block group" && is.null(county)) || (geography == "tract" && is.null(county) && year < 2015)) {
+  if ((geography == "block group" && is.null(county))) {
     st <- suppressMessages(validate_state(state))
 
     # Get year-specific county IDs from tigris
@@ -191,7 +191,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   # If more than one state specified for tracts - or more than one county
   # for block groups - take care of this under the hood by having the function
   # call itself and return the result
-  if (geography == "tract" && length(state) > 1 && year > 2014) {
+  if (geography == "tract" && length(state) > 1) {
     message("Fetching tract data by state and combining the result.")
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
@@ -240,7 +240,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     return(result)
   }
 
-  if ((geography == "block group" && length(county) > 1) || (geography == "tract" && length(county) > 1 && year < 2015)) {
+  if ((geography == "block group" && length(county) > 1)) {
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
       result <- map(county, ~{
