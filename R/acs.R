@@ -129,9 +129,6 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   }
 
   if (survey == "acs1") {
-    if (year < 2012) {
-      stop("The acs1 data is currently available beginning in 2012. Please select a different year.", call. = FALSE)
-    }
     message("The one-year ACS provides data for geographies with populations of 65,000 and greater.")
   }
 
