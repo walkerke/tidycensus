@@ -181,19 +181,21 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
       result <- map(state, ~{
         suppressMessages(
           insist_get_decennial(geography = geography,
-                                       variables = variables,
-                                       table = table,
-                                       cache_table = cache_table,
-                                       year = year,
-                                       sumfile = sumfile,
-                                       output = output,
-                                       state = .x,
-                                       county = county,
-                                       geometry = geometry,
-                                       keep_geo_vars = keep_geo_vars,
-                                       shift_geo = FALSE,
-                                       summary_var = summary_var,
-                                       key = key))
+                               variables = variables,
+                               table = table,
+                               cache_table = cache_table,
+                               year = year,
+                               sumfile = sumfile,
+                               output = output,
+                               state = .x,
+                               county = county,
+                               geometry = geometry,
+                               keep_geo_vars = keep_geo_vars,
+                               shift_geo = FALSE,
+                               summary_var = summary_var,
+                               key = key,
+                               show_call = show_call)
+          )
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -207,19 +209,20 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
       result <- map_df(state, ~{
         suppressMessages(
           insist_get_decennial(geography = geography,
-                                       variables = variables,
-                                       table = table,
-                                       cache_table = cache_table,
-                                       year = year,
-                                       sumfile = sumfile,
-                                       output = output,
-                                       state = .x,
-                                       county = county,
-                                       geometry = geometry,
-                                       keep_geo_vars = keep_geo_vars,
-                                       shift_geo = FALSE,
-                                       summary_var = summary_var,
-                                       key = key))
+                               variables = variables,
+                               table = table,
+                               cache_table = cache_table,
+                               year = year,
+                               sumfile = sumfile,
+                               output = output,
+                               state = .x,
+                               county = county,
+                               geometry = geometry,
+                               keep_geo_vars = keep_geo_vars,
+                               shift_geo = FALSE,
+                               summary_var = summary_var,
+                               key = key,
+                               show_call = show_call))
       })
     }
     return(result)
@@ -231,19 +234,20 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
       result <- map(county, ~{
         suppressMessages(
           insist_get_decennial(geography = geography,
-                                       variables = variables,
-                                       table = table,
-                                       cache_table = cache_table,
-                                       year = year,
-                                       sumfile = sumfile,
-                                       output = output,
-                                       state = state,
-                                       county = .x,
-                                       geometry = geometry,
-                                       keep_geo_vars = keep_geo_vars,
-                                       shift_geo = FALSE,
-                                       summary_var = summary_var,
-                                       key = key))
+                               variables = variables,
+                               table = table,
+                               cache_table = cache_table,
+                               year = year,
+                               sumfile = sumfile,
+                               output = output,
+                               state = state,
+                               county = .x,
+                               geometry = geometry,
+                               keep_geo_vars = keep_geo_vars,
+                               shift_geo = FALSE,
+                               summary_var = summary_var,
+                               key = key,
+                               show_call = show_call))
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -257,19 +261,20 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
       result <- map_df(county, ~{
         suppressMessages(
           insist_get_decennial(geography = geography,
-                                       variables = variables,
-                                       table = table,
-                                       cache_table = cache_table,
-                                       year = year,
-                                       sumfile = sumfile,
-                                       output = output,
-                                       state = state,
-                                       county = .x,
-                                       geometry = geometry,
-                                       keep_geo_vars = keep_geo_vars,
-                                       shift_geo = FALSE,
-                                       summary_var = summary_var,
-                                       key = key))
+                               variables = variables,
+                               table = table,
+                               cache_table = cache_table,
+                               year = year,
+                               sumfile = sumfile,
+                               output = output,
+                               state = state,
+                               county = .x,
+                               geometry = geometry,
+                               keep_geo_vars = keep_geo_vars,
+                               shift_geo = FALSE,
+                               summary_var = summary_var,
+                               key = key,
+                               show_call = show_call))
       })
     }
     return(result)

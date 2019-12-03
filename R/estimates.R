@@ -53,6 +53,10 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, show_call = FALSE, ...) {
 
+  if (year < 2015) {
+    stop("The Population Estimates API is not available in tidycensus for years prior to 2015. Consider using `time_series = TRUE` or the censusapi package for earlier estimates.")
+  }
+
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 
@@ -66,6 +70,66 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
   if (geography == "cbsa") geography <- "metropolitan statistical area/micropolitan statistical area"
 
+  insist_get_estimates <- purrr::insistently(get_estimates)
+
+  # Allow for characteristics products to be pulled for the entire US by county
+  # Come back to this later
+  if (is.null(state) && geography == "county" && product == "characteristics") {
+
+    message("Fetching characteristics data by state and combining the result.")
+
+    state <- unique(fips_codes$state_code)[1:51]
+    # mc <- match.call(expand.dots = TRUE)
+    if (geometry) {
+      result <- map(state,~{
+        suppressMessages(
+          insist_get_estimates(geography = geography,
+                         product = product,
+                         variables = variables,
+                         breakdown = breakdown,
+                         breakdown_labels = breakdown_labels,
+                         year = year,
+                         state = .x,
+                         county = county,
+                         time_series = time_series,
+                         output = output,
+                         geometry = geometry,
+                         keep_geo_vars = keep_geo_vars,
+                         shift_geo = shift_geo,
+                         key = key,
+                         show_call = show_call))
+      }) %>%
+        reduce(rbind)
+      geoms <- unique(st_geometry_type(result))
+      if (length(geoms) > 1) {
+        result <- st_cast(result, "MULTIPOLYGON")
+      }
+      result <- result %>%
+        as_tibble() %>%
+        st_as_sf()
+    } else {
+      result <- map_df(state, ~{
+        suppressMessages(
+          insist_get_estimates(geography = geography,
+                               product = product,
+                               variables = variables,
+                               breakdown = breakdown,
+                               breakdown_labels = breakdown_labels,
+                               year = year,
+                               state = .x,
+                               county = county,
+                               time_series = time_series,
+                               output = output,
+                               geometry = geometry,
+                               keep_geo_vars = keep_geo_vars,
+                               shift_geo = shift_geo,
+                               key = key,
+                               show_call = show_call))
+      })
+    }
+    return(result)
+
+  }
 
   if (!is.null(product) && product == "characteristics") {
     product <- "charagegroups"

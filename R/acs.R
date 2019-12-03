@@ -211,7 +211,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 keep_geo_vars = keep_geo_vars,
                 shift_geo = FALSE,
                 key = key,
-                moe_level = moe_level))
+                moe_level = moe_level,
+                survey = survey,
+                show_call = show_call))
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -237,7 +239,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 keep_geo_vars = keep_geo_vars,
                 shift_geo = FALSE,
                 key = key,
-                moe_level = moe_level))
+                moe_level = moe_level,
+                survey = survey,
+                show_call = show_call))
       })
     }
     return(result)
@@ -261,7 +265,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 keep_geo_vars = keep_geo_vars,
                 shift_geo = FALSE,
                 key = key,
-                moe_level = moe_level))
+                moe_level = moe_level,
+                survey = survey,
+                show_call = show_call))
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -287,7 +293,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 keep_geo_vars = keep_geo_vars,
                 shift_geo = FALSE,
                 key = key,
-                moe_level = moe_level))
+                moe_level = moe_level,
+                survey = survey,
+                show_call = show_call))
       })
     }
     return(result)
@@ -313,7 +321,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 keep_geo_vars = keep_geo_vars,
                 shift_geo = FALSE,
                 key = key,
-                moe_level = moe_level))
+                moe_level = moe_level,
+                survey = survey,
+                show_call = show_call))
       }) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -341,7 +351,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 keep_geo_vars = keep_geo_vars,
                 shift_geo = FALSE,
                 key = key,
-                moe_level = moe_level))
+                moe_level = moe_level,
+                survey = survey,
+                show_call = show_call))
       })
     }
     return(result)
