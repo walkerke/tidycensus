@@ -106,6 +106,8 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
   #        call. = FALSE)
   # }
 
+  if (geography == "cbsa") geography <- "metropolitan statistical area/micropolitan statistical area"
+
   if (geography == "zcta") geography <- "zip code tabulation area"
 
   if (geography == "zip code tabulation area" && !is.null(state)) {
