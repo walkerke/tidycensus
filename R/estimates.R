@@ -64,6 +64,9 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
   }
 
+  if (geography == "cbsa") geography <- "metropolitan statistical area/micropolitan statistical area"
+
+
   if (!is.null(product) && product == "characteristics") {
     product <- "charagegroups"
   }
@@ -127,6 +130,10 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
   if ("DATE_CODE" %in% names(dat)) {
     dat <- rename(dat, DATE = DATE_CODE)
+  }
+
+  if ("DATE_" %in% names(dat)) {
+    dat <- rename(dat, DATE = DATE_)
   }
 
   if (output == "tidy") {

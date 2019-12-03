@@ -523,7 +523,7 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
       if (year == 2018) {
         vars_to_get <- paste0(vars_to_get, ",DATE_CODE")
       } else {
-        vars_to_get <- paste0(vars_to_get, ",DATE")
+        vars_to_get <- paste0(vars_to_get, ",DATE_")
       }
     }
   }
