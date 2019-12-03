@@ -635,6 +635,10 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   v2 <- c(var_vector, "GEONAME")
 
+  if ("county" %in% names(dat)) {
+    dat$county <- stringr::str_pad(dat$county, 3, "left", "0")
+  }
+
   # Get the geography ID variables
   id_vars <- names(dat)[! names(dat) %in% v2]
 
