@@ -68,6 +68,12 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
                           keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL, key = NULL,
                           show_call = FALSE, ...) {
 
+  # Right now, block groups are only available by tract, which tidycensus won't support
+  # Stop if this is called
+  if (geography == "block group") {
+    stop("At the moment block groups are not supported by `get_decennial()` due to API limitations. We recommend downloading data from NHGIS until this is resolved.")
+  }
+
   message(sprintf("Getting data from the %s decennial Census", year))
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
@@ -148,7 +154,9 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
   }
 
 
+
   # Allow users to get all block groups in a state
+  # Keep this here when county wildcards for block groups are fixed
   if (geography == "block group" && is.null(county)) {
     st <- suppressMessages(validate_state(state))
 
@@ -162,6 +170,8 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
   }
 
+  insist_get_decennial <- purrr::insistently(get_decennial)
+
   # If more than one state specified for tracts - or more than one county
   # for block groups - take care of this under the hood by having the function
   # call itself and return the result
@@ -169,7 +179,8 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
       result <- map(state, ~{
-        suppressMessages(get_decennial(geography = geography,
+        suppressMessages(
+          insist_get_decennial(geography = geography,
                                        variables = variables,
                                        table = table,
                                        cache_table = cache_table,
@@ -194,7 +205,8 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
         st_as_sf()
     } else {
       result <- map_df(state, ~{
-        suppressMessages(get_decennial(geography = geography,
+        suppressMessages(
+          insist_get_decennial(geography = geography,
                                        variables = variables,
                                        table = table,
                                        cache_table = cache_table,
@@ -217,7 +229,8 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
       result <- map(county, ~{
-        suppressMessages(get_decennial(geography = geography,
+        suppressMessages(
+          insist_get_decennial(geography = geography,
                                        variables = variables,
                                        table = table,
                                        cache_table = cache_table,
@@ -242,7 +255,8 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
         st_as_sf()
     } else {
       result <- map_df(county, ~{
-        suppressMessages(get_decennial(geography = geography,
+        suppressMessages(
+          insist_get_decennial(geography = geography,
                                        variables = variables,
                                        table = table,
                                        cache_table = cache_table,
