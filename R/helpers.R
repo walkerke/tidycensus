@@ -121,7 +121,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(bg)
 
-  } else if (geography %in% c("zcta", "zip code tabulation area")) {
+  } else if (geography %in% c("zcta", "zip code tabulation area", "zip code tabulation area (or part)")) {
 
     # For right now, to get it to work, it has to be cb = FALSE for 2010, 2011, and 2012
     # Re-visit this in the future.

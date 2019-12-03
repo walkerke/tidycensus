@@ -65,7 +65,8 @@
 #' @export
 get_decennial <- function(geography, variables = NULL, table = NULL, cache_table = FALSE, year = 2010,
                           sumfile = "sf1", state = NULL, county = NULL, geometry = FALSE, output = "tidy",
-                          keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL, key = NULL, show_call = FALSE, ...) {
+                          keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL, key = NULL,
+                          show_call = FALSE, ...) {
 
   message(sprintf("Getting data from the %s decennial Census", year))
 
@@ -107,15 +108,19 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
-  if (geography == "zip code tabulation area" && is.null(state)) {
-    stop("ZCTA data for the decennial Census is only available by state from tidycensus.",
-         call. = FALSE)
+  if (geography == "zip code tabulation area" && !is.null(state)) {
+    geography <- "zip code tabulation area (or part)"
   }
 
-  if (geography == "zip code tabulation area" && geometry) {
-    stop("Linked ZCTA geometry and attributes for `get_decennial` are not currently available in tidycensus.",
-         call. = FALSE)
-  }
+  # if (geography == "zip code tabulation area" && is.null(state)) {
+  #   stop("ZCTA data for the decennial Census is only available by state from tidycensus.",
+  #        call. = FALSE)
+  # }
+  #
+  # if (geography == "zip code tabulation area" && geometry) {
+  #   stop("Linked ZCTA geometry and attributes for `get_decennial` are not currently available in tidycensus.",
+  #        call. = FALSE)
+  # }
 
   if (shift_geo && !geometry) {
     stop("`shift_geo` is only available when requesting feature geometry with `geometry = TRUE`",
