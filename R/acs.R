@@ -356,7 +356,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       }
 
     }
-    return(result)
+    return(arrange(result, GEOID))  # sort so all vars for each GEOID is together
   }
 
   # If more than one state specified for tracts - or more than one county
