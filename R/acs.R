@@ -264,7 +264,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         # join non geo result to first result sf object
         result <- result_geo %>%
           left_join(result_no_geo, by = c("GEOID", "NAME")) %>%
-          # select(-geometry, geometry)  # move geometry to last column
+          select(-geometry, geometry)  # move geometry to last column
 
 
       } else {

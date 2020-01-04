@@ -4,11 +4,24 @@
 \alias{get_decennial}
 \title{Obtain data and feature geometry for the decennial Census}
 \usage{
-get_decennial(geography, variables = NULL, table = NULL,
-  cache_table = FALSE, year = 2010, sumfile = "sf1", state = NULL,
-  county = NULL, geometry = FALSE, output = "tidy",
-  keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL,
-  key = NULL, show_call = FALSE, ...)
+get_decennial(
+  geography,
+  variables = NULL,
+  table = NULL,
+  cache_table = FALSE,
+  year = 2010,
+  sumfile = "sf1",
+  state = NULL,
+  county = NULL,
+  geometry = FALSE,
+  output = "tidy",
+  keep_geo_vars = FALSE,
+  shift_geo = FALSE,
+  summary_var = NULL,
+  key = NULL,
+  show_call = FALSE,
+  ...
+)
 }
 \arguments{
 \item{geography}{The geography of your data.}

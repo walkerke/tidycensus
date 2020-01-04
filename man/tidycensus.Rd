@@ -3,7 +3,6 @@
 \docType{package}
 \name{tidycensus}
 \alias{tidycensus}
-\alias{tidycensus-package}
 \title{Return tidy data frames from the US Census Bureau API}
 \description{
 This packages uses US Census Bureau data but is neither endorsed nor supported by the US Census Bureau.

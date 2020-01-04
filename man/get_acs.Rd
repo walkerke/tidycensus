@@ -4,12 +4,26 @@
 \alias{get_acs}
 \title{Obtain data and feature geometry for the five-year American Community Survey}
 \usage{
-get_acs(geography, variables = NULL, table = NULL,
-  cache_table = FALSE, year = 2017, endyear = NULL,
-  output = "tidy", state = NULL, county = NULL, geometry = FALSE,
-  keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL,
-  key = NULL, moe_level = 90, survey = "acs5", show_call = FALSE,
-  ...)
+get_acs(
+  geography,
+  variables = NULL,
+  table = NULL,
+  cache_table = FALSE,
+  year = 2017,
+  endyear = NULL,
+  output = "tidy",
+  state = NULL,
+  county = NULL,
+  geometry = FALSE,
+  keep_geo_vars = FALSE,
+  shift_geo = FALSE,
+  summary_var = NULL,
+  key = NULL,
+  moe_level = 90,
+  survey = "acs5",
+  show_call = FALSE,
+  ...
+)
 }
 \arguments{
 \item{geography}{The geography of your data.}
