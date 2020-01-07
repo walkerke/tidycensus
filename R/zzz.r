@@ -43,4 +43,6 @@ utils::globalVariables(c("variable", "value", "GEOID", "NAME", "type", "moe",
                          ".", "NAME.y", "summary_moe", "TRACTBASE", "TRACT",
                          "ANPSADPI", "BLKGROUP", "BLKGRP", "BLKIDFP00", "CO", "COUNTY",
                          "GEOID10", "ST", "STATE", "TRACTSUF", "name", ".data", "GEONAME",
-                         "GEOID00", "POP", "PERIOD", "DATE", "PERIOD_CODE", "DATE_CODE"))
+                         "GEOID00", "POP", "PERIOD", "DATE", "PERIOD_CODE", "DATE_CODE",
+                         "DATE_", "STATEFP00", "STATEFP10", "CNTYIDFP00", "CTIDFP00",
+                         "BKGPIDFP00"))

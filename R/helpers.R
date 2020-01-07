@@ -25,15 +25,22 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
         st_cast("MULTIPOLYGON")
 
     } else if (year %in% c(2000, 2010)) {
+
+      if (cb) {
       st <- mutate(st, GEOID = STATE)
-      if (cb && year == 2000) {
+
+      if (year == 2000) {
         st <- st %>%
           group_by(GEOID) %>%
           summarize() %>%
           st_cast("MULTIPOLYGON")
       }
+    # when cb = FALSE the variable name for the state fips code column is year specific
+    } else if (year == 2000) {
+      st <- mutate(st, GEOID = STATEFP00)
+    } else if (year == 2010)
+      st <- mutate(st, GEOID = STATEFP10)
     }
-
     if (year == 2014) {
       st <- st_zm(st)
     }
@@ -52,13 +59,19 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
         summarize() %>%
         st_cast("MULTIPOLYGON")
     } else if (year %in% c(2000, 2010)) {
-      ct <- mutate(ct, GEOID = paste0(STATE, COUNTY))
-      if (cb && year == 2000) {
-        ct <- ct %>%
-          group_by(GEOID) %>%
-          summarize() %>%
-          st_cast("MULTIPOLYGON")
-      }
+      if (cb) {
+        ct <- mutate(ct, GEOID = paste0(STATE, COUNTY))
+        if (year == 2000) {
+          ct <- ct %>%
+            group_by(GEOID) %>%
+            summarize() %>%
+            st_cast("MULTIPOLYGON")
+        }
+        # when cb = FALSE the variable name for the fips code columns are year specific
+      } else if (year == 2000) {
+        ct <- mutate(ct, GEOID = CNTYIDFP00)
+      } else if (year == 2010)
+        ct <- mutate(ct, GEOID = GEOID10)
     }
 
     if (year == 2014) {
@@ -77,11 +90,20 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
         mutate(TRACTSUF = ifelse(is.na(TRACTSUF), "00", TRACTSUF)) %>%
         mutate(GEOID = paste0(ST, CO, TRACTBASE, TRACTSUF))
     } else if (year %in% c(2000, 2010)) {
-      if (year == 2000) {
-        tr <- mutate(tr, TRACT = str_pad(TRACT, 6, "right", "0"))
-      }
-      tr <- mutate(tr, GEOID = paste0(STATE, COUNTY, TRACT))
+      if (cb) {
+        if (year == 2000) {
+          tr <- mutate(tr, TRACT = str_pad(TRACT, 6, "right", "0"))
+        }
+        tr <- mutate(tr, GEOID = paste0(STATE, COUNTY, TRACT))
+        # when cb = FALSE the variable name for the fips code columns are year specific
+      } else if (year == 2000) {
+        tr <- mutate(tr, GEOID = CTIDFP00)
+      } else if (year == 2010)
+        tr <- mutate(tr, GEOID = GEOID10)
     }
+
+
+
     if (any(duplicated(tr$GEOID))) {
       tr <- tr %>%
         group_by(GEOID) %>%
@@ -100,13 +122,19 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     bg <- block_groups(cb = cb, state = state, county = county, year = year,
                  class = "sf", ...)
 
-    if (year == 2000) {
-      bg <- bg %>%
-        mutate(TRACT = str_pad(TRACT, 6, "right", "0")) %>%
-        mutate(GEOID = paste0(STATE, COUNTY, TRACT, BLKGROUP))
-    } else if (year == 2010) {
-      bg <- mutate(bg, GEOID = paste0(STATE, COUNTY, TRACT, BLKGRP))
-    }
+    if (cb) {
+      if (year == 2000) {
+        bg <- bg %>%
+          mutate(TRACT = str_pad(TRACT, 6, "right", "0")) %>%
+          mutate(GEOID = paste0(STATE, COUNTY, TRACT, BLKGROUP))
+      } else if (year == 2010) {
+        bg <- mutate(bg, GEOID = paste0(STATE, COUNTY, TRACT, BLKGRP))
+      }
+      # when cb = FALSE the variable name for the fips code columns are year specific
+    } else if (year == 2000) {
+      bg <- mutate(bg, GEOID = BKGPIDFP00)
+    } else if (year == 2010)
+      bg <- mutate(bg, GEOID = GEOID10)
 
     if (any(duplicated(bg$GEOID))) {
       bg <- bg %>%
