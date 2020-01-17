@@ -9,7 +9,7 @@ get_acs(
   variables = NULL,
   table = NULL,
   cache_table = FALSE,
-  year = 2017,
+  year = 2018,
   endyear = NULL,
   output = "tidy",
   state = NULL,
@@ -42,8 +42,8 @@ Defaults to FALSE; if TRUE, only needs to be called once per
 dataset.  If variables dataset is already cached via the
 \code{load_variables} function, this can be bypassed.}
 
-\item{year}{The year, or endyear, of the ACS sample. 2010 through 2017 are
-available. Defaults to 2017.}
+\item{year}{The year, or endyear, of the ACS sample. 2009 through 2018 are
+available. Defaults to 2018.}
 
 \item{endyear}{Deprecated and will be removed in a future release.}
 

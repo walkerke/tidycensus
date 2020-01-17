@@ -12,8 +12,8 @@
 #'                    Defaults to FALSE; if TRUE, only needs to be called once per
 #'                    dataset.  If variables dataset is already cached via the
 #'                    \code{load_variables} function, this can be bypassed.
-#' @param year The year, or endyear, of the ACS sample. 2010 through 2017 are
-#'                available. Defaults to 2017.
+#' @param year The year, or endyear, of the ACS sample. 2009 through 2018 are
+#'                available. Defaults to 2018.
 #' @param endyear Deprecated and will be removed in a future release.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'               enumeration unit-variable combination, or "wide" in which each
@@ -80,7 +80,7 @@
 #' }
 #' @export
 get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FALSE,
-                    year = 2017, endyear = NULL,
+                    year = 2018, endyear = NULL,
                     output = "tidy",
                     state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
                     shift_geo = FALSE, summary_var = NULL, key = NULL,
