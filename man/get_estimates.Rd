@@ -4,11 +4,24 @@
 \alias{get_estimates}
 \title{Get data from the US Census Bureau Population Estimates APIs}
 \usage{
-get_estimates(geography, product = NULL, variables = NULL,
-  breakdown = NULL, breakdown_labels = FALSE, year = 2018,
-  state = NULL, county = NULL, time_series = FALSE,
-  output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
-  shift_geo = FALSE, key = NULL, show_call = FALSE, ...)
+get_estimates(
+  geography,
+  product = NULL,
+  variables = NULL,
+  breakdown = NULL,
+  breakdown_labels = FALSE,
+  year = 2018,
+  state = NULL,
+  county = NULL,
+  time_series = FALSE,
+  output = "tidy",
+  geometry = FALSE,
+  keep_geo_vars = FALSE,
+  shift_geo = FALSE,
+  key = NULL,
+  show_call = FALSE,
+  ...
+)
 }
 \arguments{
 \item{geography}{The geography of your data.}

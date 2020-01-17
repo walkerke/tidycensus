@@ -167,9 +167,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
          call. = FALSE)
   }
 
-  # Allow users to get all block groups in a state
+  insist_get_acs <- purrr::insistently(get_acs)
 
-  if ((geography == "block group" && is.null(county))) {
+  # Allow users to get all block groups in a state
+  # If only one state is specified, get all county FIPS codes in state from tigirs and continue
+
+  if ((geography == "block group" && length(state) == 1 && is.null(county))) {
     st <- suppressMessages(validate_state(state))
 
     # Get year-specific county IDs from tigris
@@ -184,10 +187,243 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     county <- cty_year$COUNTYFP
 
-
   }
 
-  insist_get_acs <- purrr::insistently(get_acs)
+  # If more than one state requested, iterate over the states, calling get_acs and combine results
+
+  if (geography == "block group" && length(state) > 1) {
+
+    if (!is.null(county)) {
+      stop("Don't know which counties belong to which states. County must be null when requesting multiple states.",
+           call. = FALSE)
+    } else {
+
+    message("Fetching block group data by state and county and combining the result.")
+
+    if (geometry) {
+      result <- map(state, ~{
+        suppressMessages(
+          insist_get_acs(geography = geography,
+                         variables = variables,
+                         table = table,
+                         cache_table = cache_table,
+                         year = year,
+                         output = output,
+                         state = .x,
+                         county = county,
+                         summary_var = summary_var,
+                         geometry = geometry,
+                         keep_geo_vars = keep_geo_vars,
+                         shift_geo = FALSE,
+                         key = key,
+                         moe_level = moe_level,
+                         survey = survey,
+                         show_call = show_call))
+      }) %>%
+        reduce(rbind)
+      geoms <- unique(st_geometry_type(result))
+      if (length(geoms) > 1) {
+        result <- st_cast(result, "MULTIPOLYGON")
+      }
+      result <- result %>%
+        as_tibble() %>%
+        st_as_sf()
+    } else {
+      result <- map_df(state, ~{
+        suppressMessages(
+          insist_get_acs(geography = geography,
+                         variables = variables,
+                         table = table,
+                         cache_table = cache_table,
+                         year = year,
+                         output = output,
+                         state = .x,
+                         county = county,
+                         summary_var = summary_var,
+                         geometry = geometry,
+                         keep_geo_vars = keep_geo_vars,
+                         shift_geo = FALSE,
+                         key = key,
+                         moe_level = moe_level,
+                         survey = survey,
+                         show_call = show_call))
+      })
+    }
+
+    return(result)
+      }
+    }
+
+  # if variables from more than one type of table (e.g. "S1701_C03_002" and "B05002_013"))
+  # are requested - take care of this under the hood by having the function
+  # call itself for "B" variables, "S" variabls and "DP" variables then combining the results
+
+  if (length(unique(substr(variables, 1, 1))) > 1) {
+
+    message('Fetching data by table type ("B", "S", "DP") and combining the result.')
+
+    # split variables by type into list, discard empty list elements
+    vars_by_type <- map(c("^B", "^S", "^D"), ~ str_subset(variables, .x)) %>%
+      purrr::compact()
+
+    if (geometry) {
+      if (output == "wide") {
+        # when output is wide and geometry = TRUE we can't just make three calls to
+        # get_acs and left_join the results because joining two sf objects requires
+        # a spatial join, which we don't want to do here
+        # instead, we'll take the first element of the var list (say, just "B" vars)
+        # and get the data and geometry. then, we'll get the just the data without
+        # geometry for the remaining var list elements and do a non-spatial
+        # left join to the sf object from the first result
+
+        vars_first <- vars_by_type[[1]]
+        vars_rest <- vars_by_type[-1]
+
+        # return acs data with geometry for first element of list
+        result_geo <- suppressMessages(
+          insist_get_acs(
+            geography = geography,
+            variables = vars_first,
+            table = table,
+            cache_table = cache_table,
+            year = year,
+            output = output,
+            state = state,
+            county = county,
+            summary_var = summary_var,
+            geometry = geometry,
+            keep_geo_vars = keep_geo_vars,
+            shift_geo = FALSE,
+            key = key,
+            moe_level = moe_level,
+            survey = survey,
+            show_call = show_call
+            )
+          )
+
+        # return acs data without geometry for remaining elements and join
+        result_no_geo <- map(vars_rest, ~
+          suppressMessages(
+            insist_get_acs(
+              geography = geography,
+              variables = .x,
+              table = table,
+              cache_table = cache_table,
+              year = year,
+              output = output,
+              state = state,
+              county = county,
+              summary_var = summary_var,
+              geometry = FALSE,
+              keep_geo_vars = keep_geo_vars,
+              shift_geo = FALSE,
+              key = key,
+              moe_level = moe_level,
+              survey = survey,
+              show_call = show_call
+              )
+            )
+          ) %>%
+          reduce(left_join, by = c("GEOID", "NAME"))
+
+        # join non geo result to first result sf object
+        result <- result_geo %>%
+          left_join(result_no_geo, by = c("GEOID", "NAME")) %>%
+          select(-geometry, geometry)  # move geometry to last column
+
+
+      } else {
+      # if output is tidy, we don't need to worry about this as results can
+      # be combined using rbind
+      result <- map(vars_by_type, ~
+        suppressMessages(
+          insist_get_acs(
+            geography = geography,
+            variables = .x,
+            table = table,
+            cache_table = cache_table,
+            year = year,
+            output = output,
+            state = state,
+            county = county,
+            summary_var = summary_var,
+            geometry = geometry,
+            keep_geo_vars = keep_geo_vars,
+            shift_geo = FALSE,
+            key = key,
+            moe_level = moe_level,
+            survey = survey,
+            show_call = show_call
+          )
+        )
+      ) %>%
+        reduce(rbind)
+      }
+
+      geoms <- unique(st_geometry_type(result))
+      if (length(geoms) > 1) {
+        result <- st_cast(result, "MULTIPOLYGON")
+      }
+      result <- result %>%
+        as_tibble() %>%
+        st_as_sf()
+
+    } else {
+      if (output == "wide") {
+        # when output is wide and geometry = FALSE make one call per list element
+        # and then left join results into one df
+        result <- map(vars_by_type, ~
+          suppressMessages(
+            insist_get_acs(
+              geography = geography,
+              variables = .x,
+              table = table,
+              cache_table = cache_table,
+              year = year,
+              output = output,
+              state = state,
+              county = county,
+              summary_var = summary_var,
+              geometry = geometry,
+              keep_geo_vars = keep_geo_vars,
+              shift_geo = FALSE,
+              key = key,
+              moe_level = moe_level,
+              survey = survey,
+              show_call = show_call
+            )
+          )
+        ) %>%
+          reduce(left_join, by = c("GEOID", "NAME"))
+      } else {
+        result <- map_df(vars_by_type, ~
+          suppressMessages(
+            insist_get_acs(
+              geography = geography,
+              variables = .x,
+              table = table,
+              cache_table = cache_table,
+              year = year,
+              output = output,
+              state = state,
+              county = county,
+              summary_var = summary_var,
+              geometry = geometry,
+              keep_geo_vars = keep_geo_vars,
+              shift_geo = FALSE,
+              key = key,
+              moe_level = moe_level,
+              survey = survey,
+              show_call = show_call
+            )
+          )
+        )
+      }
+
+    }
+    return(arrange(result, GEOID))  # sort so all vars for each GEOID is together
+  }
+
 
   # If more than one state specified for tracts - or more than one county
   # for block groups - take care of this under the hood by having the function
