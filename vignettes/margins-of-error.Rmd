@@ -6,7 +6,6 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidycensus)
-census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
 library(tidyverse)
 options(tibble.print.min = 6)
 ```

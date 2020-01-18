@@ -92,12 +92,13 @@ By filtering for "median age" I can quickly view the variable IDs that correspon
 
 ## Working with ACS data
 
-American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population.  In turn, ACS data points are __estimates__ characterized by a __margin of error__.  __tidycensus__ will always return the estimate and margin of error together for any requested variables.  In turn, when requesting ACS data with __tidycensus__, it is not necessary to specify the `"E"` or `"M"` suffix for a variable name.  Let's fetch median household income data from the 2013-2017 ACS for counties in Vermont; the endyear is not necessary here as the function defaults to 2017. 
+American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population.  In turn, ACS data points are __estimates__ characterized by a __margin of error__.  __tidycensus__ will always return the estimate and margin of error together for any requested variables.  In turn, when requesting ACS data with __tidycensus__, it is not necessary to specify the `"E"` or `"M"` suffix for a variable name.  Let's fetch median household income data from the 2014-2018 ACS for counties in Vermont. 
 
 ```{r}
 vt <- get_acs(geography = "county", 
               variables = c(medincome = "B19013_001"), 
-              state = "VT")
+              state = "VT", 
+              year = 2018)
 
 vt
 ```

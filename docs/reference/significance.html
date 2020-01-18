@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>License • tidycensus</title>
+<title>Evaluate whether the difference in two estimates is statistically significant. — significance • tidycensus</title>
 
 
 <!-- jquery -->
@@ -29,13 +29,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
-<link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script>
+<link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script>
 
 
 
 
-<meta property="og:title" content="License" />
+<meta property="og:title" content="Evaluate whether the difference in two estimates is statistically significant. — significance" />
+<meta property="og:description" content="Evaluate whether the difference in two estimates is statistically significant." />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -54,7 +56,7 @@
   </head>
 
   <body>
-    <div class="container template-title-body">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -66,7 +68,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">tidycensus</a>
+        <a class="navbar-link" href="../index.html">tidycensus</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
       </span>
     </div>
@@ -74,13 +76,13 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -90,16 +92,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="articles/basic-usage.html">Basic usage of tidycensus</a>
+      <a href="../articles/basic-usage.html">Basic usage of tidycensus</a>
     </li>
     <li>
-      <a href="articles/spatial-data.html">Spatial data in tidycensus</a>
+      <a href="../articles/spatial-data.html">Spatial data in tidycensus</a>
     </li>
     <li>
-      <a href="articles/margins-of-error.html">Margins of error in the ACS</a>
+      <a href="../articles/margins-of-error.html">Margins of error in the ACS</a>
     </li>
     <li>
-      <a href="articles/other-datasets.html">Other Census Bureau datasets</a>
+      <a href="../articles/other-datasets.html">Other Census Bureau datasets</a>
     </li>
   </ul>
 </li>
@@ -122,19 +124,62 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>License</h1>
+    <h1>Evaluate whether the difference in two estimates is statistically significant.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/walkerke/tidycensus/blob/master/R/significance.R'><code>R/significance.R</code></a></small>
+    <div class="hidden name"><code>significance.Rd</code></div>
     </div>
 
-<pre>YEAR: 2017
-COPYRIGHT HOLDER: Kyle Walker
-</pre>
+    <div class="ref-description">
+    <p>Evaluate whether the difference in two estimates is statistically significant.</p>
+    </div>
+
+    <pre class="usage"><span class='fu'>significance</span>(<span class='no'>est1</span>, <span class='no'>est2</span>, <span class='no'>moe1</span>, <span class='no'>moe2</span>, <span class='kw'>clevel</span> <span class='kw'>=</span> <span class='fl'>0.9</span>)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>est1</th>
+      <td><p>The first estimate.</p></td>
+    </tr>
+    <tr>
+      <th>est2</th>
+      <td><p>The second estimate</p></td>
+    </tr>
+    <tr>
+      <th>moe1</th>
+      <td><p>The margin of error of the first estimate</p></td>
+    </tr>
+    <tr>
+      <th>moe2</th>
+      <td><p>The margin of error of the second estimate</p></td>
+    </tr>
+    <tr>
+      <th>clevel</th>
+      <td><p>The confidence level. May by 0.9, 0.95, or 0.99</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>TRUE if the difference is statistically signifiance, FALSE otherwise.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch07.pdf</p></div>
 
   </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
+      <li><a href="#see-also">See also</a></li>
+    </ul>
 
+  </div>
 </div>
-
 
 
       <footer>

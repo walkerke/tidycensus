@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Other Census Bureau datasets • tidycensus</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Other Census Bureau datasets">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
       </span>
     </div>
 
@@ -56,13 +57,13 @@
       <a href="../articles/basic-usage.html">Basic usage of tidycensus</a>
     </li>
     <li>
+      <a href="../articles/spatial-data.html">Spatial data in tidycensus</a>
+    </li>
+    <li>
       <a href="../articles/margins-of-error.html">Margins of error in the ACS</a>
     </li>
     <li>
       <a href="../articles/other-datasets.html">Other Census Bureau datasets</a>
-    </li>
-    <li>
-      <a href="../articles/spatial-data.html">Spatial data in tidycensus</a>
     </li>
   </ul>
 </li>
@@ -83,6 +84,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -103,9 +105,9 @@
 <h2 class="hasAnchor">
 <a href="#components-of-change-population-estimates" class="anchor"></a>Components of change population estimates</h2>
 <p>By default, specifying <code>"population"</code>, <code>"components"</code>, or <code>"housing"</code> as the <code>product</code> in <code><a href="../reference/get_estimates.html">get_estimates()</a></code> returns all variables associated with that component. For example, we can request all components of change variables for US states in 2017:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidycensus)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyverse)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">tigris_use_cache =</span> <span class="ot">TRUE</span>)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidycensus)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyverse)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="dt">tigris_use_cache =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb1-5" data-line-number="5">us_components &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_estimates.html">get_estimates</a></span>(<span class="dt">geography =</span> <span class="st">"state"</span>, <span class="dt">product =</span> <span class="st">"components"</span>)</a>
 <a class="sourceLine" id="cb1-6" data-line-number="6"></a>
@@ -113,19 +115,19 @@
 <pre><code>## # A tibble: 624 x 4
 ##    NAME                 GEOID variable  value
 ##    &lt;chr&gt;                &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;
-##  1 Alabama              01    BIRTHS    58389
-##  2 Alaska               02    BIRTHS    11163
-##  3 Arizona              04    BIRTHS    85634
-##  4 Arkansas             05    BIRTHS    38236
-##  5 California           06    BIRTHS   487916
-##  6 Colorado             08    BIRTHS    67638
-##  7 Connecticut          09    BIRTHS    35183
-##  8 Delaware             10    BIRTHS    11010
-##  9 District of Columbia 11    BIRTHS     9715
-## 10 Florida              12    BIRTHS   225447
+##  1 Alabama              01    BIRTHS    59637
+##  2 Alaska               02    BIRTHS    11335
+##  3 Arizona              04    BIRTHS    86765
+##  4 Arkansas             05    BIRTHS    38779
+##  5 California           06    BIRTHS   500353
+##  6 Colorado             08    BIRTHS    66345
+##  7 Connecticut          09    BIRTHS    36319
+##  8 Delaware             10    BIRTHS    11026
+##  9 District of Columbia 11    BIRTHS     9652
+## 10 Florida              12    BIRTHS   221755
 ## # … with 614 more rows</code></pre>
 <p>The variables included in the components of change product consist of both estimates of <em>counts</em> and <em>rates</em>. Rates are preceded by an <code>R</code> in the variable name and are calculated per 1000 residents.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(us_components<span class="op">$</span>variable)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(us_components<span class="op">$</span>variable)</a></code></pre></div>
 <pre><code>##  [1] "BIRTHS"            "DEATHS"            "DOMESTICMIG"      
 ##  [4] "INTERNATIONALMIG"  "NATURALINC"        "NETMIG"           
 ##  [7] "RBIRTH"            "RDEATH"            "RDOMESTICMIG"     
@@ -147,19 +149,19 @@
 ## # A tibble: 3,142 x 5
 ##    GEOID NAME        variable  value                               geometry
 ##    &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;     &lt;dbl&gt;                     &lt;MULTIPOLYGON [m]&gt;
-##  1 01001 Autauga Co… RNETMIG    1.32 (((1269841 -1303980, 1248372 -1300830…
-##  2 01009 Blount Cou… RNETMIG    7.29 (((1240383 -1149119, 1222632 -1143475…
-##  3 01017 Chambers C… RNETMIG    2.43 (((1382944 -1225846, 1390214 -1235634…
-##  4 01021 Chilton Co… RNETMIG    4.35 (((1257515 -1230045, 1259055 -1240041…
-##  5 01033 Colbert Co… RNETMIG    4.43 (((1085910 -1080751, 1085892 -1080071…
-##  6 01045 Dale Count… RNETMIG   -1.91 (((1382203 -1366760, 1387076 -1400145…
-##  7 01051 Elmore Cou… RNETMIG    4.36 (((1278144 -1255151, 1279961 -1256403…
-##  8 01065 Hale Count… RNETMIG   -1.69 (((1176099 -1258997, 1172005 -1264523…
-##  9 01079 Lawrence C… RNETMIG   -4.44 (((1178216 -1055420, 1179636 -1066254…
-## 10 01083 Limestone … RNETMIG   13.2  (((1197770 -1018013, 1199180 -1017791…
+##  1 01001 Autauga Co… RNETMIG  -1.86  (((1269841 -1303980, 1248372 -1300830…
+##  2 01009 Blount Cou… RNETMIG  -1.29  (((1240383 -1149119, 1222632 -1143475…
+##  3 01017 Chambers C… RNETMIG   1.59  (((1382944 -1225846, 1390214 -1235634…
+##  4 01021 Chilton Co… RNETMIG  -1.78  (((1257515 -1230045, 1259055 -1240041…
+##  5 01033 Colbert Co… RNETMIG   0.919 (((1085910 -1080751, 1085892 -1080071…
+##  6 01045 Dale Count… RNETMIG  -3.48  (((1382203 -1366760, 1387076 -1400145…
+##  7 01051 Elmore Cou… RNETMIG   2.51  (((1278144 -1255151, 1279961 -1256403…
+##  8 01065 Hale Count… RNETMIG  -4.12  (((1176099 -1258997, 1172005 -1264523…
+##  9 01079 Lawrence C… RNETMIG  -8.08  (((1178216 -1055420, 1179636 -1066254…
+## 10 01083 Limestone … RNETMIG   7.69  (((1197770 -1018013, 1199180 -1017791…
 ## # … with 3,132 more rows</code></pre>
 <p>We’ll next use tidyverse tools to generate a <code>groups</code> column that bins the net migration rates into comprehensible categories, and plot the result using <code>geom_sf()</code> and ggplot2.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">order =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"-15 and below"</span>, <span class="st">"-15 to -5"</span>, <span class="st">"-5 to +5"</span>, <span class="st">"+5 to +15"</span>, <span class="st">"+15 and up"</span>)</a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">order =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"-15 and below"</span>, <span class="st">"-15 to -5"</span>, <span class="st">"-5 to +5"</span>, <span class="st">"+5 to +15"</span>, <span class="st">"+15 and up"</span>)</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">net_migration &lt;-<span class="st"> </span>net_migration <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb7-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">groups =</span> <span class="kw">case_when</span>(</a>
@@ -169,7 +171,7 @@
 <a class="sourceLine" id="cb7-8" data-line-number="8">    value <span class="op">&gt;</span><span class="st"> </span><span class="dv">-15</span> <span class="op">~</span><span class="st"> "-15 to -5"</span>,</a>
 <a class="sourceLine" id="cb7-9" data-line-number="9">    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> "-15 and below"</span></a>
 <a class="sourceLine" id="cb7-10" data-line-number="10">  )) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">groups =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(groups, <span class="dt">levels =</span> order))</a>
+<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">groups =</span> <span class="kw"><a href="https://rdrr.io/r/base/factor.html">factor</a></span>(groups, <span class="dt">levels =</span> order))</a>
 <a class="sourceLine" id="cb7-12" data-line-number="12"></a>
 <a class="sourceLine" id="cb7-13" data-line-number="13"><span class="kw">ggplot</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb7-14" data-line-number="14"><span class="st">  </span><span class="kw">geom_sf</span>(<span class="dt">data =</span> net_migration, <span class="kw">aes</span>(<span class="dt">fill =</span> groups, <span class="dt">color =</span> groups), <span class="dt">lwd =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
@@ -191,38 +193,38 @@
 <p>By default, the returned categories are formatted as integers that map onto the Census Bureau definitions explained here: <a href="https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html" class="uri">https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html</a>. However, by specifying <code>breakdown_labels = TRUE</code>, the function will return the appropriate labels instead. For example:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">la_age_hisp &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_estimates.html">get_estimates</a></span>(<span class="dt">geography =</span> <span class="st">"county"</span>, </a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">                             <span class="dt">product =</span> <span class="st">"characteristics"</span>, </a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">                             <span class="dt">breakdown =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"SEX"</span>, <span class="st">"AGEGROUP"</span>, <span class="st">"HISP"</span>),  </a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">                             <span class="dt">breakdown =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"SEX"</span>, <span class="st">"AGEGROUP"</span>, <span class="st">"HISP"</span>),  </a>
 <a class="sourceLine" id="cb8-4" data-line-number="4">                             <span class="dt">breakdown_labels =</span> <span class="ot">TRUE</span>, </a>
 <a class="sourceLine" id="cb8-5" data-line-number="5">                             <span class="dt">state =</span> <span class="st">"CA"</span>, </a>
 <a class="sourceLine" id="cb8-6" data-line-number="6">                             <span class="dt">county =</span> <span class="st">"Los Angeles"</span>)</a>
 <a class="sourceLine" id="cb8-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb8-8" data-line-number="8">la_age_hisp</a></code></pre></div>
 <pre><code>## # A tibble: 210 x 6
-##    GEOID NAME                    value SEX     AGEGROUP      HISP          
-##    &lt;chr&gt; &lt;chr&gt;                   &lt;dbl&gt; &lt;chr&gt;   &lt;fct&gt;         &lt;chr&gt;         
-##  1 06037 Los Angeles County,… 10150558 Both s… All ages      Both Hispanic…
-##  2 06037 Los Angeles County,…   626115 Both s… Age 0 to 4 y… Both Hispanic…
-##  3 06037 Los Angeles County,…   621599 Both s… Age 5 to 9 y… Both Hispanic…
-##  4 06037 Los Angeles County,…   613392 Both s… Age 10 to 14… Both Hispanic…
-##  5 06037 Los Angeles County,…   656343 Both s… Age 15 to 19… Both Hispanic…
-##  6 06037 Los Angeles County,…   740057 Both s… Age 20 to 24… Both Hispanic…
-##  7 06037 Los Angeles County,…   853568 Both s… Age 25 to 29… Both Hispanic…
-##  8 06037 Los Angeles County,…   769217 Both s… Age 30 to 34… Both Hispanic…
-##  9 06037 Los Angeles County,…   708672 Both s… Age 35 to 39… Both Hispanic…
-## 10 06037 Los Angeles County,…   680393 Both s… Age 40 to 44… Both Hispanic…
+##    GEOID NAME                    value SEX      AGEGROUP     HISP          
+##    &lt;chr&gt; &lt;chr&gt;                   &lt;dbl&gt; &lt;chr&gt;    &lt;fct&gt;        &lt;chr&gt;         
+##  1 06037 Los Angeles County,… 10105518 Both se… All ages     Both Hispanic…
+##  2 06037 Los Angeles County,…  5190231 Both se… All ages     Non-Hispanic  
+##  3 06037 Los Angeles County,…  4915287 Both se… All ages     Hispanic      
+##  4 06037 Los Angeles County,…  4981895 Male     All ages     Both Hispanic…
+##  5 06037 Los Angeles County,…  2529798 Male     All ages     Non-Hispanic  
+##  6 06037 Los Angeles County,…  2452097 Male     All ages     Hispanic      
+##  7 06037 Los Angeles County,…  5123623 Female   All ages     Both Hispanic…
+##  8 06037 Los Angeles County,…  2660433 Female   All ages     Non-Hispanic  
+##  9 06037 Los Angeles County,…  2463190 Female   All ages     Hispanic      
+## 10 06037 Los Angeles County,…   603555 Both se… Age 0 to 4 … Both Hispanic…
 ## # … with 200 more rows</code></pre>
 <p>With some additional data wrangling, the returned format facilitates analysis and visualization. For example, we can compare population pyramids for Hispanic and non-Hispanic populations in Los Angeles County:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">compare &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(la_age_hisp, <span class="kw">str_detect</span>(AGEGROUP, <span class="st">"^Age"</span>), </a>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">compare &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(la_age_hisp, <span class="kw">str_detect</span>(AGEGROUP, <span class="st">"^Age"</span>), </a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">                  HISP <span class="op">!=</span><span class="st"> "Both Hispanic Origins"</span>, </a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">                  SEX <span class="op">!=</span><span class="st"> "Both sexes"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(SEX <span class="op">==</span><span class="st"> "Male"</span>, <span class="op">-</span>value, value))</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(SEX <span class="op">==</span><span class="st"> "Male"</span>, <span class="op">-</span>value, value))</a>
 <a class="sourceLine" id="cb10-5" data-line-number="5"></a>
 <a class="sourceLine" id="cb10-6" data-line-number="6"><span class="kw">ggplot</span>(compare, <span class="kw">aes</span>(<span class="dt">x =</span> AGEGROUP, <span class="dt">y =</span> value, <span class="dt">fill =</span> SEX)) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb10-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">"identity"</span>, <span class="dt">width =</span> <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb10-8" data-line-number="8"><span class="st">  </span><span class="kw">theme_minimal</span>(<span class="dt">base_family =</span> <span class="st">"Roboto"</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> <span class="cf">function</span>(y) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(y <span class="op">/</span><span class="st"> </span><span class="dv">1000</span>), <span class="st">"k"</span>)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels =</span> <span class="cf">function</span>(x) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">gsub</a></span>(<span class="st">"Age | years"</span>, <span class="st">""</span>, x)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"darkred"</span>, <span class="st">"navy"</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> <span class="cf">function</span>(y) <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(y <span class="op">/</span><span class="st"> </span><span class="dv">1000</span>), <span class="st">"k"</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="st">  </span><span class="kw">scale_x_discrete</span>(<span class="dt">labels =</span> <span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span>(<span class="st">"Age | years"</span>, <span class="st">""</span>, x)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="st">  </span><span class="kw">scale_fill_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"darkred"</span>, <span class="st">"navy"</span>)) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb10-12" data-line-number="12"><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb10-13" data-line-number="13"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>HISP) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb10-14" data-line-number="14"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">""</span>, </a>
@@ -233,21 +235,16 @@
 <a class="sourceLine" id="cb10-19" data-line-number="19">       <span class="dt">caption =</span> <span class="st">"Data source: US Census Bureau population estimates &amp; tidycensus R package"</span>)</a></code></pre></div>
 <p><img src="other-datasets_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
 </div>
-<div id="acs-migration-flows" class="section level2">
-<h2 class="hasAnchor">
-<a href="#acs-migration-flows" class="anchor"></a>ACS migration flows</h2>
-<p>My next project prior to the 1.0 release of tidycensus is to incorporate access to the <a href="https://www.census.gov/data/developers/data-sets/acs-migration-flows.html">American Community Survey Migration Flows API</a>. Flows data will come integrated with simple feature geometry allowing for visualization of migration flows. Stay tuned!</p>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#components-of-change-population-estimates">Components of change population estimates</a></li>
       <li><a href="#estimates-of-population-characteristics">Estimates of population characteristics</a></li>
-      <li><a href="#acs-migration-flows">ACS migration flows</a></li>
       </ul>
 </div>
       </div>
@@ -255,17 +252,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Kyle Walker.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

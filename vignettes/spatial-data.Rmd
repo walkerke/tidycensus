@@ -7,7 +7,6 @@ output: html_document
 ```{r setup, include=FALSE}
 library(tidycensus)
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8)
-census_api_key("5ed58a5745802102fb83d4eec5d1f7326f65ffab")
 ```
 
 If requested, __tidycensus__ can return simple feature geometry for geographic units along with variables from the decennial US Census or American Community survey.  By setting `geometry = TRUE` in a __tidycensus__ function call, __tidycensus__ will use the __tigris__ package to retrieve the corresponding geographic dataset from the US Census Bureau and pre-merge it with the tabular data obtained from the Census API.  The following example shows median household income from the 2013-2017 ACS for Census tracts in Orange County, California: 
@@ -34,6 +33,8 @@ orange %>%
   coord_sf(crs = 26911) + 
   scale_fill_viridis_c(option = "magma") 
 ```
+
+Please note that the UTM Zone 11N coordinate system (`26911`) is appropriate for Southern California but may not be for your area of interest.  
 
 ## Faceted mapping
 

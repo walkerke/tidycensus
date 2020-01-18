@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Basic usage of tidycensus • tidycensus</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Basic usage of tidycensus">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.5</span>
       </span>
     </div>
 
@@ -56,13 +57,13 @@
       <a href="../articles/basic-usage.html">Basic usage of tidycensus</a>
     </li>
     <li>
+      <a href="../articles/spatial-data.html">Spatial data in tidycensus</a>
+    </li>
+    <li>
       <a href="../articles/margins-of-error.html">Margins of error in the ACS</a>
     </li>
     <li>
       <a href="../articles/other-datasets.html">Other Census Bureau datasets</a>
-    </li>
-    <li>
-      <a href="../articles/spatial-data.html">Spatial data in tidycensus</a>
     </li>
   </ul>
 </li>
@@ -83,6 +84,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -97,14 +99,14 @@
     
     
 <p>To get started working with <strong>tidycensus</strong>, users should load the package along with the <strong>tidyverse</strong> package, and set their Census API key. A key can be obtained from <a href="http://api.census.gov/data/key_signup.html" class="uri">http://api.census.gov/data/key_signup.html</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidycensus)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyverse)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidycensus)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyverse)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw"><a href="../reference/census_api_key.html">census_api_key</a></span>(<span class="st">"YOUR API KEY GOES HERE"</span>)</a></code></pre></div>
 <p>There are two major functions implemented in <strong>tidycensus</strong>: <code>get_decennial</code>, which grants access to the 1990, 2000, and 2010 decennial US Census APIs, and <code>get_acs</code>, which grants access to the 5-year American Community Survey APIs. In this basic example, let’s look at median gross rent by state in 1990:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">m90 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_decennial.html">get_decennial</a></span>(<span class="dt">geography =</span> <span class="st">"state"</span>, <span class="dt">variables =</span> <span class="st">"H043A001"</span>, <span class="dt">year =</span> <span class="dv">1990</span>)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(m90)</a></code></pre></div>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(m90)</a></code></pre></div>
 <pre><code>## # A tibble: 6 x 4
 ##   GEOID NAME       variable value
 ##   &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;    &lt;dbl&gt;
@@ -117,7 +119,7 @@
 <p>The function returns a tibble with four columns by default: <code>GEOID</code>, which is an identifier for the geographical unit associated with the row; <code>NAME</code>, which is a descriptive name of the geographical unit; <code>variable</code>, which is the Census variable represented in the row; and <code>value</code>, which is the value of the variable for that unit. By default, <strong>tidycensus</strong> functions return tidy data frames in which rows represent unit-variable combinations; for a wide data frame with Census variable names in the columns, set <code>output = "wide"</code> in the function call.</p>
 <p>As the function has returned a tidy object, we can visualize it quickly with <strong>ggplot2</strong>:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">m90 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/reorder.factor">reorder</a></span>(NAME, value))) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> <span class="kw"><a href="https://rdrr.io/r/stats/reorder.factor.html">reorder</a></span>(NAME, value))) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
 <p><img src="basic-usage_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
 <div id="geography-in-tidycensus" class="section level2">
@@ -176,7 +178,8 @@
 <tr class="even">
 <td><code>"county subdivision"</code></td>
 <td>County subdivision</td>
-<td>state, county</td>
+<td>
+<strong>state</strong>, county</td>
 <td>
 <code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
 </td>
@@ -342,41 +345,42 @@
 <p>Getting variables from the Census or ACS requires knowing the variable ID - and there are thousands of these IDs across the different Census files. To rapidly search for variables, use the <code>load_variables</code> function. The function takes two required arguments: the year of the Census or endyear of the ACS sample, and the dataset - one of <code>"sf1"</code>, <code>"sf3"</code>, or <code>"acs5"</code>. For ideal functionality, I recommend assigning the result of this function to a variable, setting <code>cache = TRUE</code> to store the result on your computer for future access, and using the <code>View</code> function in RStudio to interactively browse for variables.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">v17 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/load_variables.html">load_variables</a></span>(<span class="dv">2017</span>, <span class="st">"acs5"</span>, <span class="dt">cache =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/View">View</a></span>(v17)</a></code></pre></div>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/utils/View.html">View</a></span>(v17)</a></code></pre></div>
 <p><img src="img/view.png" style="width: 100%"></p>
 <p>By filtering for “median age” I can quickly view the variable IDs that correspond to my query.</p>
 </div>
 <div id="working-with-acs-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#working-with-acs-data" class="anchor"></a>Working with ACS data</h2>
-<p>American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population. In turn, ACS data points are <strong>estimates</strong> characterized by a <strong>margin of error</strong>. <strong>tidycensus</strong> will always return the estimate and margin of error together for any requested variables. In turn, when requesting ACS data with <strong>tidycensus</strong>, it is not necessary to specify the <code>"E"</code> or <code>"M"</code> suffix for a variable name. Let’s fetch median household income data from the 2013-2017 ACS for counties in Vermont; the endyear is not necessary here as the function defaults to 2017.</p>
+<p>American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population. In turn, ACS data points are <strong>estimates</strong> characterized by a <strong>margin of error</strong>. <strong>tidycensus</strong> will always return the estimate and margin of error together for any requested variables. In turn, when requesting ACS data with <strong>tidycensus</strong>, it is not necessary to specify the <code>"E"</code> or <code>"M"</code> suffix for a variable name. Let’s fetch median household income data from the 2014-2018 ACS for counties in Vermont.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">vt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="dt">geography =</span> <span class="st">"county"</span>, </a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">              <span class="dt">variables =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">medincome =</span> <span class="st">"B19013_001"</span>), </a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">              <span class="dt">state =</span> <span class="st">"VT"</span>)</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">vt</a></code></pre></div>
+<a class="sourceLine" id="cb6-2" data-line-number="2">              <span class="dt">variables =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dt">medincome =</span> <span class="st">"B19013_001"</span>), </a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">              <span class="dt">state =</span> <span class="st">"VT"</span>, </a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">              <span class="dt">year =</span> <span class="dv">2018</span>)</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">vt</a></code></pre></div>
 <pre><code>## # A tibble: 14 x 5
 ##    GEOID NAME                       variable  estimate   moe
 ##    &lt;chr&gt; &lt;chr&gt;                      &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
-##  1 50001 Addison County, Vermont    medincome    61875  2338
-##  2 50003 Bennington County, Vermont medincome    52251  3311
-##  3 50005 Caledonia County, Vermont  medincome    47371  1846
-##  4 50007 Chittenden County, Vermont medincome    66906  2119
-##  5 50009 Essex County, Vermont      medincome    38767  2389
-##  6 50011 Franklin County, Vermont   medincome    62214  2360
-##  7 50013 Grand Isle County, Vermont medincome    66111  3036
-##  8 50015 Lamoille County, Vermont   medincome    54899  2802
-##  9 50017 Orange County, Vermont     medincome    56584  2696
-## 10 50019 Orleans County, Vermont    medincome    45664  1944
-## 11 50021 Rutland County, Vermont    medincome    52635  1977
-## 12 50023 Washington County, Vermont medincome    60602  2838
-## 13 50025 Windham County, Vermont    medincome    50831  1962
-## 14 50027 Windsor County, Vermont    medincome    56828  2027</code></pre>
+##  1 50001 Addison County, Vermont    medincome    65093  2424
+##  2 50003 Bennington County, Vermont medincome    53040  2307
+##  3 50005 Caledonia County, Vermont  medincome    49348  1842
+##  4 50007 Chittenden County, Vermont medincome    69896  2132
+##  5 50009 Essex County, Vermont      medincome    41045  2661
+##  6 50011 Franklin County, Vermont   medincome    64258  1568
+##  7 50013 Grand Isle County, Vermont medincome    69583  5812
+##  8 50015 Lamoille County, Vermont   medincome    60365  3915
+##  9 50017 Orange County, Vermont     medincome    60159  2361
+## 10 50019 Orleans County, Vermont    medincome    47915  2193
+## 11 50021 Rutland County, Vermont    medincome    54973  1754
+## 12 50023 Washington County, Vermont medincome    62108  2065
+## 13 50025 Windham County, Vermont    medincome    52659  1706
+## 14 50027 Windsor County, Vermont    medincome    58303  1576</code></pre>
 <p>The output is similar to a call to <code>get_decennial</code>, but instead of a <code>value</code> column, <code>get_acs</code> returns <code>estimate</code> and <code>moe</code> columns for the ACS estimate and margin of error, respectively. <code>moe</code> represents the default 90 percent confidence level around the estimate; this can be changed to 95 or 99 percent with the <code>moe_level</code> parameter in <code>get_acs</code> if desired.</p>
 <p>As we have the margin of error, we can visualize the uncertainty around the estimate:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">vt <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">NAME =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">gsub</a></span>(<span class="st">" County, Vermont"</span>, <span class="st">""</span>, NAME)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/reorder.factor">reorder</a></span>(NAME, estimate))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">NAME =</span> <span class="kw"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span>(<span class="st">" County, Vermont"</span>, <span class="st">""</span>, NAME)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> <span class="kw"><a href="https://rdrr.io/r/stats/reorder.factor.html">reorder</a></span>(NAME, estimate))) <span class="op">+</span></a>
 <a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_errorbarh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> estimate <span class="op">-</span><span class="st"> </span>moe, <span class="dt">xmax =</span> estimate <span class="op">+</span><span class="st"> </span>moe)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb8-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb8-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">"Household income by county in Vermont"</span>,</a>
@@ -388,6 +392,7 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -402,17 +407,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Kyle Walker.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

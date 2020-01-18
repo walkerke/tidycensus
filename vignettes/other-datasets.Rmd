@@ -121,6 +121,3 @@ ggplot(compare, aes(x = AGEGROUP, y = value, fill = SEX)) +
 ```
 
 
-## ACS migration flows
-
-My next project prior to the 1.0 release of tidycensus is to incorporate access to the [American Community Survey Migration Flows API](https://www.census.gov/data/developers/data-sets/acs-migration-flows.html).  Flows data will come integrated with simple feature geometry allowing for visualization of migration flows.  Stay tuned!
