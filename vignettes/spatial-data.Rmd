@@ -93,12 +93,14 @@ As illustrated in the graphic, the boundaries of Manhattan include water boundar
 tidycensus allows users to get TIGER/Line instead of cartographic boundary shapefiles with the keyword argument `cb = FALSE`.  This argument will be familiar to users of the tigris package, as it is used by tigris to distinguish between cartographic boundary and TIGER/Line shapefiles in the package.  
 
 ```{r, message = FALSE, warning = FALSE}
+library(sf)
+
 ny2 <- get_acs(geography = "tract", 
               variables = "B19013_001", 
               state = "NY", 
               county = "New York", 
               geometry = TRUE, 
-              cb = FALSE)
+              cb = FALSE) 
 ```
 
 Next, tools in the tigris and [sf](https://github.com/r-spatial/sf) package can be used to remove the water area from Manhattan's Census tracts.  sf allows users to "erase" one geometry from another, [akin to tools available in desktop GIS software](http://pro.arcgis.com/en/pro-app/tool-reference/analysis/erase.htm).  The `st_erase()` function defined below is not exported by the package, but is defined in the documentation for `st_difference()`.  
@@ -106,14 +108,13 @@ Next, tools in the tigris and [sf](https://github.com/r-spatial/sf) package can 
 The geometry used to "erase" water area from the tract polygons is obtained by the `area_water()` function in tigris, making sure to choose the option `class = "sf"`.  
 
 ```{r, message = FALSE, warning = FALSE}
-library(sf)
 library(tigris)
 
 st_erase <- function(x, y) {
-  st_difference(x, st_union(st_combine(y)))
+  st_difference(x, st_union(y))
 }
 
-ny_water <- area_water("NY", "New York", class = "sf")
+ny_water <- area_water("NY", "New York", class = "sf") 
 
 ny_erase <- st_erase(ny2, ny_water)
 

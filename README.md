@@ -8,10 +8,10 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
-## In version 0.9: 
+## In version 0.9.5: 
 
-* `get_acs()` now defaults to the 2013-2017 five-year American Community Survey estimates, or the 2017 1-year estimates if users set `survey = "acs1"`.
-* Various improvements and bug fixes.  
+* `get_acs()` now defaults to the 2014-2018 five-year American Community Survey estimates, or the 2018 1-year estimates if users set `survey = "acs1"`.
+* Various improvements and bug fixes (largely thanks to Matt Herman's contributions).  
 
 ## In version 0.8.1: 
 
