@@ -91,69 +91,41 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
+<hr>
+<p>title: “tidycensus” output: html_document —</p>
 <div id="tidycensus" class="section level2">
 <h2 class="hasAnchor">
 <a href="#tidycensus" class="anchor"></a>tidycensus</h2>
-<p><a href="https://travis-ci.org/walkerke/tidycensus"><img src="https://travis-ci.org/walkerke/tidycensus.svg?branch=master" alt="Build Status"></a> <img src="http://www.r-pkg.org/badges/version/tidycensus" alt="CRAN Badge"><img src="http://cranlogs.r-pkg.org/badges/grand-total/tidycensus" alt="CRAN Downloads"></p>
+<p><a href="https://travis-ci.org/walkerke/tidycensus"><img src="https://travis-ci.org/walkerke/tidycensus.svg?branch=master" alt="Build Status"></a> <img src="http://www.r-pkg.org/badges/version/tidycensus" alt="CRAN Badge"><img src="http://cranlogs.r-pkg.org/badges/tidycensus" alt="CRAN Downloads"></p>
 <p><strong>tidycensus</strong> is an R package that allows users to interface with the US Census Bureau’s decennial Census and five-year American Community APIs and return tidyverse-ready data frames, optionally with simple feature geometry included. Install from CRAN with the following command:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"tidycensus"</span>)</a></code></pre></div>
-</div>
-<div id="in-version-0-9" class="section level2">
-<h2 class="hasAnchor">
-<a href="#in-version-0-9" class="anchor"></a>In version 0.9:</h2>
-<ul>
-<li>
-<code><a href="reference/get_acs.html">get_acs()</a></code> now defaults to the 2013-2017 five-year American Community Survey estimates, or the 2017 1-year estimates if users set <code>survey = "acs1"</code>.</li>
-<li>Various improvements and bug fixes.</li>
-</ul>
-</div>
-<div id="in-version-0-8-1" class="section level2">
-<h2 class="hasAnchor">
-<a href="#in-version-0-8-1" class="anchor"></a>In version 0.8.1:</h2>
-<ul>
-<li><p>tidycensus now includes support for the Census Bureau Population Estimates API. Please see <a href="https://walkerke.github.io/tidycensus/articles/other-datasets.html" class="uri">https://walkerke.github.io/tidycensus/articles/other-datasets.html</a> for examples of how to use these new features.</p></li>
-<li><p>Important internal changes to ensure that tidycensus continues to work with upcoming changes to Census API endpoints.</p></li>
-<li><p>Several internal improvements and bug fixes. Please see the closed issues at <a href="https://github.com/walkerke/tidycensus/issues" class="uri">https://github.com/walkerke/tidycensus/issues</a> for a list.</p></li>
-</ul>
-</div>
-<div id="in-version-0-4-6" class="section level2">
-<h2 class="hasAnchor">
-<a href="#in-version-0-4-6" class="anchor"></a>In version 0.4.6:</h2>
-<ul>
-<li><p>Bug fixed that was causing GEOIDs for some states to be converted to NA on certain Linux platforms</p></li>
-<li><p>A new parameter, <code>shift_geo</code>, allows tidycensus users to get US state and county geometry originally obtained with the <strong>albersusa</strong> R package with Alaska and Hawaii shifted and re-scaled for better cartographic display of the entire US.</p></li>
-</ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidycensus)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyverse)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(viridis)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">us_county_income &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_acs.html">get_acs</a></span>(<span class="dt">geography =</span> <span class="st">"county"</span>, <span class="dt">variables =</span> <span class="st">"B19013_001"</span>, </a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">                            <span class="dt">shift_geo =</span> <span class="ot">TRUE</span>, <span class="dt">geometry =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="kw">ggplot</span>(us_county_income) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_sf</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> estimate), <span class="dt">color =</span> <span class="ot">NA</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="st">  </span><span class="kw">coord_sf</span>(<span class="dt">datum =</span> <span class="ot">NA</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="st">  </span><span class="kw">scale_fill_viridis_c</span>()</a></code></pre></div>
-<p><img src="tools/readme/county_income.png" alt="income_plot"></p>
 </div>
 <div id="why-tidycensus" class="section level2">
 <h2 class="hasAnchor">
 <a href="#why-tidycensus" class="anchor"></a>Why tidycensus?</h2>
-<p>My work heavily involves the use of data from the US Census Bureau, and like many R users, I do most of my work within the <strong>tidyverse</strong>. Beyond this, the <strong>sf</strong> package now allows R users to work with spatial data in an integrated way with <strong>tidyverse</strong> tools, and updates to the <strong>tigris</strong> package provide access to Census boundary data as <code>sf</code> objects. Recently, I’ve found myself writing the same routines over and over to get Census data ready for use with <strong>tidyverse</strong> packages and <strong>sf</strong>. This motivated me to wrap these functions in a package and open-source in case other R users find them useful.</p>
+<p>My work heavily involves the use of data from the US Census Bureau, and like many R users, I do most of my work within the <strong>tidyverse</strong>. Beyond this, the <strong>sf</strong> package now allows R users to work with spatial data in an integrated way with <strong>tidyverse</strong> tools, and updates to the <strong>tigris</strong> package provide access to Census boundary data as <code>sf</code> objects. Recently, I’ve found myself writing the same routines over and over to get Census data ready for use with <strong>tidyverse</strong> packages and <strong>sf</strong>. This motivated me to open-source these functions in a package in case other R users find them useful.</p>
 <p><strong>tidycensus</strong> is designed to help R users get Census data that is pre-prepared for exploration within the <strong>tidyverse</strong>, and optionally spatially with <strong>sf</strong>. To learn more about how the package works, I encourage you to read the following articles:</p>
 <ul>
-<li><a href="https://walkerke.github.io/tidycensus/articles/basic-usage.html">Basic usage of <strong>tidycensus</strong></a></li>
-<li><a href="https://walkerke.github.io/tidycensus/articles/spatial-data.html">Spatial data in <strong>tidycensus</strong></a></li>
-<li><a href="https://walkerke.github.io/tidycensus/articles/margins-of-error.html">Margins of error in the ACS</a></li>
+<li><a href="articles/basic-usage.html">Basic usage of <strong>tidycensus</strong></a></li>
+<li><a href="articles/spatial-data.html">Spatial data in <strong>tidycensus</strong></a></li>
+<li><a href="articles/margins-of-error.html">Margins of error in the ACS</a></li>
+<li><a href="articles/other-datasets.html">Other Census Bureau datasets</a></li>
 </ul>
 </div>
 <div id="future-development" class="section level2">
 <h2 class="hasAnchor">
 <a href="#future-development" class="anchor"></a>Future development</h2>
-<p>To keep up with on-going development of <strong>tidycensus</strong> and get even more examples of how to use the package, <a href="http://eepurl.com/cPGKZD">subscribe to my email list by clicking here</a> (no spam, I promise!). You’ll also get updates on the development of my upcoming book with CRC Press, <em>Analyzing the US Census with R</em>.</p>
+<p>To keep up with on-going development of <strong>tidycensus</strong> and get even more examples of how to use the package, subscribe to my email list below (no spam, I promise!). You’ll also get updates on the development of my upcoming book with CRC Press, <em>Analyzing the US Census with R</em>.</p>
+<!-- Begin MailChimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<p>#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; } /* Add your own MailChimp form style overrides in your site stylesheet or in this style block. We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */ </style>
+<div id="mc_embed_signup"> <form action="//github.us15.list-manage.com/subscribe/post?u=1829a68a5eda3d301119fdcd6&amp;id=c4a53d2961" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate> <div id="mc_embed_signup_scroll">
+<p><input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required><!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups--></p>
+<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_1829a68a5eda3d301119fdcd6_c4a53d2961" tabindex="-1" value=""></div> <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div> </div> </form> </div>
+<!--End mc_embed_signup-->
 <p>You can also follow my blog at <a href="https://walkerke.github.io" class="uri">https://walkerke.github.io</a>.</p>
-<p>My development focus is on making the current datasets as accessible as possible; if you need other approaches or datasets, I recommend the <a href="https://github.com/hrecht/censusapi">censusapi</a> and <a href="https://cran.r-project.org/package=acs">acs</a> packages.</p>
+<p>My development focus is on making the current datasets as accessible as possible; if you need other approaches or datasets, I recommend the <a href="https://github.com/hrecht/censusapi">censusapi</a> and <a href="https://cran.r-project.org/web/packages/acs/index.html">acs</a> packages.</p>
 <p>If you find this project useful, you can support package development in the following ways:</p>
 <ul>
 <li>Hiring me as a consultant to help you use <strong>tidycensus</strong> in your project, or hiring me to give a workshop on <strong>tidycensus</strong> for your organization. Please contact me at <a href="mailto:kwalkerdata@gmail.com" class="email">kwalkerdata@gmail.com</a> if you are interested!</li>
