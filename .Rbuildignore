@@ -6,6 +6,7 @@
 _pkgdown.yml
 ^examples$
 index.Rmd
+index.md
 .travis.yml
 ^tidycensus\.Rcheck$
 ^tidycensus.*\.tar\.gz$
