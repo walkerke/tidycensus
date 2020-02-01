@@ -70,6 +70,8 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
   # Right now, block groups are only available by tract, which tidycensus won't support
   # Stop if this is called
+  if (geography == "cbg") geography <- "block group"
+
   if (geography == "block group") {
     stop("At the moment block groups are not supported by `get_decennial()` due to API limitations. We recommend downloading data from NHGIS until this is resolved.")
   }
