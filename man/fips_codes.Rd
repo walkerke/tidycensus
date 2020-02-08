@@ -25,5 +25,15 @@ Dataset with FIPS codes for US states and counties
 
 Built-in dataset for use with the \code{lookup_code} function.
 To access the data directly, issue the command \code{data(fips_codes)}.
+
+Note: this dataset includes FIPS codes for all counties that have appeared in
+the decennial Census or American Community Survey from 2010 to the present.
+This means that counties that have been renamed or absorbed into other
+geographic entities since 2010 remain in this dataset along with newly added
+or renamed counties.
+
+If you need the FIPS codes and names for counties for a particular Census
+year, you can use the \link[tigris]{counties} function from the tigris
+package and set the year parameter as required.
 }
 \keyword{datasets}
