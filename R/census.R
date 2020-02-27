@@ -68,13 +68,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
                           keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL, key = NULL,
                           show_call = FALSE, ...) {
 
-  # Right now, block groups are only available by tract, which tidycensus won't support
-  # Stop if this is called
   if (geography == "cbg") geography <- "block group"
-
-  # if (geography == "block group") {
-  #   stop("At the moment block groups are not supported by `get_decennial()` due to API limitations. We recommend downloading data from NHGIS until this is resolved.")
-  # }
 
   message(sprintf("Getting data from the %s decennial Census", year))
 
