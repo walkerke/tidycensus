@@ -160,6 +160,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   if (geography == "cbsa") geography <- "metropolitan statistical area/micropolitan statistical area"
 
+  if (geography == "cbg") geography <- "block group"
+
   if (geography == "zcta") geography <- "zip code tabulation area"
 
   if (geography == "zip code tabulation area" && (!is.null(state) || !is.null(county))) {
