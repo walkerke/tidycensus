@@ -22,7 +22,7 @@ orange <- get_acs(state = "CA", county = "Orange", geography = "tract",
 head(orange)
 ```
 
-Our object `orange` looks much like the basic __tidycensus__ output, but with a `geometry` list-column describing the geometry of each feature, using the geographic coordinate system NAD 1983 (EPSG: 4269) which is the default for Census shapefiles.  __tidycensus__ uses the Census [cartographic boundary shapefiles](https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html) for faster processing; if you prefer the TIGER/Line shapefiles, set `cb = FALSE` in the function call. 
+Our object `orange` looks much like the basic __tidycensus__ output, but with a `geometry` list-column describing the geometry of each feature, using the geographic coordinate system NAD 1983 (EPSG: 4269) which is the default for Census shapefiles.  __tidycensus__ uses the Census [cartographic boundary shapefiles](https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html) for faster processing; if you prefer the TIGER/Line shapefiles, set `cb = FALSE` in the function call. 
 
 As the dataset is in a tidy format, it can be quickly visualized with the `geom_sf` functionality currently in the development version of __ggplot2__: 
 
