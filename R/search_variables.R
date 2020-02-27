@@ -30,7 +30,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
     rds <- gsub("/", "_", rds)
   }
 
-  if (year > 2009 && (grepl("acs1", dataset) || grepl("acs5", dataset))) {
+  if (year > 2009 && (grepl("acs1", dataset) || grepl("acs5", dataset)) || grepl("acsse", dataset)) {
     dataset <- paste0("acs/", dataset)
   }
 
@@ -44,7 +44,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
     set <- paste(year, d, sep = "/")
 
     # If ACS, use JSON parsing to speed things up
-    if (grepl("acs[135]", d)) {
+    if (grepl("acs[135]|acsse", d)) {
 
       url <- paste("https://api.census.gov/data",
                    set,
@@ -64,7 +64,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
 
       names(out) <- tolower(names(out))
 
-      out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P[0-9]|^H[0-9]", out$name), ]
+      out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P[0-9]|^H[0-9]|^K[0-9]", out$name), ]
 
       out1$name <- str_replace(out1$name, "E$|M$", "")
 
@@ -129,7 +129,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
         }
 
 
-        out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P[0-9]|^H[0-9]", out$name), ]
+        out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P[0-9]|^H[0-9]|^K[0-9]", out$name), ]
 
         out1$name <- str_replace(out1$name, "E$|M$", "")
 

@@ -162,6 +162,11 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
     base <- paste0(base, "/subject")
   }
 
+  if (grepl("^K[0-9].", formatted_variables)) {
+    message("Using the ACS Supplemental Estimates")
+    base <- paste0(base, "/acsse")
+  }
+
   for_area <- paste0(geography, ":*")
 
   if (!is.null(state)) {
