@@ -210,13 +210,15 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "state legislative district (upper chamber)") {
 
-    slu <- state_legislative_districts(state = state, house = "upper", cb = cb, year = year, ...)
+    slu <- state_legislative_districts(state = state, house = "upper", cb = cb, year = year,
+                                       class = "sf", ...)
 
     return(slu)
 
   } else if (geography == "state legislative district (lower chamber)") {
 
-    slc <- state_legislative_districts(state = state, house = "lower", cb = cb, year = year, ...)
+    slc <- state_legislative_districts(state = state, house = "lower", cb = cb, year = year,
+                                       class = "sf", ...)
 
     return(slc)
 
