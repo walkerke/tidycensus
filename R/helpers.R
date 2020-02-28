@@ -182,6 +182,52 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(bl)
 
+  } else if (geography == "place") {
+
+    pl <- places(state = state, year = year, cb = cb, class = "sf", ...)
+
+    return(pl)
+
+  } else if (geography == "metropolitan statistical area/micropolitan statistical area") {
+
+    cbsa <- core_based_statistical_areas(cb = cb, year = year, ...)
+
+    return(cbsa)
+
+  } else if (geography == "congressional district") {
+
+    cd <- congressional_districts(cb = cb, year = year, class = "sf", ...)
+
+    return(cd)
+
+  } else if (geography == "public use microdata area") {
+
+    pm <- pumas(state = state, cb = cb, year = year, class = "sf", ...)
+
+    pm <- rename(pm, GEOID == GEOID10)
+
+    return(pm)
+
+  } else if (geography == "state legislative district (upper chamber)") {
+
+    slu <- state_legislative_districts(state = state, house = "upper", cb = cb, year = year, ...)
+
+    return(slu)
+
+  } else if (geography == "state legislative district (lower chamber)") {
+
+    slc <- state_legislative_districts(state = state, house = "lower", cb = cb, year = year, ...)
+
+    return(slc)
+
+  } else if (geography == "american indian area/alaska native area/hawaiian home land" ||
+             "american indian area/alaska native area (reservation or statistical entity only)" ||
+             "american indian area (off-reservation trust land only)/hawaiian home land") {
+
+    nv <- native_areas(cb = cb, year = year, class = "sf", ...)
+
+    return(nv)
+
   } else {
 
     stop(sprintf("Geometry for %s is not yet supported.  Use the tigris package and join as normal instead.",
