@@ -145,11 +145,6 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
                   as.character(year),
                   survey, sep = "/")
   } else {
-    if (grepl("^K[0-9].", formatted_variables)) {
-      message("Using the ACS Supplemental Estimates")
-    }
-
-    survey <- "acsse"
 
     base <- paste("https://api.census.gov/data",
                   as.character(year), "acs",
