@@ -237,6 +237,20 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(cs)
 
+  } else if (geography == "combined statistical area") {
+
+    csa <- combined_statistical_areas(cb = cb, class = "sf", year = year, ...)
+
+    return(csa)
+
+  } else if (geography == "urban area") {
+
+    ua <- urban_areas(cb = cb, year = year, class = "sf", ...)
+
+    ua <- rename(ua, GEOID = GEOID10)
+
+    return(ua)
+
   } else {
 
     stop(sprintf("Geometry for %s is not yet supported.  Use the tigris package and join as normal instead.",
