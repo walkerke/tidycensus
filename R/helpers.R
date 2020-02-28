@@ -222,13 +222,20 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(slc)
 
-  } else if (geography == "american indian area/alaska native area/hawaiian home land" ||
-             "american indian area/alaska native area (reservation or statistical entity only)" ||
-             "american indian area (off-reservation trust land only)/hawaiian home land") {
+  } else if (geography %in% c("american indian area/alaska native area/hawaiian home land",
+                              "american indian area/alaska native area (reservation or statistical entity only)",
+                              "american indian area (off-reservation trust land only)/hawaiian home land")) {
 
     nv <- native_areas(cb = cb, year = year, class = "sf", ...)
 
     return(nv)
+
+  } else if (geography == "county subdivision") {
+
+    cs <- county_subdivisions(state = state, county = county, cb = cb,
+                              year = year, class = "sf", ...)
+
+    return(cs)
 
   } else {
 
