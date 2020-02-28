@@ -145,6 +145,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
                   as.character(year),
                   survey, sep = "/")
   } else {
+
     base <- paste("https://api.census.gov/data",
                   as.character(year), "acs",
                   survey, sep = "/")
@@ -161,6 +162,8 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
     message("Using the ACS Subject Tables")
     base <- paste0(base, "/subject")
   }
+
+
 
   for_area <- paste0(geography, ":*")
 
