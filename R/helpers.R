@@ -299,6 +299,26 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(nec)
 
+  } else if (geography == "us") {
+
+    nat <- nation(year = year, class = "sf", ...)
+
+    nat <- dplyr::mutate(nat, GEOID = "1")
+
+    return(nat)
+
+  } else if (geography == "region") {
+
+    reg <- regions(year = year, class = "sf", ...)
+
+    return(reg)
+
+  } else if (geography == "division") {
+
+    div <- divisions(year = year, class = "sf", ...)
+
+    return(div)
+
   } else {
 
     # Leave this in as a legacy piece in case something changes
