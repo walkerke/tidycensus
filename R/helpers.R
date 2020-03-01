@@ -1,7 +1,5 @@
 # Function to get the correct geom for a Census dataset
 # if geometry = TRUE
-
-
 use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
                        state = NULL, county = NULL, starts_with = NULL, ...) {
 
@@ -251,8 +249,59 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(ua)
 
+  } else if (geography == "school district (elementary)") {
+
+    # tigris did not support CB files for school districts prior to 0.9.3
+    if (packageVersion("tigris") < "0.9.3") {
+      cb <- FALSE
+    }
+
+    sde <- school_districts(state = state, type = "elementary", cb = cb, year = year,
+                            class = "sf", ...)
+
+    return(sde)
+
+  } else if (geography == "school district (secondary)") {
+
+    # tigris did not support CB files for school districts prior to 0.9.3
+    if (packageVersion("tigris") < "0.9.3") {
+      cb <- FALSE
+    }
+
+    sds <- school_districts(state = state, type = "secondary", cb = cb, year = year,
+                            class = "sf", ...)
+
+    return(sds)
+
+  } else if (geography == "school district (unified)") {
+
+    # tigris did not support CB files for school districts prior to 0.9.3
+    if (packageVersion("tigris") < "0.9.3") {
+      cb <- FALSE
+    }
+
+    sdu <- school_districts(state = state, type = "unified", cb = cb, year = year,
+                            class = "sf", ...)
+
+    return(sdu)
+
+  } else if (geography == "new england city and town area") {
+
+    ne <- new_england(type = "necta", cb = cb, year = year,
+                      class = "sf", ...)
+
+    return(ne)
+
+  } else if (geography == "combined new england city and town area") {
+
+    nec <- new_england(type = "combined", cb = cb, year = year,
+                      class = "sf", ...)
+
+    return(nec)
+
   } else {
 
+    # Leave this in as a legacy piece in case something changes
     stop(sprintf("Geometry for %s is not yet supported.  Use the tigris package and join as normal instead.",
                  geography), call. = FALSE)
 
