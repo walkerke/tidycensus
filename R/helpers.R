@@ -1,7 +1,5 @@
 # Function to get the correct geom for a Census dataset
 # if geometry = TRUE
-
-
 use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
                        state = NULL, county = NULL, starts_with = NULL, ...) {
 
@@ -182,8 +180,148 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(bl)
 
+  } else if (geography == "place") {
+
+    pl <- places(state = state, year = year, cb = cb, class = "sf", ...)
+
+    return(pl)
+
+  } else if (geography == "metropolitan statistical area/micropolitan statistical area") {
+
+    cbsa <- core_based_statistical_areas(cb = cb, year = year, ...)
+
+    return(cbsa)
+
+  } else if (geography == "congressional district") {
+
+    cd <- congressional_districts(cb = cb, year = year, class = "sf", ...)
+
+    return(cd)
+
+  } else if (geography == "public use microdata area") {
+
+    pm <- pumas(state = state, cb = cb, year = year, class = "sf", ...)
+
+    pm <- rename(pm, GEOID = GEOID10)
+
+    return(pm)
+
+  } else if (geography == "state legislative district (upper chamber)") {
+
+    slu <- state_legislative_districts(state = state, house = "upper", cb = cb, year = year,
+                                       class = "sf", ...)
+
+    return(slu)
+
+  } else if (geography == "state legislative district (lower chamber)") {
+
+    slc <- state_legislative_districts(state = state, house = "lower", cb = cb, year = year,
+                                       class = "sf", ...)
+
+    return(slc)
+
+  } else if (geography %in% c("american indian area/alaska native area/hawaiian home land",
+                              "american indian area/alaska native area (reservation or statistical entity only)",
+                              "american indian area (off-reservation trust land only)/hawaiian home land")) {
+
+    nv <- native_areas(cb = cb, year = year, class = "sf", ...)
+
+    return(nv)
+
+  } else if (geography == "county subdivision") {
+
+    cs <- county_subdivisions(state = state, county = county, cb = cb,
+                              year = year, class = "sf", ...)
+
+    return(cs)
+
+  } else if (geography == "combined statistical area") {
+
+    csa <- combined_statistical_areas(cb = cb, class = "sf", year = year, ...)
+
+    return(csa)
+
+  } else if (geography == "urban area") {
+
+    ua <- urban_areas(cb = cb, year = year, class = "sf", ...)
+
+    ua <- rename(ua, GEOID = GEOID10)
+
+    return(ua)
+
+  } else if (geography == "school district (elementary)") {
+
+    # tigris did not support CB files for school districts prior to 0.9.3
+    if (packageVersion("tigris") < "0.9.3") {
+      cb <- FALSE
+    }
+
+    sde <- school_districts(state = state, type = "elementary", cb = cb, year = year,
+                            class = "sf", ...)
+
+    return(sde)
+
+  } else if (geography == "school district (secondary)") {
+
+    # tigris did not support CB files for school districts prior to 0.9.3
+    if (packageVersion("tigris") < "0.9.3") {
+      cb <- FALSE
+    }
+
+    sds <- school_districts(state = state, type = "secondary", cb = cb, year = year,
+                            class = "sf", ...)
+
+    return(sds)
+
+  } else if (geography == "school district (unified)") {
+
+    # tigris did not support CB files for school districts prior to 0.9.3
+    if (packageVersion("tigris") < "0.9.3") {
+      cb <- FALSE
+    }
+
+    sdu <- school_districts(state = state, type = "unified", cb = cb, year = year,
+                            class = "sf", ...)
+
+    return(sdu)
+
+  } else if (geography == "new england city and town area") {
+
+    ne <- new_england(type = "necta", cb = cb, year = year,
+                      class = "sf", ...)
+
+    return(ne)
+
+  } else if (geography == "combined new england city and town area") {
+
+    nec <- new_england(type = "combined", cb = cb, year = year,
+                      class = "sf", ...)
+
+    return(nec)
+
+  } else if (geography == "us") {
+
+    nat <- nation(year = year, class = "sf", ...)
+
+    nat <- dplyr::mutate(nat, GEOID = "1")
+
+    return(nat)
+
+  } else if (geography == "region") {
+
+    reg <- regions(year = year, class = "sf", ...)
+
+    return(reg)
+
+  } else if (geography == "division") {
+
+    div <- divisions(year = year, class = "sf", ...)
+
+    return(div)
+
   } else {
 
+    # Leave this in as a legacy piece in case something changes
     stop(sprintf("Geometry for %s is not yet supported.  Use the tigris package and join as normal instead.",
                  geography), call. = FALSE)
 
