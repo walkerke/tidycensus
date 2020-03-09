@@ -253,11 +253,14 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     # tigris did not support CB files for school districts prior to 0.9.3
     if (packageVersion("tigris") < "0.9.3") {
-      cb <- FALSE
+      sde <- school_districts(state = state, type = "elementary", year = year,
+                              class = "sf", ...)
+    } else {
+      sde <- school_districts(state = state, type = "elementary", cb = cb, year = year,
+                              class = "sf", ...)
     }
 
-    sde <- school_districts(state = state, type = "elementary", cb = cb, year = year,
-                            class = "sf", ...)
+
 
     return(sde)
 
@@ -265,11 +268,12 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     # tigris did not support CB files for school districts prior to 0.9.3
     if (packageVersion("tigris") < "0.9.3") {
-      cb <- FALSE
+      sds <- school_districts(state = state, type = "secondary", year = year,
+                              class = "sf", ...)
+    } else {
+      sds <- school_districts(state = state, type = "secondary", cb = cb, year = year,
+                              class = "sf", ...)
     }
-
-    sds <- school_districts(state = state, type = "secondary", cb = cb, year = year,
-                            class = "sf", ...)
 
     return(sds)
 
@@ -277,11 +281,12 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     # tigris did not support CB files for school districts prior to 0.9.3
     if (packageVersion("tigris") < "0.9.3") {
-      cb <- FALSE
+      sdu <- school_districts(state = state, type = "unified", year = year,
+                              class = "sf", ...)
+    } else {
+      sdu <- school_districts(state = state, type = "unified", cb = cb, year = year,
+                              class = "sf", ...)
     }
-
-    sdu <- school_districts(state = state, type = "unified", cb = cb, year = year,
-                            class = "sf", ...)
 
     return(sdu)
 
