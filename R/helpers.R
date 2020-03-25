@@ -188,7 +188,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "metropolitan statistical area/micropolitan statistical area") {
 
-    cbsa <- core_based_statistical_areas(cb = cb, year = year, ...)
+    cbsa <- core_based_statistical_areas(cb = cb, year = year, class = "sf", ...)
 
     return(cbsa)
 
