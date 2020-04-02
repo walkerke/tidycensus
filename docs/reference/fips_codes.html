@@ -78,7 +78,7 @@ state_name: Title-case name of state
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9.2</span>
       </span>
     </div>
 
@@ -164,6 +164,14 @@ state_name: Title-case name of state
     <p>Dataset with FIPS codes for US states and counties</p>
 <p>Built-in dataset for use with the <code>lookup_code</code> function.
 To access the data directly, issue the command <code><a href='https://rdrr.io/r/utils/data.html'>data(fips_codes)</a></code>.</p>
+<p>Note: this dataset includes FIPS codes for all counties that have appeared in
+the decennial Census or American Community Survey from 2010 to the present.
+This means that counties that have been renamed or absorbed into other
+geographic entities since 2010 remain in this dataset along with newly added
+or renamed counties.</p>
+<p>If you need the FIPS codes and names for counties for a particular Census
+year, you can use the <a href='https://rdrr.io/pkg/tigris/man/counties.html'>counties</a> function from the tigris
+package and set the year parameter as required.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
