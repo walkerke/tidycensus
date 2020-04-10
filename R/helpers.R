@@ -200,7 +200,19 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "public use microdata area") {
 
-    pm <- pumas(state = state, cb = cb, year = year, class = "sf", ...)
+    if (length(state) > 1) {
+      pm <- purrr::map(state, function(x) {
+        pumas(state = x, cb = cb, year = year, class = "sf", ...)
+      }) %>%
+        rbind_tigris()
+    } else if (is.null(state)) {
+      pm <- purrr::map(c(state.abb, "DC", "PR"), function(x) {
+        pumas(state = x, cb = cb, year = year, class = "sf", ...)
+      }) %>%
+        rbind_tigris()
+    } else {
+      pm <- pumas(state = state, cb = cb, year = year, class = "sf", ...)
+    }
 
     pm <- rename(pm, GEOID = GEOID10)
 
