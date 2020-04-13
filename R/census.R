@@ -294,7 +294,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
       }
       d
     }) %>%
-      bind_cols()
+      reduce(left_join, by = c("GEOID", "NAME"))
   } else {
     dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county, show_call = show_call),
                silent = TRUE)

@@ -4,7 +4,9 @@
 \name{state_laea}
 \alias{state_laea}
 \title{State geometry with Alaska and Hawaii shifted and re-scaled}
-\format{An object of class \code{sf} (inherits from \code{data.frame}) with 51 rows and 2 columns.}
+\format{
+An object of class \code{sf} (inherits from \code{data.frame}) with 51 rows and 2 columns.
+}
 \usage{
 data(state_laea)
 
