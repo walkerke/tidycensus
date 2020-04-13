@@ -4,7 +4,9 @@
 \name{fips_codes}
 \alias{fips_codes}
 \title{Dataset with FIPS codes for US states and counties}
-\format{An object of class \code{data.frame} with 3237 rows and 5 columns.}
+\format{
+An object of class \code{data.frame} with 3237 rows and 5 columns.
+}
 \usage{
 data(fips_codes)
 }
