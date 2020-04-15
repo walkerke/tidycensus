@@ -114,7 +114,7 @@ vt %>%
   geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
   geom_point(color = "red", size = 3) +
   labs(title = "Household income by county in Vermont",
-       subtitle = "2013-2017 American Community Survey",
+       subtitle = "2014-2018 American Community Survey",
        y = "",
        x = "ACS estimate (bars represent margin of error)")
 ```
