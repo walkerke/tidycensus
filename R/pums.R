@@ -57,6 +57,15 @@ get_pums <- function(variables,
                               show_call = show_call,
                               key = key)
 
+  # Replace variable names if supplied
+  if (!is.null(names(variables))) {
+    for (i in 1:length(variables)) {
+      names(pums_data) <- str_replace(names(pums_data),
+                                      variables[i],
+                                      names(variables)[i])
+    }
+  }
+
   return(pums_data)
 
 
