@@ -632,3 +632,72 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   return(dat)
 }
+
+
+
+load_data_pums <- function(variables, state, key, year, survey, show_call) {
+
+
+  var <- paste0(variables, collapse = ",")
+
+  vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
+
+  base <- sprintf("https://api.census.gov/data/%s/acs/%s/pums",
+                  year, survey)
+
+
+  if (!is.null(state)) {
+    state <- map_chr(state, function(x) {
+      paste0("0400000US",
+             validate_state(x))
+  })
+  }
+
+  if (length(state) > 1) {
+    state <- paste0(state, collapse = ",")
+  }
+
+  call <- GET(base, query = list(get = vars_to_get,
+                                 ucgid = state,
+                                 key = key))
+
+
+  if (show_call) {
+    call_url <- gsub("&key.*", "", call$url)
+    message(paste("Census API call:", call_url))
+  }
+
+  # Make sure call status returns 200, else, print the error message for the user.
+  if (call$status_code != 200) {
+    msg <- content(call, as = "text")
+
+    if (grepl("The requested resource is not available", msg)) {
+      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
+    } else {
+      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
+    }
+
+  }
+
+
+  content <- content(call, as = "text")
+
+  if (grepl("You included a key with this request", content)) {
+    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
+  }
+
+  dat <- fromJSON(content)
+
+  colnames(dat) <- dat[1,]
+
+  dat <- as_tibble(dat)
+
+  dat <- dat[-1,]
+
+  # Convert the weights columns to numeric
+  dat$WGTP <- as.numeric(dat$WGTP)
+  dat$PWGTP <- as.numeric(dat$PWGTP)
+
+  return(dat)
+
+}
