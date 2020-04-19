@@ -635,7 +635,7 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
 
 
-load_data_pums <- function(variables, state, key, year, survey, show_call) {
+load_data_pums <- function(variables, state, key, year, survey, recode, show_call) {
 
 
   var <- paste0(variables, collapse = ",")
@@ -698,6 +698,95 @@ load_data_pums <- function(variables, state, key, year, survey, show_call) {
   dat$WGTP <- as.numeric(dat$WGTP)
   dat$PWGTP <- as.numeric(dat$PWGTP)
 
-  return(dat)
+  # Filter the pums lookup table for the selected year and survey
+  pums_variables_filter <- tidycensus::pums_variables %>%
+    filter(year == !!year, survey == !!survey)
 
+  # Do some clean up of the API response: pad returned values with 0s when
+  # necessary to match data dictionary codes and
+  # convert variables to numeric according to data dictionary
+
+  # But wait, this only works when the serial numbers are correctly returned and they are not for 2018 right now
+  if(year != 2018) {
+    var_val_length <- pums_variables_filter %>%
+      filter(!is.na(.data$val_length)) %>%
+      distinct(.data$var_code, .data$val_length, .data$val_na)
+
+    num_vars <- pums_variables_filter%>%
+      filter(.data$data_type == "num") %>%
+      distinct(.data$var_code) %>%
+      pull()
+
+    # For all variables in which we know what the legnth should be, pad with 0s
+    dat_padded <- dat %>%
+      select(.data$SERIALNO, .data$SPORDER, any_of(var_val_length$var_code)) %>%
+      pivot_longer(
+        cols = -c(.data$SERIALNO, .data$SPORDER),
+        names_to = "var_code",
+        values_to = "val"
+      ) %>%
+      left_join(var_val_length, by = "var_code") %>%
+      mutate(
+        val = ifelse(!is.na(.data$val_na) & .data$val_na == .data$val, strrep("b", .data$val_length), .data$val),
+        val = ifelse(.data$var_code != "NAICSP", str_pad(.data$val, .data$val_length, pad = "0"), .data$val),
+        val = ifelse(.data$var_code == "NAICSP" & .data$val == "*", "bbbbbbbb", .data$val),  # special NULL value returned by API for this var
+      ) %>%
+      select(-.data$val_length, -.data$val_na) %>%
+      pivot_wider(
+        names_from = .data$var_code,
+        values_from = .data$val
+      )
+
+    # Rejoin padded variables to API return
+    dat <- dat %>%
+      select(.data$SERIALNO, .data$SPORDER, !any_of(var_val_length$var_code)) %>%
+      left_join(dat_padded, by = c("SERIALNO", "SPORDER")) %>%
+      mutate_at(vars(any_of(num_vars)), as.double)
+    }
+
+  # Do you want to return value labels also?
+  if(recode) {
+
+    # Only works for 2017 for now because 2017 is only year included in pums_variables
+    if(year == 2017) {
+      var_lookup <- pums_variables_filter %>%
+        select(.data$var_code, val = .data$val_min, .data$val_label)
+
+      # Vector of variables that are possible to recode
+      vars_to_recode <- pums_variables_filter %>%
+        filter(.data$recode) %>%
+        distinct(.data$var_code) %>%
+        pull()
+
+      # Pivot to long format and join variable codes to lookup table with labels
+      recoded_long <- dat %>%
+        select(.data$SERIALNO, .data$SPORDER, any_of(vars_to_recode)) %>%
+        pivot_longer(
+          cols = -c(.data$SERIALNO, .data$SPORDER),
+          names_to = "var_code",
+          values_to = "val"
+        ) %>%
+        left_join(var_lookup, by = c("var_code", "val")) %>%
+        select(-.data$val)
+
+      # Create a "pivot spec" with nicer names for the labeled columns
+      # https://tidyr.tidyverse.org/articles/pivot.html#wider-1
+      spec <- recoded_long %>%
+        build_wider_spec(
+          names_from = .data$var_code,
+          values_from = .data$val_label
+        ) %>%
+        mutate(.name = paste0(.data$var_code, "_label", ""))
+
+      recoded_wide <- recoded_long %>%
+        pivot_wider_spec(spec)
+
+      # Join recoded columns to API return
+      dat <- dat %>%
+        left_join(recoded_wide, by = c("SERIALNO", "SPORDER"))
+    } else {
+      message("Recoding is currently only supported for 2017 1-year and 5-year data. Returning original data only.")
+      }
+    }
+  return(dat)
 }

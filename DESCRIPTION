@@ -24,14 +24,15 @@ Imports:
     tigris,
     stringr,
     jsonlite (>= 1.5.0),
-    purrr, 
-    rvest, 
-    tidyr (>= 0.7.0),
-    rappdirs, 
-    readr, 
-    xml2, 
-    units, 
-    utils
+    purrr,
+    rvest,
+    tidyr (>= 1.0.0),
+    rappdirs,
+    readr,
+    xml2,
+    units,
+    utils,
+    rlang
 Suggests: 
     ggplot2
 RoxygenNote: 7.1.0
