@@ -463,16 +463,22 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   for_area <- paste0(geography, ":*")
 
+  if (year == 2019) {
+    geo_name <- "NAME"
+  } else {
+    geo_name <- "GEONAME"
+  }
+
   if (is.null(variables)) {
     if (is.null(product)) {
       stop("Either a product or a vector of variables is required.", call. = FALSE)
     } else {
       if (product == "population") {
-        vars_to_get <- "GEONAME,POP,DENSITY"
+        vars_to_get <- paste0(geo_name, ",POP,DENSITY")
       } else if (product == "components") {
-        vars_to_get <- "GEONAME,BIRTHS,DEATHS,DOMESTICMIG,INTERNATIONALMIG,NATURALINC,NETMIG,RBIRTH,RDEATH,RDOMESTICMIG,RINTERNATIONALMIG,RNATURALINC,RNETMIG"
+        vars_to_get <- paste0(geo_name, ",BIRTHS,DEATHS,DOMESTICMIG,INTERNATIONALMIG,NATURALINC,NETMIG,RBIRTH,RDEATH,RDOMESTICMIG,RINTERNATIONALMIG,RNATURALINC,RNETMIG")
       } else if (product == "housing") {
-        vars_to_get <- "GEONAME,HUEST"
+        vars_to_get <- paste0(geo_name, ",HUEST")
       } else {
         stop("Other products are not yet supported.", call. = FALSE)
       }
@@ -491,7 +497,7 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
         product <- "housing"
       }
     }
-    vars_to_get <- paste0("GEONAME,", paste0(variables, collapse = ","))
+    vars_to_get <- paste0(geo_name, ",", paste0(variables, collapse = ","))
   }
 
   if (time_series) {
@@ -611,11 +617,11 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   var_vector <- unlist(strsplit(vars_to_get, split = ","))
 
-  var_vector <- var_vector[var_vector != "GEONAME"]
+  var_vector <- var_vector[var_vector != geo_name]
 
   dat[var_vector] <- lapply(dat[var_vector], as.numeric)
 
-  v2 <- c(var_vector, "GEONAME")
+  v2 <- c(var_vector, geo_name)
 
   if ("county" %in% names(dat)) {
     dat$county <- stringr::str_pad(dat$county, 3, "left", "0")

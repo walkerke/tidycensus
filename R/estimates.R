@@ -171,7 +171,7 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
       })
 
       # Remove any extra GEOID or GEONAME columns
-      dat <- dat[, -grep("GEOID[0-9]|GEONAME[0-9]", colnames(dat))]
+      dat <- dat[, -grep("GEOID[0-9]|GEONAME[0-9]|NAME[0-9]", colnames(dat))]
 
     } else {
       dat <- load_data_estimates(geography = geography, product = product,
@@ -208,18 +208,37 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
     if (time_series) {
       if ("PERIOD" %in% names(dat)) {
-        dat2 <- dat %>%
-          rename(NAME = GEONAME) %>%
-          gather(key = variable, value = value, -GEOID, -NAME, -PERIOD)
+        if ("GEONAME" %in% names(dat)) {
+          dat2 <- dat %>%
+            rename(NAME = GEONAME) %>%
+            gather(key = variable, value = value, -GEOID, -NAME, -PERIOD)
+        } else {
+          dat2 <- dat %>%
+            gather(key = variable, value = value, -GEOID, -NAME, -PERIOD)
+        }
+
       } else {
-        dat2 <- dat %>%
-          rename(NAME = GEONAME) %>%
-          gather(key = variable, value = value, -GEOID, -NAME, -DATE)
+        if ("GEONAME" %in% names(dat)) {
+          dat2 <- dat %>%
+            rename(NAME = GEONAME) %>%
+            gather(key = variable, value = value, -GEOID, -NAME, -DATE)
+        } else {
+          dat2 <- dat %>%
+            gather(key = variable, value = value, -GEOID, -NAME, -DATE)
+        }
       }
     } else {
-      dat2 <- dat %>%
-        rename(NAME = GEONAME) %>%
-        gather(key = variable, value = value, -GEOID, -NAME)
+
+      if ("GEONAME" %in% names(dat)) {
+        dat2 <- dat %>%
+          rename(NAME = GEONAME) %>%
+          gather(key = variable, value = value, -GEOID, -NAME)
+      } else {
+        dat2 <- dat %>%
+          gather(key = variable, value = value, -GEOID, -NAME)
+      }
+
+
     }
 
     if (!is.null(names(variables))) {
@@ -301,8 +320,15 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
       }
     }
 
-    dat2 <- dat2 %>%
-      select(GEOID, NAME = GEONAME, everything())
+    if ("GEONAME" %in% names(dat2)) {
+      dat2 <- dat2 %>%
+        select(GEOID, NAME = GEONAME, everything())
+    } else {
+      dat2 <- dat2 %>%
+        select(GEOID, NAME, everything())
+    }
+
+
 
   }
 
