@@ -502,13 +502,13 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   if (time_series) {
     if (product == "components") {
-      if (year == 2018) {
+      if (year >= 2018) {
         vars_to_get <- paste0(vars_to_get, ",PERIOD_CODE")
       } else {
         vars_to_get <- paste0(vars_to_get, ",PERIOD")
       }
     } else {
-      if (year == 2018) {
+      if (year >= 2018) {
         vars_to_get <- paste0(vars_to_get, ",DATE_CODE")
       } else {
         vars_to_get <- paste0(vars_to_get, ",DATE_")
