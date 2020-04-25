@@ -1,7 +1,4 @@
-library(dplyr)
-library(tidyr)
-library(readr)
-library(stringr)
+library(tidyverse)
 
 clean_data_dict <- function(path, survey, year) {
 
@@ -60,11 +57,10 @@ clean_data_dict <- function(path, survey, year) {
 
 }
 
+files <- list.files("data-raw", pattern = "^pums-dict.*\\.csv$", full.names = TRUE)
+survey <- str_extract(files, "acs[0-9]")
+year <- str_extract(files, "20[0-9]{2}")
 
-pums_variables_2017 <- clean_data_dict("data-raw/pums-dict-2017.csv", "acs1", 2017)
-pums_variables_2013_2017 <- clean_data_dict("data-raw/pums-dict-2013-2017.csv", "acs5", 2017)
-
-pums_variables <- pums_variables_2017 %>%
-  bind_rows(pums_variables_2013_2017)
+pums_variables <- pmap_dfr(list(files, survey, year), ~ clean_data_dict(..1, ..2, ..3))
 
 usethis::use_data(pums_variables, overwrite = TRUE)

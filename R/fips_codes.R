@@ -99,7 +99,7 @@
 #'
 #' @docType data
 #' @keywords datasets
-#' @name pums_variabls
+#' @name pums_variables
 #'
 #' @usage data(pums_variables)
 "pums_variables"
