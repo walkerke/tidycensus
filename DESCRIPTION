@@ -34,5 +34,6 @@ Imports:
     utils,
     rlang
 Suggests: 
-    ggplot2
+    ggplot2,
+    survey
 RoxygenNote: 7.1.0
