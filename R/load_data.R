@@ -663,9 +663,11 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
     state <- paste0(state, collapse = ",")
   }
 
-  call <- GET(base, query = list(get = vars_to_get,
+  call <- GET(base,
+              query = list(get = vars_to_get,
                                  ucgid = state,
-                                 key = key))
+                                 key = key),
+              progress())
 
 
   if (show_call) {
@@ -713,7 +715,7 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
   # convert variables to numeric according to data dictionary
 
   # But wait, this only works when the serial numbers are correctly returned and they are not for 2018 right now
-  if(year != 2018) {
+  if (year != 2018) {
     var_val_length <- pums_variables_filter %>%
       filter(!is.na(.data$val_length)) %>%
       distinct(.data$var_code, .data$val_length, .data$val_na)
@@ -723,7 +725,7 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
       distinct(.data$var_code) %>%
       pull()
 
-    # For all variables in which we know what the legnth should be, pad with 0s
+    # For all variables in which we know what the length should be, pad with 0s
     dat_padded <- dat %>%
       select(.data$SERIALNO, .data$SPORDER, any_of(var_val_length$var_code)) %>%
       pivot_longer(
@@ -751,10 +753,10 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
     }
 
   # Do you want to return value labels also?
-  if(recode) {
+  if (recode) {
 
     # Only works for 2017 for now because 2017 is only year included in pums_variables
-    if(year == 2017) {
+    if (year == 2017) {
       var_lookup <- pums_variables_filter %>%
         select(.data$var_code, val = .data$val_min, .data$val_label)
 

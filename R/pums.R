@@ -54,14 +54,17 @@ get_pums <- function(variables,
 
   }
 
-  if(rep_weights == "housing") {
-    variables <- c(variables, housing_weight_variables)
-  }
-  if(rep_weights == "person") {
-    variables <- c(variables, person_weight_variables)
-  }
-  if(rep_weights == "both") {
-    variables <- c(variables, housing_weight_variables, person_weight_variables)
+  if (!is.null(rep_weights)) {
+    if (rep_weights == "housing") {
+      variables <- c(variables, housing_weight_variables)
+    }
+    if (rep_weights == "person") {
+      variables <- c(variables, person_weight_variables)
+    }
+    if (rep_weights == "both") {
+      variables <- c(variables, housing_weight_variables, person_weight_variables)
+    }
+
   }
 
   ## If more than 46 vars requested, split into multiple API calls and join the result
