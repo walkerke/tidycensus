@@ -87,9 +87,15 @@ get_pums <- function(variables,
                      recode = recode,
                      show_call = show_call,
                      key = key)
-        }) %>%
-      reduce(left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")) %>%
-      select(-contains("WGTP"), everything(), contains("WGTP"))
+        })
+
+    if(recode) {
+      pums_data <- reduce(pums_data, left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST", "ST_label"))
+    } else {
+      pums_data <- reduce(pums_data, left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP"))
+    }
+
+    pums_data <- select(pums_data, -contains("WGTP"), everything(), contains("WGTP"))
       } else {
         pums_data <- load_data_pums(variables = variables,
                                     state = state,
@@ -110,7 +116,6 @@ get_pums <- function(variables,
   }
   return(pums_data)
 }
-
 
 
 #' Convert a data frame returned by get_pums() to a survey design object
