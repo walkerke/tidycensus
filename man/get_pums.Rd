@@ -25,15 +25,15 @@ request data.}
 5-year sample. Defaults to 2017.}
 
 \item{survey}{The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
-(the default)}
+(the default).}
 
-\item{rep_weights}{(not currently implemented) Whether or not to return
-household, person, or both household and person-level replicate weights for
-calculation of standard errors.}
+\item{rep_weights}{Whether or not to return housing, person, or both housing
+and person-level replicate weights for calculation of standard errors; one
+of \code{"person"}, \code{"housing"}, or \code{"both"}.}
 
-\item{recode}{(a bit fragile for now) If TRUE, recodes variable values using
-Census data dictionary and creates a new \code{*_label} column for each
-variable that is recoded. Defaults to FALSE.}
+\item{recode}{(only works for 2017 for now) If TRUE, recodes variable values
+using Census data dictionary and creates a new \code{*_label} column for
+each variable that is recoded. Defaults to FALSE.}
 
 \item{show_call}{If TRUE, display call made to Census API. This can be very
 useful in debugging and determining if error messages returned are due to
