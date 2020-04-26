@@ -54,19 +54,30 @@ get_pums <- function(variables,
 
   }
 
-  if(rep_weights == "housing") {
-    variables <- c(variables, housing_weight_variables)
-  }
-  if(rep_weights == "person") {
-    variables <- c(variables, person_weight_variables)
-  }
-  if(rep_weights == "both") {
-    variables <- c(variables, housing_weight_variables, person_weight_variables)
+  if(!is.null(rep_weights)) {
+    if(year == 2018) {
+    stop("Cannot request replicate weights for 2018 PUMS because household serial numbers are not available from the API at the moment and each API call is limited to 50 variables.",
+         call. = FALSE)
+    } else {
+      if(rep_weights == "housing") {
+        variables <- c(variables, housing_weight_variables)
+      }
+      if(rep_weights == "person") {
+        variables <- c(variables, person_weight_variables)
+        }
+      if(rep_weights == "both") {
+        variables <- c(variables, housing_weight_variables, person_weight_variables)
+        }
+      }
   }
 
   ## If more than 46 vars requested, split into multiple API calls and join the result
   ## this works, but repeats pulling the weight and ST vars
   if (length(variables) > 46) {
+    if(year == 2018) {
+      stop("Cannot request more than 46 variables in a single call for 2018 PUMS because household serial numbers are not available from the API at the moment.",
+           call. = FALSE)
+    }
     l <- split(variables, ceiling(seq_along(variables) / 46))
     pums_data <- map(l, function(x) {
       load_data_pums(variables = x,
@@ -122,6 +133,7 @@ get_pums <- function(variables,
 #' \dontrun{
 #' pums <- get_pums(variables = "AGEP", state = "VT", rep_weights = "person")
 #' pums_design <- df_to_svyrep(pums, type = "person")
+#' survey::svymean(~AGEP, pums_design)
 #' }
 df_to_svyrep <- function(df, type = "person") {
 

@@ -27,5 +27,6 @@ This helper function takes a data frame returned by
 \dontrun{
 pums <- get_pums(variables = "AGEP", state = "VT", rep_weights = "person")
 pums_design <- df_to_svyrep(pums, type = "person")
+survey::svymean(~AGEP, pums_design)
 }
 }
