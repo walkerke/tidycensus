@@ -54,22 +54,30 @@ get_pums <- function(variables,
 
   }
 
-  if (!is.null(rep_weights)) {
-    if (rep_weights == "housing") {
-      variables <- c(variables, housing_weight_variables)
-    }
-    if (rep_weights == "person") {
-      variables <- c(variables, person_weight_variables)
-    }
-    if (rep_weights == "both") {
-      variables <- c(variables, housing_weight_variables, person_weight_variables)
-    }
-
+  if(!is.null(rep_weights)) {
+    if(year == 2018) {
+    stop("Cannot request replicate weights for 2018 PUMS because household serial numbers are not available from the API at the moment and each API call is limited to 50 variables.",
+         call. = FALSE)
+    } else {
+      if(rep_weights == "housing") {
+        variables <- c(variables, housing_weight_variables)
+      }
+      if(rep_weights == "person") {
+        variables <- c(variables, person_weight_variables)
+        }
+      if(rep_weights == "both") {
+        variables <- c(variables, housing_weight_variables, person_weight_variables)
+        }
+      }
   }
 
   ## If more than 46 vars requested, split into multiple API calls and join the result
   ## this works, but repeats pulling the weight and ST vars
   if (length(variables) > 46) {
+    if(year == 2018) {
+      stop("Cannot request more than 46 variables in a single call for 2018 PUMS because household serial numbers are not available from the API at the moment.",
+           call. = FALSE)
+    }
     l <- split(variables, ceiling(seq_along(variables) / 46))
     pums_data <- map(l, function(x) {
       load_data_pums(variables = x,
@@ -79,9 +87,15 @@ get_pums <- function(variables,
                      recode = recode,
                      show_call = show_call,
                      key = key)
-        }) %>%
-      reduce(left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")) %>%
-      select(-contains("WGTP"), everything(), contains("WGTP"))
+        })
+
+    if(recode) {
+      pums_data <- reduce(pums_data, left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST", "ST_label"))
+    } else {
+      pums_data <- reduce(pums_data, left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP"))
+    }
+
+    pums_data <- select(pums_data, -contains("WGTP"), everything(), contains("WGTP"))
       } else {
         pums_data <- load_data_pums(variables = variables,
                                     state = state,
@@ -104,7 +118,6 @@ get_pums <- function(variables,
 }
 
 
-
 #' Convert a data frame returned by get_pums() to a survey design object
 #'
 #' @description This helper function takes a data frame returned by
@@ -125,6 +138,7 @@ get_pums <- function(variables,
 #' \dontrun{
 #' pums <- get_pums(variables = "AGEP", state = "VT", rep_weights = "person")
 #' pums_design <- df_to_svyrep(pums, type = "person")
+#' survey::svymean(~AGEP, pums_design)
 #' }
 df_to_svyrep <- function(df, type = "person") {
 

@@ -714,8 +714,8 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
   # necessary to match data dictionary codes and
   # convert variables to numeric according to data dictionary
 
-  # But wait, this only works when the serial numbers are correctly returned and they are not for 2018 right now
-  if (year != 2018) {
+  # But wait, this only works when the serial numbers are correctly returned and and we have a variable metadata in pums_variables
+  if(year == 2017) {
     var_val_length <- pums_variables_filter %>%
       filter(!is.na(.data$val_length)) %>%
       distinct(.data$var_code, .data$val_length, .data$val_na)
@@ -755,8 +755,8 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
   # Do you want to return value labels also?
   if (recode) {
 
-    # Only works for 2017 for now because 2017 is only year included in pums_variables
-    if (year == 2017) {
+    # Only works for 2017 because it's the only year included in pums_variables for now
+    if(year == 2017) {
       var_lookup <- pums_variables_filter %>%
         select(.data$var_code, val = .data$val_min, .data$val_label)
 
