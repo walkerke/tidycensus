@@ -6,13 +6,13 @@
 #' @param year The data year of the 1-year ACS sample or the endyear of the
 #'   5-year sample. Defaults to 2017.
 #' @param survey The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
-#'   (the default)
-#' @param rep_weights (not currently implemented) Whether or not to return
-#'   household, person, or both household and person-level replicate weights for
-#'   calculation of standard errors.
-#' @param recode (a bit fragile for now) If TRUE, recodes variable values using
-#'   Census data dictionary and creates a new \code{*_label} column for each
-#'   variable that is recoded. Defaults to FALSE.
+#'   (the default).
+#' @param rep_weights Whether or not to return housing, person, or both housing
+#'   and person-level replicate weights for calculation of standard errors; one
+#'   of \code{"person"}, \code{"housing"}, or \code{"both"}.
+#' @param recode (only works for 2017 for now) If TRUE, recodes variable values
+#'   using Census data dictionary and creates a new \code{*_label} column for
+#'   each variable that is recoded. Defaults to FALSE.
 #' @param show_call If TRUE, display call made to Census API. This can be very
 #'   useful in debugging and determining if error messages returned are due to
 #'   tidycensus or the Census API. Copy to the API call into a browser and see
@@ -54,13 +54,43 @@ get_pums <- function(variables,
 
   }
 
-  pums_data <- load_data_pums(variables = variables,
-                              state = state,
-                              year = year,
-                              survey = survey,
-                              recode = recode,
-                              show_call = show_call,
-                              key = key)
+  if (!is.null(rep_weights)) {
+    if (rep_weights == "housing") {
+      variables <- c(variables, housing_weight_variables)
+    }
+    if (rep_weights == "person") {
+      variables <- c(variables, person_weight_variables)
+    }
+    if (rep_weights == "both") {
+      variables <- c(variables, housing_weight_variables, person_weight_variables)
+    }
+
+  }
+
+  ## If more than 46 vars requested, split into multiple API calls and join the result
+  ## this works, but repeats pulling the weight and ST vars
+  if (length(variables) > 46) {
+    l <- split(variables, ceiling(seq_along(variables) / 46))
+    pums_data <- map(l, function(x) {
+      load_data_pums(variables = x,
+                     state = state,
+                     year = year,
+                     survey = survey,
+                     recode = recode,
+                     show_call = show_call,
+                     key = key)
+        }) %>%
+      reduce(left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")) %>%
+      select(-contains("WGTP"), everything(), contains("WGTP"))
+      } else {
+        pums_data <- load_data_pums(variables = variables,
+                                    state = state,
+                                    year = year,
+                                    survey = survey,
+                                    recode = recode,
+                                    show_call = show_call,
+                                    key = key)
+        }
 
   # Replace variable names if supplied
   if (!is.null(names(variables))) {
@@ -70,7 +100,74 @@ get_pums <- function(variables,
                                       names(variables)[i])
     }
   }
-
   return(pums_data)
+}
 
+
+
+#' Convert a data frame returned by get_pums() to a survey design object
+#'
+#' @description This helper function takes a data frame returned by
+#'   \code{\link{get_pums}} and converts it to a svyrep.design object from the
+#'   \code{\link[survey]{svrepdesign}} package. You can then use functions from survey (or
+#'   srvyr) package to calculte weighted estimates with replicate weights
+#'   included to provide accurate standard errors.
+#'
+#' @param df A data frame with PUMS person or housing replicate weight
+#'   variables, most likely returned by \code{\link{get_pums}}.
+#' @param type Whether to use person or housing-level replicate weights; either
+#'   \code{"housing"} or \code{"person"} (the default).
+#'
+#' @return A svyrep.design object.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' pums <- get_pums(variables = "AGEP", state = "VT", rep_weights = "person")
+#' pums_design <- df_to_svyrep(pums, type = "person")
+#' }
+df_to_svyrep <- function(df, type = "person") {
+
+  if(!"survey" %in% installed.packages()) {
+    stop('survey package must be installed to convert to a svyrep object. Please install using install.packages("survey") and try again.',
+         call. = FALSE)
+    }
+  if(type == "person") {
+    if(!all(person_weight_variables %in% names(df))) {
+      stop("Not all person replicate weight variables are present in input data.", call. = FALSE)
+    }
+    if(!"PWGTP" %in% names(df)) {
+      stop("Person weight variable is not present in input data.", call. = FALSE)
+    }
+    variables <- df[, !names(df) %in% c(person_weight_variables, "PWGTP")]
+    weights <- df$PWGTP
+    repweights <- df[, person_weight_variables]
+  }
+
+  if(type == "housing") {
+
+    if(anyDuplicated(df$SERIALNO) != 0) {
+      warning("You have duplicate values in the SERIALNO column of your input data, are you sure you wish to proceed?",
+              call. = FALSE)
+    }
+    if(!all(housing_weight_variables %in% names(df))) {
+      stop("Not all housing replicate weight variables are present in input data.", call. = FALSE)
+    }
+    if(!"WGTP" %in% names(df)) {
+      stop("Housing weight variable is not present in input data.", call. = FALSE)
+    }
+    variables <- df[, !names(df) %in% c(housing_weight_variables, "WGTP")]
+    weights <- df$WGTP
+    repweights <- df[, housing_weight_variables]
+  }
+
+  survey::svrepdesign(
+    variables = variables,
+    weights = weights,
+    repweights = repweights,
+    scale = 4 / 80,
+    rscales = rep(1 , 80),
+    mse = TRUE,
+    type = "JK1"
+  )
 }
