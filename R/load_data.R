@@ -726,7 +726,8 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
       pull()
 
     # For all variables in which we know what the length should be, pad with 0s
-    dat_padded <- dat %>%
+    dat_padded <- suppressWarnings(
+      dat %>%
       select(.data$SERIALNO, .data$SPORDER, any_of(var_val_length$var_code)) %>%
       pivot_longer(
         cols = -c(.data$SERIALNO, .data$SPORDER),
@@ -744,6 +745,7 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
         names_from = .data$var_code,
         values_from = .data$val
       )
+    )
 
     # Rejoin padded variables to API return
     dat <- dat %>%
@@ -767,7 +769,8 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
         pull()
 
       # Pivot to long format and join variable codes to lookup table with labels
-      recoded_long <- dat %>%
+      recoded_long <- suppressWarnings(
+        dat %>%
         select(.data$SERIALNO, .data$SPORDER, any_of(vars_to_recode)) %>%
         pivot_longer(
           cols = -c(.data$SERIALNO, .data$SPORDER),
@@ -776,6 +779,7 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
         ) %>%
         left_join(var_lookup, by = c("var_code", "val")) %>%
         select(-.data$val)
+      )
 
       # Create a "pivot spec" with nicer names for the labeled columns
       # https://tidyr.tidyverse.org/articles/pivot.html#wider-1
