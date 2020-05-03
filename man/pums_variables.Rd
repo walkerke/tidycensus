@@ -5,7 +5,7 @@
 \alias{pums_variables}
 \title{Dataset with PUMS variables and codes}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 21114 rows and 11 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 21114 rows and 12 columns.
 }
 \usage{
 data(pums_variables)
@@ -20,6 +20,7 @@ Built-in dataset for variable name and code label lookup.
   \item \code{var_code}: Variable name
   \item \code{var_label}: Variable label
   \item \code{data_type}: chr or num
+  \item \code{level}: housing or person
   \item \code{val_min}: For numeric variables, the minimum value
   \item \code{val_max}: For numeric variables, the maximum value
   \item \code{val_label}: Value label

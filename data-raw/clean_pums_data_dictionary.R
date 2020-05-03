@@ -13,7 +13,14 @@ clean_data_dict <- function(path, survey, year) {
 
   var_name <- data_dict %>%
     filter(type == "NAME") %>%
-    select(var_code, var_label, data_type)
+    mutate(
+      level = case_when(
+        var_code == "ADJHSG"      ~ "housing",
+        var_code == "SPORDER" ~ "person"
+      )
+    ) %>%
+    fill(level) %>%
+    select(var_code, var_label, data_type, level)
 
   num_vars <- var_name %>%
     filter(data_type == "num") %>%

@@ -88,6 +88,7 @@
 #'   \item \code{var_code}: Variable name
 #'   \item \code{var_label}: Variable label
 #'   \item \code{data_type}: chr or num
+#'   \item \code{level}: housing or person
 #'   \item \code{val_min}: For numeric variables, the minimum value
 #'   \item \code{val_max}: For numeric variables, the maximum value
 #'   \item \code{val_label}: Value label
