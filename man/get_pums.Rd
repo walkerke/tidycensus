@@ -27,9 +27,9 @@ request data.}
 \item{survey}{The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 (the default).}
 
-\item{rep_weights}{Whether or not to return housing, person, or both housing
-and person-level replicate weights for calculation of standard errors; one
-of \code{"person"}, \code{"housing"}, or \code{"both"}.}
+\item{rep_weights}{Whether or not to return housing unit, person, or both
+housing and person-level replicate weights for calculation of standard
+errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.}
 
 \item{recode}{(only works for 2017 for now) If TRUE, recodes variable values
 using Census data dictionary and creates a new \code{*_label} column for
