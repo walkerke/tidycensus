@@ -10,8 +10,8 @@ Date: 2020-04-20
 URL: https://github.com/walkerke/tidycensus
 BugReports: https://github.com/walkerke/tidycensus/issues
 Description: An integrated R interface to the decennial US Census and American Community Survey APIs and
-    the US Census Bureau's geographic boundary files.  Allows R users to return Census and ACS data as
-    tidyverse-ready data frames, and optionally returns a list-column with feature geometry for many 
+    the US Census Bureau's geographic boundary files. Allows R users to return Census and ACS data as
+    tidyverse-ready data frames, and optionally returns a list-column with feature geometry for all Census 
     geographies. 
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -35,5 +35,6 @@ Imports:
     rlang
 Suggests: 
     ggplot2,
-    survey
+    survey,
+    srvyr
 RoxygenNote: 7.1.0

@@ -7,9 +7,9 @@
 #'   5-year sample. Defaults to 2017.
 #' @param survey The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 #'   (the default).
-#' @param rep_weights Whether or not to return housing, person, or both housing
-#'   and person-level replicate weights for calculation of standard errors; one
-#'   of \code{"person"}, \code{"housing"}, or \code{"both"}.
+#' @param rep_weights Whether or not to return housing unit, person, or both
+#'   housing and person-level replicate weights for calculation of standard
+#'   errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.
 #' @param recode (only works for 2017 for now) If TRUE, recodes variable values
 #'   using Census data dictionary and creates a new \code{*_label} column for
 #'   each variable that is recoded. Defaults to FALSE.
@@ -92,7 +92,7 @@ get_pums <- function(variables,
     if(recode) {
       pums_data <- reduce(pums_data, left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST", "ST_label"))
     } else {
-      pums_data <- reduce(pums_data, left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP"))
+      pums_data <- reduce(pums_data, left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST"))
     }
 
     pums_data <- select(pums_data, -contains("WGTP"), everything(), contains("WGTP"))
@@ -118,70 +118,118 @@ get_pums <- function(variables,
 }
 
 
-#' Convert a data frame returned by get_pums() to a survey design object
+#' Convert a data frame returned by get_pums() to a survey object
 #'
 #' @description This helper function takes a data frame returned by
-#'   \code{\link{get_pums}} and converts it to a svyrep.design object from the
-#'   \code{\link[survey]{svrepdesign}} package. You can then use functions from survey (or
-#'   srvyr) package to calculte weighted estimates with replicate weights
+#'   \code{\link{get_pums}} and converts it to a tbl_svy from the srvyr
+#'   \code{\link[srvyr]{as_survey}} package or a svyrep.design object from the
+#'   \code{\link[survey]{svrepdesign}} package. You can then use functions from the
+#'   srvyr or survey to calculate weighted estimates with replicate weights
 #'   included to provide accurate standard errors.
 #'
-#' @param df A data frame with PUMS person or housing replicate weight
-#'   variables, most likely returned by \code{\link{get_pums}}.
-#' @param type Whether to use person or housing-level replicate weights; either
+#' @param df A data frame with PUMS person or housing weight variables, most
+#'   likely returned by \code{\link{get_pums}}.
+#' @param type Whether to use person or housing-level weights; either
 #'   \code{"housing"} or \code{"person"} (the default).
+#' @param design Whether to use a cluster or replicate weight survey design;
+#'   either \code{"cluster"} or \code{"rep_weights"} (the default).
+#' @param class Whether to convert to a srvyr or survey object; either
+#'   \code{"survey"} or \code{"srvyr"} (the default).
 #'
-#' @return A svyrep.design object.
+#' @return A tbl_svy or svyrep.design object.
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' pums <- get_pums(variables = "AGEP", state = "VT", rep_weights = "person")
-#' pums_design <- df_to_svyrep(pums, type = "person")
+#' pums_design <- df_to_svyrep(pums, type = "person", class = "srvyr")
 #' survey::svymean(~AGEP, pums_design)
 #' }
-df_to_svyrep <- function(df, type = "person") {
+df_to_survey <- function(df,
+                         type = c("person", "housing"),
+                         class = c("srvyr", "survey"),
+                         design = c("rep_weights", "cluster")) {
+
+  type <- match.arg(type)
+  class <- match.arg(class)
+  design <- match.arg(design)
+
+  if(class == "srvyr" && !"srvyr" %in% installed.packages()) {
+    stop('srvyr package must be installed to convert to a srvyr object. Please install using install.packages("srvyr") and try again.',
+         call. = FALSE)
+  }
 
   if(!"survey" %in% installed.packages()) {
-    stop('survey package must be installed to convert to a svyrep object. Please install using install.packages("survey") and try again.',
+    stop('survey package must be installed to convert to a survey object. Please install using install.packages("survey") and try again.',
          call. = FALSE)
+  }
+
+  if(design == "cluster") {
+    if(!all(c("SERIALNO", "PUMA") %in% names(df))) {
+      stop('"SERIALNO" and "PUMA" are present in input data.', call. = FALSE)
     }
+  }
+
   if(type == "person") {
-    if(!all(person_weight_variables %in% names(df))) {
-      stop("Not all person replicate weight variables are present in input data.", call. = FALSE)
-    }
-    if(!"PWGTP" %in% names(df)) {
-      stop("Person weight variable is not present in input data.", call. = FALSE)
-    }
+
     variables <- df[, !names(df) %in% c(person_weight_variables, "PWGTP")]
     weights <- df$PWGTP
-    repweights <- df[, person_weight_variables]
+
+    if(design == "rep_weights") {
+      if(!all(person_weight_variables %in% names(df))) {
+        stop("Not all person replicate weight variables are present in input data.", call. = FALSE)
+      }
+      if(!"PWGTP" %in% names(df)) {
+        stop("Person weight variable is not present in input data.", call. = FALSE)
+      }
+      repweights <- df[, person_weight_variables]
+    }
   }
 
   if(type == "housing") {
-
     if(anyDuplicated(df$SERIALNO) != 0) {
       warning("You have duplicate values in the SERIALNO column of your input data, are you sure you wish to proceed?",
               call. = FALSE)
     }
-    if(!all(housing_weight_variables %in% names(df))) {
-      stop("Not all housing replicate weight variables are present in input data.", call. = FALSE)
-    }
-    if(!"WGTP" %in% names(df)) {
-      stop("Housing weight variable is not present in input data.", call. = FALSE)
-    }
+
     variables <- df[, !names(df) %in% c(housing_weight_variables, "WGTP")]
     weights <- df$WGTP
+
+    if(design == "rep_weights") {
+      if(!all(housing_weight_variables %in% names(df))) {
+        stop("Not all housing replicate weight variables are present in input data.", call. = FALSE)
+      }
+      if(!"WGTP" %in% names(df)) {
+        stop("Housing weight variable is not present in input data.", call. = FALSE)
+      }
     repweights <- df[, housing_weight_variables]
+    }
   }
 
-  survey::svrepdesign(
-    variables = variables,
-    weights = weights,
-    repweights = repweights,
-    scale = 4 / 80,
-    rscales = rep(1 , 80),
-    mse = TRUE,
-    type = "JK1"
-  )
+  if(design == "cluster") {
+    survey <- survey::svydesign(
+      variables = variables,
+      weights = weights,
+      ids = df$SERIALNO,
+      strata = df$PUMA
+    )
+  }
+
+  if(design == "rep_weights"){
+    survey <- survey::svrepdesign(
+      variables = variables,
+      weights = weights,
+      repweights = repweights,
+      scale = 4 / 80,
+      rscales = rep(1 , 80),
+      mse = TRUE,
+      type = "JK1"
+      )
+    }
+
+  if(class == "srvyr") {
+    return(srvyr::as_survey(survey))
+  } else {
+    survey
+  }
 }

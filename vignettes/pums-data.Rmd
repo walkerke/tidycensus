@@ -1,0 +1,356 @@
+---
+title: "Working with Census microdata"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 8,
+  R.options = list(width = 105, tibble.print_min = 5)
+  )
+```
+
+Most of the data available through tidycensus and the Census API is aggregated to certain geographic levels (tract, county, state, etc.). In other words, the data we get by executing `get_acs()` has been summarized by the Census Bureau so that we are able to learn how many people live in a particular county or what the median household income of a state is. There are thousands of individual variables that the Census aggregates and publishes in tabular form.
+
+For many purposes, these pre-aggregated tables have enough information to work with. But, the Census Bureau also releases **microdata** from the American Community Survey. Microdata is the individual-level responses to the ACS that is used to create the summary and detail tables the Census publishes. Instead of a getting one row per state from a table, we can get one row per respondent. For the American Community Survey, this data is called the [**Public Use Microdata Sample** (PUMS)](https://www.census.gov/programs-surveys/acs/technical-documentation/pums/about.html).
+
+Using PUMS data instead of the published tables can be a very powerful tool. It can, for instance, allow you to create custom estimates that aren't available in pre-aggregated tables. You can also use microdata to fit models on individual-level data instead of modeling block groups or census tracts.
+
+Until recently, PUMS data was only available from the [Census Bureau FTP site](https://www2.census.gov/programs-surveys/acs/data/pums/2018/1-Year/) and was somewhat cumbersome to use. Now, PUMS data is available via web API, which means you can easily access it in R by using tidycensus.
+
+## PUMAs
+
+One trade-off with using PUMS data as compared to aggregated data is that you only get the state and [public use microdata area (PUMA)](https://www.census.gov/programs-surveys/geography/guidance/geo-areas/pumas.html) of each individual in the microdata. PUMAs are Census geographies that contain at least 100,000 people and are entirely within a single state. They are built from census tracts and counties and may or may not be similar to other recognized geographic boundaries. In New York City, for instance, PUMAs are closely aligned to [Community Districts](https://www1.nyc.gov/assets/planning/download/pdf/data-maps/nyc-population/census2010/puma_cd_map.pdf). So, if you are interested in pulling data about block groups, census tracts, or other small areas, you can't use PUMS data.
+
+## PUMS data dictionaries
+
+The first place to start is to identify the variables you want to download. There are hundreds of PUMS variables and each describes characteristics of a person or a housing unit. `pums_variables` is a dataset built into tidycensus that contains names, descriptions, codes, and other metadata about the PUMS variables.
+
+Because PUMS variables and codes can change slightly by year, you should select which year's data you will be working with and filter `pums_variables` for only that year and survey. In the following example, we will be working with the 2017 1-year American Community Survey.
+
+Later in this vignette, we use the [**survey**](http://r-survey.r-forge.r-project.org/survey/) and [**srvyr**](http://gdfe.co/srvyr/) to calculate PUMS estimates, so if you want to follow along and you don't already have them installed, you should install these two packages from CRAN.
+
+```{r, eval=FALSE}
+install.packages(c("survey", "srvyr"))
+```
+
+```{r}
+library(tidyverse)
+library(tidycensus)
+
+pums_vars_2017 <- pums_variables %>% 
+  filter(year == 2017, survey == "acs1")
+```
+
+`pums_variables()` contains both the variables as well as their possible values. So let's just look at the unique variables.
+
+```{r}
+pums_vars_2017 %>% 
+  distinct(var_code, var_label, data_type, level)
+```
+
+If you're new to PUMS data, this is a good dataset to browse to get a feel for what variables are available.
+
+## Person vs. housing unit
+
+Some PUMS variables relate to individuals (e.g. age, race, educational attainment) while others relate to households/housing units (e.g. number of bedrooms, electricity cost, property value).
+
+Individuals in PUMS data are always nested within a housing unit (The ACS is sent to an housing unit address and all people living in that unit complete the survey.) Housing units are uniquely identified by the `SERIALNO` variable and persons are uniquely identified by the combination of `SERIALNO` and `SPORDER`. In the data dictionary included in tidycensus, variables are identified as either "housing" or "person" variables in the level column. Here, for example, are the first five person-level variables in the data dictionary.
+
+```{r}
+pums_vars_2017 %>% 
+  distinct(var_code, var_label, data_type, level) %>% 
+  filter(level == "person")
+```
+
+It is important to be mindful of whether the variables you choose to analyze are person- or household-level variables.
+
+## Using `get_pums()` to download PUMS data
+
+To download PUMS data from the Census API, use the `get_pums()` function. If you've used other `get_*()` functions in tidycensus, it should be familiar to you. The key arguments to specify are `variables`, `state`, `survey`, and `year`. Here we get `PUMA`, `SEX`, `AGEP`, and `SCHL` variables for Vermont from the 2017 1-year ACS.
+
+```{r, results="hide"}
+vt_pums <- get_pums(
+  variables = c("PUMA", "SEX", "AGEP", "SCHL"),
+  state = "VT",
+  survey = "acs1",
+  year = 2017
+  )
+```
+```{r}
+vt_pums
+```
+
+We get 6,340 rows and 9 columns. In addition to the variables we specified, `get_pums()` also always returns `SERIALNO`, `SPORDER`, `WGTP`, `PWGTP`, and `ST`. `SERIALNO` and `SPORDER` are the variables that uniquely identify observations, `WGTP` and `PWGTP` are the housing-unit and person weights, and `ST` is the state code. 
+
+Notice that `ST`, `SEX` and `SCHL` return coded character variables. You can look up what these codes represent in the `pums_variables` dataset provided or set `recode = TRUE` in `get_pums()` to return additional columns with the values of these variables recoded.
+
+```{r, results="hide"}
+vt_pums_recoded <- get_pums(
+  variables = c("PUMA", "SEX", "AGEP", "SCHL"),
+  state = "VT",
+  survey = "acs1",
+  year = 2017,
+  recode = TRUE
+  )
+```
+```{r}
+vt_pums_recoded
+```
+
+## Analyzing PUMS data
+
+Remember that PUMS data is a sample of about 1% of the US population. When we want to estimate a variable that represents the entire population rather than a sample, we have to apply a weighting adjustment. A simple way to think about PUMS weights is that for each observation in the sample, the weight variable tells us the number of people in the population that the observation represents. So, if we simply add up all the person weights in our VT PUMS data, we get the (estimated) population of Vermont.
+
+```{r}
+sum(vt_pums_recoded$PWGTP)
+```
+
+Another convenient approach to weighting PUMS data is to use the `wt` argument in `dplyr::count()`. Here, we calculate the population by sex for each PUMA in Vermont (there are only four in the whole state!).
+
+```{r}
+vt_pums_recoded %>% 
+  count(PUMA, SEX_label, wt = PWGTP)
+```
+
+Many of the variables included in the PUMS data are categorical and we might want to group some categories together and estimate the proportion of the population with these characteristics. In this example, we first create a new variable that is whether or not the person has a Bachelor's degree or above, group by PUMA and sex, then calculate the total population, average age, total with BA or above (only for people 25 and older), and percent with BA or above.
+
+```{r}
+vt_pums_recoded %>% 
+  mutate(ba_above = SCHL %in% c("21", "22", "23", "24")) %>% 
+  group_by(PUMA, SEX_label) %>% 
+  summarize(
+    total_pop = sum(PWGTP),
+    mean_age = weighted.mean(AGEP, PWGTP),
+    ba_above = sum(PWGTP[ba_above == TRUE & AGEP >= 25]),
+    ba_above_pct = ba_above / sum(PWGTP[AGEP >= 25])
+  )
+```
+
+## Calculating standard errors
+
+In the previous examples, you might have noticed that we calculate a point estimate, but do not get a standard error or margin of error as is included in aggregated Census tables. It is important to calculate standard errors when making custom estimates using PUMS data, because it can be easy to create a very small sub-group where there are not enough observations in the sample to make a reliable estimate.
+
+The standard package for calculating estimates and fitting models with complex survey objects is the [**survey** package](http://r-survey.r-forge.r-project.org/survey/). The [**srvyr** package](http://gdfe.co/srvyr/index.html) is an alternative and wraps some survey functions to allow for analyzing surveys using **dplyr**-style syntax. tidycensus provides a function, `df_to_survey()`, that converts data frames returned by `get_pums()` into either a survey or srvyr object.
+
+In order to generate reliable standard errors, the Census Bureau provides a set of [replicate weights](https://usa.ipums.org/usa/repwt.shtml) for each observation in the PUMS dataset. These replicate weights are used to simulate multiple samples from the single PUMS sample and can be used to calculate more precise standard errors. PUMS data contains both person- and housing-unit-level replicate weights.
+
+To download replicate weights along with PUMS data, set the `rep_weights` argument in `get_pums()` to `"person"`, `"housing"`, or `"both"`. Here we get the same Vermont PUMS data as above in addition to the 80 person replicate weight columns.
+
+```{r, results="hide"}
+vt_pums_rep_weights <- get_pums(
+  variables = c("PUMA", "SEX", "AGEP", "SCHL"),
+  state = "VT",
+  survey = "acs1",
+  year = 2017,
+  recode = TRUE,
+  rep_weights = "person"
+  )
+```
+
+To easily convert this data frame to a survey or srvyr object, we can use the `df_to_survey()` function.
+
+```{r}
+vt_survey_design <- df_to_survey(vt_pums_rep_weights)
+```
+
+By default, `df_to_survey()` converts a data frame to a `tbl_svy` object by using person replicate weights. You can change the arguments in `df_to_survey` if you are analyzing housing-unit data (`type = "housing"`), if you prefer to use a cluster/strata survey design without replicate weights (`design = "cluster"`), or if you want a survey object instead of a srvyr object. (Although, `tbl_svy` objects also have a svyrep.design class so you can [use survey functions on srvyr objects](http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects).)
+
+Now, with our srvyr design object defined, we can calculate the same estimates as above, but we now get column with standard errors as well. 
+```{r}
+library(srvyr, warn.conflicts = FALSE)
+
+vt_survey_design %>% 
+  survey_count(PUMA, SEX_label)
+```
+
+The srvyr syntax is very similar to standard dplyr syntax, so this should look familiar; we've swapped out `count()` for `survey_count()` and we don't need a `wt` argument because we defined the weights when we set up the srvyr object.
+
+The equivalent estimate using survey syntax looks like this:
+
+```{r}
+survey::svyby(~SEX_label, ~PUMA, design = vt_survey_design, survey::svytotal)
+```
+
+We can also repeat the estimate we did above and calculate the percentage of people that are 25 and up with a bachelor's degree, while this time returning the upper and lower bounds of the confidence interval for these estimates. This time though, we have to subset our data frame to only those 25 and older before we summarize.
+
+```{r}
+vt_survey_design %>% 
+  mutate(ba_above = SCHL %in% c("21", "22", "23", "24")) %>% 
+  filter(AGEP >= 25) %>% 
+  group_by(PUMA, SEX_label) %>% 
+  summarize(
+    age_25_up = survey_total(vartype = "ci"),
+    ba_above = survey_total(ba_above, vartype = "ci"),
+    ba_pct = survey_mean(ba_above, vartype = "ci")
+    )
+```
+
+## Modeling with PUMS data
+
+An important use case for PUMS data is doing regression analysis or other modeling. Let's try to predict the length of an individual's commute to work (`JWMNP`) based on their wages, employer type (private, public, self), and which PUMA they live in. We'll use the 2017 5-year estimates so we have a bigger sample to work with.
+
+```{r, results="hide"}
+vt_pums_to_model <- get_pums(
+  variables = c("PUMA", "WAGP", "JWMNP", "JWTR", "COW", "ESR"),
+  state = "VT",
+  survey = "acs5",
+  year = 2017
+  )
+```
+
+Now, we filter out observations that aren't relevant, do a little recoding of the class of worker variable, and finally convert the data frame to a survey design object. Note that we did not request replicate weights from the API, so we specify `design = "cluster"` when we create the survey design. This creates the survey using a cluster design with the household (`SERIALNO`) as the primary sampling unit, the PUMA as the strata, and `PWGTP` as the weight.
+
+```{r}
+vt_model_sd <- vt_pums_to_model %>% 
+  filter(
+    ESR == 1,   # civilian employed
+    JWTR != 11, # does not work at home
+    WAGP > 0,   # earned wages last year
+    JWMNP > 0   # commute more than zero min
+    ) %>%
+  mutate(
+    emp_type = case_when(
+      COW %in% c("1", "2")      ~ "private",
+      COW %in% c("3", "4", "5") ~ "public",
+      TRUE                      ~ "self"
+      )
+    ) %>%
+    df_to_survey(design = "cluster")
+```
+
+Let's quickly check out some summary stats using `srvyr`.
+
+```{r}
+vt_model_sd %>% 
+  summarize(
+    n              = survey_total(1),
+    mean_wage      = survey_mean(WAGP),
+    median_wage    = survey_median(WAGP),
+    mean_commute   = survey_mean(JWMNP),
+    median_commute = survey_median(JWMNP)
+    )
+
+vt_model_sd %>% 
+  survey_count(emp_type)
+```
+
+And now we're ready to fit a simple linear regression model.
+
+```{r}
+model <- survey::svyglm(log(JWMNP) ~ log(WAGP) + emp_type + PUMA, design = vt_model_sd)
+summary(model)
+```
+
+## Mapping PUMS data
+
+If you've used the spatial functionality in tidycensus before, you might also want to put your custom PUMS estimates on a map. To do this, let's use `tigris` to download PUMA boundaries for the states in New England as an `sf` object. 
+
+```{r, results="hide"}
+ne_states <- c("VT", "NH", "ME", "MA", "CT", "RI")
+ne_pumas <- map_dfr(ne_states, tigris::pumas, class = "sf", cb = TRUE)
+```
+
+Next we download the income-to-poverty ratio from the PUMS dataset and calculate the percentage of population below 200% of the poverty line for each PUMA.
+
+```{r, results="hide"}
+ne_pums <- get_pums(
+  variables = c("PUMA", "POVPIP"),
+  state = ne_states,
+  survey = "acs1",
+  year = 2017
+  )
+
+ne_pov <- ne_pums %>%
+  group_by(ST, PUMA) %>%
+  summarize(
+    total_pop = sum(PWGTP),
+    pct_in_pov = sum(PWGTP[POVPIP < 200]) / total_pop
+  )
+```
+
+And now we can make a choropleth map by joining the PUMA boundaries with the PUMS data.
+
+```{r}
+ne_pumas %>%
+  left_join(ne_pov, by = c("STATEFP10" = "ST", "PUMACE10" = "PUMA")) %>%
+  ggplot(aes(fill = pct_in_pov)) +
+  geom_sf() +
+  scale_fill_viridis_b(
+    name = NULL,
+    option = "magma",
+    labels = scales::label_percent(1)
+    ) +
+  labs(title = "Percentage of population below 200% of the poverty line") +
+  theme_void()
+```
+
+## Verification of PUMS estimates
+
+The Census provides [calculated estimates and standard errors](https://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2017.html) for a number of states and variables to ensure that users' analysis of PUMS data matches the expected values.
+
+In the following example, we generate a few estimates using the methodology described above. You may want to perform a similar verification on your system to ensure your PUMS estimates will be accurate.
+
+Here are a few estimates we'll verify from the 2017 ACS 1-year PUMS estimates for user verification file:  
+
+| State   | Variable                              | Estimate | SE   |
+|---------|---------------------------------------|----------|------|
+| Wyoming | GQ institutional population (RELP=16) | 6985     | 2    |
+| Utah    | Owned free and clear (TEN=2)          | 199857   | 3635 |
+| Hawaii  | Age 0-4                               | 87094    | 959  |
+
+
+```{r, results="hide"}
+wy_relp <- get_pums(
+  variables = "RELP",
+  state = "Wyoming",
+  survey = "acs1",
+  year = 2017,
+  rep_weights = "person"
+)
+
+ut_ten <- get_pums(
+  variables = "TEN",
+  state = "Utah",
+  survey = "acs1",
+  year = 2017,
+  rep_weights = "housing"
+)
+
+hi_age <- get_pums(
+  variables = "AGEP",
+  state = "Hawaii",
+  survey = "acs1",
+  year = 2017,
+  rep_weights = "person"
+)
+```
+
+```{r}
+wy_relp %>% 
+  df_to_survey() %>% 
+  survey_count(RELP) %>% 
+  filter(RELP == "16")
+
+ut_ten %>% 
+  distinct(SERIALNO, .keep_all = TRUE) %>%
+  df_to_survey(type = "housing") %>% 
+  survey_count(TEN) %>% 
+  filter(TEN == 2)
+
+hi_age %>% 
+  filter(between(AGEP, 0, 4)) %>% 
+  df_to_survey() %>% 
+  summarize(age_0_4 = survey_total(1))
+```
+
+3 for 3 -- yay!
+
+## More resources for analyzing PUMS data
+
+* [**srvyr** website](http://gdfe.co/srvyr/)
+* [**survey** website](http://r-survey.r-forge.r-project.org/survey/)
+* [Census Bureau PUMS documention](https://www.census.gov/programs-surveys/acs/technical-documentation/pums.html)
+* [IPUMS FAQs](https://usa.ipums.org/usa-action/faq)

@@ -714,7 +714,7 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
   # necessary to match data dictionary codes and
   # convert variables to numeric according to data dictionary
 
-  # But wait, this only works when the serial numbers are correctly returned and and we have a variable metadata in pums_variables
+  # But wait, this only works when the serial numbers are correctly returned and and we have variable metadata in pums_variables
   if(year == 2017) {
     var_val_length <- pums_variables_filter %>%
       filter(!is.na(.data$val_length)) %>%
