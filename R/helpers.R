@@ -200,13 +200,19 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "public use microdata area") {
 
+    state_ids <- c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+                   "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA",
+                   "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY",
+                   "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX",
+                   "UT", "VT", "VA", "WA", "WV", "WI", "WY", "DC", "PR")
+
     if (length(state) > 1) {
       pm <- purrr::map(state, function(x) {
         pumas(state = x, cb = cb, year = year, class = "sf", ...)
       }) %>%
         rbind_tigris()
     } else if (is.null(state)) {
-      pm <- purrr::map(c(state.abb, "DC", "PR"), function(x) {
+      pm <- purrr::map(state_ids, function(x) {
         pumas(state = x, cb = cb, year = year, class = "sf", ...)
       }) %>%
         rbind_tigris()
