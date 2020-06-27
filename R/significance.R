@@ -8,7 +8,7 @@
 #'
 #' @seealso https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch07.pdf
 #'
-#' @return TRUE if the difference is statistically signifiance, FALSE otherwise.
+#' @return TRUE if the difference is statistically signifiant, FALSE otherwise.
 #' @export
 significance <- function(est1, est2, moe1, moe2, clevel = 0.9){
   # generate z score
