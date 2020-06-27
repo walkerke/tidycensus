@@ -681,10 +681,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     # dat[[moe_vars]] <- apply(dat[[moe_vars]], 2, function(x) round(x * moe_factor, 0))
 
-    moex <- function(x) x * moe_factor
-
     dat2 <- dat %>%
-      mutate_if(grepl("*M$", names(.)), funs(moex))
+      mutate_if(grepl("*M$", names(.)), list(~(. * moe_factor)))
 
     if (!is.null(names(variables))) {
       for (i in 1:length(variables)) {
