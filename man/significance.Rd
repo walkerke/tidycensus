@@ -18,7 +18,7 @@ significance(est1, est2, moe1, moe2, clevel = 0.9)
 \item{clevel}{The confidence level. May by 0.9, 0.95, or 0.99}
 }
 \value{
-TRUE if the difference is statistically signifiance, FALSE otherwise.
+TRUE if the difference is statistically signifiant, FALSE otherwise.
 }
 \description{
 Evaluate whether the difference in two estimates is statistically significant.
