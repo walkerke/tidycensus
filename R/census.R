@@ -291,6 +291,13 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
       # If sf1 fails, try to get it from sf3
       if (inherits(d, "try-error")) {
         d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", state, county, show_call = show_call)))
+        message("Variables not found in Summary File 1. Trying Summary File 3...")
+      } else {
+        if (sumfile == "sf3") {
+          message("Using Census Summary File 3")
+        } else {
+          message("Using Census Summary File 1")
+        }
       }
       d
     }) %>%
@@ -302,6 +309,13 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
     # If sf1 fails, try to get it from sf3
     if (inherits(dat, "try-error")) {
       dat <- try(suppressMessages(load_data_decennial(geography, variables, key, year, sumfile = "sf3", state, county, show_call = show_call)))
+      message("Variables not found in Summary File 1. Trying Summary File 3...")
+    } else {
+      if (sumfile == "sf3") {
+        message("Using Census Summary File 3")
+      } else {
+        message("Using Census Summary File 1")
+      }
     }
 
   }

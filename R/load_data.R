@@ -379,6 +379,8 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
 
     if (grepl("The requested resource is not available", msg)) {
       stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
+    } else if (grepl("unknown variable", msg) && length(variables) > 1) {
+      stop(sprintf("The Census API has returned the error message %s.\nThis may be due to mixing SF1 and SF3 variables. If so, separate your requests to SF1 and SF3 when using `get_decennial()` by using the `sumfile` argument in separate calls.", msg))
     } else {
       stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
     }
