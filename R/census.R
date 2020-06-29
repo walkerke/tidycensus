@@ -304,7 +304,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
       reduce(left_join, by = c("GEOID", "NAME"))
   } else {
     dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county, show_call = show_call),
-               silent = FALSE)
+               silent = TRUE)
 
     # If sf1 fails, try to get it from sf3
     if (inherits(dat, "try-error") && year < 2010) {
