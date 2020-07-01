@@ -7,7 +7,7 @@
 get_pums(
   variables,
   state,
-  year = 2017,
+  year = 2018,
   survey = "acs5",
   rep_weights = NULL,
   recode = FALSE,
@@ -22,7 +22,7 @@ get_pums(
 request data.}
 
 \item{year}{The data year of the 1-year ACS sample or the endyear of the
-5-year sample. Defaults to 2017.}
+5-year sample. Defaults to 2018.}
 
 \item{survey}{The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 (the default).}
@@ -31,7 +31,7 @@ request data.}
 housing and person-level replicate weights for calculation of standard
 errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.}
 
-\item{recode}{(only works for 2017 for now) If TRUE, recodes variable values
+\item{recode}{If TRUE, recodes variable values
 using Census data dictionary and creates a new \code{*_label} column for
 each variable that is recoded. Defaults to FALSE.}
 

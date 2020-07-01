@@ -4,13 +4,13 @@
 #' @param state A state, or vector of states, for which you would like to
 #'   request data.
 #' @param year The data year of the 1-year ACS sample or the endyear of the
-#'   5-year sample. Defaults to 2017.
+#'   5-year sample. Defaults to 2018.
 #' @param survey The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 #'   (the default).
 #' @param rep_weights Whether or not to return housing unit, person, or both
 #'   housing and person-level replicate weights for calculation of standard
 #'   errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.
-#' @param recode (only works for 2017 for now) If TRUE, recodes variable values
+#' @param recode If TRUE, recodes variable values
 #'   using Census data dictionary and creates a new \code{*_label} column for
 #'   each variable that is recoded. Defaults to FALSE.
 #' @param show_call If TRUE, display call made to Census API. This can be very
@@ -24,16 +24,12 @@
 #' @export
 get_pums <- function(variables,
                      state,
-                     year = 2017,
+                     year = 2018,
                      survey = "acs5",
                      rep_weights = NULL,
                      recode = FALSE,
                      show_call = FALSE,
                      key = NULL) {
-
-  if (year == 2018) {
-    warning("The 2018 PUMS API has limited functionality as household serial numbers do not come through correctly at the moment. Use at your own risk.")
-  }
 
   if (survey == "acs1") {
     message(sprintf("Getting data from the %s 1-year ACS Public Use Microdata Sample",
@@ -55,29 +51,20 @@ get_pums <- function(variables,
   }
 
   if(!is.null(rep_weights)) {
-    if(year == 2018) {
-    stop("Cannot request replicate weights for 2018 PUMS because household serial numbers are not available from the API at the moment and each API call is limited to 50 variables.",
-         call. = FALSE)
-    } else {
-      if(rep_weights == "housing") {
-        variables <- c(variables, housing_weight_variables)
-      }
-      if(rep_weights == "person") {
-        variables <- c(variables, person_weight_variables)
-        }
-      if(rep_weights == "both") {
-        variables <- c(variables, housing_weight_variables, person_weight_variables)
-        }
-      }
+    if(rep_weights == "housing") {
+      variables <- c(variables, housing_weight_variables)
+    }
+    if(rep_weights == "person") {
+      variables <- c(variables, person_weight_variables)
+    }
+    if(rep_weights == "both") {
+      variables <- c(variables, housing_weight_variables, person_weight_variables)
+    }
   }
 
   ## If more than 46 vars requested, split into multiple API calls and join the result
   ## this works, but repeats pulling the weight and ST vars
   if (length(variables) > 46) {
-    if(year == 2018) {
-      stop("Cannot request more than 46 variables in a single call for 2018 PUMS because household serial numbers are not available from the API at the moment.",
-           call. = FALSE)
-    }
     l <- split(variables, ceiling(seq_along(variables) / 46))
     pums_data <- map(l, function(x) {
       load_data_pums(variables = x,

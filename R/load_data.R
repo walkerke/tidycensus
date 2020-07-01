@@ -758,7 +758,7 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
   if (recode) {
 
     # Only works for 2017 because it's the only year included in pums_variables for now
-    if(year == 2017) {
+    if(year %in% 2017:2018) {
       var_lookup <- pums_variables_filter %>%
         select(.data$var_code, val = .data$val_min, .data$val_label)
 
@@ -797,7 +797,7 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
       dat <- dat %>%
         left_join(recoded_wide, by = c("SERIALNO", "SPORDER"))
     } else {
-      message("Recoding is currently only supported for 2017 1-year and 5-year data. Returning original data only.")
+      message("Recoding is currently only supported for 2017 and 2018 1-year and 5-year data. Returning original data only.")
       }
     }
   return(dat)
