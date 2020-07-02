@@ -13,11 +13,11 @@ matrix:
     include:
         - os: linux
           r: release
-          dist: trusty # 14.04
+          dist: bionic # 14.04
           env: R_CODECOV=true
         - os: linux
           r: devel
-          dist: trusty
+          dist: bionic
 
 before_install:
     - sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable --yes
