@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9.7</span>
       </span>
     </div>
 
@@ -169,11 +169,11 @@
 <pre><code>## # A tibble: 6,340 x 9
 ##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX  
 ##   &lt;chr&gt;         &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 2017000000001 1          56    55    34 00300 50    18    2    
-## 2 2017000000001 2          56    56    34 00300 50    16    1    
-## 3 2017000000001 3          56    48    10 00300 50    07    1    
-## 4 2017000000001 4          56    51     5 00300 50    01    1    
-## 5 2017000001982 1          36    35    68 00200 50    22    1    
+## 1 2017000001562 1         136   135    71 00200 50    19    1    
+## 2 2017000001562 2         136   107    71 00200 50    22    2    
+## 3 2017000002201 1          88    88    72 00200 50    23    2    
+## 4 2017000004992 1         109   109    41 00100 50    20    2    
+## 5 2017000004992 2         109    72    32 00100 50    20    1    
 ## # … with 6,335 more rows</code></pre>
 <p>We get 6,340 rows and 9 columns. In addition to the variables we specified, <code><a href="../reference/get_pums.html">get_pums()</a></code> also always returns <code>SERIALNO</code>, <code>SPORDER</code>, <code>WGTP</code>, <code>PWGTP</code>, and <code>ST</code>. <code>SERIALNO</code> and <code>SPORDER</code> are the variables that uniquely identify observations, <code>WGTP</code> and <code>PWGTP</code> are the housing-unit and person weights, and <code>ST</code> is the state code.</p>
 <p>Notice that <code>ST</code>, <code>SEX</code> and <code>SCHL</code> return coded character variables. You can look up what these codes represent in the <code>pums_variables</code> dataset provided or set <code>recode = TRUE</code> in <code><a href="../reference/get_pums.html">get_pums()</a></code> to return additional columns with the values of these variables recoded.</p>
@@ -518,7 +518,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Kyle Walker.</p>
+  <p>Developed by Kyle Walker, Matt Herman.</p>
 </div>
 
 <div class="pkgdown">
