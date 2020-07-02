@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • tidycensus</title>
+<title>Dataset with PUMS variables and codes — pums_variables • tidycensus</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,24 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Dataset with PUMS variables and codes — pums_variables" />
+<meta property="og:description" content="Built-in dataset for variable name and code label lookup.
+             To access the data directly, issue the command data(pums_variables).
+
+survey: acs1 or acs5
+year: Year of data. For 5-year data, last year in range.
+var_code: Variable name
+var_label: Variable label
+data_type: chr or num
+level: housing or person
+val_min: For numeric variables, the minimum value
+val_max: For numeric variables, the maximum value
+val_label: Value label
+recode: Use labels to recode values
+val_length: Length of value returned
+val_na: Value of NA value returned by API (if known)
+
+" />
 
 
 
@@ -58,7 +75,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -129,138 +146,53 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Dataset with PUMS variables and codes</h1>
+    <small class="dont-index">Source: <a href='https://github.com/walkerke/tidycensus/blob/master/R/fips_codes.R'><code>R/fips_codes.R</code></a></small>
+    <div class="hidden name"><code>pums_variables.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Built-in dataset for variable name and code label lookup.
+             To access the data directly, issue the command <code><a href='https://rdrr.io/r/utils/data.html'>data(pums_variables)</a></code>.</p>
+<ul>
+<li><p><code>survey</code>: acs1 or acs5</p></li>
+<li><p><code>year</code>: Year of data. For 5-year data, last year in range.</p></li>
+<li><p><code>var_code</code>: Variable name</p></li>
+<li><p><code>var_label</code>: Variable label</p></li>
+<li><p><code>data_type</code>: chr or num</p></li>
+<li><p><code>level</code>: housing or person</p></li>
+<li><p><code>val_min</code>: For numeric variables, the minimum value</p></li>
+<li><p><code>val_max</code>: For numeric variables, the maximum value</p></li>
+<li><p><code>val_label</code>: Value label</p></li>
+<li><p><code>recode</code>: Use labels to recode values</p></li>
+<li><p><code>val_length</code>: Length of value returned</p></li>
+<li><p><code>val_na</code>: Value of NA value returned by API (if known)</p></li>
+</ul>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    </div>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="census_api_key.html">census_api_key()</a></code> </p>
-        </td>
-        <td><p>Install a CENSUS API Key in Your <code>.Renviron</code> File for Repeated Use</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="county_laea.html">county_laea</a></code> <code><a href="county_laea.html">county_laea</a></code> </p>
-        </td>
-        <td><p>County geometry with Alaska and Hawaii shifted and re-scaled</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="df_to_survey.html">df_to_survey()</a></code> </p>
-        </td>
-        <td><p>Convert a data frame returned by get_pums() to a survey object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fips_codes.html">fips_codes</a></code> </p>
-        </td>
-        <td><p>Dataset with FIPS codes for US states and counties</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_acs.html">get_acs()</a></code> </p>
-        </td>
-        <td><p>Obtain data and feature geometry for the five-year American Community Survey</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_decennial.html">get_decennial()</a></code> </p>
-        </td>
-        <td><p>Obtain data and feature geometry for the decennial Census</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_estimates.html">get_estimates()</a></code> </p>
-        </td>
-        <td><p>Get data from the US Census Bureau Population Estimates APIs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_pums.html">get_pums()</a></code> </p>
-        </td>
-        <td><p>Load data from the American Community Survey Public Use Microdata Series API</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="load_variables.html">load_variables()</a></code> </p>
-        </td>
-        <td><p>Load variables from a decennial Census or American Community Survey dataset to search in R</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="moe_product.html">moe_product()</a></code> </p>
-        </td>
-        <td><p>Calculate the margin of error for a derived product</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="moe_prop.html">moe_prop()</a></code> </p>
-        </td>
-        <td><p>Calculate the margin of error for a derived proportion</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="moe_ratio.html">moe_ratio()</a></code> </p>
-        </td>
-        <td><p>Calculate the margin of error for a derived ratio</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="moe_sum.html">moe_sum()</a></code> </p>
-        </td>
-        <td><p>Calculate the margin of error for a derived sum</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pums_variables.html">pums_variables</a></code> </p>
-        </td>
-        <td><p>Dataset with PUMS variables and codes</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="significance.html">significance()</a></code> </p>
-        </td>
-        <td><p>Evaluate whether the difference in two estimates is statistically significant.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="state_laea.html">state_laea</a></code> <code><a href="state_laea.html">state_laea</a></code> </p>
-        </td>
-        <td><p>State geometry with Alaska and Hawaii shifted and re-scaled</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidycensus.html">tidycensus</a></code> </p>
-        </td>
-        <td><p>Return tidy data frames from the US Census Bureau API</p></td>
-      </tr>
-    </tbody>
-    </table>
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>pums_variables</span>)</pre>
+
+
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+
+    <p>An object of class <code>tbl_df</code> (inherits from <code>tbl</code>, <code>data.frame</code>) with 21114 rows and 12 columns.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Dataset with PUMS variables and codes</p>
+<p>Built-in dataset that is created from the
+<a href='https://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2018.html'>Census
+PUMS data dictionaries</a>. Use this dataset to lookup the names of variables to
+use in <code><a href='get_pums.html'>get_pums</a></code>. This dataset also contains labels for the
+coded values returned by the Census API and is used when <code>recode = TRUE</code>
+in <code><a href='get_pums.html'>get_pums</a></code>.</p>
+<p>Because variable names and codes change from year to year, you should filter
+this dataset for the survey and year of interest. NOTE: only 2017 (acs1 and
+acs5) variables are available.</p>
+
   </div>
-
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
