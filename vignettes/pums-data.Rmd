@@ -82,7 +82,7 @@ vt_pums <- get_pums(
 vt_pums
 ```
 
-We get 6,340 rows and 9 columns. In addition to the variables we specified, `get_pums()` also always returns `SERIALNO`, `SPORDER`, `WGTP`, `PWGTP`, and `ST`. `SERIALNO` and `SPORDER` are the variables that uniquely identify observations, `WGTP` and `PWGTP` are the housing-unit and person weights, and `ST` is the state code. 
+We get `r nrow(vt_pums)` rows and 9 columns. In addition to the variables we specified, `get_pums()` also always returns `SERIALNO`, `SPORDER`, `WGTP`, `PWGTP`, and `ST`. `SERIALNO` and `SPORDER` are the variables that uniquely identify observations, `WGTP` and `PWGTP` are the housing-unit and person weights, and `ST` is the state code. 
 
 Notice that `ST`, `SEX` and `SCHL` return coded character variables. You can look up what these codes represent in the `pums_variables` dataset provided or set `recode = TRUE` in `get_pums()` to return additional columns with the values of these variables recoded.
 
