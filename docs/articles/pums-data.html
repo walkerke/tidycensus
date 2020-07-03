@@ -242,7 +242,7 @@
 <h2 class="hasAnchor">
 <a href="#calculating-standard-errors" class="anchor"></a>Calculating standard errors</h2>
 <p>In the previous examples, you might have noticed that we calculate a point estimate, but do not get a standard error or margin of error as is included in aggregated Census tables. It is important to calculate standard errors when making custom estimates using PUMS data, because it can be easy to create a very small sub-group where there are not enough observations in the sample to make a reliable estimate.</p>
-<p>The standard package for calculating estimates and fitting models with complex survey objects is the <a href="http://r-survey.r-forge.r-project.org/survey/"><strong>survey</strong> package</a>. The <a href="http://gdfe.co/srvyr/index.html"><strong>srvyr</strong> package</a> is an alternative and wraps some survey functions to allow for analyzing surveys using <strong>dplyr</strong>-style syntax. tidycensus provides a function, <code><a href="../reference/df_to_survey.html">df_to_survey()</a></code>, that converts data frames returned by <code><a href="../reference/get_pums.html">get_pums()</a></code> into either a survey or srvyr object.</p>
+<p>The standard package for calculating estimates and fitting models with complex survey objects is the <a href="http://r-survey.r-forge.r-project.org/survey/"><strong>survey</strong> package</a>. The <a href="http://gdfe.co/srvyr/index.html"><strong>srvyr</strong> package</a> is an alternative and wraps some survey functions to allow for analyzing surveys using <strong>dplyr</strong>-style syntax. tidycensus provides a function, <code><a href="../reference/to_survey.html">to_survey()</a></code>, that converts data frames returned by <code><a href="../reference/get_pums.html">get_pums()</a></code> into either a survey or srvyr object.</p>
 <p>In order to generate reliable standard errors, the Census Bureau provides a set of <a href="https://usa.ipums.org/usa/repwt.shtml">replicate weights</a> for each observation in the PUMS dataset. These replicate weights are used to simulate multiple samples from the single PUMS sample and can be used to calculate more precise standard errors. PUMS data contains both person- and housing-unit-level replicate weights.</p>
 <p>To download replicate weights along with PUMS data, set the <code>rep_weights</code> argument in <code><a href="../reference/get_pums.html">get_pums()</a></code> to <code>"person"</code>, <code>"housing"</code>, or <code>"both"</code>. Here we get the same Vermont PUMS data as above in addition to the 80 person replicate weight columns.</p>
 <div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">vt_pums_rep_weights</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span>(
@@ -253,9 +253,9 @@
   <span class="kw">recode</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
   <span class="kw">rep_weights</span> <span class="kw">=</span> <span class="st">"person"</span>
   )</pre></body></html></div>
-<p>To easily convert this data frame to a survey or srvyr object, we can use the <code><a href="../reference/df_to_survey.html">df_to_survey()</a></code> function.</p>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="no">vt_survey_design</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/df_to_survey.html">df_to_survey</a></span>(<span class="no">vt_pums_rep_weights</span>)</pre></body></html></div>
-<p>By default, <code><a href="../reference/df_to_survey.html">df_to_survey()</a></code> converts a data frame to a <code>tbl_svy</code> object by using person replicate weights. You can change the arguments in <code>df_to_survey</code> if you are analyzing housing-unit data (<code>type = "housing"</code>), if you prefer to use a cluster/strata survey design without replicate weights (<code>design = "cluster"</code>), or if you want a survey object instead of a srvyr object. (Although, <code>tbl_svy</code> objects also have a svyrep.design class so you can <a href="http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects">use survey functions on srvyr objects</a>.)</p>
+<p>To easily convert this data frame to a survey or srvyr object, we can use the <code><a href="../reference/to_survey.html">to_survey()</a></code> function.</p>
+<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="no">vt_survey_design</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span>(<span class="no">vt_pums_rep_weights</span>)</pre></body></html></div>
+<p>By default, <code><a href="../reference/to_survey.html">to_survey()</a></code> converts a data frame to a <code>tbl_svy</code> object by using person replicate weights. You can change the arguments in <code>to_survey</code> if you are analyzing housing-unit data (<code>type = "housing"</code>), if you prefer to use a cluster/strata survey design without replicate weights (<code>design = "cluster"</code>), or if you want a survey object instead of a srvyr object. (Although, <code>tbl_svy</code> objects also have a svyrep.design class so you can <a href="http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects">use survey functions on srvyr objects</a>.)</p>
 <p>Now, with our srvyr design object defined, we can calculate the same estimates as above, but we now get column with standard errors as well.</p>
 <div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">srvyr</span>, <span class="kw">warn.conflicts</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
 
@@ -328,7 +328,7 @@
       <span class="fl">TRUE</span>                      ~ <span class="st">"self"</span>
       )
     ) <span class="kw">%&gt;%</span>
-    <span class="fu"><a href="../reference/df_to_survey.html">df_to_survey</a></span>(<span class="kw">design</span> <span class="kw">=</span> <span class="st">"cluster"</span>)</pre></body></html></div>
+    <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span>(<span class="kw">design</span> <span class="kw">=</span> <span class="st">"cluster"</span>)</pre></body></html></div>
 <p>Let’s quickly check out some summary stats using <code>srvyr</code>.</p>
 <div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="no">vt_model_sd</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/srvyr/man/summarise.html">summarize</a></span>(
@@ -469,7 +469,7 @@
   <span class="kw">rep_weights</span> <span class="kw">=</span> <span class="st">"person"</span>
 )</pre></body></html></div>
 <div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="no">wy_relp</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/df_to_survey.html">df_to_survey</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span>() <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/srvyr/man/survey_tally.html">survey_count</a></span>(<span class="no">RELP</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/srvyr/man/dplyr_single.html">filter</a></span>(<span class="no">RELP</span> <span class="kw">==</span> <span class="st">"16"</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 1 x 3
@@ -478,7 +478,7 @@
 ## 1 16     6985  2.41</code></pre>
 <div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="no">ut_ten</span> <span class="kw">%&gt;%</span>
   <span class="fu">distinct</span>(<span class="no">SERIALNO</span>, <span class="kw">.keep_all</span> <span class="kw">=</span> <span class="fl">TRUE</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/df_to_survey.html">df_to_survey</a></span>(<span class="kw">type</span> <span class="kw">=</span> <span class="st">"housing"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span>(<span class="kw">type</span> <span class="kw">=</span> <span class="st">"housing"</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/srvyr/man/survey_tally.html">survey_count</a></span>(<span class="no">TEN</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/srvyr/man/dplyr_single.html">filter</a></span>(<span class="no">TEN</span> <span class="kw">==</span> <span class="fl">2</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 1 x 3
@@ -487,7 +487,7 @@
 ## 1 2     199857 3635.</code></pre>
 <div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="no">hi_age</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/srvyr/man/dplyr_single.html">filter</a></span>(<span class="fu">between</span>(<span class="no">AGEP</span>, <span class="fl">0</span>, <span class="fl">4</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/df_to_survey.html">df_to_survey</a></span>() <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span>() <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/srvyr/man/summarise.html">summarize</a></span>(<span class="kw">age_0_4</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/pkg/srvyr/man/survey_total.html">survey_total</a></span>(<span class="fl">1</span>))</pre></body></html></div>
 <pre><code>## # A tibble: 1 x 2
 ##   age_0_4 age_0_4_se

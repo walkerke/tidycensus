@@ -41,5 +41,4 @@ pums <- get_pums(variables = "AGEP", state = "VT", rep_weights = "person")
 pums_design <- to_survey(pums, type = "person", class = "srvyr")
 survey::svymean(~AGEP, pums_design)
 }
-
 }

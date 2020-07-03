@@ -140,7 +140,6 @@ get_pums <- function(variables,
 #' pums_design <- to_survey(pums, type = "person", class = "srvyr")
 #' survey::svymean(~AGEP, pums_design)
 #' }
-#'
 to_survey <- function(df,
                       type = c("person", "housing"),
                       class = c("srvyr", "survey"),
