@@ -717,12 +717,12 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
   # convert variables to numeric according to data dictionary
 
   # But wait, this only works when the serial numbers are correctly returned and and we have variable metadata in pums_variables
-  if(year == 2017) {
+  if (year %in% c(2017, 2018)) {
     var_val_length <- pums_variables_filter %>%
       filter(!is.na(.data$val_length)) %>%
       distinct(.data$var_code, .data$val_length, .data$val_na)
 
-    num_vars <- pums_variables_filter%>%
+    num_vars <- pums_variables_filter %>%
       filter(.data$data_type == "num") %>%
       distinct(.data$var_code) %>%
       pull()
@@ -730,23 +730,23 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
     # For all variables in which we know what the length should be, pad with 0s
     dat_padded <- suppressWarnings(
       dat %>%
-      select(.data$SERIALNO, .data$SPORDER, any_of(var_val_length$var_code)) %>%
-      pivot_longer(
-        cols = -c(.data$SERIALNO, .data$SPORDER),
-        names_to = "var_code",
-        values_to = "val"
-      ) %>%
-      left_join(var_val_length, by = "var_code") %>%
-      mutate(
-        val = ifelse(!is.na(.data$val_na) & .data$val_na == .data$val, strrep("b", .data$val_length), .data$val),
-        val = ifelse(.data$var_code != "NAICSP", str_pad(.data$val, .data$val_length, pad = "0"), .data$val),
-        val = ifelse(.data$var_code == "NAICSP" & .data$val == "*", "bbbbbbbb", .data$val),  # special NULL value returned by API for this var
-      ) %>%
-      select(-.data$val_length, -.data$val_na) %>%
-      pivot_wider(
-        names_from = .data$var_code,
-        values_from = .data$val
-      )
+        select(.data$SERIALNO, .data$SPORDER, any_of(var_val_length$var_code)) %>%
+        pivot_longer(
+          cols = -c(.data$SERIALNO, .data$SPORDER),
+          names_to = "var_code",
+          values_to = "val"
+        ) %>%
+        left_join(var_val_length, by = "var_code") %>%
+        mutate(
+          val = ifelse(!is.na(.data$val_na) & .data$val_na == .data$val, strrep("b", .data$val_length), .data$val),
+          val = ifelse(.data$var_code != "NAICSP", str_pad(.data$val, .data$val_length, pad = "0"), .data$val),
+          val = ifelse(.data$var_code == "NAICSP" & .data$val == "*", "bbbbbbbb", .data$val),  # special NULL value returned by API for this var
+        ) %>%
+        select(-.data$val_length, -.data$val_na) %>%
+        pivot_wider(
+          names_from = .data$var_code,
+          values_from = .data$val
+        )
     )
 
     # Rejoin padded variables to API return
@@ -760,7 +760,7 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
   if (recode) {
 
     # Only works for 2017 because it's the only year included in pums_variables for now
-    if(year %in% 2017:2018) {
+    if (year %in% 2017:2018) {
       var_lookup <- pums_variables_filter %>%
         select(.data$var_code, val = .data$val_min, .data$val_label)
 

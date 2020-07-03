@@ -31,9 +31,9 @@ request data.}
 housing and person-level replicate weights for calculation of standard
 errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.}
 
-\item{recode}{If TRUE, recodes variable values
-using Census data dictionary and creates a new \code{*_label} column for
-each variable that is recoded. Defaults to FALSE.}
+\item{recode}{If TRUE, recodes variable values using Census data dictionary
+and creates a new \code{*_label} column for each variable that is recoded.
+Only available for 2017 and 2018 data. Defaults to FALSE.}
 
 \item{show_call}{If TRUE, display call made to Census API. This can be very
 useful in debugging and determining if error messages returned are due to
@@ -48,4 +48,12 @@ A tibble of microdata from the ACS PUMS API.
 }
 \description{
 Load data from the American Community Survey Public Use Microdata Series API
+}
+\examples{
+\dontrun{
+get_pums(variables = "AGEP", state = "VT")
+get_pums(variables = c("AGEP", "ANC1P"), state = "VT", recode = TRUE)
+get_pums(variables = "AGEP", state = "VT", survey = "acs1", rep_weights = "person")
+}
+
 }

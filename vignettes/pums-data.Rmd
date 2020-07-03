@@ -28,7 +28,7 @@ One trade-off with using PUMS data as compared to aggregated data is that you on
 
 The first place to start is to identify the variables you want to download. There are hundreds of PUMS variables and each describes characteristics of a person or a housing unit. `pums_variables` is a dataset built into tidycensus that contains names, descriptions, codes, and other metadata about the PUMS variables.
 
-Because PUMS variables and codes can change slightly by year, you should select which year's data you will be working with and filter `pums_variables` for only that year and survey. In the following example, we will be working with the 2017 1-year American Community Survey.
+Because PUMS variables and codes can change slightly by year, you should select which year's data you will be working with and filter `pums_variables` for only that year and survey. In the following example, we will be working with the 2018 1-year American Community Survey.
 
 Later in this vignette, we use the [**survey**](http://r-survey.r-forge.r-project.org/survey/) and [**srvyr**](http://gdfe.co/srvyr/) to calculate PUMS estimates, so if you want to follow along and you don't already have them installed, you should install these two packages from CRAN.
 
@@ -40,14 +40,14 @@ install.packages(c("survey", "srvyr"))
 library(tidyverse)
 library(tidycensus)
 
-pums_vars_2017 <- pums_variables %>% 
-  filter(year == 2017, survey == "acs1")
+pums_vars_2018 <- pums_variables %>% 
+  filter(year == 2018, survey == "acs1")
 ```
 
 `pums_variables()` contains both the variables as well as their possible values. So let's just look at the unique variables.
 
 ```{r}
-pums_vars_2017 %>% 
+pums_vars_2018 %>% 
   distinct(var_code, var_label, data_type, level)
 ```
 
@@ -60,7 +60,7 @@ Some PUMS variables relate to individuals (e.g. age, race, educational attainmen
 Individuals in PUMS data are always nested within a housing unit (The ACS is sent to an housing unit address and all people living in that unit complete the survey.) Housing units are uniquely identified by the `SERIALNO` variable and persons are uniquely identified by the combination of `SERIALNO` and `SPORDER`. In the data dictionary included in tidycensus, variables are identified as either "housing" or "person" variables in the level column. Here, for example, are the first five person-level variables in the data dictionary.
 
 ```{r}
-pums_vars_2017 %>% 
+pums_vars_2018 %>% 
   distinct(var_code, var_label, data_type, level) %>% 
   filter(level == "person")
 ```
@@ -69,21 +69,20 @@ It is important to be mindful of whether the variables you choose to analyze are
 
 ## Using `get_pums()` to download PUMS data
 
-To download PUMS data from the Census API, use the `get_pums()` function. If you've used other `get_*()` functions in tidycensus, it should be familiar to you. The key arguments to specify are `variables`, `state`, `survey`, and `year`. Here we get `PUMA`, `SEX`, `AGEP`, and `SCHL` variables for Vermont from the 2017 1-year ACS.
+To download PUMS data from the Census API, use the `get_pums()` function. If you've used other `get_*()` functions in tidycensus, it should be familiar to you. The key arguments to specify are `variables`, `state`, `survey`, and `year`. Here we get `PUMA`, `SEX`, `AGEP`, and `SCHL` variables for Vermont from the 2018 1-year ACS.
 
 ```{r, results="hide"}
 vt_pums <- get_pums(
   variables = c("PUMA", "SEX", "AGEP", "SCHL"),
   state = "VT",
-  survey = "acs1",
-  year = 2017
+  survey = "acs1"
   )
 ```
 ```{r}
 vt_pums
 ```
 
-We get 6,340 rows and 9 columns. In addition to the variables we specified, `get_pums()` also always returns `SERIALNO`, `SPORDER`, `WGTP`, `PWGTP`, and `ST`. `SERIALNO` and `SPORDER` are the variables that uniquely identify observations, `WGTP` and `PWGTP` are the housing-unit and person weights, and `ST` is the state code. 
+We get `r nrow(vt_pums)` rows and 9 columns. In addition to the variables we specified, `get_pums()` also always returns `SERIALNO`, `SPORDER`, `WGTP`, `PWGTP`, and `ST`. `SERIALNO` and `SPORDER` are the variables that uniquely identify observations, `WGTP` and `PWGTP` are the housing-unit and person weights, and `ST` is the state code. 
 
 Notice that `ST`, `SEX` and `SCHL` return coded character variables. You can look up what these codes represent in the `pums_variables` dataset provided or set `recode = TRUE` in `get_pums()` to return additional columns with the values of these variables recoded.
 
@@ -92,7 +91,6 @@ vt_pums_recoded <- get_pums(
   variables = c("PUMA", "SEX", "AGEP", "SCHL"),
   state = "VT",
   survey = "acs1",
-  year = 2017,
   recode = TRUE
   )
 ```
@@ -144,7 +142,6 @@ vt_pums_rep_weights <- get_pums(
   variables = c("PUMA", "SEX", "AGEP", "SCHL"),
   state = "VT",
   survey = "acs1",
-  year = 2017,
   recode = TRUE,
   rep_weights = "person"
   )
@@ -190,14 +187,13 @@ vt_survey_design %>%
 
 ## Modeling with PUMS data
 
-An important use case for PUMS data is doing regression analysis or other modeling. Let's try to predict the length of an individual's commute to work (`JWMNP`) based on their wages, employer type (private, public, self), and which PUMA they live in. We'll use the 2017 5-year estimates so we have a bigger sample to work with.
+An important use case for PUMS data is doing regression analysis or other modeling. Let's try to predict the length of an individual's commute to work (`JWMNP`) based on their wages, employer type (private, public, self), and which PUMA they live in. We'll use the 2018 5-year estimates so we have a bigger sample to work with.
 
 ```{r, results="hide"}
 vt_pums_to_model <- get_pums(
   variables = c("PUMA", "WAGP", "JWMNP", "JWTR", "COW", "ESR"),
   state = "VT",
-  survey = "acs5",
-  year = 2017
+  survey = "acs5"
   )
 ```
 
@@ -218,7 +214,7 @@ vt_model_sd <- vt_pums_to_model %>%
       TRUE                      ~ "self"
       )
     ) %>%
-    to_survey(design = "cluster")
+  to_survey(design = "cluster")
 ```
 
 Let's quickly check out some summary stats using `srvyr`.
@@ -250,7 +246,8 @@ If you've used the spatial functionality in tidycensus before, you might also wa
 
 ```{r, results="hide"}
 ne_states <- c("VT", "NH", "ME", "MA", "CT", "RI")
-ne_pumas <- map_dfr(ne_states, tigris::pumas, class = "sf", cb = TRUE)
+ne_pumas <- map(ne_states, tigris::pumas, class = "sf", cb = TRUE) %>% 
+  reduce(rbind)
 ```
 
 Next we download the income-to-poverty ratio from the PUMS dataset and calculate the percentage of population below 200% of the poverty line for each PUMA.
@@ -259,8 +256,7 @@ Next we download the income-to-poverty ratio from the PUMS dataset and calculate
 ne_pums <- get_pums(
   variables = c("PUMA", "POVPIP"),
   state = ne_states,
-  survey = "acs1",
-  year = 2017
+  survey = "acs1"
   )
 
 ne_pov <- ne_pums %>%
@@ -289,17 +285,17 @@ ne_pumas %>%
 
 ## Verification of PUMS estimates
 
-The Census provides [calculated estimates and standard errors](https://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2017.html) for a number of states and variables to ensure that users' analysis of PUMS data matches the expected values.
+The Census provides [calculated estimates and standard errors](https://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2018.html) for a number of states and variables to ensure that users' analysis of PUMS data matches the expected values.
 
 In the following example, we generate a few estimates using the methodology described above. You may want to perform a similar verification on your system to ensure your PUMS estimates will be accurate.
 
-Here are a few estimates we'll verify from the 2017 ACS 1-year PUMS estimates for user verification file:  
+Here are a few estimates we'll verify from the 2018 ACS 1-year PUMS estimates for user verification file:  
 
 | State   | Variable                              | Estimate | SE   |
 |---------|---------------------------------------|----------|------|
-| Wyoming | GQ institutional population (RELP=16) | 6985     | 2    |
-| Utah    | Owned free and clear (TEN=2)          | 199857   | 3635 |
-| Hawaii  | Age 0-4                               | 87094    | 959  |
+| Wyoming | GQ institutional population (RELP=16) | 7018     | 3    |
+| Utah    | Owned free and clear (TEN=2)          | 209632   | 3972 |
+| Hawaii  | Age 0-4                               | 86452    | 944  |
 
 
 ```{r, results="hide"}
@@ -307,7 +303,6 @@ wy_relp <- get_pums(
   variables = "RELP",
   state = "Wyoming",
   survey = "acs1",
-  year = 2017,
   rep_weights = "person"
 )
 
@@ -315,7 +310,6 @@ ut_ten <- get_pums(
   variables = "TEN",
   state = "Utah",
   survey = "acs1",
-  year = 2017,
   rep_weights = "housing"
 )
 
@@ -323,7 +317,6 @@ hi_age <- get_pums(
   variables = "AGEP",
   state = "Hawaii",
   survey = "acs1",
-  year = 2017,
   rep_weights = "person"
 )
 ```
