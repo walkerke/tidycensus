@@ -129,13 +129,13 @@ get_pums <- function(variables,
 #' @examples
 #' \dontrun{
 #' pums <- get_pums(variables = "AGEP", state = "VT", rep_weights = "person")
-#' pums_design <- df_to_svyrep(pums, type = "person", class = "srvyr")
+#' pums_design <- to_survey(pums, type = "person", class = "srvyr")
 #' survey::svymean(~AGEP, pums_design)
 #' }
-df_to_survey <- function(df,
-                         type = c("person", "housing"),
-                         class = c("srvyr", "survey"),
-                         design = c("rep_weights", "cluster")) {
+to_survey <- function(df,
+                      type = c("person", "housing"),
+                      class = c("srvyr", "survey"),
+                      design = c("rep_weights", "cluster")) {
 
   type <- match.arg(type)
   class <- match.arg(class)

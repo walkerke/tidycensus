@@ -133,7 +133,7 @@ vt_pums_recoded %>%
 
 In the previous examples, you might have noticed that we calculate a point estimate, but do not get a standard error or margin of error as is included in aggregated Census tables. It is important to calculate standard errors when making custom estimates using PUMS data, because it can be easy to create a very small sub-group where there are not enough observations in the sample to make a reliable estimate.
 
-The standard package for calculating estimates and fitting models with complex survey objects is the [**survey** package](http://r-survey.r-forge.r-project.org/survey/). The [**srvyr** package](http://gdfe.co/srvyr/index.html) is an alternative and wraps some survey functions to allow for analyzing surveys using **dplyr**-style syntax. tidycensus provides a function, `df_to_survey()`, that converts data frames returned by `get_pums()` into either a survey or srvyr object.
+The standard package for calculating estimates and fitting models with complex survey objects is the [**survey** package](http://r-survey.r-forge.r-project.org/survey/). The [**srvyr** package](http://gdfe.co/srvyr/index.html) is an alternative and wraps some survey functions to allow for analyzing surveys using **dplyr**-style syntax. tidycensus provides a function, `to_survey()`, that converts data frames returned by `get_pums()` into either a survey or srvyr object.
 
 In order to generate reliable standard errors, the Census Bureau provides a set of [replicate weights](https://usa.ipums.org/usa/repwt.shtml) for each observation in the PUMS dataset. These replicate weights are used to simulate multiple samples from the single PUMS sample and can be used to calculate more precise standard errors. PUMS data contains both person- and housing-unit-level replicate weights.
 
@@ -150,13 +150,13 @@ vt_pums_rep_weights <- get_pums(
   )
 ```
 
-To easily convert this data frame to a survey or srvyr object, we can use the `df_to_survey()` function.
+To easily convert this data frame to a survey or srvyr object, we can use the `to_survey()` function.
 
 ```{r}
-vt_survey_design <- df_to_survey(vt_pums_rep_weights)
+vt_survey_design <- to_survey(vt_pums_rep_weights)
 ```
 
-By default, `df_to_survey()` converts a data frame to a `tbl_svy` object by using person replicate weights. You can change the arguments in `df_to_survey` if you are analyzing housing-unit data (`type = "housing"`), if you prefer to use a cluster/strata survey design without replicate weights (`design = "cluster"`), or if you want a survey object instead of a srvyr object. (Although, `tbl_svy` objects also have a svyrep.design class so you can [use survey functions on srvyr objects](http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects).)
+By default, `to_survey()` converts a data frame to a `tbl_svy` object by using person replicate weights. You can change the arguments in `to_survey` if you are analyzing housing-unit data (`type = "housing"`), if you prefer to use a cluster/strata survey design without replicate weights (`design = "cluster"`), or if you want a survey object instead of a srvyr object. (Although, `tbl_svy` objects also have a svyrep.design class so you can [use survey functions on srvyr objects](http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects).)
 
 Now, with our srvyr design object defined, we can calculate the same estimates as above, but we now get column with standard errors as well. 
 ```{r}
@@ -218,7 +218,7 @@ vt_model_sd <- vt_pums_to_model %>%
       TRUE                      ~ "self"
       )
     ) %>%
-    df_to_survey(design = "cluster")
+    to_survey(design = "cluster")
 ```
 
 Let's quickly check out some summary stats using `srvyr`.
@@ -330,19 +330,19 @@ hi_age <- get_pums(
 
 ```{r}
 wy_relp %>% 
-  df_to_survey() %>% 
+  to_survey() %>% 
   survey_count(RELP) %>% 
   filter(RELP == "16")
 
 ut_ten %>% 
   distinct(SERIALNO, .keep_all = TRUE) %>%
-  df_to_survey(type = "housing") %>% 
+  to_survey(type = "housing") %>% 
   survey_count(TEN) %>% 
   filter(TEN == 2)
 
 hi_age %>% 
   filter(between(AGEP, 0, 4)) %>% 
-  df_to_survey() %>% 
+  to_survey() %>% 
   summarize(age_0_4 = survey_total(1))
 ```
 
