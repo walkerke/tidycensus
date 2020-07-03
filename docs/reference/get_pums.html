@@ -182,9 +182,9 @@ errors; one of <code>"person"</code>, <code>"housing"</code>, or <code>"both"</c
     </tr>
     <tr>
       <th>recode</th>
-      <td><p>If TRUE, recodes variable values
-using Census data dictionary and creates a new <code>*_label</code> column for
-each variable that is recoded. Defaults to FALSE.</p></td>
+      <td><p>If TRUE, recodes variable values using Census data dictionary
+and creates a new <code>*_label</code> column for each variable that is recoded.
+Only available for 2017 and 2018 data. Defaults to FALSE.</p></td>
     </tr>
     <tr>
       <th>show_call</th>
@@ -204,6 +204,12 @@ what is returned by the API directly. Defaults to FALSE.</p></td>
 
     <p>A tibble of microdata from the ACS PUMS API.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>)
+<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"AGEP"</span>, <span class='st'>"ANC1P"</span>), <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>, <span class='kw'>recode</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>, <span class='kw'>survey</span> <span class='kw'>=</span> <span class='st'>"acs1"</span>, <span class='kw'>rep_weights</span> <span class='kw'>=</span> <span class='st'>"person"</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
