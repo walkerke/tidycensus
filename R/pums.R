@@ -10,9 +10,9 @@
 #' @param rep_weights Whether or not to return housing unit, person, or both
 #'   housing and person-level replicate weights for calculation of standard
 #'   errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.
-#' @param recode If TRUE, recodes variable values
-#'   using Census data dictionary and creates a new \code{*_label} column for
-#'   each variable that is recoded. Defaults to FALSE.
+#' @param recode If TRUE, recodes variable values using Census data dictionary
+#'   and creates a new \code{*_label} column for each variable that is recoded.
+#'   Only available for 2017 and 2018 data. Defaults to FALSE.
 #' @param show_call If TRUE, display call made to Census API. This can be very
 #'   useful in debugging and determining if error messages returned are due to
 #'   tidycensus or the Census API. Copy to the API call into a browser and see
@@ -22,6 +22,14 @@
 #'
 #' @return A tibble of microdata from the ACS PUMS API.
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_pums(variables = "AGEP", state = "VT")
+#' get_pums(variables = c("AGEP", "ANC1P"), state = "VT", recode = TRUE)
+#' get_pums(variables = "AGEP", state = "VT", survey = "acs1", rep_weights = "person")
+#' }
+#'
 get_pums <- function(variables,
                      state,
                      year = 2018,
@@ -50,14 +58,14 @@ get_pums <- function(variables,
 
   }
 
-  if(!is.null(rep_weights)) {
-    if(rep_weights == "housing") {
+  if (!is.null(rep_weights)) {
+    if (rep_weights == "housing") {
       variables <- c(variables, housing_weight_variables)
     }
-    if(rep_weights == "person") {
+    if (rep_weights == "person") {
       variables <- c(variables, person_weight_variables)
     }
-    if(rep_weights == "both") {
+    if (rep_weights == "both") {
       variables <- c(variables, housing_weight_variables, person_weight_variables)
     }
   }
@@ -76,7 +84,7 @@ get_pums <- function(variables,
                      key = key)
         })
 
-    if(recode) {
+    if (recode) {
       pums_data <- reduce(pums_data, left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST", "ST_label"))
     } else {
       pums_data <- reduce(pums_data, left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST"))
@@ -129,52 +137,53 @@ get_pums <- function(variables,
 #' @examples
 #' \dontrun{
 #' pums <- get_pums(variables = "AGEP", state = "VT", rep_weights = "person")
-#' pums_design <- df_to_svyrep(pums, type = "person", class = "srvyr")
+#' pums_design <- to_survey(pums, type = "person", class = "srvyr")
 #' survey::svymean(~AGEP, pums_design)
 #' }
-df_to_survey <- function(df,
-                         type = c("person", "housing"),
-                         class = c("srvyr", "survey"),
-                         design = c("rep_weights", "cluster")) {
+#'
+to_survey <- function(df,
+                      type = c("person", "housing"),
+                      class = c("srvyr", "survey"),
+                      design = c("rep_weights", "cluster")) {
 
   type <- match.arg(type)
   class <- match.arg(class)
   design <- match.arg(design)
 
-  if(class == "srvyr" && !"srvyr" %in% installed.packages()) {
+  if (class == "srvyr" && !"srvyr" %in% installed.packages()) {
     stop('srvyr package must be installed to convert to a srvyr object. Please install using install.packages("srvyr") and try again.',
          call. = FALSE)
   }
 
-  if(!"survey" %in% installed.packages()) {
+  if (!"survey" %in% installed.packages()) {
     stop('survey package must be installed to convert to a survey object. Please install using install.packages("survey") and try again.',
          call. = FALSE)
   }
 
-  if(design == "cluster") {
-    if(!all(c("SERIALNO", "PUMA") %in% names(df))) {
+  if (design == "cluster") {
+    if (!all(c("SERIALNO", "PUMA") %in% names(df))) {
       stop('"SERIALNO" and "PUMA" are present in input data.', call. = FALSE)
     }
   }
 
-  if(type == "person") {
+  if (type == "person") {
 
     variables <- df[, !names(df) %in% c(person_weight_variables, "PWGTP")]
     weights <- df$PWGTP
 
-    if(design == "rep_weights") {
-      if(!all(person_weight_variables %in% names(df))) {
+    if (design == "rep_weights") {
+      if (!all(person_weight_variables %in% names(df))) {
         stop("Not all person replicate weight variables are present in input data.", call. = FALSE)
       }
-      if(!"PWGTP" %in% names(df)) {
+      if (!"PWGTP" %in% names(df)) {
         stop("Person weight variable is not present in input data.", call. = FALSE)
       }
       repweights <- df[, person_weight_variables]
     }
   }
 
-  if(type == "housing") {
-    if(anyDuplicated(df$SERIALNO) != 0) {
+  if (type == "housing") {
+    if (anyDuplicated(df$SERIALNO) != 0) {
       warning("You have duplicate values in the SERIALNO column of your input data, are you sure you wish to proceed?",
               call. = FALSE)
     }
@@ -182,18 +191,18 @@ df_to_survey <- function(df,
     variables <- df[, !names(df) %in% c(housing_weight_variables, "WGTP")]
     weights <- df$WGTP
 
-    if(design == "rep_weights") {
-      if(!all(housing_weight_variables %in% names(df))) {
+    if (design == "rep_weights") {
+      if (!all(housing_weight_variables %in% names(df))) {
         stop("Not all housing replicate weight variables are present in input data.", call. = FALSE)
       }
-      if(!"WGTP" %in% names(df)) {
+      if (!"WGTP" %in% names(df)) {
         stop("Housing weight variable is not present in input data.", call. = FALSE)
       }
     repweights <- df[, housing_weight_variables]
     }
   }
 
-  if(design == "cluster") {
+  if (design == "cluster") {
     survey <- survey::svydesign(
       variables = variables,
       weights = weights,
@@ -202,7 +211,7 @@ df_to_survey <- function(df,
     )
   }
 
-  if(design == "rep_weights"){
+  if (design == "rep_weights"){
     survey <- survey::svrepdesign(
       variables = variables,
       weights = weights,
@@ -214,7 +223,7 @@ df_to_survey <- function(df,
       )
     }
 
-  if(class == "srvyr") {
+  if (class == "srvyr") {
     return(srvyr::as_survey(survey))
   } else {
     survey
