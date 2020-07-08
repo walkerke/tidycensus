@@ -697,6 +697,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   if (!is.null(summary_var)) {
 
+    if (length(summary_var) > 1) {
+      stop(paste0("Only one summary variable may be used per pull. ",
+                  "Alternatively, place all variables in `variables` and ",
+                  "use `output='wide'`"))
+    }
+
     sumvar <- format_variables_acs(summary_var)
 
     sumdat <- suppressMessages(load_data_acs(geography, sumvar, key, year, state, county, survey))
