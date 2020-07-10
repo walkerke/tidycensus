@@ -65,3 +65,44 @@
 "county_laea"
 
 
+#' Dataset with PUMS variables and codes
+#'
+#' Built-in dataset that is created from the
+#' \href{https://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2018.html}{Census
+#' PUMS data dictionaries}. Use this dataset to lookup the names of variables to
+#' use in \code{\link{get_pums}}. This dataset also contains labels for the
+#' coded values returned by the Census API and is used when \code{recode = TRUE}
+#' in \code{\link{get_pums}}.
+#'
+#' Because variable names and codes change from year to year, you should filter
+#' this dataset for the survey and year of interest. NOTE: only 2017 (acs1 and
+#' acs5) variables are available.
+#'
+#' @title Dataset with PUMS variables and codes
+#' @description Built-in dataset for variable name and code label lookup.
+#'              To access the data directly, issue the command \code{data(pums_variables)}.
+#'
+#' \itemize{
+#'   \item \code{survey}: acs1 or acs5
+#'   \item \code{year}: Year of data. For 5-year data, last year in range.
+#'   \item \code{var_code}: Variable name
+#'   \item \code{var_label}: Variable label
+#'   \item \code{data_type}: chr or num
+#'   \item \code{level}: housing or person
+#'   \item \code{val_min}: For numeric variables, the minimum value
+#'   \item \code{val_max}: For numeric variables, the maximum value
+#'   \item \code{val_label}: Value label
+#'   \item \code{recode}: Use labels to recode values
+#'   \item \code{val_length}: Length of value returned
+#'   \item \code{val_na}: Value of NA value returned by API (if known)
+
+#' }
+#'
+#' @docType data
+#' @keywords datasets
+#' @name pums_variables
+#'
+#' @usage data(pums_variables)
+"pums_variables"
+
+

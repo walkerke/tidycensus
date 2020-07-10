@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • tidycensus</title>
+<title>Dataset with PUMS variables and codes — pums_variables • tidycensus</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,24 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Dataset with PUMS variables and codes — pums_variables" />
+<meta property="og:description" content="Built-in dataset for variable name and code label lookup.
+             To access the data directly, issue the command data(pums_variables).
+
+survey: acs1 or acs5
+year: Year of data. For 5-year data, last year in range.
+var_code: Variable name
+var_label: Variable label
+data_type: chr or num
+level: housing or person
+val_min: For numeric variables, the minimum value
+val_max: For numeric variables, the maximum value
+val_label: Value label
+recode: Use labels to recode values
+val_length: Length of value returned
+val_na: Value of NA value returned by API (if known)
+
+" />
 
 
 
@@ -58,7 +75,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -131,26 +148,55 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Dataset with PUMS variables and codes</h1>
+    <small class="dont-index">Source: <a href='https://github.com/walkerke/tidycensus/blob/master/R/fips_codes.R'><code>R/fips_codes.R</code></a></small>
+    <div class="hidden name"><code>pums_variables.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
+    <div class="ref-description">
+    <p>Built-in dataset for variable name and code label lookup.
+             To access the data directly, issue the command <code><a href='https://rdrr.io/r/utils/data.html'>data(pums_variables)</a></code>.</p>
+<ul>
+<li><p><code>survey</code>: acs1 or acs5</p></li>
+<li><p><code>year</code>: Year of data. For 5-year data, last year in range.</p></li>
+<li><p><code>var_code</code>: Variable name</p></li>
+<li><p><code>var_label</code>: Variable label</p></li>
+<li><p><code>data_type</code>: chr or num</p></li>
+<li><p><code>level</code>: housing or person</p></li>
+<li><p><code>val_min</code>: For numeric variables, the minimum value</p></li>
+<li><p><code>val_max</code>: For numeric variables, the maximum value</p></li>
+<li><p><code>val_label</code>: Value label</p></li>
+<li><p><code>recode</code>: Use labels to recode values</p></li>
+<li><p><code>val_length</code>: Length of value returned</p></li>
+<li><p><code>val_na</code>: Value of NA value returned by API (if known)</p></li>
+</ul>
 
-      <dl>
-        <dt><a href="basic-usage.html">Basic usage of tidycensus</a></dt>
-        <dd></dt>
-        <dt><a href="margins-of-error.html">Margins of error in the ACS</a></dt>
-        <dd></dt>
-        <dt><a href="other-datasets.html">Other Census Bureau datasets</a></dt>
-        <dd></dt>
-        <dt><a href="pums-data.html">Working with Census microdata</a></dt>
-        <dd></dt>
-        <dt><a href="spatial-data.html">Spatial data in tidycensus</a></dt>
-        <dd></dt>
-      </dl>
     </div>
+
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span>(<span class='no'>pums_variables</span>)</pre>
+
+
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+
+    <p>An object of class <code>tbl_df</code> (inherits from <code>tbl</code>, <code>data.frame</code>) with 21114 rows and 12 columns.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Dataset with PUMS variables and codes</p>
+<p>Built-in dataset that is created from the
+<a href='https://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2018.html'>Census
+PUMS data dictionaries</a>. Use this dataset to lookup the names of variables to
+use in <code><a href='get_pums.html'>get_pums</a></code>. This dataset also contains labels for the
+coded values returned by the Census API and is used when <code>recode = TRUE</code>
+in <code><a href='get_pums.html'>get_pums</a></code>.</p>
+<p>Because variable names and codes change from year to year, you should filter
+this dataset for the survey and year of interest. NOTE: only 2017 (acs1 and
+acs5) variables are available.</p>
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

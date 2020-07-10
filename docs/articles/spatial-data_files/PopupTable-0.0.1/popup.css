@@ -138,7 +138,7 @@ div::-webkit-scrollbar-corner {
 */
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-	background: #4c4c4c;
+	background: #ffffff; /*#4c4c4c;*/
 	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
 }
 

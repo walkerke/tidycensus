@@ -8,20 +8,17 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
-## Why tidycensus? 
-
-My work heavily involves the use of data from the US Census Bureau, and like many R users, I do most of my work within the __tidyverse__.  Beyond this, the __sf__ package now allows R users to work with spatial data in an integrated way with __tidyverse__ tools, and updates to the __tigris__ package provide access to Census boundary data as `sf` objects.  Recently, I've found myself writing the same routines over and over to get Census data ready for use with __tidyverse__ packages and __sf__.  This motivated me to open-source these functions in a package in case other R users find them useful.  
-
-__tidycensus__ is designed to help R users get Census data that is pre-prepared for exploration within the __tidyverse__, and optionally spatially with __sf__.  To learn more about how the package works, I encourage you to read the following articles: 
+__tidycensus__ is designed to help R users get Census data that is pre-prepared for exploration within the __tidyverse__, and optionally spatially with __sf__.  To learn more about how the package works, plase read through the following articles: 
 
 * [Basic usage of __tidycensus__](articles/basic-usage.html)
 * [Spatial data in __tidycensus__](articles/spatial-data.html)
 * [Margins of error in the ACS](articles/margins-of-error.html)
 * [Other Census Bureau datasets](articles/other-datasets.html)
+* [Working with Census microdata](articles/pums-data.html)
 
 ## Future development
 
-To keep up with on-going development of __tidycensus__ and get even more examples of how to use the package, subscribe to my email list below (no spam, I promise!).  You'll also get updates on the development of my upcoming book with CRC Press, _Analyzing the US Census with R_.  
+To keep up with on-going development of __tidycensus__ and get even more examples of how to use the package, subscribe to the Walker Data email list below.  You'll also get updates on the forthcoming CRC Press book _Analyzing the US Census with R_, which will cover a wide range of Census data analysis applications.   
 
 <!-- Begin MailChimp Signup Form -->
 <link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
@@ -44,14 +41,13 @@ We recommend moving this block and the preceding CSS link to the HEAD of your HT
 
 <!--End mc_embed_signup-->
 
-You can also follow my blog at https://walkerke.github.io.  
+While tidycensus focuses on a select number of US Census Bureau datasets, there are many others available via the Census Bureau API.  For access to all of these APIs, please check out Hannah Recht's excellent [censusapi package](https://github.com/hrecht/censusapi). 
 
-My development focus is on making the current datasets as accessible as possible; if you need other approaches or datasets, I recommend the [censusapi](https://github.com/hrecht/censusapi) and [acs](https://cran.r-project.org/web/packages/acs/index.html) packages.
+If you find tidycensus useful in your work and would like to ensure continued development of the package, you can provide support in the following ways: 
 
-If you find this project useful, you can support package development in the following ways: 
-
-* Hiring me as a consultant to help you use __tidycensus__ in your project, or hiring me to give a workshop on __tidycensus__ for your organization.  Please contact me at <kwalkerdata@gmail.com> if you are interested!
-* Filing an issue - or even better, a pull request - at https://github.com/walkerke/tidycensus/issues.  
+* [Chip in some funds to support package development via PayPal](https://paypal.me/walkerdata);
+* Set up a consulting engagement or workshop though Walker Data to help you implement tidycensus in your project.  Send a note to <kyle@walker-data.com> if you are interested; 
+* File an issue - or even better, a pull request - at https://github.com/walkerke/tidycensus/issues.  
 
 Note: This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau.
 

@@ -6,19 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Margins of error in the ACS • tidycensus</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Margins of error in the ACS">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="tidycensus">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9.7</span>
       </span>
     </div>
 
@@ -65,6 +65,9 @@
     <li>
       <a href="../articles/other-datasets.html">Other Census Bureau datasets</a>
     </li>
+    <li>
+      <a href="../articles/pums-data.html">Working with Census microdata</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -88,7 +91,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Margins of error in the ACS</h1>
+      <h1 data-toc-skip>Margins of error in the ACS</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/walkerke/tidycensus/blob/master/vignettes/margins-of-error.Rmd"><code>vignettes/margins-of-error.Rmd</code></a></small>
@@ -103,18 +106,18 @@
 <p>While the main function of the decennial census is to provide <em>counts</em> of people for the purpose of congressional apportionment and legislative redistricting, the primary purpose of the ACS is to measure the changing social and economic <em>characteristics</em> of the U.S. population. As a result, the ACS does not provide official counts of the population in between censuses. <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 </blockquote>
 <p>In turn, ACS data <strong>do not</strong> represent precise counts of population subgroups, but are rather designed to give a general sense of how socioeconomic indicators vary across the country. In many cases, ACS margins of error can be quite large - at times exceeding the estimate. Let’s say we want to study aging populations in Ramsey County, Minnesota from the 2012-2016 ACS by Census tracts. We can pull up a dataset with <code>get_acs</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidycensus)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyverse)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">vars &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"B01001_0"</span>, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">20</span><span class="op">:</span><span class="dv">25</span>, <span class="dv">44</span><span class="op">:</span><span class="dv">49</span>))</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">ramsey &lt;-<span class="st"> </span><span class="kw"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="dt">geography =</span> <span class="st">"tract"</span>, </a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">                  <span class="dt">variables =</span> vars, </a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">                  <span class="dt">state =</span> <span class="st">"MN"</span>, </a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">                  <span class="dt">county =</span> <span class="st">"Ramsey"</span>, </a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">                  <span class="dt">year =</span> <span class="dv">2016</span>)</a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(ramsey <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>NAME))</a></code></pre></div>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidycensus</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
+
+<span class="no">vars</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"B01001_0"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">20</span>:<span class="fl">25</span>, <span class="fl">44</span>:<span class="fl">49</span>))
+
+<span class="no">ramsey</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="kw">geography</span> <span class="kw">=</span> <span class="st">"tract"</span>,
+                  <span class="kw">variables</span> <span class="kw">=</span> <span class="no">vars</span>,
+                  <span class="kw">state</span> <span class="kw">=</span> <span class="st">"MN"</span>,
+                  <span class="kw">county</span> <span class="kw">=</span> <span class="st">"Ramsey"</span>,
+                  <span class="kw">year</span> <span class="kw">=</span> <span class="fl">2016</span>)
+
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ramsey</span> <span class="kw">%&gt;%</span> <span class="fu">select</span>(-<span class="no">NAME</span>))</pre></body></html></div>
 <pre><code>## # A tibble: 6 x 4
 ##   GEOID       variable   estimate   moe
 ##   &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
@@ -126,12 +129,12 @@
 ## 6 27123030100 B01001_025       23    18</code></pre>
 <p>We can see that in two instances the margin of error exceeds the estimate. One way to address this is through data aggregation. While the specific group estimates in this Census tract may be unreliable, the estimate for the total population over age 65 in the tract is likely better, but is not available directly from the ACS detailed tables. In turn, we can summarize our data.</p>
 <p>The US Census Bureau publishes guidelines on how to calculate margins of error for derived estimates (see the footnotes). These formulas are implemented in <strong>tidycensus</strong> in the <code>moe_sum</code>, <code>moe_prop</code>, <code>moe_ratio</code>, and <code>moe_product</code> functions. The example below illustrates the use of <code>moe_sum</code> to calculate the margin of error around a derived estimate for Census tract population over age 65.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">ramsey65 &lt;-<span class="st"> </span>ramsey <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(GEOID) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">sumest =</span> <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(estimate), </a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">            <span class="dt">summoe =</span> <span class="kw"><a href="../reference/moe_sum.html">moe_sum</a></span>(moe, estimate))</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(ramsey65)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">ramsey65</span> <span class="kw">&lt;-</span> <span class="no">ramsey</span> <span class="kw">%&gt;%</span>
+  <span class="fu">group_by</span>(<span class="no">GEOID</span>) <span class="kw">%&gt;%</span>
+  <span class="fu">summarize</span>(<span class="kw">sumest</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">estimate</span>),
+            <span class="kw">summoe</span> <span class="kw">=</span> <span class="fu"><a href="../reference/moe_sum.html">moe_sum</a></span>(<span class="no">moe</span>, <span class="no">estimate</span>))
+
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ramsey65</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 6 x 3
 ##   GEOID       sumest summoe
 ##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
@@ -152,13 +155,13 @@
 <div class="footnotes">
 <hr>
 <ol>
-<li id="fn1"><p>United States Census Bureau (2008). A Compass for Understanding and Using American Community Survey Data. <a href="https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf" class="uri">https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf</a>.<a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>United States Census Bureau (2016). Instructions for Applying Statistical Testing to the 2011-2015 ACS 5-Year Data. <a href="https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2015StatisticalTesting5year.pdf" class="uri">https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2015StatisticalTesting5year.pdf</a>.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>United States Census Bureau (2008). A Compass for Understanding and Using American Community Survey Data. <a href="https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf" class="uri">https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf</a>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>United States Census Bureau (2016). Instructions for Applying Statistical Testing to the 2011-2015 ACS 5-Year Data. <a href="https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2015StatisticalTesting5year.pdf" class="uri">https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2015StatisticalTesting5year.pdf</a>.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
       </div>
 
@@ -167,11 +170,11 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Kyle Walker.</p>
+  <p>Developed by Kyle Walker, Matt Herman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

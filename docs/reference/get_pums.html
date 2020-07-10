@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • tidycensus</title>
+<title>Load data from the American Community Survey Public Use Microdata Series API — get_pums • tidycensus</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Load data from the American Community Survey Public Use Microdata Series API — get_pums" />
+<meta property="og:description" content="Load data from the American Community Survey Public Use Microdata Series API" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -131,26 +132,89 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Load data from the American Community Survey Public Use Microdata Series API</h1>
+    <small class="dont-index">Source: <a href='https://github.com/walkerke/tidycensus/blob/master/R/pums.R'><code>R/pums.R</code></a></small>
+    <div class="hidden name"><code>get_pums.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="basic-usage.html">Basic usage of tidycensus</a></dt>
-        <dd></dt>
-        <dt><a href="margins-of-error.html">Margins of error in the ACS</a></dt>
-        <dd></dt>
-        <dt><a href="other-datasets.html">Other Census Bureau datasets</a></dt>
-        <dd></dt>
-        <dt><a href="pums-data.html">Working with Census microdata</a></dt>
-        <dd></dt>
-        <dt><a href="spatial-data.html">Spatial data in tidycensus</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>Load data from the American Community Survey Public Use Microdata Series API</p>
     </div>
+
+    <pre class="usage"><span class='fu'>get_pums</span>(
+  <span class='no'>variables</span>,
+  <span class='no'>state</span>,
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2018</span>,
+  <span class='kw'>survey</span> <span class='kw'>=</span> <span class='st'>"acs5"</span>,
+  <span class='kw'>rep_weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>recode</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>show_call</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>variables</th>
+      <td><p>A vector of variables from the PUMS API.</p></td>
+    </tr>
+    <tr>
+      <th>state</th>
+      <td><p>A state, or vector of states, for which you would like to
+request data.</p></td>
+    </tr>
+    <tr>
+      <th>year</th>
+      <td><p>The data year of the 1-year ACS sample or the endyear of the
+5-year sample. Defaults to 2018.</p></td>
+    </tr>
+    <tr>
+      <th>survey</th>
+      <td><p>The ACS survey; one of either <code>"acs1"</code> or <code>"acs5"</code>
+(the default).</p></td>
+    </tr>
+    <tr>
+      <th>rep_weights</th>
+      <td><p>Whether or not to return housing unit, person, or both
+housing and person-level replicate weights for calculation of standard
+errors; one of <code>"person"</code>, <code>"housing"</code>, or <code>"both"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>recode</th>
+      <td><p>If TRUE, recodes variable values using Census data dictionary
+and creates a new <code>*_label</code> column for each variable that is recoded.
+Only available for 2017 and 2018 data. Defaults to FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>show_call</th>
+      <td><p>If TRUE, display call made to Census API. This can be very
+useful in debugging and determining if error messages returned are due to
+tidycensus or the Census API. Copy to the API call into a browser and see
+what is returned by the API directly. Defaults to FALSE.</p></td>
+    </tr>
+    <tr>
+      <th>key</th>
+      <td><p>Your Census API key. Obtain one at
+<a href='http://api.census.gov/data/key_signup.html'>http://api.census.gov/data/key_signup.html</a></p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A tibble of microdata from the ACS PUMS API.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>)
+<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"AGEP"</span>, <span class='st'>"ANC1P"</span>), <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>, <span class='kw'>recode</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>, <span class='kw'>survey</span> <span class='kw'>=</span> <span class='st'>"acs1"</span>, <span class='kw'>rep_weights</span> <span class='kw'>=</span> <span class='st'>"person"</span>)
+}</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
