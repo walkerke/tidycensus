@@ -251,6 +251,14 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     cs <- county_subdivisions(state = state, county = county, cb = cb,
                               year = year, class = "sf", ...)
 
+    if ("GEO_ID" %in% names(cs)) {
+      cs$GEOID <- paste0(cs$STATE, cs$COUNTY, cs$COUSUB)
+    }
+
+    if ("GEOID10" %in% names(cs)) {
+      cs$GEOID <- cs$GEOID10
+    }
+
     return(cs)
 
   } else if (geography == "combined statistical area") {
