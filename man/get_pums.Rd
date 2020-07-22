@@ -19,7 +19,7 @@ get_pums(
 \item{variables}{A vector of variables from the PUMS API.}
 
 \item{state}{A state, or vector of states, for which you would like to
-request data.}
+request data.  The entire US can be requested with \code{state = "all"} - though be patient with the data download!}
 
 \item{year}{The data year of the 1-year ACS sample or the endyear of the
 5-year sample. Defaults to 2018.}

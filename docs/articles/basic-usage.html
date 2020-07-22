@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9.8</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
 
 <span class="fu"><a href="../reference/census_api_key.html">census_api_key</a></span>(<span class="st">"YOUR API KEY GOES HERE"</span>)</pre></body></html></div>
-<p>There are two major functions implemented in <strong>tidycensus</strong>: <code>get_decennial</code>, which grants access to the 1990, 2000, and 2010 decennial US Census APIs, and <code>get_acs</code>, which grants access to the 5-year American Community Survey APIs. In this basic example, let’s look at median gross rent by state in 1990:</p>
+<p>There are two major functions implemented in <strong>tidycensus</strong>: <code><a href="../reference/get_decennial.html">get_decennial()</a></code>, which grants access to the 1990, 2000, and 2010 decennial US Census APIs, and <code><a href="../reference/get_acs.html">get_acs()</a></code>, which grants access to the 5-year American Community Survey APIs. In this basic example, let’s look at median gross rent by state in 1990:</p>
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">m90</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_decennial.html">get_decennial</a></span>(<span class="kw">geography</span> <span class="kw">=</span> <span class="st">"state"</span>, <span class="kw">variables</span> <span class="kw">=</span> <span class="st">"H043A001"</span>, <span class="kw">year</span> <span class="kw">=</span> <span class="fl">1990</span>)
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">m90</span>)</pre></body></html></div>
@@ -345,7 +345,7 @@
 <div id="searching-for-variables" class="section level2">
 <h2 class="hasAnchor">
 <a href="#searching-for-variables" class="anchor"></a>Searching for variables</h2>
-<p>Getting variables from the Census or ACS requires knowing the variable ID - and there are thousands of these IDs across the different Census files. To rapidly search for variables, use the <code>load_variables</code> function. The function takes two required arguments: the year of the Census or endyear of the ACS sample, and the dataset - one of <code>"sf1"</code>, <code>"sf3"</code>, or <code>"acs5"</code>. For ideal functionality, I recommend assigning the result of this function to a variable, setting <code>cache = TRUE</code> to store the result on your computer for future access, and using the <code>View</code> function in RStudio to interactively browse for variables.</p>
+<p>Getting variables from the Census or ACS requires knowing the variable ID - and there are thousands of these IDs across the different Census files. To rapidly search for variables, use the <code><a href="../reference/load_variables.html">load_variables()</a></code> function. The function takes two required arguments: the year of the Census or endyear of the ACS sample, and the dataset - one of <code>"sf1"</code>, <code>"sf3"</code>, or <code>"acs5"</code>. For ideal functionality, I recommend assigning the result of this function to a variable, setting <code>cache = TRUE</code> to store the result on your computer for future access, and using the <code>View</code> function in RStudio to interactively browse for variables.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">v17</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/load_variables.html">load_variables</a></span>(<span class="fl">2017</span>, <span class="st">"acs5"</span>, <span class="kw">cache</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
 
 <span class="fu"><a href="https://rdrr.io/r/utils/View.html">View</a></span>(<span class="no">v17</span>)</pre></body></html></div>
@@ -355,7 +355,7 @@
 <div id="working-with-acs-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#working-with-acs-data" class="anchor"></a>Working with ACS data</h2>
-<p>American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population. In turn, ACS data points are <strong>estimates</strong> characterized by a <strong>margin of error</strong>. <strong>tidycensus</strong> will always return the estimate and margin of error together for any requested variables. In turn, when requesting ACS data with <strong>tidycensus</strong>, it is not necessary to specify the <code>"E"</code> or <code>"M"</code> suffix for a variable name. Let’s fetch median household income data from the 2014-2018 ACS for counties in Vermont.</p>
+<p>American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population. In turn, ACS data points are <strong>estimates</strong> characterized by a <strong>margin of error</strong>. <strong>tidycensus</strong> will always return the estimate and margin of error together for any requested variables when using <code><a href="../reference/get_acs.html">get_acs()</a></code>. In turn, when requesting ACS data with <strong>tidycensus</strong>, it is not necessary to specify the <code>"E"</code> or <code>"M"</code> suffix for a variable name. Let’s fetch median household income data from the 2014-2018 ACS for counties in Vermont.</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">vt</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="kw">geography</span> <span class="kw">=</span> <span class="st">"county"</span>,
               <span class="kw">variables</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">medincome</span> <span class="kw">=</span> <span class="st">"B19013_001"</span>),
               <span class="kw">state</span> <span class="kw">=</span> <span class="st">"VT"</span>,
@@ -379,7 +379,7 @@
 ## 12 50023 Washington County, Vermont medincome    62108  2065
 ## 13 50025 Windham County, Vermont    medincome    52659  1706
 ## 14 50027 Windsor County, Vermont    medincome    58303  1576</code></pre>
-<p>The output is similar to a call to <code>get_decennial</code>, but instead of a <code>value</code> column, <code>get_acs</code> returns <code>estimate</code> and <code>moe</code> columns for the ACS estimate and margin of error, respectively. <code>moe</code> represents the default 90 percent confidence level around the estimate; this can be changed to 95 or 99 percent with the <code>moe_level</code> parameter in <code>get_acs</code> if desired.</p>
+<p>The output is similar to a call to <code><a href="../reference/get_decennial.html">get_decennial()</a></code>, but instead of a <code>value</code> column, <code>get_acs</code> returns <code>estimate</code> and <code>moe</code> columns for the ACS estimate and margin of error, respectively. <code>moe</code> represents the default 90 percent confidence level around the estimate; this can be changed to 95 or 99 percent with the <code>moe_level</code> parameter in <code>get_acs</code> if desired.</p>
 <p>As we have the margin of error, we can visualize the uncertainty around the estimate:</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">vt</span> <span class="kw">%&gt;%</span>
   <span class="fu">mutate</span>(<span class="kw">NAME</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span>(<span class="st">" County, Vermont"</span>, <span class="st">""</span>, <span class="no">NAME</span>)) <span class="kw">%&gt;%</span>

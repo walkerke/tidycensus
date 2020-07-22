@@ -2,7 +2,7 @@
 #'
 #' @param variables A vector of variables from the PUMS API.
 #' @param state A state, or vector of states, for which you would like to
-#'   request data.
+#'   request data.  The entire US can be requested with \code{state = "all"} - though be patient with the data download!
 #' @param year The data year of the 1-year ACS sample or the endyear of the
 #'   5-year sample. Defaults to 2018.
 #' @param survey The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
@@ -46,6 +46,12 @@ get_pums <- function(variables,
     startyear <- year - 4
     message(sprintf("Getting data from the %s-%s 5-year ACS Public Use Microdata Sample",
                     startyear, year))
+  }
+
+  # Allow users to get all states by specifying "all"
+  if (state == "all") {
+    message("Requesting data for the entire United States. This can take several minutes to complete.")
+    state <- NULL
   }
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
