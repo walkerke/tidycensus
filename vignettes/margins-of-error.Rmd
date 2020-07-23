@@ -64,7 +64,7 @@ Spielman, S.E., and Folch, D.C. (2015).  Reducing Uncertainty in the American Co
 
 Spielman, S.E., and Singleton, A. (2015) Studying Neighborhoods Using Uncertain Data from the American Community Survey: A Contextual Approach. _Annals of the Association of American Geographers_. http://www.tandfonline.com/doi/full/10.1080/00045608.2015.1052335; R implementation at https://github.com/geoss/acs_demographic_clusters.  
 
-Wong, D.W., and Sun, M. (2013). Handling Data Quality Information of Survey Data in GIS: A Case of Using the American Community Survey Data. _Spatial Demography_. http://spatialdemography.org/wp-content/uploads/2013/04/2.-Wong-and-Sun.pdf. 
+Wong, D.W., and Sun, M. (2013). Handling Data Quality Information of Survey Data in GIS: A Case of Using the American Community Survey Data. _Spatial Demography_. https://link.springer.com/article/10.1007/BF03354884. 
 
 [^1]: United States Census Bureau (2008). A Compass for Understanding and Using American Community Survey Data.  https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf.  
 [^2]: United States Census Bureau (2016). Instructions for Applying Statistical Testing to the 2011-2015 ACS 5-Year Data. https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2015StatisticalTesting5year.pdf.  
