@@ -49,7 +49,7 @@ get_pums <- function(variables,
   }
 
   # Allow users to get all states by specifying "all"
-  if (state == "all") {
+  if (all(state == "all")) {
     message("Requesting data for the entire United States. This can take several minutes to complete.")
     state <- NULL
   }
