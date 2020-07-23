@@ -795,6 +795,22 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
       recoded_wide <- recoded_long %>%
         pivot_wider_spec(spec)
 
+      recode_v <- recoded_long %>% pull(var_code) %>% unique()
+
+      for (var in recode_v){
+
+        order_v <- var_lookup %>%
+          filter(var_code==var) %>%
+          pull(val_label)
+
+        var_label <- str_c(var, "_label")
+
+        recoded_wide[[var_label]] <-
+          parse_factor(recoded_wide[[var_label]], ordered=TRUE, levels=order_v)
+
+      }
+
+
       # Join recoded columns to API return
       dat <- dat %>%
         left_join(recoded_wide, by = c("SERIALNO", "SPORDER"))
