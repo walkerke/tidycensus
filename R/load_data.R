@@ -806,7 +806,7 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
         var_label <- str_c(var, "_label")
 
         recoded_wide[[var_label]] <-
-          parse_factor(recoded_wide[[var_label]], ordered=TRUE, levels=order_v)
+          readr::parse_factor(recoded_wide[[var_label]], ordered=TRUE, levels=order_v)
 
       }
 
