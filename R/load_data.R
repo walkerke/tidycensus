@@ -343,8 +343,11 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
 
     } else {
 
-      in_area <- paste0("state:", state)
-
+      if (geography == "block") {
+        in_area <- paste0("state:", state, "%20county:*")
+      } else {
+        in_area <- paste0("state:", state)
+      }
     }
 
     if (geography == "state" && !is.null(state)) {
