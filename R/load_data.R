@@ -646,31 +646,77 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
 
 
-load_data_pums <- function(variables, state, key, year, survey, recode, show_call) {
+load_data_pums <- function(variables, state, puma, key, year,
+                           survey, recode, show_call) {
 
+  # ST is always returned from API,
+  # so we should drop if included in variables requested
+  variables <- variables[variables != "ST"]
 
-  var <- paste0(variables, collapse = ",")
+  # PUMA is always returned from API when PUMAs are specified,
+  # so we should drop if included in variables requested
+  if (!is.null(puma)) {
+    variables <- variables[variables != "PUMA"]
+  }
 
-  vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
+  # If one of the variables that is always returned is requested, deduplicate it
+  var <- unique(c("SERIALNO", "SPORDER", "WGTP", "PWGTP", variables))
+
+  vars_to_get <- paste0(var, collapse = ",")
 
   base <- sprintf("https://api.census.gov/data/%s/acs/%s/pums",
                   year, survey)
 
+  if (!is.null(puma)) {
 
-  if (!is.null(state)) {
-    state <- map_chr(state, function(x) {
-      paste0("0400000US",
-             validate_state(x))
-  })
-  }
+    if (length(state) > 1) {
+        stop('When requesting PUMAs for more than one state, you must set state to "multiple" and set puma to a named vector of state/PUMA pairs.', call. = FALSE)
+    }
 
-  if (length(state) > 1) {
-    state <- paste0(state, collapse = ",")
-  }
+    # pumas in multiple states can be requested with a named vector of
+    # state / puma pairs in the puma argument of get_pums()
+    if (state == "multiple") {
+
+      # print FIPS code of states used just once
+      purrr::walk(unique(names(puma)), validate_state)
+
+      geo <- purrr::map2_chr(names(puma), unname(puma), function(x, y) {
+        paste0("7950000US", suppressMessages(validate_state(x)), y)
+        })
+
+      geo <- paste0(geo, collapse = ",")
+
+    } else {
+      # if PUMAs requested are in one state only
+      state <- validate_state(state)
+      geo <- map_chr(puma, function(x) {
+        paste0("7950000US", state, x)
+        })
+
+      if (length(puma) > 1) {
+        geo <- paste0(geo, collapse = ",")
+        }
+      }
+    } else {
+      # if no PUMAs specified, get all PUMAs in each state requested
+      if (!is.null(state)) {
+        geo <- map_chr(state, function(x) {
+          paste0("0400000US", validate_state(x))
+        })
+
+      } else {
+        geo <- NULL
+      }
+
+      if (length(state) > 1) {
+        geo <- paste0(geo, collapse = ",")
+
+        }
+      }
 
   call <- GET(base,
               query = list(get = vars_to_get,
-                                 ucgid = state,
+                                 ucgid = geo,
                                  key = key),
               progress())
 
@@ -719,7 +765,8 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
   # necessary to match data dictionary codes and
   # convert variables to numeric according to data dictionary
 
-  # But wait, this only works when the serial numbers are correctly returned and and we have variable metadata in pums_variables
+  # But wait, this only works when the serial numbers are correctly returned
+  # and and we have variable metadata in pums_variables
   if (year %in% c(2017, 2018)) {
     var_val_length <- pums_variables_filter %>%
       filter(!is.na(.data$val_length)) %>%

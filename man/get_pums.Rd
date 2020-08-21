@@ -6,7 +6,8 @@
 \usage{
 get_pums(
   variables,
-  state,
+  state = NULL,
+  puma = NULL,
   year = 2018,
   survey = "acs5",
   rep_weights = NULL,
@@ -19,7 +20,12 @@ get_pums(
 \item{variables}{A vector of variables from the PUMS API.}
 
 \item{state}{A state, or vector of states, for which you would like to
-request data.  The entire US can be requested with \code{state = "all"} - though be patient with the data download!}
+request data. The entire US can be requested with \code{state = "all"} -
+though be patient with the data download!}
+
+\item{puma}{A vector of PUMAs from a single state, for which you would like
+to request data. To get data from PUMAs in more than one state, specify a
+named vector of state/PUMA pairs and set \code{state = "multiple"}.}
 
 \item{year}{The data year of the 1-year ACS sample or the endyear of the
 5-year sample. Defaults to 2018.}
@@ -53,6 +59,8 @@ Load data from the American Community Survey Public Use Microdata Series API
 \dontrun{
 get_pums(variables = "AGEP", state = "VT")
 get_pums(variables = c("AGEP", "ANC1P"), state = "VT", recode = TRUE)
+get_pums(variables = "AGEP", state = "VT", puma = "00100")
+get_pums(variables = "AGEP", state = "multiple", puma = c("VT" = "00100", "UT" = "53001"))
 get_pums(variables = "AGEP", state = "VT", survey = "acs1", rep_weights = "person")
 }
 

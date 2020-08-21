@@ -2,7 +2,11 @@
 #'
 #' @param variables A vector of variables from the PUMS API.
 #' @param state A state, or vector of states, for which you would like to
-#'   request data.  The entire US can be requested with \code{state = "all"} - though be patient with the data download!
+#'   request data. The entire US can be requested with \code{state = "all"} -
+#'   though be patient with the data download!
+#' @param puma A vector of PUMAs from a single state, for which you would like
+#'   to request data. To get data from PUMAs in more than one state, specify a
+#'   named vector of state/PUMA pairs and set \code{state = "multiple"}.
 #' @param year The data year of the 1-year ACS sample or the endyear of the
 #'   5-year sample. Defaults to 2018.
 #' @param survey The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
@@ -27,17 +31,24 @@
 #' \dontrun{
 #' get_pums(variables = "AGEP", state = "VT")
 #' get_pums(variables = c("AGEP", "ANC1P"), state = "VT", recode = TRUE)
+#' get_pums(variables = "AGEP", state = "VT", puma = "00100")
+#' get_pums(variables = "AGEP", state = "multiple", puma = c("VT" = "00100", "UT" = "53001"))
 #' get_pums(variables = "AGEP", state = "VT", survey = "acs1", rep_weights = "person")
 #' }
 #'
 get_pums <- function(variables,
-                     state,
+                     state = NULL,
+                     puma = NULL,
                      year = 2018,
                      survey = "acs5",
                      rep_weights = NULL,
                      recode = FALSE,
                      show_call = FALSE,
                      key = NULL) {
+
+  if (is.null(state)) {
+      stop("You must include a state.", call. = FALSE)
+    }
 
   if (survey == "acs1") {
     message(sprintf("Getting data from the %s 1-year ACS Public Use Microdata Sample",
@@ -83,6 +94,7 @@ get_pums <- function(variables,
     pums_data <- map(l, function(x) {
       load_data_pums(variables = x,
                      state = state,
+                     puma = puma,
                      year = year,
                      survey = survey,
                      recode = recode,
@@ -90,16 +102,31 @@ get_pums <- function(variables,
                      key = key)
         })
 
+    # to combine the multiple API calls, we need to join using the repeated
+    # variables so they don't get duplicated in the final data frame
+    # the repeated variables will depend on how we requested data
+    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
+
     if (recode) {
-      pums_data <- reduce(pums_data, left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST", "ST_label"))
+      if (!is.null(puma)) {
+        join_vars <- c(join_vars, "ST_label", "PUMA")
+      } else {
+          join_vars <- c(join_vars, "ST_label")
+        }
     } else {
-      pums_data <- reduce(pums_data, left_join, by = c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST"))
+      if (!is.null(puma)) {
+        join_vars <- c(join_vars, "PUMA")
+      }
     }
+
+    pums_data <- reduce(pums_data, left_join, by = join_vars)
+
 
     pums_data <- select(pums_data, -contains("WGTP"), everything(), contains("WGTP"))
       } else {
         pums_data <- load_data_pums(variables = variables,
                                     state = state,
+                                    puma = puma,
                                     year = year,
                                     survey = survey,
                                     recode = recode,

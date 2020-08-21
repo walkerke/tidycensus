@@ -37,4 +37,4 @@ Suggests:
     ggplot2,
     survey,
     srvyr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
