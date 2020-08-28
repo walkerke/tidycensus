@@ -99,8 +99,8 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
     stop("Summary File 3 was not released in 2010. Use Summary File 1 or tables from the American Community Survey via get_acs() instead.", call. = FALSE)
   }
 
-  if (geography == "block" && year != 2010) {
-    stop("At the moment, block data is only available for 2010. I recommend using NHGIS (http://www.nhgis.org) and the ipumsr package for block data for other years.", call. = FALSE)
+  if (geography == "block" && year == 1990) {
+    stop("At the moment, block data is not available for 1990. I recommend using NHGIS (http://www.nhgis.org) and the ipumsr package for block data for other years.", call. = FALSE)
   }
 
   # if (geography %in% c("tract", "block group") && year == 1990 && is.null(county)) {
