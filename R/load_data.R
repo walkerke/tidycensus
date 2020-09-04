@@ -288,7 +288,7 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
     vars_to_get <- paste0(var, ",NAME")
   }
 
-  if (year == 2010) {
+  if (year == 2010 || (year == 2000 && sumfile == "sf1")) {
     base <- paste0("https://api.census.gov/data/",
                    year,
                    "/dec/",
