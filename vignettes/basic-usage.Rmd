@@ -47,9 +47,9 @@ If __state__ or __county__ is in bold face in "Available by", you are required t
 
 |Geography|Definition|Available by|Available in|
 |---------|----------|------------|------------|
-|`"us"`|United States||`get_acs()`| 
-|`"region"`|Census region||`get_acs()`| 
-|`"division"`|Census division||`get_acs()`| 
+|`"us"`|United States||`get_acs()`, `get_decennial()`| 
+|`"region"`|Census region||`get_acs()`, `get_decennial()`| 
+|`"division"`|Census division||`get_acs()`, `get_decennial()`| 
 |`"state"`|State or equivalent|state|`get_acs()`, `get_decennial()`| 
 |`"county"`|County or equivalent|state, county|`get_acs()`, `get_decennial()`| 
 |`"county subdivision"`|County subdivision|__state__, county|`get_acs()`, `get_decennial()`| 
@@ -59,17 +59,17 @@ If __state__ or __county__ is in bold face in "Available by", you are required t
 |`"place"`|Census-designated place|state|`get_acs()`, `get_decennial()`|  
 |`"alaska native regional corporation"`|Alaska native regional corporation|state|`get_acs()`, `get_decennial()`|  
 |`"american indian area/alaska native area/hawaiian home land"`|Federal and state-recognized American Indian reservations and Hawaiian home lands|state|`get_acs()`, `get_decennial()`|  
-|`"american indian area/alaska native area (reservation or statistical entity only)"`|Only reservations and statistical entities|state|`get_acs()`| 
+|`"american indian area/alaska native area (reservation or statistical entity only)"`|Only reservations and statistical entities|state|`get_acs()`, `get_decennial()`| 
 |`"american indian area (off-reservation trust land only)/hawaiian home land"`|Only off-reservation trust lands and Hawaiian home lands|state|`get_acs()`| 
 |`"metropolitan statistical area/micropolitan statistical area"`|Core-based statistical area|state|`get_acs()`, `get_decennial()`|
-|`"combined statistical area"`|Combined statistical area|state|`get_acs()`| 
-|`"new england city and town area"`|New England city/town area|state|`get_acs()`| 
-|`"combined new england city and town area"`|Combined New England area|state|`get_acs()`| 
-|`"urban area"`|Census-defined urbanized areas||`get_acs()`| 
+|`"combined statistical area"`|Combined statistical area|state|`get_acs()`, `get_decennial()`| 
+|`"new england city and town area"`|New England city/town area|state|`get_acs()`, `get_decennial()`| 
+|`"combined new england city and town area"`|Combined New England area|state|`get_acs()`, `get_decennial()`| 
+|`"urban area"`|Census-defined urbanized areas||`get_acs()`, `get_decennial()`| 
 |`"congressional district"`|Congressional district for the year-appropriate Congress|state|`get_acs()`, `get_decennial()`|  
-|`"school district (elementary)"`|Elementary school district|__state__|`get_acs()`| 
-|`"school district (secondary)"`|Secondary school district|__state__|`get_acs()`| 
-|`"school district (unified)"`|Unified school district|__state__|`get_acs()`| 
+|`"school district (elementary)"`|Elementary school district|__state__|`get_acs()`, `get_decennial()`| 
+|`"school district (secondary)"`|Secondary school district|__state__|`get_acs()`, `get_decennial()`| 
+|`"school district (unified)"`|Unified school district|__state__|`get_acs()`, `get_decennial()`| 
 |`"public use microdata area"`|PUMA (geography associated with Census microdata samples)|state|`get_acs()`| 
 |`"zip code tabulation area"` OR `"zcta"`|Zip code tabulation area||`get_acs()`, `get_decennial()`|  
 |`"state legislative district (upper chamber)"`|State senate districts|__state__|`get_acs()`, `get_decennial()`|  

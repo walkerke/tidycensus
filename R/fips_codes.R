@@ -75,7 +75,7 @@
 #' in \code{\link{get_pums}}.
 #'
 #' Because variable names and codes change from year to year, you should filter
-#' this dataset for the survey and year of interest. NOTE: only 2017 (acs1 and
+#' this dataset for the survey and year of interest. NOTE: only 2017 and 2018 (acs1 and
 #' acs5) variables are available.
 #'
 #' @title Dataset with PUMS variables and codes
