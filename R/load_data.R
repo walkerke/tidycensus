@@ -1466,7 +1466,8 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
 
 
-load_data_pums <- function(variables, state, key, year, survey, recode, show_call) {
+load_data_pums <- function(variables, state, puma,
+                           key, year, survey, recode, show_call) {
 
 
   var <- paste0(variables, collapse = ",")
@@ -1477,23 +1478,58 @@ load_data_pums <- function(variables, state, key, year, survey, recode, show_cal
                   year, survey)
 
 
-  if (!is.null(state)) {
-    state <- map_chr(state, function(x) {
-      paste0("0400000US",
-             validate_state(x))
-  })
-  }
+  if (!is.null(puma)) {
 
-  if (length(state) > 1) {
-    state <- paste0(state, collapse = ",")
+    if (length(state) > 1) {
+      stop('When requesting PUMAs for more than one state, you must set state to "multiple" and set puma to a named vector of state/PUMA pairs.', call. = FALSE)
+    }
+
+    # pumas in multiple states can be requested with a named vector of
+    # state / puma pairs in the puma argument of get_pums()
+    if (state == "multiple") {
+
+      # print FIPS code of states used just once
+      purrr::walk(unique(names(puma)), validate_state)
+
+      geo <- purrr::map2_chr(names(puma), unname(puma), function(x, y) {
+        paste0("7950000US", suppressMessages(validate_state(x)), y)
+      })
+
+      geo <- paste0(geo, collapse = ",")
+
+    } else {
+      # if PUMAs requested are in one state only
+      state <- validate_state(state)
+      geo <- map_chr(puma, function(x) {
+        paste0("7950000US", state, x)
+      })
+
+      if (length(puma) > 1) {
+        geo <- paste0(geo, collapse = ",")
+      }
+    }
+  } else {
+    # if no PUMAs specified, get all PUMAs in each state requested
+    if (!is.null(state)) {
+      geo <- map_chr(state, function(x) {
+        paste0("0400000US", validate_state(x))
+      })
+
+    } else {
+      geo <- NULL
+    }
+
+    if (length(state) > 1) {
+      geo <- paste0(geo, collapse = ",")
+
+    }
   }
 
   call <- GET(base,
               query = list(get = vars_to_get,
-                                 ucgid = state,
-                                 key = key),
+                           ucgid = geo,
+                           key = key),
               progress())
-
 
   if (show_call) {
     call_url <- gsub("&key.*", "", call$url)
