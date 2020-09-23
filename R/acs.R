@@ -62,7 +62,7 @@
 #'   geom_sf() +
 #'   coord_sf(crs = 26914) +
 #'   scale_fill_viridis(option = "magma") +
-#'   scale_color_viridis(options = "magma")
+#'   scale_color_viridis(option = "magma")
 #'
 #'
 #' vt <- get_acs(geography = "county", variables = "B19013_001", state = "VT")

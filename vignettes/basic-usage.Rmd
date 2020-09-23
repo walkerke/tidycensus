@@ -21,12 +21,16 @@ library(tidyverse)
 census_api_key("YOUR API KEY GOES HERE")
 ```
 
-There are two major functions implemented in __tidycensus__: `get_decennial()`, which grants access to the 1990, 2000, and 2010 decennial US Census APIs, and `get_acs()`, which grants access to the 5-year American Community Survey APIs.  In this basic example, let's look at median gross rent by state in 1990: 
+There are two major functions implemented in __tidycensus__: `get_decennial()`, which grants access to the 2000 and 2010 decennial US Census APIs, and `get_acs()`, which grants access to the 1-year and 5-year American Community Survey APIs.  _Note: at the moment, access to the 1990 (SF1 and SF3) and 2000 (SF3) APIs has been suspended._ 
+
+In this basic example, let's look at median age by state in 2010: 
 
 ```{r}
-m90 <- get_decennial(geography = "state", variables = "H043A001", year = 1990)
+age10 <- get_decennial(geography = "state", 
+                       variables = "P013001", 
+                       year = 2010)
 
-head(m90)
+head(age10)
 ```
 
 The function returns a tibble with four columns by default: `GEOID`, which is an identifier for the geographical unit associated with the row; `NAME`, which is a descriptive name of the geographical unit; `variable`, which is the Census variable represented in the row; and `value`, which is the value of the variable for that unit.  By default, __tidycensus__ functions return tidy data frames in which rows represent unit-variable combinations; for a wide data frame with Census variable names in the columns, set `output = "wide"` in the function call.  
@@ -34,7 +38,7 @@ The function returns a tibble with four columns by default: `GEOID`, which is an
 As the function has returned a tidy object, we can visualize it quickly with __ggplot2__: 
 
 ```{r, fig.height = 8}
-m90 %>%
+age10 %>%
   ggplot(aes(x = value, y = reorder(NAME, value))) + 
   geom_point()
 ```

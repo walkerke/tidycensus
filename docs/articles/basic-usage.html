@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9.9000</span>
       </span>
     </div>
 
@@ -106,22 +106,25 @@
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
 
 <span class="fu"><a href="../reference/census_api_key.html">census_api_key</a></span>(<span class="st">"YOUR API KEY GOES HERE"</span>)</pre></body></html></div>
-<p>There are two major functions implemented in <strong>tidycensus</strong>: <code><a href="../reference/get_decennial.html">get_decennial()</a></code>, which grants access to the 1990, 2000, and 2010 decennial US Census APIs, and <code><a href="../reference/get_acs.html">get_acs()</a></code>, which grants access to the 5-year American Community Survey APIs. In this basic example, let’s look at median gross rent by state in 1990:</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">m90</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_decennial.html">get_decennial</a></span>(<span class="kw">geography</span> <span class="kw">=</span> <span class="st">"state"</span>, <span class="kw">variables</span> <span class="kw">=</span> <span class="st">"H043A001"</span>, <span class="kw">year</span> <span class="kw">=</span> <span class="fl">1990</span>)
+<p>There are two major functions implemented in <strong>tidycensus</strong>: <code><a href="../reference/get_decennial.html">get_decennial()</a></code>, which grants access to the 2000 and 2010 decennial US Census APIs, and <code><a href="../reference/get_acs.html">get_acs()</a></code>, which grants access to the 1-year and 5-year American Community Survey APIs. <em>Note: at the moment, access to the 1990 (SF1 and SF3) and 2000 (SF3) APIs has been suspended.</em></p>
+<p>In this basic example, let’s look at median age by state in 2010:</p>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">age10</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_decennial.html">get_decennial</a></span>(<span class="kw">geography</span> <span class="kw">=</span> <span class="st">"state"</span>,
+                       <span class="kw">variables</span> <span class="kw">=</span> <span class="st">"P013001"</span>,
+                       <span class="kw">year</span> <span class="kw">=</span> <span class="fl">2010</span>)
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">m90</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">age10</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 6 x 4
 ##   GEOID NAME       variable value
 ##   &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;    &lt;dbl&gt;
-## 1 01    Alabama    H043A001   325
-## 2 02    Alaska     H043A001   559
-## 3 04    Arizona    H043A001   438
-## 4 05    Arkansas   H043A001   328
-## 5 06    California H043A001   620
-## 6 08    Colorado   H043A001   418</code></pre>
+## 1 01    Alabama    P013001   37.9
+## 2 02    Alaska     P013001   33.8
+## 3 04    Arizona    P013001   35.9
+## 4 05    Arkansas   P013001   37.4
+## 5 06    California P013001   35.2
+## 6 22    Louisiana  P013001   35.8</code></pre>
 <p>The function returns a tibble with four columns by default: <code>GEOID</code>, which is an identifier for the geographical unit associated with the row; <code>NAME</code>, which is a descriptive name of the geographical unit; <code>variable</code>, which is the Census variable represented in the row; and <code>value</code>, which is the value of the variable for that unit. By default, <strong>tidycensus</strong> functions return tidy data frames in which rows represent unit-variable combinations; for a wide data frame with Census variable names in the columns, set <code>output = "wide"</code> in the function call.</p>
 <p>As the function has returned a tidy object, we can visualize it quickly with <strong>ggplot2</strong>:</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">m90</span> <span class="kw">%&gt;%</span>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">age10</span> <span class="kw">%&gt;%</span>
   <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">value</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html">reorder</a></span>(<span class="no">NAME</span>, <span class="no">value</span>))) +
   <span class="fu">geom_point</span>()</pre></body></html></div>
 <p><img src="basic-usage_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
@@ -148,19 +151,25 @@
 <td><code>"us"</code></td>
 <td>United States</td>
 <td></td>
-<td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
 </tr>
 <tr class="even">
 <td><code>"region"</code></td>
 <td>Census region</td>
 <td></td>
-<td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
 </tr>
 <tr class="odd">
 <td><code>"division"</code></td>
 <td>Census division</td>
 <td></td>
-<td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
 </tr>
 <tr class="even">
 <td><code>"state"</code></td>
@@ -241,7 +250,9 @@
 <td><code>"american indian area/alaska native area (reservation or statistical entity only)"</code></td>
 <td>Only reservations and statistical entities</td>
 <td>state</td>
-<td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
 </tr>
 <tr class="even">
 <td><code>"american indian area (off-reservation trust land only)/hawaiian home land"</code></td>
@@ -261,25 +272,33 @@
 <td><code>"combined statistical area"</code></td>
 <td>Combined statistical area</td>
 <td>state</td>
-<td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
 </tr>
 <tr class="odd">
 <td><code>"new england city and town area"</code></td>
 <td>New England city/town area</td>
 <td>state</td>
-<td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
 </tr>
 <tr class="even">
 <td><code>"combined new england city and town area"</code></td>
 <td>Combined New England area</td>
 <td>state</td>
-<td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
 </tr>
 <tr class="odd">
 <td><code>"urban area"</code></td>
 <td>Census-defined urbanized areas</td>
 <td></td>
-<td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
 </tr>
 <tr class="even">
 <td><code>"congressional district"</code></td>
@@ -293,19 +312,25 @@
 <td><code>"school district (elementary)"</code></td>
 <td>Elementary school district</td>
 <td><strong>state</strong></td>
-<td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
 </tr>
 <tr class="even">
 <td><code>"school district (secondary)"</code></td>
 <td>Secondary school district</td>
 <td><strong>state</strong></td>
-<td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
 </tr>
 <tr class="odd">
 <td><code>"school district (unified)"</code></td>
 <td>Unified school district</td>
 <td><strong>state</strong></td>
-<td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
 </tr>
 <tr class="even">
 <td><code>"public use microdata area"</code></td>
