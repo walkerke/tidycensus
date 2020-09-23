@@ -6,7 +6,7 @@ Authors@R: c(
     person(given = "Kyle", family = "Walker", email="kyle@walker-data.com", role=c("aut", "cre")),
     person(given = "Matt", family = "Herman", email = "mfherman@gmail.com", role = "aut"),
     person(given = "Kris", family = "Eberwein", email = "eberwein@knights.ucf.edu", role = "ctb"))
-Date: 2020-09-16
+Date: 2020-09-23
 URL: https://github.com/walkerke/tidycensus
 BugReports: https://github.com/walkerke/tidycensus/issues
 Description: An integrated R interface to the decennial US Census and American Community Survey APIs and
@@ -37,4 +37,4 @@ Suggests:
     ggplot2,
     survey,
     srvyr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

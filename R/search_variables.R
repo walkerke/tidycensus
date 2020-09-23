@@ -37,7 +37,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
   get_dataset <- function(d) {
 
     # Account for URL change for 2010 decennial Census
-    if (year == 2010 && dataset == "sf1") {
+    if (year %in% c(2000, 2010) && dataset == "sf1") {
       d <- paste0("dec/", d)
     }
 
