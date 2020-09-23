@@ -82,6 +82,14 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
   }
 
+  if (year == 1990) {
+    stop("The 1990 decennial Census endpoint has been removed by the Census Bureau. We will support 1990 data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.", call. = FALSE)
+  }
+
+  if (year == 2000 && sumfile == "sf3") {
+    stop("The 2000 decennial Census SF3 endpoint has been removed by the Census Bureau. We will support this data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.", call. = FALSE)
+  }
+
   if (is.null(variables) && is.null(table)) {
     stop("Either a vector of variables or an table must be specified.", call. = FALSE)
   }
@@ -291,16 +299,19 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
                  silent = silent)
       # If sf1 fails, try to get it from sf3
       if (inherits(d, "try-error") && year < 2010) {
-        d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", state, county, show_call = show_call)))
-        message("Variables not found in Summary File 1. Trying Summary File 3...")
-      } else {
-        if (sumfile == "sf3") {
-          message("Using Census Summary File 3")
-        } else {
-          message("Using Census Summary File 1")
-        }
-      }
-      d
+
+        stop("The 2000 decennial Census SF3 endpoint has been removed by the Census Bureau. We will support this data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.", call. = FALSE)
+
+        # d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", state, county, show_call = show_call)))
+        # message("Variables not found in Summary File 1. Trying Summary File 3...")
+      } # else {
+      #   if (sumfile == "sf3") {
+      #     message("Using Census Summary File 3")
+      #   } else {
+      #     message("Using Census Summary File 1")
+      #   }
+      # }
+      # d
     }) %>%
       reduce(left_join, by = c("GEOID", "NAME"))
   } else {
@@ -308,16 +319,20 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
                silent = silent)
 
     # If sf1 fails, try to get it from sf3
+    # Keep this code in here, but throw an error for now (if sumfile is not provided)
     if (inherits(dat, "try-error") && year < 2010) {
-      dat <- try(suppressMessages(load_data_decennial(geography, variables, key, year, sumfile = "sf3", state, county, show_call = show_call)))
-      message("Variables not found in Summary File 1. Trying Summary File 3...")
-    } else {
-      if (sumfile == "sf3") {
-        message("Using Census Summary File 3")
-      } else {
-        message("Using Census Summary File 1")
-      }
-    }
+
+      stop("The 2000 decennial Census SF3 endpoint has been removed by the Census Bureau. We will support this data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.", call. = FALSE)
+
+      # dat <- try(suppressMessages(load_data_decennial(geography, variables, key, year, sumfile = "sf3", state, county, show_call = show_call)))
+      # message("Variables not found in Summary File 1. Trying Summary File 3...")
+    } # else {
+    #   if (sumfile == "sf3") {
+    #     message("Using Census Summary File 3")
+    #   } else {
+    #     message("Using Census Summary File 1")
+    #   }
+    # }
 
   }
 
