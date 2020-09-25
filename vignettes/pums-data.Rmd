@@ -12,8 +12,6 @@ knitr::opts_chunk$set(
   )
 ```
 
-__Please note: until version 1.0 of tidycensus is published on CRAN, this functionality is only available in the development version of tidycensus.  Install the development version with `remotes::install_github("walkerke/tidycensus")`.__
-
 Most of the data available through tidycensus and the Census API is aggregated to certain geographic levels (tract, county, state, etc.). In other words, the data we get by executing `get_acs()` has been summarized by the Census Bureau so that we are able to learn how many people live in a particular county or what the median household income of a state is. There are thousands of individual variables that the Census aggregates and publishes in tabular form.
 
 For many purposes, these pre-aggregated tables have enough information to work with. But, the Census Bureau also releases **microdata** from the American Community Survey. Microdata is the individual-level responses to the ACS that is used to create the summary and detail tables the Census publishes. Instead of a getting one row per state from a table, we can get one row per respondent. For the American Community Survey, this data is called the [**Public Use Microdata Sample** (PUMS)](https://www.census.gov/programs-surveys/acs/technical-documentation/pums/about.html).

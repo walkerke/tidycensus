@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.1</span>
       </span>
     </div>
 
@@ -101,7 +101,6 @@
 
     
     
-<p><strong>Please note: until version 1.0 of tidycensus is published on CRAN, this functionality is only available in the development version of tidycensus. Install the development version with <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github("walkerke/tidycensus")</a></code>.</strong></p>
 <p>Most of the data available through tidycensus and the Census API is aggregated to certain geographic levels (tract, county, state, etc.). In other words, the data we get by executing <code><a href="../reference/get_acs.html">get_acs()</a></code> has been summarized by the Census Bureau so that we are able to learn how many people live in a particular county or what the median household income of a state is. There are thousands of individual variables that the Census aggregates and publishes in tabular form.</p>
 <p>For many purposes, these pre-aggregated tables have enough information to work with. But, the Census Bureau also releases <strong>microdata</strong> from the American Community Survey. Microdata is the individual-level responses to the ACS that is used to create the summary and detail tables the Census publishes. Instead of a getting one row per state from a table, we can get one row per respondent. For the American Community Survey, this data is called the <a href="https://www.census.gov/programs-surveys/acs/technical-documentation/pums/about.html"><strong>Public Use Microdata Sample</strong> (PUMS)</a>.</p>
 <p>Using PUMS data instead of the published tables can be a very powerful tool. It can, for instance, allow you to create custom estimates that aren’t available in pre-aggregated tables. You can also use microdata to fit models on individual-level data instead of modeling block groups or census tracts.</p>
@@ -169,11 +168,11 @@
 <pre><code>## # A tibble: 6,436 x 9
 ##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX  
 ##   &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 2018GQ0002083       1     0    59    20 00100 50    19    2    
-## 2 2018GQ0002131       1     0     2    51 00400 50    16    1    
-## 3 2018GQ0002587       1     0    52    18 00400 50    16    1    
-## 4 2018GQ0003751       1     0    34    19 00100 50    19    2    
-## 5 2018GQ0003853       1     0   129    20 00400 50    19    1    
+## 1 2018GQ0001230       1     0     3    26 00300 50    20    1    
+## 2 2018GQ0002135       1     0    64    18 00100 50    19    2    
+## 3 2018GQ0002999       1     0    62    20 00400 50    19    2    
+## 4 2018GQ0004077       1     0    16    94 00200 50    21    2    
+## 5 2018GQ0006486       1     0    26    20 00400 50    19    1    
 ## # … with 6,431 more rows</code></pre>
 <p>We get 6436 rows and 9 columns. In addition to the variables we specified, <code><a href="../reference/get_pums.html">get_pums()</a></code> also always returns <code>SERIALNO</code>, <code>SPORDER</code>, <code>WGTP</code>, <code>PWGTP</code>, and <code>ST</code>. <code>SERIALNO</code> and <code>SPORDER</code> are the variables that uniquely identify observations, <code>WGTP</code> and <code>PWGTP</code> are the housing-unit and person weights, and <code>ST</code> is the state code.</p>
 <p>Notice that <code>ST</code>, <code>SEX</code> and <code>SCHL</code> return coded character variables. You can look up what these codes represent in the <code>pums_variables</code> dataset provided or set <code>recode = TRUE</code> in <code><a href="../reference/get_pums.html">get_pums()</a></code> to return additional columns with the values of these variables recoded.</p>
@@ -186,12 +185,12 @@
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">vt_pums_recoded</span></pre></body></html></div>
 <pre><code>## # A tibble: 6,436 x 12
 ##   SERIALNO   SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX   ST_label  SCHL_label             SEX_label
-##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;                  &lt;chr&gt;    
-## 1 2018GQ000…       1     0    61    19 00200 50    19    1     Vermont/… 1 or more years of co… Male     
-## 2 2018GQ000…       1     0    67    80 00200 50    11    2     Vermont/… Grade 8                Female   
-## 3 2018GQ000…       1     0   177    82 00400 50    16    2     Vermont/… Regular high school d… Female   
-## 4 2018GQ000…       1     0    17    17 00100 50    16    2     Vermont/… Regular high school d… Female   
-## 5 2018GQ000…       1     0    68    20 00400 50    19    2     Vermont/… 1 or more years of co… Female   
+##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;ord&gt;     &lt;ord&gt;                  &lt;ord&gt;    
+## 1 2018GQ000…       1     0     3    26 00300 50    20    1     Vermont/… Associate's degree     Male     
+## 2 2018GQ000…       1     0    64    18 00100 50    19    2     Vermont/… 1 or more years of co… Female   
+## 3 2018GQ000…       1     0    62    20 00400 50    19    2     Vermont/… 1 or more years of co… Female   
+## 4 2018GQ000…       1     0    16    94 00200 50    21    2     Vermont/… Bachelor's degree      Female   
+## 5 2018GQ000…       1     0    26    20 00400 50    19    1     Vermont/… 1 or more years of co… Male     
 ## # … with 6,431 more rows</code></pre>
 </div>
 <div id="analyzing-pums-data" class="section level2">
@@ -205,15 +204,15 @@
   <span class="fu">count</span>(<span class="no">PUMA</span>, <span class="no">SEX_label</span>, <span class="kw">wt</span> <span class="kw">=</span> <span class="no">PWGTP</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 8 x 3
 ##   PUMA  SEX_label      n
-##   &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;
-## 1 00100 Female    111564
-## 2 00100 Male      108732
-## 3 00200 Female     73416
-## 4 00200 Male       73768
-## 5 00300 Female     64806
-## 6 00300 Male       61601
-## 7 00400 Female     66737
-## 8 00400 Male       65675</code></pre>
+##   &lt;chr&gt; &lt;ord&gt;      &lt;dbl&gt;
+## 1 00100 Male      108732
+## 2 00100 Female    111564
+## 3 00200 Male       73768
+## 4 00200 Female     73416
+## 5 00300 Male       61601
+## 6 00300 Female     64806
+## 7 00400 Male       65675
+## 8 00400 Female     66737</code></pre>
 <p>Many of the variables included in the PUMS data are categorical and we might want to group some categories together and estimate the proportion of the population with these characteristics. In this example, we first create a new variable that is whether or not the person has a Bachelor’s degree or above, group by PUMA and sex, then calculate the total population, average age, total with BA or above (only for people 25 and older), and percent with BA or above.</p>
 <div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">vt_pums_recoded</span> <span class="kw">%&gt;%</span>
   <span class="fu">mutate</span>(<span class="kw">ba_above</span> <span class="kw">=</span> <span class="no">SCHL</span> <span class="kw">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"21"</span>, <span class="st">"22"</span>, <span class="st">"23"</span>, <span class="st">"24"</span>)) <span class="kw">%&gt;%</span>
@@ -227,15 +226,15 @@
 <pre><code>## # A tibble: 8 x 6
 ## # Groups:   PUMA [4]
 ##   PUMA  SEX_label total_pop mean_age ba_above ba_above_pct
-##   &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;
-## 1 00100 Female       111564     40.4    36873        0.473
-## 2 00100 Male         108732     38.2    34113        0.469
-## 3 00200 Female        73416     43.6    20248        0.367
-## 4 00200 Male          73768     41.4    15831        0.303
-## 5 00300 Female        64806     45.0    21527        0.434
-## 6 00300 Male          61601     43.7    14869        0.326
-## 7 00400 Female        66737     44.6    18980        0.391
-## 8 00400 Male          65675     41.9    12788        0.278</code></pre>
+##   &lt;chr&gt; &lt;ord&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;
+## 1 00100 Male         108732     38.2    34113        0.469
+## 2 00100 Female       111564     40.4    36873        0.473
+## 3 00200 Male          73768     41.4    15831        0.303
+## 4 00200 Female        73416     43.6    20248        0.367
+## 5 00300 Male          61601     43.7    14869        0.326
+## 6 00300 Female        64806     45.0    21527        0.434
+## 7 00400 Male          65675     41.9    12788        0.278
+## 8 00400 Female        66737     44.6    18980        0.391</code></pre>
 </div>
 <div id="calculating-standard-errors" class="section level2">
 <h2 class="hasAnchor">
@@ -261,23 +260,23 @@
   <span class="fu"><a href="https://rdrr.io/pkg/srvyr/man/survey_tally.html">survey_count</a></span>(<span class="no">PUMA</span>, <span class="no">SEX_label</span>)</pre></body></html></div>
 <pre><code>## # A tibble: 8 x 4
 ##   PUMA  SEX_label      n  n_se
-##   &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1 00100 Female    111564 1360.
-## 2 00100 Male      108732 1123.
-## 3 00200 Female     73416  809.
-## 4 00200 Male       73768  754.
-## 5 00300 Female     64806  578.
-## 6 00300 Male       61601  491.
-## 7 00400 Female     66737  776.
-## 8 00400 Male       65675  702.</code></pre>
+##   &lt;chr&gt; &lt;ord&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1 00100 Male      108732 1123.
+## 2 00100 Female    111564 1360.
+## 3 00200 Male       73768  754.
+## 4 00200 Female     73416  809.
+## 5 00300 Male       61601  491.
+## 6 00300 Female     64806  578.
+## 7 00400 Male       65675  702.
+## 8 00400 Female     66737  776.</code></pre>
 <p>The srvyr syntax is very similar to standard dplyr syntax, so this should look familiar; we’ve swapped out <code>count()</code> for <code><a href="https://rdrr.io/pkg/srvyr/man/survey_tally.html">survey_count()</a></code> and we don’t need a <code>wt</code> argument because we defined the weights when we set up the srvyr object.</p>
 <p>The equivalent estimate using survey syntax looks like this:</p>
 <div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="kw pkg">survey</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svyby.html">svyby</a></span>(~<span class="no">SEX_label</span>, ~<span class="no">PUMA</span>, <span class="kw">design</span> <span class="kw">=</span> <span class="no">vt_survey_design</span>, <span class="kw pkg">survey</span><span class="kw ns">::</span><span class="no"><a href="https://rdrr.io/pkg/survey/man/surveysummary.html">svytotal</a></span>)</pre></body></html></div>
-<pre><code>##        PUMA SEX_labelFemale SEX_labelMale       se1       se2
-## 00100 00100          111564        108732 1360.3476 1122.9765
-## 00200 00200           73416         73768  808.7364  754.0906
-## 00300 00300           64806         61601  578.3529  490.5432
-## 00400 00400           66737         65675  775.9812  702.0659</code></pre>
+<pre><code>##        PUMA SEX_labelMale SEX_labelFemale       se1       se2
+## 00100 00100        108732          111564 1122.9765 1360.3476
+## 00200 00200         73768           73416  754.0906  808.7364
+## 00300 00300         61601           64806  490.5432  578.3529
+## 00400 00400         65675           66737  702.0659  775.9812</code></pre>
 <p>We can also repeat the estimate we did above and calculate the percentage of people that are 25 and up with a bachelor’s degree, while this time returning the upper and lower bounds of the confidence interval for these estimates. This time though, we have to subset our data frame to only those 25 and older before we summarize.</p>
 <div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">vt_survey_design</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/srvyr/man/dplyr_single.html">mutate</a></span>(<span class="kw">ba_above</span> <span class="kw">=</span> <span class="no">SCHL</span> <span class="kw">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"21"</span>, <span class="st">"22"</span>, <span class="st">"23"</span>, <span class="st">"24"</span>)) <span class="kw">%&gt;%</span>
@@ -291,15 +290,15 @@
 <pre><code>## # A tibble: 8 x 11
 ## # Groups:   PUMA [4]
 ##   PUMA  SEX_label age_25_up age_25_up_low age_25_up_upp ba_above ba_above_low ba_above_upp ba_pct
-##   &lt;chr&gt; &lt;chr&gt;         &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;  &lt;dbl&gt;
-## 1 00100 Female        77966        75671.        80261.    36873       32202.       41544.  0.473
-## 2 00100 Male          72680        70216.        75144.    34113       29913.       38313.  0.469
-## 3 00200 Female        55162        53643.        56681.    20248       17679.       22817.  0.367
-## 4 00200 Male          52278        50826.        53730.    15831       13327.       18335.  0.303
-## 5 00300 Female        49546        48576.        50516.    21527       19010.       24044.  0.434
-## 6 00300 Male          45634        44743.        46525.    14869       12638.       17100.  0.326
-## 7 00400 Female        48601        47783.        49419.    18980       16540.       21420.  0.391
-## 8 00400 Male          45960        45067.        46853.    12788       10699.       14877.  0.278
+##   &lt;chr&gt; &lt;ord&gt;         &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+## 1 00100 Male          72680        70216.        75144.    34113       29913.       38313.  0.469
+## 2 00100 Female        77966        75671.        80261.    36873       32202.       41544.  0.473
+## 3 00200 Male          52278        50826.        53730.    15831       13327.       18335.  0.303
+## 4 00200 Female        55162        53643.        56681.    20248       17679.       22817.  0.367
+## 5 00300 Male          45634        44743.        46525.    14869       12638.       17100.  0.326
+## 6 00300 Female        49546        48576.        50516.    21527       19010.       24044.  0.434
+## 7 00400 Male          45960        45067.        46853.    12788       10699.       14877.  0.278
+## 8 00400 Female        48601        47783.        49419.    18980       16540.       21420.  0.391
 ## # … with 2 more variables: ba_pct_low &lt;dbl&gt;, ba_pct_upp &lt;dbl&gt;</code></pre>
 </div>
 <div id="modeling-with-pums-data" class="section level2">
