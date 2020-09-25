@@ -86,6 +86,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                     shift_geo = FALSE, summary_var = NULL, key = NULL,
                     moe_level = 90, survey = "acs5", show_call = FALSE, ...) {
 
+  if (year < 2009) {
+    stop("ACS support in tidycensus begins with the 2005-2009 5-year ACS. Consider using decennial Census data instead.", call. = FALSE)
+  }
+
   if (!is.null(endyear)) {
     year <- endyear
     message("The `endyear` parameter is deprecated and will be removed in a future release.  Please use `year` instead.")
