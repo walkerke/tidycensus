@@ -8,7 +8,7 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
-## In version 0.9.9.8 (currently GitHub-only):
+## In version 0.10.1:
 
 * tidycensus now includes functionality to download and analyze data from the [American Community Survey Public Use Microdata Series (PUMS) datasets](https://www.census.gov/programs-surveys/acs/data/pums.html).  [Read through the corresponding documentation to learn how to use these features.](https://walker-data.com/tidycensus/articles/pums-data.html)
 
