@@ -8,6 +8,12 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
+To learn more about the package, please visit the package documentation at https://walker-data.com/tidycensus. 
+
+Note: This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau.
+
+Update logs:
+
 ## In version 0.10.1:
 
 * tidycensus now includes functionality to download and analyze data from the [American Community Survey Public Use Microdata Series (PUMS) datasets](https://www.census.gov/programs-surveys/acs/data/pums.html).  [Read through the corresponding documentation to learn how to use these features.](https://walker-data.com/tidycensus/articles/pums-data.html)
@@ -57,28 +63,3 @@ ggplot(us_county_income) +
 ![income_plot](tools/readme/county_income.png)
 
 
-
-## Why tidycensus? 
-
-My work heavily involves the use of data from the US Census Bureau, and like many R users, I do most of my work within the __tidyverse__.  Beyond this, the __sf__ package now allows R users to work with spatial data in an integrated way with __tidyverse__ tools, and updates to the __tigris__ package provide access to Census boundary data as `sf` objects.  Recently, I've found myself writing the same routines over and over to get Census data ready for use with __tidyverse__ packages and __sf__.  This motivated me to wrap these functions in a package and open-source in case other R users find them useful.  
-
-__tidycensus__ is designed to help R users get Census data that is pre-prepared for exploration within the __tidyverse__, and optionally spatially with __sf__.  To learn more about how the package works, I encourage you to read the following articles: 
-
-* [Basic usage of __tidycensus__](https://walkerke.github.io/tidycensus/articles/basic-usage.html)
-* [Spatial data in __tidycensus__](https://walkerke.github.io/tidycensus/articles/spatial-data.html)
-* [Margins of error in the ACS](https://walkerke.github.io/tidycensus/articles/margins-of-error.html)
-
-## Future development
-
-To keep up with on-going development of __tidycensus__ and get even more examples of how to use the package, [subscribe to my email list by clicking here](http://eepurl.com/cPGKZD) (no spam, I promise!).  You'll also get updates on the development of my upcoming book with CRC Press, _Analyzing the US Census with R_.  
-
-You can also follow my blog at https://walkerke.github.io.  
-
-My development focus is on making the current datasets as accessible as possible; if you need other approaches or datasets, I recommend the [censusapi](https://github.com/hrecht/censusapi) and [acs](https://cran.r-project.org/package=acs) packages.
-
-If you find this project useful, you can support package development in the following ways: 
-
-* Hiring me as a consultant to help you use __tidycensus__ in your project, or hiring me to give a workshop on __tidycensus__ for your organization.  Please contact me at <kwalkerdata@gmail.com> if you are interested!
-* Filing an issue - or even better, a pull request - at https://github.com/walkerke/tidycensus/issues.  
-
-Note: This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau.
