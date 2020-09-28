@@ -15,6 +15,14 @@
 #' @export
 load_variables <- function(year, dataset, cache = FALSE) {
 
+  if (dataset == "sf3" && year == 2000) {
+    stop("The 2000 SF3 endpoint has been removed by the Census Bureau. We will support this data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.")
+  }
+
+  if (year == 1990) {
+    stop("The 1990 decennial Census endpoint has been removed by the Census Bureau. We will support 1990 data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.")
+  }
+
   if (dataset=="acs3") {
     if (year > 2013 || year < 2012)
       stop("The current acs3 survey contains data from 2012-2013. Please select a different year.")
