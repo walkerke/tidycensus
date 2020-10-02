@@ -311,7 +311,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
       #     message("Using Census Summary File 1")
       #   }
       # }
-      # d
+      d
     }) %>%
       reduce(left_join, by = c("GEOID", "NAME"))
   } else {
