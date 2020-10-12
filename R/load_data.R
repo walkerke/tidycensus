@@ -126,7 +126,7 @@ format_variables_acs <- function(variables) {
 }
 
 load_data_acs <- function(geography, formatted_variables, key, year, state = NULL,
-                          county = NULL, survey, show_call = FALSE) {
+                          county = NULL, zcta = NULL, survey, show_call = FALSE) {
 
   base <- paste("https://api.census.gov/data",
                   as.character(year), "acs",
@@ -206,7 +206,17 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
   }
 
-  else {
+  else if (!is.null(zcta))  {
+
+    for_area <- paste0(zcta, collapse = ",")
+
+    vars_to_get <- paste0(formatted_variables, ",NAME")
+
+    call <- GET(base, query = list(get = vars_to_get,
+                                   "for" = paste0(geography, ":", for_area),
+                                   key = key))
+
+  } else {
 
     vars_to_get <- paste0(formatted_variables, ",NAME")
 
