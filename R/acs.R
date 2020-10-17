@@ -25,10 +25,14 @@
 #' @param county The county for which you are requesting data. County names and
 #'               FIPS codes are accepted. Must be combined with a value supplied
 #'               to `state`.  Defaults to NULL.
+#' @param zcta The zip code tabulation area(s) for which you are requesting data.
+#'             Specify a single value or a vector of values to get data for more
+#'             than one ZCTA. Numeric or character ZCTA GEOIDs are accepted.
+#'             When specifying ZCTAs, geography must be set to `"zcta"` and
+#'             `state` and `county` must be `NULL`. Defaults to NULL.
 #' @param geometry if FALSE (the default), return a regular tibble of ACS data.
 #'                 if TRUE, uses the tigris package to return an sf tibble
-#'                 with simple feature geometry in the `geometry` column.  state, county, tract, block group,
-#'                 block, and ZCTA geometry are supported.
+#'                 with simple feature geometry in the `geometry` column.
 #' @param keep_geo_vars if TRUE, keeps all the variables from the Census
 #'                      shapefile obtained by tigris.  Defaults to FALSE.
 #' @param shift_geo if TRUE, returns geometry with Alaska and Hawaii shifted for thematic mapping of the entire US.
@@ -80,9 +84,9 @@
 #' }
 #' @export
 get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FALSE,
-                    year = 2018, endyear = NULL,
-                    output = "tidy",
-                    state = NULL, county = NULL, geometry = FALSE, keep_geo_vars = FALSE,
+                    year = 2018, endyear = NULL, output = "tidy",
+                    state = NULL, county = NULL, zcta = NULL,
+                    geometry = FALSE, keep_geo_vars = FALSE,
                     shift_geo = FALSE, summary_var = NULL, key = NULL,
                     moe_level = 90, survey = "acs5", show_call = FALSE, ...) {
 
@@ -189,7 +193,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   if (geography == "puma") geography <- "public use microdata area"
 
   if (geography == "zip code tabulation area" && (!is.null(state) || !is.null(county))) {
-    stop("ZCTAs can only be requested for the entire country, not within states or counties.",
+    stop("ZCTAs can only be requested for the entire country or by specifying ZCTAs, not within states or counties.",
+         call. = FALSE)
+  }
+
+  if (!is.null(zcta) && geography != "zip code tabulation area") {
+    stop("ZCTAs can only be specified when requesting data at the zip code tabulation area-level.",
          call. = FALSE)
   }
 
@@ -237,6 +246,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                          output = output,
                          state = .x,
                          county = county,
+                         zcta = zcta,
                          summary_var = summary_var,
                          geometry = geometry,
                          keep_geo_vars = keep_geo_vars,
@@ -265,6 +275,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                          output = output,
                          state = .x,
                          county = county,
+                         zcta = zcta,
                          summary_var = summary_var,
                          geometry = geometry,
                          keep_geo_vars = keep_geo_vars,
@@ -321,6 +332,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
             output = output,
             state = state,
             county = county,
+            zcta = zcta,
             summary_var = summary_var,
             geometry = geometry,
             keep_geo_vars = keep_geo_vars,
@@ -344,6 +356,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               output = output,
               state = state,
               county = county,
+              zcta = zcta,
               summary_var = summary_var,
               geometry = FALSE,
               keep_geo_vars = keep_geo_vars,
@@ -377,6 +390,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
             output = output,
             state = state,
             county = county,
+            zcta = zcta,
             summary_var = summary_var,
             geometry = geometry,
             keep_geo_vars = keep_geo_vars,
@@ -414,6 +428,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               output = output,
               state = state,
               county = county,
+              zcta = zcta,
               summary_var = summary_var,
               geometry = geometry,
               keep_geo_vars = keep_geo_vars,
@@ -438,6 +453,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               output = output,
               state = state,
               county = county,
+              zcta = zcta,
               summary_var = summary_var,
               geometry = geometry,
               keep_geo_vars = keep_geo_vars,
@@ -473,6 +489,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 output = output,
                 state = .x,
                 county = county,
+                zcta = zcta,
                 summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
@@ -502,6 +519,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 output = output,
                 state = .x,
                 county = county,
+                zcta = zcta,
                 summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
@@ -528,6 +546,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 output = output,
                 state = state,
                 county = .x,
+                zcta = zcta,
                 summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
@@ -558,6 +577,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 output = output,
                 state = state,
                 county = .x,
+                zcta = zcta,
                 summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
@@ -603,14 +623,14 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     dat <- map(l, function(x) {
       vars <- format_variables_acs(x)
       suppressWarnings(load_data_acs(geography, vars, key, year, state, county,
-                                     survey, show_call = show_call))
+                                     zcta, survey, show_call = show_call))
     }) %>%
     Reduce(function(x, y) full_join(x, y, by = "GEOID", suffix = c("", ".y")), .)
   } else {
     vars <- format_variables_acs(variables)
 
     dat <- suppressWarnings(load_data_acs(geography, vars, key, year, state, county,
-                                          survey, show_call = show_call))
+                                          zcta, survey, show_call = show_call))
   }
 
   vars2 <- format_variables_acs(variables)
@@ -709,7 +729,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     sumvar <- format_variables_acs(summary_var)
 
-    sumdat <- suppressMessages(load_data_acs(geography, sumvar, key, year, state, county, survey))
+    sumdat <- suppressMessages(load_data_acs(geography, sumvar, key, year, state, county, zcta, survey))
 
     sumest <- paste0(summary_var, "E")
 
