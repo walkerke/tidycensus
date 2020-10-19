@@ -29,6 +29,7 @@
 #' @examples
 #' \dontrun{
 #' get_pums(variables = "AGEP", state = "VT")
+#' get_pums(variables = "AGEP", state = "multiple", puma = c("UT" = 35008, "NV" = 00403))
 #' get_pums(variables = c("AGEP", "ANC1P"), state = "VT", recode = TRUE)
 #' get_pums(variables = "AGEP", state = "VT", survey = "acs1", rep_weights = "person")
 #' }

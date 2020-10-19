@@ -661,6 +661,9 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
 load_data_pums <- function(variables, state, puma, key, year, survey, recode, show_call) {
 
+  # for which years is data dictionary available in pums_variables?
+  # we'll use this a couple times later on
+  recode_years <- 2017:2019
 
   var <- paste0(variables, collapse = ",")
 
@@ -767,8 +770,8 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
   # necessary to match data dictionary codes and
   # convert variables to numeric according to data dictionary
 
-  # But wait, this only works when the serial numbers are correctly returned and and we have variable metadata in pums_variables
-  if (year %in% c(2017, 2018)) {
+  # Only works for years included in pums_variables data dictionary
+  if (year %in% recode_years) {
     var_val_length <- pums_variables_filter %>%
       filter(!is.na(.data$val_length)) %>%
       distinct(.data$var_code, .data$val_length, .data$val_na)
@@ -810,8 +813,8 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
   # Do you want to return value labels also?
   if (recode) {
 
-    # Works for 2017-2019 because those are the only years included in pums_variables for now
-    if (year %in% 2017:2019) {
+    # Only works for years included in pums_variables data dictionary
+    if (year %in% recode_years) {
       var_lookup <- pums_variables_filter %>%
         select(.data$var_code, val = .data$val_min, .data$val_label)
 
@@ -866,7 +869,9 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
       dat <- dat %>%
         left_join(recoded_wide, by = c("SERIALNO", "SPORDER"))
     } else {
-      message("Recoding is currently supported for 2017 - 2019 data. Returning original data only.")
+      message(paste("Recoding is currently supported for",
+                    min(recode_years), "-", max(recode_years),
+                    "data. Returning original data only."))
       }
     }
   return(dat)
