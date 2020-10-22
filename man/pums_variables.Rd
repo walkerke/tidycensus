@@ -5,7 +5,7 @@
 \alias{pums_variables}
 \title{Dataset with PUMS variables and codes}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 21114 rows and 12 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 26482 rows and 12 columns.
 }
 \usage{
 data(pums_variables)
@@ -33,14 +33,14 @@ Built-in dataset for variable name and code label lookup.
 Dataset with PUMS variables and codes
 
 Built-in dataset that is created from the
-\href{https://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2018.html}{Census
+\href{https://www.census.gov/programs-surveys/acs/microdata/documentation.html}{Census
 PUMS data dictionaries}. Use this dataset to lookup the names of variables to
 use in \code{\link{get_pums}}. This dataset also contains labels for the
 coded values returned by the Census API and is used when \code{recode = TRUE}
 in \code{\link{get_pums}}.
 
 Because variable names and codes change from year to year, you should filter
-this dataset for the survey and year of interest. NOTE: only 2017 and 2018 (acs1 and
+this dataset for the survey and year of interest. NOTE: 2017 - 2019 (acs1 and
 acs5) variables are available.
 }
 \keyword{datasets}

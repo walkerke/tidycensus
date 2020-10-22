@@ -15,7 +15,7 @@
 #'   errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.
 #' @param recode If TRUE, recodes variable values using Census data dictionary
 #'   and creates a new \code{*_label} column for each variable that is recoded.
-#'   Only available for 2017 and 2018 data. Defaults to FALSE.
+#'   Available for 2017 - 2019 data. Defaults to FALSE.
 #' @param show_call If TRUE, display call made to Census API. This can be very
 #'   useful in debugging and determining if error messages returned are due to
 #'   tidycensus or the Census API. Copy to the API call into a browser and see
@@ -29,6 +29,7 @@
 #' @examples
 #' \dontrun{
 #' get_pums(variables = "AGEP", state = "VT")
+#' get_pums(variables = "AGEP", state = "multiple", puma = c("UT" = 35008, "NV" = 00403))
 #' get_pums(variables = c("AGEP", "ANC1P"), state = "VT", recode = TRUE)
 #' get_pums(variables = "AGEP", state = "VT", survey = "acs1", rep_weights = "person")
 #' }
