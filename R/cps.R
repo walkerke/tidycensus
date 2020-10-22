@@ -1,11 +1,18 @@
 #' Load data from the Basic Monthly Current Population Survey Microdata API
 #'
-#' @param variables A vector of variables from the CPS API.
+#' @param variables A vector of variables from the CPS API. Household and person
+#'   IDs, household and person weights, state, year, and month are always
+#'   returned.
 #' @param state A state, or vector of states, for which you would like to
 #'   request data. The entire US can be requested with \code{state = "all"}.
 #'   Defaults to \code{"all"}.
-#' @param year The year of the CPS data requested. Defaults to 2020.
-#' @param month The month number of the CPS data requested Defaults to 9 (September).
+#' @param year The year or years of the CPS data requested.
+#' @param month The month number or numbers of the CPS data requested.
+#' @param date_range A vector of two dates (start month and end month). All
+#'   months of data between the two dates will be requested You can use either a
+#'   date range or a combination of year and month, but not both.
+#' @param var_filter A named list of CPS variable names and values to be used as
+#'   filter when requesting data from the Census API.
 #' @param show_call If TRUE, display call made to Census API. This can be very
 #'   useful in debugging and determining if error messages returned are due to
 #'   tidycensus or the Census API. Copy to the API call into a browser and see
@@ -18,9 +25,17 @@
 #'
 #' @examples
 #' \dontrun{
-#' get_pums(variables = "AGEP", state = "VT")
-#' get_pums(variables = c("AGEP", "ANC1P"), state = "VT", recode = TRUE)
-#' get_pums(variables = "AGEP", state = "VT", survey = "acs1", rep_weights = "person")
+#' get_cps(variables = "PRTAGE", state = "VT", year = 2020, month = 9)
+#'
+#' # All months between July 2018 and and June 2020
+#' # Only return observations where age is between 16 and 24 and
+#' # employment status is 1, 2, or 5
+#' get_cps(
+#'   variables = c("PRTAGE", "PEMLR", "PTDTRACE", "PEHSPNON"),
+#'   state = c("VT", "NH"),
+#'   date_range = c(as.Date("2018-07-01"), as.Date("2020-06-01")),
+#'   var_filter = list(PRTAGE = 16:24, PEMLR = c(1, 2, 5))
+#'   )
 #' }
 #'
 get_cps <- function(variables,
@@ -28,9 +43,11 @@ get_cps <- function(variables,
                     year = NULL,
                     month = NULL,
                     date_range = NULL,
+                    var_filter = NULL,
                     show_call = FALSE,
                     key = NULL) {
 
+  # check if api key is installed or provided
   if (Sys.getenv('CENSUS_API_KEY') != '') {
     key <- Sys.getenv('CENSUS_API_KEY')
   } else if (is.null(key)) {
@@ -38,6 +55,7 @@ get_cps <- function(variables,
          call. = FALSE)
   }
 
+  # check that there is either a year/month or date range specified
   if (
     (!is.null(date_range) && (!is.null(year) || !is.null(month))) ||
     (is.null(date_range) && (is.null(year) || is.null(month)))
@@ -52,28 +70,19 @@ get_cps <- function(variables,
     state <- NULL
   }
 
-  # # if no year or month specified, let's get data from 2 months ago
-  # if (is.null(year) || is.null(month)) {
-  #   floor_month <- as.Date(cut(Sys.Date(), "month"))
-  #   last_month <- seq(floor_month, length = 2, by = "-2 month")[2]
-  #
-  #   if (is.null(year)) {
-  #     year <- as.numeric(format(last_month, "%Y"))
-  #     message(paste("No year specified, defaulting to", year))
-  #   }
-  #
-  #   if (is.null(month)) {
-  #     month <- as.numeric(format(last_month, "%m"))
-  #     message(paste("No month specified, defaulting to", month.name[month]))
-  #   }
-  # }
-
   # remove a handful of variables that may be requested by user because they
   # are always returned by load_data_cps() and will return duplicate columns
   # if included in vars requested
   vars_exclude <- c("GESTFIPS", "PWCMPWGT", "HWHHWGT",
                     "HRHHID", "HRHHID2", "PULINENO",
                     "HRMONTH", "HRYEAR4", "HRYEAR")
+
+  # if we request the variable in the var list as well as in filters
+  # it will be duplicated, so add the vars with filters to the exclude list
+  if (!is.null(var_filter)) {
+    vars_exclude <- c(vars_exclude, unique(names(var_filter)))
+  }
+
   variables <- variables[!variables %in% vars_exclude]
 
   # always get household and person weight vars
@@ -92,6 +101,14 @@ get_cps <- function(variables,
     year_month <- tidyr::crossing(year = year, month = month)
 
   } else {
+
+    if (length(date_range) > 2) {
+      stop("Provide a vector of two dates to specify beginning and end of date range",
+           call. = FALSE)
+    }
+    if (length(date_range) == 1) {
+      date_range[2] <- date_range[1]
+    }
 
     # when date range specified, get first of the month for start and end
     floor_month <- as.Date(cut(date_range, "month"))
@@ -121,7 +138,6 @@ get_cps <- function(variables,
          call. = FALSE)
   }
 
-
   message("Getting data from the Basic Monthly CPS Public Use Microdata files")
   message(paste("First month:", format(min(year_month$date), "%b %Y")))
   message(paste("Last month:", format(max(year_month$date), "%b %Y")))
@@ -135,9 +151,6 @@ get_cps <- function(variables,
   # and will only need a single api call
   l <- split(variables, ceiling(seq_along(variables) / 42))
 
-  # # use insistently to try loading data up to 3 times if api response fails
-  # insist_load_data_cps <- purrr::insistently(load_data_cps)
-
   # iterate over each element of vars list
   cps_data <- map(l, function(variables) {
 
@@ -145,16 +158,12 @@ get_cps <- function(variables,
     # bind all rows returned into a single data frame
     purrr::map2_dfr(year_month$year, year_month$month, function(x, y) {
       load_data_cps(variables = variables,
-                                  state = state,
-                                  year = x,
-                                  month = y,
-                                  show_call = show_call,
-                                  key = key)
-
-      # if (x == min(year_month$year) && y == min(year_month$month)) {
-      #   message(ret$messages)
-      #   }
-      # ret$result
+                    state = state,
+                    year = x,
+                    month = y,
+                    var_filter = var_filter,
+                    show_call = show_call,
+                    key = key)
       })
     })
 
@@ -174,10 +183,9 @@ get_cps <- function(variables,
     mutate(
       GESTFIPS = str_pad(.data$GESTFIPS, width = 2, side = "left", pad = "0"),
       dplyr::across(!dplyr::any_of(c("HRHHID", "HRHHID2", "PULINENO", "GESTFIPS")), as.numeric)
-     # dplyr::across(tidyselect::vars_select_helpers$where(is.numeric), ~ ifelse(.x == -1, NA, .x))
       ) %>%
     left_join(fips_state_table, by = c("GESTFIPS" = "fips")) %>%
-    mutate(ST = toupper(abb)) %>%
+    mutate(ST = toupper(.data$abb)) %>%
     select(-.data$name, -.data$abb) %>%
     dplyr::relocate(.data$GESTFIPS, .data$ST, .after = .data$PULINENO) %>%
     dplyr::relocate(.data$HRMONTH, .data$HRYEAR4)
@@ -197,120 +205,3 @@ get_cps <- function(variables,
   }
   return(cps_data)
 }
-
-
-#' #' Convert a data frame returned by get_pums() to a survey object
-#' #'
-#' #' @description This helper function takes a data frame returned by
-#' #'   \code{\link{get_pums}} and converts it to a tbl_svy from the srvyr
-#' #'   \code{\link[srvyr]{as_survey}} package or a svyrep.design object from the
-#' #'   \code{\link[survey]{svrepdesign}} package. You can then use functions from the
-#' #'   srvyr or survey to calculate weighted estimates with replicate weights
-#' #'   included to provide accurate standard errors.
-#' #'
-#' #' @param df A data frame with PUMS person or housing weight variables, most
-#' #'   likely returned by \code{\link{get_pums}}.
-#' #' @param type Whether to use person or housing-level weights; either
-#' #'   \code{"housing"} or \code{"person"} (the default).
-#' #' @param design Whether to use a cluster or replicate weight survey design;
-#' #'   either \code{"cluster"} or \code{"rep_weights"} (the default).
-#' #' @param class Whether to convert to a srvyr or survey object; either
-#' #'   \code{"survey"} or \code{"srvyr"} (the default).
-#' #'
-#' #' @return A tbl_svy or svyrep.design object.
-#' #' @export
-#' #'
-#' #' @examples
-#' #' \dontrun{
-#' #' pums <- get_pums(variables = "AGEP", state = "VT", rep_weights = "person")
-#' #' pums_design <- to_survey(pums, type = "person", class = "srvyr")
-#' #' survey::svymean(~AGEP, pums_design)
-#' #' }
-#' to_survey <- function(df,
-#'                       type = c("person", "housing"),
-#'                       class = c("srvyr", "survey"),
-#'                       design = c("rep_weights", "cluster")) {
-#'
-#'   type <- match.arg(type)
-#'   class <- match.arg(class)
-#'   design <- match.arg(design)
-#'
-#'   if (class == "srvyr" && !"srvyr" %in% installed.packages()) {
-#'     stop('srvyr package must be installed to convert to a srvyr object. Please install using install.packages("srvyr") and try again.',
-#'          call. = FALSE)
-#'   }
-#'
-#'   if (!"survey" %in% installed.packages()) {
-#'     stop('survey package must be installed to convert to a survey object. Please install using install.packages("survey") and try again.',
-#'          call. = FALSE)
-#'   }
-#'
-#'   if (design == "cluster") {
-#'     if (!all(c("SERIALNO", "PUMA") %in% names(df))) {
-#'       stop('"SERIALNO" and "PUMA" are present in input data.', call. = FALSE)
-#'     }
-#'   }
-#'
-#'   if (type == "person") {
-#'
-#'     variables <- df[, !names(df) %in% c(person_weight_variables, "PWGTP")]
-#'     weights <- df$PWGTP
-#'
-#'     if (design == "rep_weights") {
-#'       if (!all(person_weight_variables %in% names(df))) {
-#'         stop("Not all person replicate weight variables are present in input data.", call. = FALSE)
-#'       }
-#'       if (!"PWGTP" %in% names(df)) {
-#'         stop("Person weight variable is not present in input data.", call. = FALSE)
-#'       }
-#'       repweights <- df[, person_weight_variables]
-#'     }
-#'   }
-#'
-#'   if (type == "housing") {
-#'     if (anyDuplicated(df$SERIALNO) != 0) {
-#'       warning("You have duplicate values in the SERIALNO column of your input data, are you sure you wish to proceed?",
-#'               call. = FALSE)
-#'     }
-#'
-#'     variables <- df[, !names(df) %in% c(housing_weight_variables, "WGTP")]
-#'     weights <- df$WGTP
-#'
-#'     if (design == "rep_weights") {
-#'       if (!all(housing_weight_variables %in% names(df))) {
-#'         stop("Not all housing replicate weight variables are present in input data.", call. = FALSE)
-#'       }
-#'       if (!"WGTP" %in% names(df)) {
-#'         stop("Housing weight variable is not present in input data.", call. = FALSE)
-#'       }
-#'     repweights <- df[, housing_weight_variables]
-#'     }
-#'   }
-#'
-#'   if (design == "cluster") {
-#'     survey <- survey::svydesign(
-#'       variables = variables,
-#'       weights = weights,
-#'       ids = df$SERIALNO,
-#'       strata = df$PUMA
-#'     )
-#'   }
-#'
-#'   if (design == "rep_weights"){
-#'     survey <- survey::svrepdesign(
-#'       variables = variables,
-#'       weights = weights,
-#'       repweights = repweights,
-#'       scale = 4 / 80,
-#'       rscales = rep(1 , 80),
-#'       mse = TRUE,
-#'       type = "JK1"
-#'       )
-#'     }
-#'
-#'   if (class == "srvyr") {
-#'     return(srvyr::as_survey(survey))
-#'   } else {
-#'     survey
-#'   }
-#' }

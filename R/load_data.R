@@ -877,7 +877,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
   return(dat)
 }
 
-load_data_cps <- function(variables, state, year, month, show_call, key) {
+load_data_cps <- function(variables, state, year, month, var_filter, show_call, key) {
 
   # before may 2004, HRHHID2 didn't exist so don't request it
   if (year < 2004 || (year == 2004 && month < 5)) {
@@ -895,6 +895,17 @@ load_data_cps <- function(variables, state, year, month, show_call, key) {
   # combine id_vars with user requested vars and collapse to comma sep string
   vars_to_get <- paste0(c(id_vars, variables), collapse = ",")
 
+  # if there are variable filters construct a named list
+  # of each variable name and it's filter conditions
+  # than will be passed as query parameters
+
+  filter_vars <- list()
+
+  if (!is.null(var_filter)) {
+    filter_vars <- purrr::imap(var_filter, construct_filter) %>%
+      purrr::flatten()
+  }
+
   message(paste("Downloading data from", month.abb[month], year))
 
   # replace month number(s) with month abbreviation(s) to create api call
@@ -911,9 +922,11 @@ load_data_cps <- function(variables, state, year, month, show_call, key) {
     }
 
   call <- GET(base,
-              query = list(get = vars_to_get,
-                           ucgid = geo,
-                           key = key),
+              query = c(get = vars_to_get,
+                        filter_vars,
+                        ucgid = geo,
+                        key = key
+                        )
               # progress()
               )
 
