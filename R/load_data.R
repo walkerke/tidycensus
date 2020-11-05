@@ -876,3 +876,100 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
     }
   return(dat)
 }
+
+load_data_cps <- function(variables, state, year, month, var_filter, show_call, key) {
+
+  # before may 2004, HRHHID2 didn't exist so don't request it
+  if (year < 2004 || (year == 2004 && month < 5)) {
+    id_vars <- c("HRHHID", "PULINENO", "HRYEAR4", "HRMONTH")
+  } else {
+    id_vars <- c("HRHHID", "HRHHID2", "PULINENO", "HRYEAR4", "HRMONTH")
+  }
+
+  # before 1998 year variable is HRYEAR and is two digits
+  # replace the new year variable with the old and we'll make it four digits once it comes back
+  if (year < 1998) {
+    id_vars <- gsub("HRYEAR4", "HRYEAR", id_vars)
+  }
+
+  # combine id_vars with user requested vars and collapse to comma sep string
+  vars_to_get <- paste0(c(id_vars, variables), collapse = ",")
+
+  # if there are variable filters construct a named list
+  # of each variable name and it's filter conditions
+  # than will be passed as query parameters
+
+  filter_vars <- list()
+
+  if (!is.null(var_filter)) {
+    filter_vars <- purrr::imap(var_filter, construct_filter) %>%
+      purrr::flatten()
+  }
+
+  message(paste("Downloading data from", month.abb[month], year))
+
+  # replace month number(s) with month abbreviation(s) to create api call
+  month <- tolower(month.abb[month])
+
+  base <- sprintf("https://api.census.gov/data/%s/cps/basic/%s",
+                  year, month)
+
+  if (!is.null(state)) {
+    geo <- map_chr(state, ~ paste0("0400000US", suppressMessages(validate_state(.x)))) %>%
+      paste0(collapse = ",")
+    } else {
+      geo <- NULL
+    }
+
+  call <- GET(base,
+              query = c(get = vars_to_get,
+                        filter_vars,
+                        ucgid = geo,
+                        key = key
+                        )
+              # progress()
+              )
+
+  if (show_call) {
+    call_url <- gsub("&key.*", "", utils::URLdecode(call$url))
+    message(paste("Census API call:", call_url))
+  }
+
+  # make sure call status returns 200, else, print the error message for the user
+  if (call$status_code != 200) {
+    msg <- content(call, as = "text")
+    stop(sprintf("Your API call has errors. The API message returned is %s.", msg),
+         call. = FALSE)
+    }
+
+  # convert api response to text
+  content <- content(call, as = "text")
+
+  # give a help error message to the user if the api key is rejected
+  if (grepl("You included a key with this request", content)) {
+    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.",
+         call. = FALSE)
+  }
+
+  # parse api return and convert to matrix
+  dat <- fromJSON(content)
+
+  # first row of return is the column names
+  colnames(dat) <- dat[1, ]
+
+  # convert parsed json matrix to tibble
+  dat <- as_tibble(dat)
+
+  # remove first row now that we've added it as the column names
+  dat <- dat[-1, ]
+
+  # before 1994 only 2 digits returned for year
+  # add first 2 digits and rename to 4 digit variable named used in 1998 and later
+  if (year < 1998) {
+    dat <- dat %>%
+      rename(HRYEAR4 = .data$HRYEAR) %>%
+      mutate(HRYEAR4 = paste0("19", .data$HRYEAR4))
+  }
+
+  return(dat)
+}
