@@ -450,6 +450,11 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
   id_vars <- names(dat)[! names(dat) %in% v2]
 
   # Paste into a GEOID column
+  # Apply tract band-aid (GH issue #317)
+  if ("tract" %in% id_vars && year == 2000) {
+    dat$tract <- stringr::str_pad(dat$tract, 6, "right", "0")
+  }
+
   dat$GEOID <- do.call(paste0, dat[id_vars])
 
 
