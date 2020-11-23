@@ -305,7 +305,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     message('Fetching data by table type ("B/C", "S", "DP") and combining the result.')
 
     # split variables by type into list, discard empty list elements
-    vars_by_type <- map(c("^B|^C", "^S", "^D"), ~ my_vars[str_detect(variables, .x)]) %>%
+    vars_by_type <- map(c("^B|^C", "^S", "^D"), ~ variables[str_detect(variables, .x)]) %>%
       purrr::compact()
 
     if (geometry) {
