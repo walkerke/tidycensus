@@ -7,14 +7,17 @@
 load_variables(year, dataset, cache = FALSE)
 }
 \arguments{
-\item{year}{The year for which you are requesting variables.  Either the year of the decennial Census,
-or the endyear for a 5-year ACS sample.}
+\item{year}{The year for which you are requesting variables. Either the year
+or endyear of the decennial Census or ACS sample. 5-year ACS data is
+available from 2009 through 2018. 1-year ACS data is available from 2005
+through 2019.}
 
-\item{dataset}{One of "sf1", "sf3", "acs1", "acs3", "acs5", "acs1/profile", "acs3/profile, "acs5/profile",
-"acs1/subject", "acs3/subject", or "acs5/subject".}
+\item{dataset}{One of "sf1", "sf3", "acs1", "acs3", "acs5", "acs1/profile",
+"acs3/profile, "acs5/profile", "acs1/subject", "acs3/subject", or
+"acs5/subject".}
 
-\item{cache}{Whether you would like to cache the dataset for future access, or load the dataset
-from an existing cache. Defaults to FALSE.}
+\item{cache}{Whether you would like to cache the dataset for future access,
+or load the dataset from an existing cache. Defaults to FALSE.}
 }
 \value{
 A tibble of variables from the requested dataset.
