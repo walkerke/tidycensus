@@ -14,6 +14,13 @@ Note: This product uses the Census Bureau Data API but is not endorsed or certif
 
 Update logs:
 
+## In version 0.11: 
+
+* `get_acs()` now defaults to `year = 2019`, meaning that 2015-2019 5-year estimates and 2019 1-year estimates are retrieved if no year is specified.
+* `get_estimates()` now also defaults to `year = 2019`. 
+* tidycensus can once again access the 2000 Summary File 3 in `get_decennial()` as the Census Bureau has restored its API endpoint.
+* Various bug fixes and internal improvements; browse [the GitHub issues](https://github.com/walkerke/tidycensus/issues) for a complete listing.
+
 ## In version 0.10.2:
 
 * tidycensus now includes functionality to download and analyze data from the [American Community Survey Public Use Microdata Series (PUMS) datasets](https://www.census.gov/programs-surveys/acs/microdata.html).  [Read through the corresponding documentation to learn how to use these features.](https://walker-data.com/tidycensus/articles/pums-data.html)
