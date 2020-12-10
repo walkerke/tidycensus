@@ -10,7 +10,7 @@ get_estimates(
   variables = NULL,
   breakdown = NULL,
   breakdown_labels = FALSE,
-  year = 2018,
+  year = 2019,
   state = NULL,
   county = NULL,
   time_series = FALSE,

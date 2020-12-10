@@ -48,7 +48,7 @@
 #' @export
 get_estimates <- function(geography, product = NULL, variables = NULL,
                           breakdown = NULL, breakdown_labels = FALSE,
-                          year = 2018, state = NULL, county = NULL,
+                          year = 2019, state = NULL, county = NULL,
                           time_series = FALSE,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, show_call = FALSE, ...) {

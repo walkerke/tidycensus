@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Obtain data and feature geometry for the five-year American Community Survey — get_acs • tidycensus</title>
+<title>Obtain data and feature geometry for the American Community Survey — get_acs • tidycensus</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Obtain data and feature geometry for the five-year American Community Survey — get_acs" />
-<meta property="og:description" content="Obtain data and feature geometry for the five-year American Community Survey" />
+<meta property="og:title" content="Obtain data and feature geometry for the American Community Survey — get_acs" />
+<meta property="og:description" content="Obtain data and feature geometry for the American Community Survey" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11</span>
       </span>
     </div>
 
@@ -132,13 +132,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Obtain data and feature geometry for the five-year American Community Survey</h1>
+    <h1>Obtain data and feature geometry for the American Community Survey</h1>
     <small class="dont-index">Source: <a href='https://github.com/walkerke/tidycensus/blob/master/R/acs.R'><code>R/acs.R</code></a></small>
     <div class="hidden name"><code>get_acs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Obtain data and feature geometry for the five-year American Community Survey</p>
+    <p>Obtain data and feature geometry for the American Community Survey</p>
     </div>
 
     <pre class="usage"><span class='fu'>get_acs</span>(
@@ -146,11 +146,12 @@
   <span class='kw'>variables</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>table</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>cache_table</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2018</span>,
+  <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2019</span>,
   <span class='kw'>endyear</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"tidy"</span>,
   <span class='kw'>state</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>county</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>zcta</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>keep_geo_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>shift_geo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -172,27 +173,28 @@
     <tr>
       <th>variables</th>
       <td><p>Character string or vector of character strings of variable
-IDs. tidycensus automatically returns the estimate and the
-margin of error associated with the variable.</p></td>
+IDs. tidycensus automatically returns the estimate and the margin of error
+associated with the variable.</p></td>
     </tr>
     <tr>
       <th>table</th>
-      <td><p>The ACS table for which you would like to request all variables. Uses
-lookup tables to identify the variables; performs faster when variable
-table already exists through <code><a href='load_variables.html'>load_variables(cache = TRUE)</a></code>.
-Only one table may be requested per call.</p></td>
+      <td><p>The ACS table for which you would like to request all
+variables. Uses lookup tables to identify the variables; performs faster
+when variable table already exists through <code><a href='load_variables.html'>load_variables(cache =
+TRUE)</a></code>. Only one table may be requested per call.</p></td>
     </tr>
     <tr>
       <th>cache_table</th>
-      <td><p>Whether or not to cache table names for faster future access.
-Defaults to FALSE; if TRUE, only needs to be called once per
+      <td><p>Whether or not to cache table names for faster future
+access. Defaults to FALSE; if TRUE, only needs to be called once per
 dataset.  If variables dataset is already cached via the
 <code>load_variables</code> function, this can be bypassed.</p></td>
     </tr>
     <tr>
       <th>year</th>
-      <td><p>The year, or endyear, of the ACS sample. 2009 through 2018 are
-available. Defaults to 2018.</p></td>
+      <td><p>The year, or endyear, of the ACS sample. 5-year ACS data is
+available from 2009 through 2018. 1-year ACS data is available from 2005
+through 2019. Defaults to 2018.</p></td>
     </tr>
     <tr>
       <th>endyear</th>
@@ -201,28 +203,33 @@ available. Defaults to 2018.</p></td>
     <tr>
       <th>output</th>
       <td><p>One of "tidy" (the default) in which each row represents an
-enumeration unit-variable combination, or "wide" in which each
-row represents an enumeration unit and the variables are in the
-columns.</p></td>
+enumeration unit-variable combination, or "wide" in which each row
+represents an enumeration unit and the variables are in the columns.</p></td>
     </tr>
     <tr>
       <th>state</th>
-      <td><p>An optional vector of states for which you are requesting data. State
-names, postal codes, and FIPS codes are accepted.
-Defaults to NULL.</p></td>
+      <td><p>An optional vector of states for which you are requesting data.
+State names, postal codes, and FIPS codes are accepted. Defaults to NULL.</p></td>
     </tr>
     <tr>
       <th>county</th>
       <td><p>The county for which you are requesting data. County names and
-FIPS codes are accepted. Must be combined with a value supplied
-to `state`.  Defaults to NULL.</p></td>
+FIPS codes are accepted. Must be combined with a value supplied to `state`.
+Defaults to NULL.</p></td>
+    </tr>
+    <tr>
+      <th>zcta</th>
+      <td><p>The zip code tabulation area(s) for which you are requesting
+data. Specify a single value or a vector of values to get data for more
+than one ZCTA. Numeric or character ZCTA GEOIDs are accepted. When
+specifying ZCTAs, geography must be set to `"zcta"` and `state` and
+`county` must be `NULL`. Defaults to NULL.</p></td>
     </tr>
     <tr>
       <th>geometry</th>
       <td><p>if FALSE (the default), return a regular tibble of ACS data.
-if TRUE, uses the tigris package to return an sf tibble
-with simple feature geometry in the `geometry` column.  state, county, tract, block group,
-block, and ZCTA geometry are supported.</p></td>
+if TRUE, uses the tigris package to return an sf tibble with simple feature
+geometry in the `geometry` column.</p></td>
     </tr>
     <tr>
       <th>keep_geo_vars</th>
@@ -231,36 +238,37 @@ shapefile obtained by tigris.  Defaults to FALSE.</p></td>
     </tr>
     <tr>
       <th>shift_geo</th>
-      <td><p>if TRUE, returns geometry with Alaska and Hawaii shifted for thematic mapping of the entire US.
-Geometry was originally obtained from the albersusa R package.</p></td>
+      <td><p>if TRUE, returns geometry with Alaska and Hawaii shifted for
+thematic mapping of the entire US. Geometry was originally obtained from
+the albersusa R package.</p></td>
     </tr>
     <tr>
       <th>summary_var</th>
-      <td><p>Character string of a "summary variable" from the ACS
-to be included
-in your output. Usually a variable (e.g. total population)
-that you'll want to use as a denominator or comparison.</p></td>
+      <td><p>Character string of a "summary variable" from the ACS to
+be included in your output. Usually a variable (e.g. total population) that
+you'll want to use as a denominator or comparison.</p></td>
     </tr>
     <tr>
       <th>key</th>
-      <td><p>Your Census API key.
-Obtain one at <a href='http://api.census.gov/data/key_signup.html'>http://api.census.gov/data/key_signup.html</a></p></td>
+      <td><p>Your Census API key. Obtain one at
+<a href='http://api.census.gov/data/key_signup.html'>http://api.census.gov/data/key_signup.html</a></p></td>
     </tr>
     <tr>
       <th>moe_level</th>
-      <td><p>The confidence level of the returned margin of error.  One of 90 (the default), 95, or 99.</p></td>
+      <td><p>The confidence level of the returned margin of error.  One
+of 90 (the default), 95, or 99.</p></td>
     </tr>
     <tr>
       <th>survey</th>
-      <td><p>The ACS contains one-year, three-year, and five-year surveys expressed as "acs1", "acs3", and "acs5".
-The default selection is "acs5."</p></td>
+      <td><p>The ACS contains one-year, three-year, and five-year surveys
+expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."</p></td>
     </tr>
     <tr>
       <th>show_call</th>
-      <td><p>if TRUE, display call made to Census API. This can be very useful
-in debugging and determining if error messages returned are
-due to tidycensus or the Census API. Copy to the API call into
-a browser and see what is returned by the API directly. Defaults to FALSE.</p></td>
+      <td><p>if TRUE, display call made to Census API. This can be very
+useful in debugging and determining if error messages returned are due to
+tidycensus or the Census API. Copy to the API call into a browser and see
+what is returned by the API directly. Defaults to FALSE.</p></td>
     </tr>
     <tr>
       <th>...</th>

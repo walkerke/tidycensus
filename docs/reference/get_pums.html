@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11</span>
       </span>
     </div>
 
@@ -191,7 +191,7 @@ errors; one of <code>"person"</code>, <code>"housing"</code>, or <code>"both"</c
       <th>recode</th>
       <td><p>If TRUE, recodes variable values using Census data dictionary
 and creates a new <code>*_label</code> column for each variable that is recoded.
-Only available for 2017 and 2018 data. Defaults to FALSE.</p></td>
+Available for 2017 - 2019 data. Defaults to FALSE.</p></td>
     </tr>
     <tr>
       <th>show_call</th>
@@ -214,6 +214,7 @@ what is returned by the API directly. Defaults to FALSE.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>)
+<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>, <span class='kw'>puma</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"UT"</span> <span class='kw'>=</span> <span class='fl'>35008</span>, <span class='st'>"NV"</span> <span class='kw'>=</span> <span class='fl'>00403</span>))
 <span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"AGEP"</span>, <span class='st'>"ANC1P"</span>), <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>, <span class='kw'>recode</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>, <span class='kw'>survey</span> <span class='kw'>=</span> <span class='st'>"acs1"</span>, <span class='kw'>rep_weights</span> <span class='kw'>=</span> <span class='st'>"person"</span>)
 }</div></pre>

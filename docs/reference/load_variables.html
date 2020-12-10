@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11</span>
       </span>
     </div>
 
@@ -148,18 +148,21 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>year</th>
-      <td><p>The year for which you are requesting variables.  Either the year of the decennial Census,
-or the endyear for a 5-year ACS sample.</p></td>
+      <td><p>The year for which you are requesting variables. Either the year
+or endyear of the decennial Census or ACS sample. 5-year ACS data is
+available from 2009 through 2018. 1-year ACS data is available from 2005
+through 2019.</p></td>
     </tr>
     <tr>
       <th>dataset</th>
-      <td><p>One of "sf1", "sf3", "acs1", "acs3", "acs5", "acs1/profile", "acs3/profile, "acs5/profile",
-"acs1/subject", "acs3/subject", or "acs5/subject".</p></td>
+      <td><p>One of "sf1", "sf3", "acs1", "acs3", "acs5", "acs1/profile",
+"acs3/profile, "acs5/profile", "acs1/subject", "acs3/subject", or
+"acs5/subject".</p></td>
     </tr>
     <tr>
       <th>cache</th>
-      <td><p>Whether you would like to cache the dataset for future access, or load the dataset
-from an existing cache. Defaults to FALSE.</p></td>
+      <td><p>Whether you would like to cache the dataset for future access,
+or load the dataset from an existing cache. Defaults to FALSE.</p></td>
     </tr>
     </table>
 

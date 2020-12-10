@@ -9,7 +9,7 @@ get_acs(
   variables = NULL,
   table = NULL,
   cache_table = FALSE,
-  year = 2018,
+  year = 2019,
   endyear = NULL,
   output = "tidy",
   state = NULL,

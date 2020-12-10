@@ -35,7 +35,7 @@ unique(us_components$variable)
 
 Available geographies include `"us"`, `"state"`, `"county"`, `"metropolitan statistical area/micropolitan statistical area"`, and `"combined statistical area"`.  
 
-If desired, users can request a specific component or components by supplying a character vector to the `variables` parameter, as in other tidycensus functions.  `get_estimates()` also supports simple feature geometry integration to facilitate mapping.  In the example below, we'll acquire data on the net migration rate between 2016 and 2017 for all counties in the United States, and request shifted and re-scaled feature geometry for Alaska and Hawaii to facilitate national mapping.  
+If desired, users can request a specific component or components by supplying a character vector to the `variables` parameter, as in other tidycensus functions.  `get_estimates()` also supports simple feature geometry integration to facilitate mapping.  In the example below, we'll acquire data on the net migration rate between 2018 and 2019 for all counties in the United States, and request shifted and re-scaled feature geometry for Alaska and Hawaii to facilitate national mapping.  
 
 ```{r}
 
@@ -71,7 +71,7 @@ ggplot() +
   coord_sf(datum = NA) +
   theme_minimal(base_family = "Roboto") +
   labs(title = "Net migration per 1000 residents by county",
-       subtitle = "US Census Bureau 2017 Population Estimates",
+       subtitle = "US Census Bureau 2019 Population Estimates",
        fill = "Rate",
        caption = "Data acquired with the R tidycensus package | @kyle_e_walker")
 ```
@@ -110,7 +110,7 @@ ggplot(compare, aes(x = AGEGROUP, y = value, fill = SEX)) +
   coord_flip() + 
   facet_wrap(~HISP) + 
   labs(x = "", 
-       y = "2017 Census Bureau population estimate", 
+       y = "2019 Census Bureau population estimate", 
        title = "Population structure by Hispanic origin", 
        subtitle = "Los Angeles County, California", 
        fill = "", 

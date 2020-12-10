@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11</span>
       </span>
     </div>
 
@@ -88,7 +88,8 @@
 
       
 
-      </header><div class="row">
+      </header><script src="other-datasets_files/header-attrs-2.5.3/header-attrs.js"></script><script src="other-datasets_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="other-datasets_files/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet">
+<script src="other-datasets_files/anchor-sections-1.0.1/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Other Census Bureau datasets</h1>
@@ -116,18 +117,18 @@
 
 <span class="no">us_components</span></pre></body></html></div>
 <pre><code>## # A tibble: 624 x 4
-##    NAME                 GEOID variable  value
-##    &lt;chr&gt;                &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;
-##  1 Alabama              01    BIRTHS    59637
-##  2 Alaska               02    BIRTHS    11335
-##  3 Arizona              04    BIRTHS    86765
-##  4 Arkansas             05    BIRTHS    38779
-##  5 California           06    BIRTHS   500353
-##  6 Colorado             08    BIRTHS    66345
-##  7 Connecticut          09    BIRTHS    36319
-##  8 Delaware             10    BIRTHS    11026
-##  9 District of Columbia 11    BIRTHS     9652
-## 10 Florida              12    BIRTHS   221755
+##    NAME           GEOID variable  value
+##    &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;
+##  1 Mississippi    28    BIRTHS    35978
+##  2 Missouri       29    BIRTHS    71297
+##  3 Montana        30    BIRTHS    11618
+##  4 Nebraska       31    BIRTHS    25343
+##  5 Nevada         32    BIRTHS    35932
+##  6 New Hampshire  33    BIRTHS    12004
+##  7 New Jersey     34    BIRTHS    99501
+##  8 New Mexico     35    BIRTHS    23125
+##  9 New York       36    BIRTHS   222924
+## 10 North Carolina 37    BIRTHS   119203
 ## # … with 614 more rows</code></pre>
 <p>The variables included in the components of change product consist of both estimates of <em>counts</em> and <em>rates</em>. Rates are preceded by an <code>R</code> in the variable name and are calculated per 1000 residents.</p>
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span>(<span class="no">us_components</span>$<span class="no">variable</span>)</pre></body></html></div>
@@ -136,7 +137,7 @@
 ##  [7] "RBIRTH"            "RDEATH"            "RDOMESTICMIG"     
 ## [10] "RINTERNATIONALMIG" "RNATURALINC"       "RNETMIG"</code></pre>
 <p>Available geographies include <code>"us"</code>, <code>"state"</code>, <code>"county"</code>, <code>"metropolitan statistical area/micropolitan statistical area"</code>, and <code>"combined statistical area"</code>.</p>
-<p>If desired, users can request a specific component or components by supplying a character vector to the <code>variables</code> parameter, as in other tidycensus functions. <code><a href="../reference/get_estimates.html">get_estimates()</a></code> also supports simple feature geometry integration to facilitate mapping. In the example below, we’ll acquire data on the net migration rate between 2016 and 2017 for all counties in the United States, and request shifted and re-scaled feature geometry for Alaska and Hawaii to facilitate national mapping.</p>
+<p>If desired, users can request a specific component or components by supplying a character vector to the <code>variables</code> parameter, as in other tidycensus functions. <code><a href="../reference/get_estimates.html">get_estimates()</a></code> also supports simple feature geometry integration to facilitate mapping. In the example below, we’ll acquire data on the net migration rate between 2018 and 2019 for all counties in the United States, and request shifted and re-scaled feature geometry for Alaska and Hawaii to facilitate national mapping.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">net_migration</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_estimates.html">get_estimates</a></span>(<span class="kw">geography</span> <span class="kw">=</span> <span class="st">"county"</span>,
                                <span class="kw">variables</span> <span class="kw">=</span> <span class="st">"RNETMIG"</span>,
                                <span class="kw">geometry</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
@@ -149,18 +150,18 @@
 ## bbox:           xmin: -2100000 ymin: -2500000 xmax: 2516374 ymax: 732103.3
 ## CRS:            +proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs
 ## # A tibble: 3,142 x 5
-##    GEOID NAME         variable  value                                   geometry
-##    &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;     &lt;dbl&gt;                         &lt;MULTIPOLYGON [m]&gt;
-##  1 01001 Autauga Cou… RNETMIG  -1.86  (((1269841 -1303980, 1248372 -1300830, 12…
-##  2 01009 Blount Coun… RNETMIG  -1.29  (((1240383 -1149119, 1222632 -1143475, 12…
-##  3 01017 Chambers Co… RNETMIG   1.59  (((1382944 -1225846, 1390214 -1235634, 13…
-##  4 01021 Chilton Cou… RNETMIG  -1.78  (((1257515 -1230045, 1259055 -1240041, 12…
-##  5 01033 Colbert Cou… RNETMIG   0.919 (((1085910 -1080751, 1085892 -1080071, 10…
-##  6 01045 Dale County… RNETMIG  -3.48  (((1382203 -1366760, 1387076 -1400145, 13…
-##  7 01051 Elmore Coun… RNETMIG   2.51  (((1278144 -1255151, 1279961 -1256403, 13…
-##  8 01065 Hale County… RNETMIG  -4.12  (((1176099 -1258997, 1172005 -1264523, 11…
-##  9 01079 Lawrence Co… RNETMIG  -8.08  (((1178216 -1055420, 1179636 -1066254, 11…
-## 10 01083 Limestone C… RNETMIG   7.69  (((1197770 -1018013, 1199180 -1017791, 12…
+##    GEOID NAME         variable value                                    geometry
+##    &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;    &lt;dbl&gt;                          &lt;MULTIPOLYGON [m]&gt;
+##  1 01001 Autauga Cou… RNETMIG   4.56 (((1269841 -1303980, 1248372 -1300830, 124…
+##  2 01009 Blount Coun… RNETMIG   1.12 (((1240383 -1149119, 1222632 -1143475, 120…
+##  3 01017 Chambers Co… RNETMIG  -7.75 (((1382944 -1225846, 1390214 -1235634, 138…
+##  4 01021 Chilton Cou… RNETMIG   4.94 (((1257515 -1230045, 1259055 -1240041, 126…
+##  5 01033 Colbert Cou… RNETMIG   5.97 (((1085910 -1080751, 1085892 -1080071, 108…
+##  6 01045 Dale County… RNETMIG  -1.44 (((1382203 -1366760, 1387076 -1400145, 138…
+##  7 01051 Elmore Coun… RNETMIG   1.13 (((1278144 -1255151, 1279961 -1256403, 130…
+##  8 01065 Hale County… RNETMIG  -7.21 (((1176099 -1258997, 1172005 -1264523, 117…
+##  9 01079 Lawrence Co… RNETMIG   2.00 (((1178216 -1055420, 1179636 -1066254, 118…
+## 10 01083 Limestone C… RNETMIG  26.4  (((1197770 -1018013, 1199180 -1017791, 120…
 ## # … with 3,132 more rows</code></pre>
 <p>We’ll next use tidyverse tools to generate a <code>groups</code> column that bins the net migration rates into comprehensible categories, and plot the result using <code>geom_sf()</code> and ggplot2.</p>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">order</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"-15 and below"</span>, <span class="st">"-15 to -5"</span>, <span class="st">"-5 to +5"</span>, <span class="st">"+5 to +15"</span>, <span class="st">"+15 and up"</span>)
@@ -183,7 +184,7 @@
   <span class="fu">coord_sf</span>(<span class="kw">datum</span> <span class="kw">=</span> <span class="fl">NA</span>) +
   <span class="fu">theme_minimal</span>(<span class="kw">base_family</span> <span class="kw">=</span> <span class="st">"Roboto"</span>) +
   <span class="fu">labs</span>(<span class="kw">title</span> <span class="kw">=</span> <span class="st">"Net migration per 1000 residents by county"</span>,
-       <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"US Census Bureau 2017 Population Estimates"</span>,
+       <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"US Census Bureau 2019 Population Estimates"</span>,
        <span class="kw">fill</span> <span class="kw">=</span> <span class="st">"Rate"</span>,
        <span class="kw">caption</span> <span class="kw">=</span> <span class="st">"Data acquired with the R tidycensus package | @kyle_e_walker"</span>)</pre></body></html></div>
 <p><img src="other-datasets_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
@@ -202,18 +203,18 @@
 
 <span class="no">la_age_hisp</span></pre></body></html></div>
 <pre><code>## # A tibble: 210 x 6
-##    GEOID NAME                      value SEX       AGEGROUP      HISP           
-##    &lt;chr&gt; &lt;chr&gt;                     &lt;dbl&gt; &lt;chr&gt;     &lt;fct&gt;         &lt;chr&gt;          
-##  1 06037 Los Angeles County, C… 10105518 Both sex… All ages      Both Hispanic …
-##  2 06037 Los Angeles County, C…  5190231 Both sex… All ages      Non-Hispanic   
-##  3 06037 Los Angeles County, C…  4915287 Both sex… All ages      Hispanic       
-##  4 06037 Los Angeles County, C…  2529798 Male      All ages      Non-Hispanic   
-##  5 06037 Los Angeles County, C…  4981895 Male      All ages      Both Hispanic …
-##  6 06037 Los Angeles County, C…  2452097 Male      All ages      Hispanic       
-##  7 06037 Los Angeles County, C…  5123623 Female    All ages      Both Hispanic …
-##  8 06037 Los Angeles County, C…  2660433 Female    All ages      Non-Hispanic   
-##  9 06037 Los Angeles County, C…  2463190 Female    All ages      Hispanic       
-## 10 06037 Los Angeles County, C…   603555 Both sex… Age 0 to 4 y… Both Hispanic …
+##    GEOID NAME                      value SEX      AGEGROUP       HISP           
+##    &lt;chr&gt; &lt;chr&gt;                     &lt;dbl&gt; &lt;chr&gt;    &lt;fct&gt;          &lt;chr&gt;          
+##  1 06037 Los Angeles County, C… 10039107 Both se… All ages       Both Hispanic …
+##  2 06037 Los Angeles County, C…  5157137 Both se… All ages       Non-Hispanic   
+##  3 06037 Los Angeles County, C…  4881970 Both se… All ages       Hispanic       
+##  4 06037 Los Angeles County, C…   579856 Both se… Age 0 to 4 ye… Both Hispanic …
+##  5 06037 Los Angeles County, C…   236459 Both se… Age 0 to 4 ye… Non-Hispanic   
+##  6 06037 Los Angeles County, C…   343397 Both se… Age 0 to 4 ye… Hispanic       
+##  7 06037 Los Angeles County, C…   600191 Both se… Age 5 to 9 ye… Both Hispanic …
+##  8 06037 Los Angeles County, C…   229438 Both se… Age 5 to 9 ye… Non-Hispanic   
+##  9 06037 Los Angeles County, C…   370753 Both se… Age 5 to 9 ye… Hispanic       
+## 10 06037 Los Angeles County, C…   601542 Both se… Age 10 to 14 … Both Hispanic …
 ## # … with 200 more rows</code></pre>
 <p>With some additional data wrangling, the returned format facilitates analysis and visualization. For example, we can compare population pyramids for Hispanic and non-Hispanic populations in Los Angeles County:</p>
 <div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">compare</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">la_age_hisp</span>, <span class="fu">str_detect</span>(<span class="no">AGEGROUP</span>, <span class="st">"^Age"</span>),
@@ -230,7 +231,7 @@
   <span class="fu">coord_flip</span>() +
   <span class="fu">facet_wrap</span>(~<span class="no">HISP</span>) +
   <span class="fu">labs</span>(<span class="kw">x</span> <span class="kw">=</span> <span class="st">""</span>,
-       <span class="kw">y</span> <span class="kw">=</span> <span class="st">"2017 Census Bureau population estimate"</span>,
+       <span class="kw">y</span> <span class="kw">=</span> <span class="st">"2019 Census Bureau population estimate"</span>,
        <span class="kw">title</span> <span class="kw">=</span> <span class="st">"Population structure by Hispanic origin"</span>,
        <span class="kw">subtitle</span> <span class="kw">=</span> <span class="st">"Los Angeles County, California"</span>,
        <span class="kw">fill</span> <span class="kw">=</span> <span class="st">""</span>,

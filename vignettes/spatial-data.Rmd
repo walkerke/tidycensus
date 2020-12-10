@@ -11,7 +11,7 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8)
 
 If requested, __tidycensus__ can return simple feature geometry for geographic units along with variables from the decennial US Census or American Community survey.  By setting `geometry = TRUE` in a __tidycensus__ function call, __tidycensus__ will use the __tigris__ package to retrieve the corresponding geographic dataset from the US Census Bureau and pre-merge it with the tabular data obtained from the Census API.  As of tidycensus version 0.9.9.2, `geometry = TRUE` is supported for all geographies currently available in the package.  
 
-The following example shows median household income from the 2014-2018 ACS for Census tracts in Orange County, California: 
+The following example shows median household income from the 2015-2019 ACS for Census tracts in Orange County, California: 
 
 ```{r}
 library(tidycensus)
@@ -36,7 +36,7 @@ orange %>%
   scale_fill_viridis_c(option = "magma") 
 ```
 
-Please note that the UTM Zone 11N coordinate system (`26911`) is appropriate for Southern California but may not be for your area of interest.  
+Please note that the UTM Zone 11N coordinate system (`26911`) is appropriate for Southern California but may not be for your area of interest.  For help identifying an appropriate projected coordinate system for your data, take a look at [the {crsuggest} R package](https://github.com/walkerke/crsuggest).
 
 ## Faceted mapping
 
@@ -65,7 +65,7 @@ harris %>%
   ggplot(aes(fill = pct)) +
   facet_wrap(~variable) +
   geom_sf(color = NA) +
-  coord_sf(crs = 26915) + 
+  coord_sf(crs = 26915) + # Appropriate CRS for Houston, but may not be for your data
   scale_fill_viridis_c()
 ```
 
