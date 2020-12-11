@@ -117,6 +117,13 @@ load_variables <- function(year, dataset, cache = FALSE) {
             write_rds(df, file_loc)
             return(df)
           }
+
+          # Update the cached file if missing PCT vars
+          if (!"PCT001001" %in% out$name) {
+            df <- get_dataset(dataset, year)
+            write_rds(df, file_loc)
+            return(df)
+          }
         }
 
         out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P.*[0-9]|^H.*[0-9]|^K[0-9]", out$name), ]
