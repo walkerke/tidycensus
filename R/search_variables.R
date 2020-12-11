@@ -87,7 +87,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
 
     names(out) <- tolower(names(out))
 
-    out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P[0-9]|^H[0-9]|^K[0-9]", out$name), ]
+    out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P.*[0-9]|^H.*[0-9]|^K[0-9]", out$name), ]
 
     out1$name <- str_replace(out1$name, "E$|M$", "")
 
@@ -119,7 +119,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
           }
         }
 
-        out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P[0-9]|^H[0-9]|^K[0-9]", out$name), ]
+        out1 <- out[grepl("^B[0-9]|^C[0-9]|^DP[0-9]|^S[0-9]|^P.*[0-9]|^H.*[0-9]|^K[0-9]", out$name), ]
 
         out1$name <- str_replace(out1$name, "E$|M$", "")
 
