@@ -11,4 +11,4 @@ index.md
 ^tidycensus\.Rcheck$
 ^tidycensus.*\.tar\.gz$
 ^tidycensus.*\.tgz$
-^github$
+^.github$
