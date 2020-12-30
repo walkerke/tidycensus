@@ -197,7 +197,7 @@ to_survey <- function(df,
 
   if (design == "cluster") {
     if (!all(c("SERIALNO", "PUMA") %in% names(df))) {
-      stop('"SERIALNO" and "PUMA" are present in input data.', call. = FALSE)
+      stop('"SERIALNO" and "PUMA" must both be present in the input data.', call. = FALSE)
     }
   }
 
