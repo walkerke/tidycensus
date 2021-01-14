@@ -700,7 +700,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
     } else {
       # if PUMAs requested are in one state only
       state <- validate_state(state)
-      geo <- map_chr(puma, function(x) {
+      geo <- purrr::map_chr(puma, function(x) {
         paste0("7950000US", state, x)
       })
 
@@ -711,7 +711,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
   } else {
     # if no PUMAs specified, get all PUMAs in each state requested
     if (!is.null(state)) {
-      geo <- map_chr(state, function(x) {
+      geo <- purrr::map_chr(state, function(x) {
         paste0("0400000US", validate_state(x))
       })
 
@@ -725,11 +725,11 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
     }
   }
 
-  call <- GET(base,
+  call <- httr::GET(base,
               query = list(get = vars_to_get,
                            ucgid = geo,
                            key = key),
-              progress())
+              httr::progress())
 
   if (show_call) {
     call_url <- gsub("&key.*", "", call$url)
@@ -749,13 +749,13 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
   }
 
 
-  content <- content(call, as = "text")
+  content <- httr::content(call, as = "text")
 
   if (grepl("You included a key with this request", content)) {
     stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
   }
 
-  dat <- fromJSON(content)
+  dat <- jsonlite::fromJSON(content)
 
   colnames(dat) <- dat[1,]
 
