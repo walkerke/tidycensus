@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
 
       
 
-      </header><script src="other-datasets_files/header-attrs-2.5.3/header-attrs.js"></script><script src="other-datasets_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="other-datasets_files/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet">
+      </header><script src="other-datasets_files/header-attrs-2.5.3/header-attrs.js"></script><link href="other-datasets_files/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet">
 <script src="other-datasets_files/anchor-sections-1.0.1/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -214,7 +214,7 @@
 ##  7 06037 Los Angeles County, C…   600191 Both se… Age 5 to 9 ye… Both Hispanic …
 ##  8 06037 Los Angeles County, C…   229438 Both se… Age 5 to 9 ye… Non-Hispanic   
 ##  9 06037 Los Angeles County, C…   370753 Both se… Age 5 to 9 ye… Hispanic       
-## 10 06037 Los Angeles County, C…   601542 Both se… Age 10 to 14 … Both Hispanic …
+## 10 06037 Los Angeles County, C…   373670 Both se… Age 15 to 19 … Hispanic       
 ## # … with 200 more rows</code></pre>
 <p>With some additional data wrangling, the returned format facilitates analysis and visualization. For example, we can compare population pyramids for Hispanic and non-Hispanic populations in Los Angeles County:</p>
 <div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">compare</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">la_age_hisp</span>, <span class="fu">str_detect</span>(<span class="no">AGEGROUP</span>, <span class="st">"^Age"</span>),
