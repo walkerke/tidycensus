@@ -44,8 +44,8 @@ dataset.  If variables dataset is already cached via the
 \code{load_variables} function, this can be bypassed.}
 
 \item{year}{The year, or endyear, of the ACS sample. 5-year ACS data is
-available from 2009 through 2018. 1-year ACS data is available from 2005
-through 2019. Defaults to 2018.}
+available from 2009 through 2019. 1-year ACS data is available from 2005
+through 2019. Defaults to 2019.}
 
 \item{endyear}{Deprecated and will be removed in a future release.}
 
@@ -128,7 +128,7 @@ mutate(NAME = gsub(" County, Vermont", "", NAME)) \%>\%
   geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
   geom_point(color = "red", size = 3) +
   labs(title = "Household income by county in Vermont",
-       subtitle = "2012-2016 American Community Survey",
+       subtitle = "2015-2019 American Community Survey",
        y = "",
        x = "ACS estimate (bars represent margin of error)")
 
