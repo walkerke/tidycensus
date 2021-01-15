@@ -8,7 +8,7 @@ get_pums(
   variables,
   state = NULL,
   puma = NULL,
-  year = 2018,
+  year = 2019,
   survey = "acs5",
   rep_weights = NULL,
   recode = FALSE,
@@ -27,7 +27,7 @@ to request data. To get data from PUMAs in more than one state, specify a
 named vector of state/PUMA pairs and set \code{state = "multiple"}.}
 
 \item{year}{The data year of the 1-year ACS sample or the endyear of the
-5-year sample. Defaults to 2018.}
+5-year sample. Defaults to 2019.}
 
 \item{survey}{The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 (the default).}
