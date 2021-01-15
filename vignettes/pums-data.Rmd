@@ -75,7 +75,8 @@ To download PUMS data from the Census API, use the `get_pums()` function. If you
 vt_pums <- get_pums(
   variables = c("PUMA", "SEX", "AGEP", "SCHL"),
   state = "VT",
-  survey = "acs1"
+  survey = "acs1",
+  year = 2018
   )
 ```
 ```{r}
@@ -91,6 +92,7 @@ vt_pums_recoded <- get_pums(
   variables = c("PUMA", "SEX", "AGEP", "SCHL"),
   state = "VT",
   survey = "acs1",
+  year = 2018,
   recode = TRUE
   )
 ```
@@ -142,6 +144,7 @@ vt_pums_rep_weights <- get_pums(
   variables = c("PUMA", "SEX", "AGEP", "SCHL"),
   state = "VT",
   survey = "acs1",
+  year = 2018,
   recode = TRUE,
   rep_weights = "person"
   )
@@ -193,7 +196,8 @@ An important use case for PUMS data is doing regression analysis or other modeli
 vt_pums_to_model <- get_pums(
   variables = c("PUMA", "WAGP", "JWMNP", "JWTR", "COW", "ESR"),
   state = "VT",
-  survey = "acs5"
+  survey = "acs5",
+  year = 2018
   )
 ```
 
@@ -256,7 +260,8 @@ Next we download the income-to-poverty ratio from the PUMS dataset and calculate
 ne_pums <- get_pums(
   variables = c("PUMA", "POVPIP"),
   state = ne_states,
-  survey = "acs1"
+  survey = "acs1",
+  year = 2018
   )
 
 ne_pov <- ne_pums %>%
@@ -303,6 +308,7 @@ wy_relp <- get_pums(
   variables = "RELP",
   state = "Wyoming",
   survey = "acs1",
+  year = 2018,
   rep_weights = "person"
 )
 
@@ -310,6 +316,7 @@ ut_ten <- get_pums(
   variables = "TEN",
   state = "Utah",
   survey = "acs1",
+  year = 2018,
   rep_weights = "housing"
 )
 
@@ -317,6 +324,7 @@ hi_age <- get_pums(
   variables = "AGEP",
   state = "Hawaii",
   survey = "acs1",
+  year = 2018,
   rep_weights = "person"
 )
 ```

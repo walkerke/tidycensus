@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.3</span>
       </span>
     </div>
 
@@ -163,17 +163,18 @@
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">vt_pums</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span>(
   <span class="kw">variables</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span>),
   <span class="kw">state</span> <span class="kw">=</span> <span class="st">"VT"</span>,
-  <span class="kw">survey</span> <span class="kw">=</span> <span class="st">"acs1"</span>
+  <span class="kw">survey</span> <span class="kw">=</span> <span class="st">"acs1"</span>,
+  <span class="kw">year</span> <span class="kw">=</span> <span class="fl">2018</span>
   )</pre></body></html></div>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">vt_pums</span></pre></body></html></div>
 <pre><code>## # A tibble: 6,436 x 9
 ##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX  
 ##   &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 2018GQ0002083       1     0    59    20 00100 50    19    2    
-## 2 2018GQ0002131       1     0     2    51 00400 50    16    1    
-## 3 2018GQ0002587       1     0    52    18 00400 50    16    1    
-## 4 2018GQ0003751       1     0    34    19 00100 50    19    2    
-## 5 2018GQ0003853       1     0   129    20 00400 50    19    1    
+## 1 2018GQ0001230       1     0     3    26 00300 50    20    1    
+## 2 2018GQ0002135       1     0    64    18 00100 50    19    2    
+## 3 2018GQ0002999       1     0    62    20 00400 50    19    2    
+## 4 2018GQ0004077       1     0    16    94 00200 50    21    2    
+## 5 2018GQ0006486       1     0    26    20 00400 50    19    1    
 ## # … with 6,431 more rows</code></pre>
 <p>We get 6436 rows and 9 columns. In addition to the variables we specified, <code><a href="../reference/get_pums.html">get_pums()</a></code> also always returns <code>SERIALNO</code>, <code>SPORDER</code>, <code>WGTP</code>, <code>PWGTP</code>, and <code>ST</code>. <code>SERIALNO</code> and <code>SPORDER</code> are the variables that uniquely identify observations, <code>WGTP</code> and <code>PWGTP</code> are the housing-unit and person weights, and <code>ST</code> is the state code.</p>
 <p>Notice that <code>ST</code>, <code>SEX</code> and <code>SCHL</code> return coded character variables. You can look up what these codes represent in the <code>pums_variables</code> dataset provided or set <code>recode = TRUE</code> in <code><a href="../reference/get_pums.html">get_pums()</a></code> to return additional columns with the values of these variables recoded.</p>
@@ -181,17 +182,18 @@
   <span class="kw">variables</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span>),
   <span class="kw">state</span> <span class="kw">=</span> <span class="st">"VT"</span>,
   <span class="kw">survey</span> <span class="kw">=</span> <span class="st">"acs1"</span>,
+  <span class="kw">year</span> <span class="kw">=</span> <span class="fl">2018</span>,
   <span class="kw">recode</span> <span class="kw">=</span> <span class="fl">TRUE</span>
   )</pre></body></html></div>
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">vt_pums_recoded</span></pre></body></html></div>
 <pre><code>## # A tibble: 6,436 x 12
 ##   SERIALNO   SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX   ST_label  SCHL_label             SEX_label
 ##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;ord&gt;     &lt;ord&gt;                  &lt;ord&gt;    
-## 1 2018GQ000…       1     0    61    19 00200 50    19    1     Vermont/… 1 or more years of co… Male     
-## 2 2018GQ000…       1     0    67    80 00200 50    11    2     Vermont/… Grade 8                Female   
-## 3 2018GQ000…       1     0   177    82 00400 50    16    2     Vermont/… Regular high school d… Female   
-## 4 2018GQ000…       1     0    17    17 00100 50    16    2     Vermont/… Regular high school d… Female   
-## 5 2018GQ000…       1     0    68    20 00400 50    19    2     Vermont/… 1 or more years of co… Female   
+## 1 2018GQ000…       1     0     3    26 00300 50    20    1     Vermont/… Associate's degree     Male     
+## 2 2018GQ000…       1     0    64    18 00100 50    19    2     Vermont/… 1 or more years of co… Female   
+## 3 2018GQ000…       1     0    62    20 00400 50    19    2     Vermont/… 1 or more years of co… Female   
+## 4 2018GQ000…       1     0    16    94 00200 50    21    2     Vermont/… Bachelor's degree      Female   
+## 5 2018GQ000…       1     0    26    20 00400 50    19    1     Vermont/… 1 or more years of co… Male     
 ## # … with 6,431 more rows</code></pre>
 </div>
 <div id="analyzing-pums-data" class="section level2">
@@ -248,6 +250,7 @@
   <span class="kw">variables</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span>),
   <span class="kw">state</span> <span class="kw">=</span> <span class="st">"VT"</span>,
   <span class="kw">survey</span> <span class="kw">=</span> <span class="st">"acs1"</span>,
+  <span class="kw">year</span> <span class="kw">=</span> <span class="fl">2018</span>,
   <span class="kw">recode</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
   <span class="kw">rep_weights</span> <span class="kw">=</span> <span class="st">"person"</span>
   )</pre></body></html></div>
@@ -309,7 +312,8 @@
 <div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">vt_pums_to_model</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span>(
   <span class="kw">variables</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"PUMA"</span>, <span class="st">"WAGP"</span>, <span class="st">"JWMNP"</span>, <span class="st">"JWTR"</span>, <span class="st">"COW"</span>, <span class="st">"ESR"</span>),
   <span class="kw">state</span> <span class="kw">=</span> <span class="st">"VT"</span>,
-  <span class="kw">survey</span> <span class="kw">=</span> <span class="st">"acs5"</span>
+  <span class="kw">survey</span> <span class="kw">=</span> <span class="st">"acs5"</span>,
+  <span class="kw">year</span> <span class="kw">=</span> <span class="fl">2018</span>
   )</pre></body></html></div>
 <p>Now, we filter out observations that aren’t relevant, do a little recoding of the class of worker variable, and finally convert the data frame to a survey design object. Note that we did not request replicate weights from the API, so we specify <code>design = "cluster"</code> when we create the survey design. This creates the survey using a cluster design with the household (<code>SERIALNO</code>) as the primary sampling unit, the PUMA as the strata, and <code>PWGTP</code> as the weight.</p>
 <div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="no">vt_model_sd</span> <span class="kw">&lt;-</span> <span class="no">vt_pums_to_model</span> <span class="kw">%&gt;%</span>
@@ -386,7 +390,8 @@
 <div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="no">ne_pums</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span>(
   <span class="kw">variables</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"PUMA"</span>, <span class="st">"POVPIP"</span>),
   <span class="kw">state</span> <span class="kw">=</span> <span class="no">ne_states</span>,
-  <span class="kw">survey</span> <span class="kw">=</span> <span class="st">"acs1"</span>
+  <span class="kw">survey</span> <span class="kw">=</span> <span class="st">"acs1"</span>,
+  <span class="kw">year</span> <span class="kw">=</span> <span class="fl">2018</span>
   )
 
 <span class="no">ne_pov</span> <span class="kw">&lt;-</span> <span class="no">ne_pums</span> <span class="kw">%&gt;%</span>
@@ -447,6 +452,7 @@
   <span class="kw">variables</span> <span class="kw">=</span> <span class="st">"RELP"</span>,
   <span class="kw">state</span> <span class="kw">=</span> <span class="st">"Wyoming"</span>,
   <span class="kw">survey</span> <span class="kw">=</span> <span class="st">"acs1"</span>,
+  <span class="kw">year</span> <span class="kw">=</span> <span class="fl">2018</span>,
   <span class="kw">rep_weights</span> <span class="kw">=</span> <span class="st">"person"</span>
 )
 
@@ -454,6 +460,7 @@
   <span class="kw">variables</span> <span class="kw">=</span> <span class="st">"TEN"</span>,
   <span class="kw">state</span> <span class="kw">=</span> <span class="st">"Utah"</span>,
   <span class="kw">survey</span> <span class="kw">=</span> <span class="st">"acs1"</span>,
+  <span class="kw">year</span> <span class="kw">=</span> <span class="fl">2018</span>,
   <span class="kw">rep_weights</span> <span class="kw">=</span> <span class="st">"housing"</span>
 )
 
@@ -461,6 +468,7 @@
   <span class="kw">variables</span> <span class="kw">=</span> <span class="st">"AGEP"</span>,
   <span class="kw">state</span> <span class="kw">=</span> <span class="st">"Hawaii"</span>,
   <span class="kw">survey</span> <span class="kw">=</span> <span class="st">"acs1"</span>,
+  <span class="kw">year</span> <span class="kw">=</span> <span class="fl">2018</span>,
   <span class="kw">rep_weights</span> <span class="kw">=</span> <span class="st">"person"</span>
 )</pre></body></html></div>
 <div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="no">wy_relp</span> <span class="kw">%&gt;%</span>
