@@ -46,28 +46,4 @@ Update logs:
 
 * Several internal improvements and bug fixes.  Please see the closed issues at https://github.com/walkerke/tidycensus/issues for a list.  
 
-## In version 0.4.6: 
-
-* Bug fixed that was causing GEOIDs for some states to be converted to NA on certain Linux platforms
-
-* A new parameter, `shift_geo`, allows tidycensus users to get US state and county geometry originally obtained with the __albersusa__ R package with Alaska and Hawaii shifted and re-scaled for better cartographic display of the entire US.  
-
-```r
-library(tidycensus)
-library(tidyverse)
-library(viridis)
-
-us_county_income <- get_acs(geography = "county", variables = "B19013_001", 
-                            shift_geo = TRUE, geometry = TRUE)
-
-ggplot(us_county_income) + 
-  geom_sf(aes(fill = estimate), color = NA) + 
-  coord_sf(datum = NA) + 
-  theme_minimal() + 
-  scale_fill_viridis_c()
-
-```
-
-![income_plot](tools/readme/county_income.png)
-
 
