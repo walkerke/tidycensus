@@ -58,5 +58,3 @@ ggplot(us_county_income) +
   scale_fill_viridis_c()
 
 ```
-
-![income_plot](tools/readme/county_income.png)
