@@ -111,7 +111,7 @@
 <div id="components-of-change-population-estimates" class="section level2">
 <h2 class="hasAnchor">
 <a href="#components-of-change-population-estimates" class="anchor"></a>Components of change population estimates</h2>
-<p>By default, specifying <code>"population"</code>, <code>"components"</code>, or <code>"housing"</code> as the <code>product</code> in <code><a href="../reference/get_estimates.html">get_estimates()</a></code> returns all variables associated with that component. For example, we can request all components of change variables for US states in 2017:</p>
+<p>By default, specifying <code>"population"</code>, <code>"components"</code>, or <code>"housing"</code> as the <code>product</code> in <code><a href="../reference/get_estimates.html">get_estimates()</a></code> returns all variables associated with that component. For example, we can request all components of change variables for US states in 2019:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidycensus</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">tigris_use_cache</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
@@ -214,10 +214,10 @@
 ##  4 06037 Los Angeles County, C…   579856 Both se… Age 0 to 4 ye… Both Hispanic …
 ##  5 06037 Los Angeles County, C…   236459 Both se… Age 0 to 4 ye… Non-Hispanic   
 ##  6 06037 Los Angeles County, C…   343397 Both se… Age 0 to 4 ye… Hispanic       
-##  7 06037 Los Angeles County, C…   378447 Both se… Age 10 to 14 … Hispanic       
-##  8 06037 Los Angeles County, C…   600191 Both se… Age 5 to 9 ye… Both Hispanic …
-##  9 06037 Los Angeles County, C…   229438 Both se… Age 5 to 9 ye… Non-Hispanic   
-## 10 06037 Los Angeles County, C…   370753 Both se… Age 5 to 9 ye… Hispanic       
+##  7 06037 Los Angeles County, C…   600191 Both se… Age 5 to 9 ye… Both Hispanic …
+##  8 06037 Los Angeles County, C…   229438 Both se… Age 5 to 9 ye… Non-Hispanic   
+##  9 06037 Los Angeles County, C…   370753 Both se… Age 5 to 9 ye… Hispanic       
+## 10 06037 Los Angeles County, C…   601542 Both se… Age 10 to 14 … Both Hispanic …
 ## # … with 200 more rows</code></pre>
 <p>With some additional data wrangling, the returned format facilitates analysis and visualization. For example, we can compare population pyramids for Hispanic and non-Hispanic populations in Los Angeles County:</p>
 <div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">compare</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="no">la_age_hisp</span>, <span class="fu">str_detect</span>(<span class="no">AGEGROUP</span>, <span class="st">"^Age"</span>),

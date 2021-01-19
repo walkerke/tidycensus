@@ -15,7 +15,7 @@ Population estimates are available in tidycensus through the `get_estimates()` f
 
 ## Components of change population estimates
 
-By default, specifying `"population"`, `"components"`, or `"housing"` as the `product` in `get_estimates()` returns all variables associated with that component.  For example, we can request all components of change variables for US states in 2017: 
+By default, specifying `"population"`, `"components"`, or `"housing"` as the `product` in `get_estimates()` returns all variables associated with that component.  For example, we can request all components of change variables for US states in 2019: 
 
 ```{r}
 library(tidycensus)

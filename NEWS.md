@@ -1,6 +1,7 @@
 # tidycensus 0.11.4
 
 * Added support for the 2015-2019 5-year ACS PUMS data in `get_pums()`.  Updated variable definitions are found in the data object `pums_variables`. 
+* The default year in `get_pums()` is updated to 2019.
 * For 2015-2019 ACS aggregate data, `get_acs()` now supports the `state` parameter for zip code tabulation areas (ZCTAs) to allow subsetting by state.
 * Various bug fixes and internal improvements; browse [the GitHub issues](https://github.com/walkerke/tidycensus/issues) for a complete listing.
 * Added a `NEWS.md` file to track changes to the package.

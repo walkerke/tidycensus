@@ -144,6 +144,7 @@
 </h1>
 <ul>
 <li>Added support for the 2015-2019 5-year ACS PUMS data in <code><a href="../reference/get_pums.html">get_pums()</a></code>. Updated variable definitions are found in the data object <code>pums_variables</code>.</li>
+<li>The default year in <code><a href="../reference/get_pums.html">get_pums()</a></code> is updated to 2019.</li>
 <li>For 2015-2019 ACS aggregate data, <code><a href="../reference/get_acs.html">get_acs()</a></code> now supports the <code>state</code> parameter for zip code tabulation areas (ZCTAs) to allow subsetting by state.</li>
 <li>Various bug fixes and internal improvements; browse <a href="https://github.com/walkerke/tidycensus/issues">the GitHub issues</a> for a complete listing.</li>
 <li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
@@ -224,7 +225,6 @@
   <span class="fu">coord_sf</span>(<span class="kw">datum</span> <span class="kw">=</span> <span class="fl">NA</span>) +
   <span class="fu">theme_minimal</span>() +
   <span class="fu">scale_fill_viridis_c</span>()</pre></div>
-<p><img src="tools/readme/county_income.png" alt="income_plot"></p>
 </div>
   </div>
 
