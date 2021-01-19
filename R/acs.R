@@ -193,9 +193,18 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   if (geography == "puma") geography <- "public use microdata area"
 
   if (geography == "zip code tabulation area" && (!is.null(state) || !is.null(county))) {
-    stop("ZCTAs can only be requested for the entire country or by specifying ZCTAs, not within states or counties.",
-         call. = FALSE)
+
+    if (year < 2019) {
+      stop("For ACS years prior to 2019, ZCTAs can only be requested for the entire country or by specifying ZCTAs, not within states or counties.",
+           call. = FALSE)
+    } else {
+      if (!is.null(county)) {
+        stop("ZCTAs for ACS years 2019 and later are available by state, but not by county.",
+             call. = FALSE)
+      }
+    }
   }
+
 
   if (!is.null(zcta) && geography != "zip code tabulation area") {
     stop("ZCTAs can only be specified when requesting data at the zip code tabulation area-level.",
