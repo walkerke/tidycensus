@@ -4,8 +4,6 @@ sudo: required
 cache: packages
 r_packages:
  - devtools
-r_github_packages:
- - hrbrmstr/albersusa
 
 matrix:
     #allow_failures:
