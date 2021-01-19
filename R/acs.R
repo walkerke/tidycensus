@@ -764,6 +764,14 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     dat2[dat2 == -999999999] <- NA
   }
 
+  # For ZCTAs 2019 and later, strip the state code from GEOID (issue #338)
+  if (geography == "zip code tabulation area" && year > 2018) {
+    dat2 <- dat2 %>%
+      dplyr::mutate(
+        GEOID = stringr::str_sub(GEOID, start = 3L)
+      )
+  }
+
   if (geometry) {
 
     if (shift_geo) {
