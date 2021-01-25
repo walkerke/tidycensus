@@ -74,7 +74,16 @@ get_pums <- function(variables,
   }
 
   # Avoid double-requesting variables
-  join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
+  # However, if all states are requested, we should still return the state by default
+  # as this is expected behavior when requesting data by state
+  if (all(state == "all")) {
+    if (!"ST" %in% variables) {
+      variables <- c("ST", variables)
+    }
+    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP")
+  } else {
+    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
+  }
   variables <- variables[!variables %in% join_vars]
 
   if (!is.null(rep_weights)) {
