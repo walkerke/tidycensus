@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.5</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -118,7 +118,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/walkerke/tidycensus">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,17 +144,17 @@
     <p>Load data from the American Community Survey Public Use Microdata Series API</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_pums</span>(
-  <span class='no'>variables</span>,
-  <span class='kw'>state</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>puma</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2019</span>,
-  <span class='kw'>survey</span> <span class='kw'>=</span> <span class='st'>"acs5"</span>,
-  <span class='kw'>rep_weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>recode</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>show_call</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>get_pums</span><span class='op'>(</span>
+  <span class='va'>variables</span>,
+  state <span class='op'>=</span> <span class='cn'>NULL</span>,
+  puma <span class='op'>=</span> <span class='cn'>NULL</span>,
+  year <span class='op'>=</span> <span class='fl'>2019</span>,
+  survey <span class='op'>=</span> <span class='st'>"acs5"</span>,
+  rep_weights <span class='op'>=</span> <span class='cn'>NULL</span>,
+  recode <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  show_call <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  key <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -215,12 +215,14 @@ what is returned by the API directly. Defaults to FALSE.</p></td>
     <p>A tibble of microdata from the ACS PUMS API.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>)
-<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"multiple"</span>, <span class='kw'>puma</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"UT"</span> <span class='kw'>=</span> <span class='fl'>35008</span>, <span class='st'>"NV"</span> <span class='kw'>=</span> <span class='fl'>00403</span>))
-<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"AGEP"</span>, <span class='st'>"ANC1P"</span>), <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>, <span class='kw'>recode</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>, <span class='kw'>survey</span> <span class='kw'>=</span> <span class='st'>"acs1"</span>, <span class='kw'>rep_weights</span> <span class='kw'>=</span> <span class='st'>"person"</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>get_pums</span><span class='op'>(</span>variables <span class='op'>=</span> <span class='st'>"AGEP"</span>, state <span class='op'>=</span> <span class='st'>"VT"</span><span class='op'>)</span>
+<span class='fu'>get_pums</span><span class='op'>(</span>variables <span class='op'>=</span> <span class='st'>"AGEP"</span>, state <span class='op'>=</span> <span class='st'>"multiple"</span>, puma <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"UT"</span> <span class='op'>=</span> <span class='fl'>35008</span>, <span class='st'>"NV"</span> <span class='op'>=</span> <span class='fl'>00403</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>get_pums</span><span class='op'>(</span>variables <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AGEP"</span>, <span class='st'>"ANC1P"</span><span class='op'>)</span>, state <span class='op'>=</span> <span class='st'>"VT"</span>, recode <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>get_pums</span><span class='op'>(</span>variables <span class='op'>=</span> <span class='st'>"AGEP"</span>, state <span class='op'>=</span> <span class='st'>"VT"</span>, survey <span class='op'>=</span> <span class='st'>"acs1"</span>, rep_weights <span class='op'>=</span> <span class='st'>"person"</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -236,7 +238,7 @@ what is returned by the API directly. Defaults to FALSE.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
