@@ -123,6 +123,10 @@ get_pums <- function(variables,
     # to combine the multiple API calls, we need to join using the repeated
     # variables so they don't get duplicated in the final data frame
     # the repeated variables will depend on how we requested data
+    #
+    # This gets complicated further by the use of a variable filter which
+    # is handled differently than the other variables, so we'll need to
+    # merge that in as well
 
     if (recode) {
       if (!is.null(puma)) {
@@ -133,6 +137,33 @@ get_pums <- function(variables,
     } else {
       if (!is.null(puma)) {
         join_vars <- c(join_vars, "PUMA")
+      }
+    }
+
+    if (!is.null(variables_filter)) {
+      var_names <- names(variables_filter)
+
+      if (recode) {
+        check_type <- pums_variables %>%
+          dplyr::filter(var_code %in% var_names,
+                        survey == survey,
+                        year == year,
+                        data_type == "chr") %>%
+          dplyr::distinct(var_code) %>%
+          dplyr::pull(var_code)
+
+        chr_names <- var_names[var_names %in% check_type]
+
+        if (length(chr_names) > 0) {
+          var_labels <- paste0(chr_names, "_label")
+
+          join_vars <- c(join_vars, var_names, var_labels)
+        } else {
+          join_vars <- c(join_vars, var_names)
+        }
+
+      } else {
+        join_vars <- c(join_vars, var_names)
       }
     }
 
