@@ -664,15 +664,12 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
 
 
-load_data_pums <- function(variables, state, puma, key, year, survey, recode, show_call) {
+load_data_pums <- function(variables, state, puma, key, year, survey,
+                           variables_filter, recode, show_call) {
 
   # for which years is data dictionary available in pums_variables?
   # we'll use this a couple times later on
   recode_years <- 2017:2019
-
-  var <- paste0(variables, collapse = ",")
-
-  vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
 
   base <- sprintf("https://api.census.gov/data/%s/acs/%s/pums",
                   year, survey)
@@ -725,11 +722,48 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
     }
   }
 
+  # Handle variables & variable filter
+  # If a variables filter is supplied, those variables should be removed from
+  # variables (if applicable)
+  if (!is.null(variables_filter)) {
+    filter_names <- names(variables_filter)
+
+    variables <- variables[!variables %in% filter_names]
+
+    if (length(variables) > 0) {
+      var <- paste0(variables, collapse = ",")
+
+      vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
+    } else {
+      vars_to_get <- "SERIALNO,SPORDER,WGTP,PWGTP"
+    }
+
+    # Combine the default query with the variables filter query
+    query_default <- list(get = vars_to_get,
+                          ucgid = geo,
+                          key = key)
+
+    # Collapse vectors if supplied
+    variables_filter_collapsed <- purrr::map(variables_filter,
+                                             ~{paste0(.x, collapse = ",")})
+
+    query <- c(query_default, variables_filter_collapsed)
+
+  } else {
+
+    var <- paste0(variables, collapse = ",")
+
+    vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
+
+    query <- list(get = vars_to_get,
+                  ucgid = geo,
+                  key = key)
+
+  }
+
   call <- httr::GET(base,
-              query = list(get = vars_to_get,
-                           ucgid = geo,
-                           key = key),
-              httr::progress())
+                    query = query,
+                    httr::progress())
 
   if (show_call) {
     call_url <- gsub("&key.*", "", call$url)

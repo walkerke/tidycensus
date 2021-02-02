@@ -1,6 +1,7 @@
 #' Load data from the American Community Survey Public Use Microdata Series API
 #'
 #' @param variables A vector of variables from the PUMS API.
+#'   Use \code{View(pums_variables)} to browse variable options.
 #' @param state A state, or vector of states, for which you would like to
 #'   request data.  The entire US can be requested with \code{state = "all"} - though be patient with the data download!
 #' @param puma A vector of PUMAs from a single state, for which you would like
@@ -10,6 +11,10 @@
 #'   5-year sample. Defaults to 2019.
 #' @param survey The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 #'   (the default).
+#' @param variables_filter A named list of filters you'd like to return from the
+#'   PUMS API.  For example, passing \code{list(AGE = 25:50, SEX = 1)} will return
+#'   only males aged 25 to 50 in your output dataset.  Defaults to \code{NULL},
+#'   which returns all records.
 #' @param rep_weights Whether or not to return housing unit, person, or both
 #'   housing and person-level replicate weights for calculation of standard
 #'   errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.
@@ -39,6 +44,7 @@ get_pums <- function(variables,
                      puma = NULL,
                      year = 2019,
                      survey = "acs5",
+                     variables_filter = NULL,
                      rep_weights = NULL,
                      recode = FALSE,
                      show_call = FALSE,
@@ -108,6 +114,7 @@ get_pums <- function(variables,
                      year = year,
                      puma = puma,
                      survey = survey,
+                     variables_filter = variables_filter,
                      recode = recode,
                      show_call = show_call,
                      key = key)
@@ -139,20 +146,11 @@ get_pums <- function(variables,
                                 puma = puma,
                                 year = year,
                                 survey = survey,
+                                variables_filter = variables_filter,
                                 recode = recode,
                                 show_call = show_call,
                                 key = key)
   }
-
-  # Replace variable names if supplied
-  # Suspending this functionality (for now) as it needs to be re-worked for use with labeling
-  # if (!is.null(names(variables))) {
-  #   for (i in 1:length(variables)) {
-  #     names(pums_data) <- str_replace(names(pums_data),
-  #                                     variables[i],
-  #                                     names(variables)[i])
-  #   }
-  # }
 
   return(pums_data)
 }
