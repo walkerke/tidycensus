@@ -39,7 +39,7 @@
 #' get_pums(variables = "AGEP", state = "VT", survey = "acs1", rep_weights = "person")
 #' }
 #'
-get_pums <- function(variables,
+get_pums <- function(variables = NULL,
                      state = NULL,
                      puma = NULL,
                      year = 2019,
@@ -77,6 +77,12 @@ get_pums <- function(variables,
 
     stop('A Census API key is required.  Obtain one at http://api.census.gov/data/key_signup.html, and then supply the key to the `census_api_key` function to use it throughout your tidycensus session.')
 
+  }
+
+  # If variables is NULL, initialize a length-0 vector to store
+  # the required variables eventually
+  if (is.null(variables)) {
+    variables <- c()
   }
 
   # Avoid double-requesting variables

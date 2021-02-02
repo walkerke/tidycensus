@@ -5,7 +5,7 @@
 \title{Load data from the American Community Survey Public Use Microdata Series API}
 \usage{
 get_pums(
-  variables,
+  variables = NULL,
   state = NULL,
   puma = NULL,
   year = 2019,
