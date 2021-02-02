@@ -747,7 +747,11 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
     variables_filter_collapsed <- purrr::map(variables_filter,
                                              ~{paste0(.x, collapse = ",")})
 
-    query <- c(query_default, variables_filter_collapsed)
+    query <- c(
+      list(get = vars_to_get),
+      variables_filter_collapsed,
+      list(ucgid = geo, key = key)
+    )
 
   } else {
 
