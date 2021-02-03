@@ -92,10 +92,10 @@ get_pums <- function(variables = NULL,
     if (!"ST" %in% variables) {
       variables <- c("ST", variables)
     }
-    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
-  } else {
-    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
   }
+
+  join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
+
   variables <- variables[!variables %in% join_vars]
 
   if (!is.null(rep_weights)) {
