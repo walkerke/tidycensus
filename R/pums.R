@@ -1,6 +1,7 @@
 #' Load data from the American Community Survey Public Use Microdata Series API
 #'
 #' @param variables A vector of variables from the PUMS API.
+#'   Use \code{View(pums_variables)} to browse variable options.
 #' @param state A state, or vector of states, for which you would like to
 #'   request data.  The entire US can be requested with \code{state = "all"} - though be patient with the data download!
 #' @param puma A vector of PUMAs from a single state, for which you would like
@@ -10,6 +11,10 @@
 #'   5-year sample. Defaults to 2019.
 #' @param survey The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 #'   (the default).
+#' @param variables_filter A named list of filters you'd like to return from the
+#'   PUMS API.  For example, passing \code{list(AGE = 25:50, SEX = 1)} will return
+#'   only males aged 25 to 50 in your output dataset.  Defaults to \code{NULL},
+#'   which returns all records.
 #' @param rep_weights Whether or not to return housing unit, person, or both
 #'   housing and person-level replicate weights for calculation of standard
 #'   errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.
@@ -34,11 +39,12 @@
 #' get_pums(variables = "AGEP", state = "VT", survey = "acs1", rep_weights = "person")
 #' }
 #'
-get_pums <- function(variables,
+get_pums <- function(variables = NULL,
                      state = NULL,
                      puma = NULL,
                      year = 2019,
                      survey = "acs5",
+                     variables_filter = NULL,
                      rep_weights = NULL,
                      recode = FALSE,
                      show_call = FALSE,
@@ -73,17 +79,25 @@ get_pums <- function(variables,
 
   }
 
+  # If variables is NULL, initialize a length-0 vector to store
+  # the required variables eventually
+  if (is.null(variables)) {
+    variables <- c()
+  }
+
   # Avoid double-requesting variables
   # However, if all states are requested, we should still return the state by default
   # as this is expected behavior when requesting data by state
-  if (all(state == "all")) {
-    if (!"ST" %in% variables) {
-      variables <- c("ST", variables)
-    }
-    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP")
-  } else {
-    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
-  }
+
+  # Old code - this should get picked up in load_data.R.  To be removed
+  # if (all(state == "all")) {
+  #   if (!"ST" %in% variables) {
+  #     variables <- c("ST", variables)
+  #   }
+  # }
+
+  join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
+
   variables <- variables[!variables %in% join_vars]
 
   if (!is.null(rep_weights)) {
@@ -98,16 +112,18 @@ get_pums <- function(variables,
     }
   }
 
-  ## If more than 46 vars requested, split into multiple API calls and join the result
+  ## If more than 45 vars requested, split into multiple API calls and join the result
   ## this works, but repeats pulling the weight and ST vars
-  if (length(variables) > 46) {
-    l <- split(variables, ceiling(seq_along(variables) / 46))
+  if (length(variables) > 45) {
+    l <- split(variables, ceiling(seq_along(variables) / 45))
     pums_data <- map(l, function(x) {
+
       load_data_pums(variables = x,
                      state = state,
                      year = year,
                      puma = puma,
                      survey = survey,
+                     variables_filter = variables_filter,
                      recode = recode,
                      show_call = show_call,
                      key = key)
@@ -116,6 +132,10 @@ get_pums <- function(variables,
     # to combine the multiple API calls, we need to join using the repeated
     # variables so they don't get duplicated in the final data frame
     # the repeated variables will depend on how we requested data
+    #
+    # This gets complicated further by the use of a variable filter which
+    # is handled differently than the other variables, so we'll need to
+    # merge that in as well
 
     if (recode) {
       if (!is.null(puma)) {
@@ -129,6 +149,33 @@ get_pums <- function(variables,
       }
     }
 
+    if (!is.null(variables_filter)) {
+      var_names <- names(variables_filter)
+
+      if (recode) {
+        check_type <- pums_variables %>%
+          dplyr::filter(var_code %in% var_names,
+                        survey == survey,
+                        year == year,
+                        data_type == "chr") %>%
+          dplyr::distinct(var_code) %>%
+          dplyr::pull(var_code)
+
+        chr_names <- var_names[var_names %in% check_type]
+
+        if (length(chr_names) > 0) {
+          var_labels <- paste0(chr_names, "_label")
+
+          join_vars <- c(join_vars, var_names, var_labels)
+        } else {
+          join_vars <- c(join_vars, var_names)
+        }
+
+      } else {
+        join_vars <- c(join_vars, var_names)
+      }
+    }
+
     pums_data <- reduce(pums_data, left_join, by = join_vars)
 
 
@@ -139,20 +186,11 @@ get_pums <- function(variables,
                                 puma = puma,
                                 year = year,
                                 survey = survey,
+                                variables_filter = variables_filter,
                                 recode = recode,
                                 show_call = show_call,
                                 key = key)
   }
-
-  # Replace variable names if supplied
-  # Suspending this functionality (for now) as it needs to be re-worked for use with labeling
-  # if (!is.null(names(variables))) {
-  #   for (i in 1:length(variables)) {
-  #     names(pums_data) <- str_replace(names(pums_data),
-  #                                     variables[i],
-  #                                     names(variables)[i])
-  #   }
-  # }
 
   return(pums_data)
 }
