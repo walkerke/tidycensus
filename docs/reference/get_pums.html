@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.6</span>
       </span>
     </div>
 
@@ -145,11 +145,12 @@
     </div>
 
     <pre class="usage"><span class='fu'>get_pums</span><span class='op'>(</span>
-  <span class='va'>variables</span>,
+  variables <span class='op'>=</span> <span class='cn'>NULL</span>,
   state <span class='op'>=</span> <span class='cn'>NULL</span>,
   puma <span class='op'>=</span> <span class='cn'>NULL</span>,
   year <span class='op'>=</span> <span class='fl'>2019</span>,
   survey <span class='op'>=</span> <span class='st'>"acs5"</span>,
+  variables_filter <span class='op'>=</span> <span class='cn'>NULL</span>,
   rep_weights <span class='op'>=</span> <span class='cn'>NULL</span>,
   recode <span class='op'>=</span> <span class='cn'>FALSE</span>,
   show_call <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -161,7 +162,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>variables</th>
-      <td><p>A vector of variables from the PUMS API.</p></td>
+      <td><p>A vector of variables from the PUMS API.
+Use <code><a href='https://rdrr.io/r/utils/View.html'>View(pums_variables)</a></code> to browse variable options.</p></td>
     </tr>
     <tr>
       <th>state</th>
@@ -183,6 +185,13 @@ named vector of state/PUMA pairs and set <code>state = "multiple"</code>.</p></t
       <th>survey</th>
       <td><p>The ACS survey; one of either <code>"acs1"</code> or <code>"acs5"</code>
 (the default).</p></td>
+    </tr>
+    <tr>
+      <th>variables_filter</th>
+      <td><p>A named list of filters you'd like to return from the
+PUMS API.  For example, passing <code><a href='https://rdrr.io/r/base/list.html'>list(AGE = 25:50, SEX = 1)</a></code> will return
+only males aged 25 to 50 in your output dataset.  Defaults to <code>NULL</code>,
+which returns all records.</p></td>
     </tr>
     <tr>
       <th>rep_weights</th>
