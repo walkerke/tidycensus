@@ -23,7 +23,7 @@ jobs:
       matrix:
         config:
           - {os: windows-latest, r: 'release'}
-          - {os: macOS-latest, r: 'release'}
+          # - {os: macOS-latest, r: 'release'}
           - {os: ubuntu-20.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
           - {os: ubuntu-20.04, r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
 
@@ -74,18 +74,18 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt-get install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
-      - name: "[Custom block] [macOS] Install spatial libraries"
-        if: runner.os == 'macOS'
-        run: brew install pkg-config gdal proj geos
-
-      - name: macOS configure.args
-        if: runner.os == 'macOS'
-        run: |
-          r <- options("repos")
-          r["rccp_drat"] <- "https://RcppCore.github.io/drat"
-          rgdal_config <- "--with-proj-lib=/usr/local/lib/ --with-proj-include=/usr/local/include/"
-          options(configure.args = c("rgdal" = rgdal_config), repos = r)
-        shell: Rscript {0}
+      # - name: "[Custom block] [macOS] Install spatial libraries"
+      #   if: runner.os == 'macOS'
+      #   run: brew install pkg-config gdal proj geos
+      #
+      # - name: macOS configure.args
+      #   if: runner.os == 'macOS'
+      #   run: |
+      #     r <- options("repos")
+      #     r["rccp_drat"] <- "https://RcppCore.github.io/drat"
+      #     rgdal_config <- "--with-proj-lib=/usr/local/lib/ --with-proj-include=/usr/local/include/"
+      #     options(configure.args = c("rgdal" = rgdal_config), repos = r)
+      #   shell: Rscript {0}
 
       - name: Check
         env:
