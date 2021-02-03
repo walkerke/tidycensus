@@ -92,7 +92,7 @@ get_pums <- function(variables = NULL,
     if (!"ST" %in% variables) {
       variables <- c("ST", variables)
     }
-    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP")
+    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
   } else {
     join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
   }
@@ -110,11 +110,20 @@ get_pums <- function(variables = NULL,
     }
   }
 
-  ## If more than 46 vars requested, split into multiple API calls and join the result
+  ## If more than 45 vars requested, split into multiple API calls and join the result
   ## this works, but repeats pulling the weight and ST vars
-  if (length(variables) > 46) {
-    l <- split(variables, ceiling(seq_along(variables) / 46))
+  if (length(variables) > 45) {
+    l <- split(variables, ceiling(seq_along(variables) / 45))
     pums_data <- map(l, function(x) {
+
+      # The state must be appended for everything to work
+      # if the entire US is requested
+      if (all(state == "all")) {
+        if (!"ST" %in% x) {
+          x <- c("ST", x)
+        }
+      }
+
       load_data_pums(variables = x,
                      state = state,
                      year = year,
