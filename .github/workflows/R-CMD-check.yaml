@@ -76,9 +76,7 @@ jobs:
 
       - name: "[Custom block] [macOS] Install spatial libraries"
         if: runner.os == 'macOS'
-        run: |
-          # conflicts with gfortran from r-lib/actions when linking gcc
-          brew install pkg-config gdal proj geos
+        run: brew install pkg-config gdal proj geos
 
       - name: Check
         env:
