@@ -88,11 +88,13 @@ get_pums <- function(variables = NULL,
   # Avoid double-requesting variables
   # However, if all states are requested, we should still return the state by default
   # as this is expected behavior when requesting data by state
-  if (all(state == "all")) {
-    if (!"ST" %in% variables) {
-      variables <- c("ST", variables)
-    }
-  }
+
+  # Old code - this should get picked up in load_data.R.  To be removed
+  # if (all(state == "all")) {
+  #   if (!"ST" %in% variables) {
+  #     variables <- c("ST", variables)
+  #   }
+  # }
 
   join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
 
@@ -115,14 +117,6 @@ get_pums <- function(variables = NULL,
   if (length(variables) > 45) {
     l <- split(variables, ceiling(seq_along(variables) / 45))
     pums_data <- map(l, function(x) {
-
-      # The state must be appended for everything to work
-      # if the entire US is requested
-      if (all(state == "all")) {
-        if (!"ST" %in% x) {
-          x <- c("ST", x)
-        }
-      }
 
       load_data_pums(variables = x,
                      state = state,

@@ -738,6 +738,11 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
       vars_to_get <- "SERIALNO,SPORDER,WGTP,PWGTP"
     }
 
+    # If geo is NULL, state should be added back in here
+    if (is.null(geo)) {
+      vars_to_get <- paste0(vars_to_get, ",ST")
+    }
+
     # Combine the default query with the variables filter query
     query_default <- list(get = vars_to_get,
                           ucgid = geo,
