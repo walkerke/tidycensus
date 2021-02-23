@@ -183,8 +183,8 @@ vt_survey_design %>%
   group_by(PUMA, SEX_label) %>% 
   summarize(
     age_25_up = survey_total(vartype = "ci"),
-    ba_above = survey_total(ba_above, vartype = "ci"),
-    ba_pct = survey_mean(ba_above, vartype = "ci")
+    ba_above_n = survey_total(ba_above, vartype = "ci"),
+    ba_above_pct = survey_mean(ba_above, vartype = "ci")
     )
 ```
 
