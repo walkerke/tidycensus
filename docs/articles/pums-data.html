@@ -274,7 +274,7 @@
 <p>By default, <code><a href="../reference/to_survey.html">to_survey()</a></code> converts a data frame to a <code>tbl_svy</code> object by using person replicate weights. You can change the arguments in <code>to_survey</code> if you are analyzing housing-unit data (<code>type = "housing"</code>), if you prefer to use a cluster/strata survey design without replicate weights (<code>design = "cluster"</code>), or if you want a survey object instead of a srvyr object. (Although, <code>tbl_svy</code> objects also have a svyrep.design class so you can <a href="http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects">use survey functions on srvyr objects</a>.)</p>
 <p>Now, with our srvyr design object defined, we can calculate the same estimates as above, but we now get column with standard errors as well.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://gdfe.co/srvyr">srvyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://gdfe.co/srvyr/">srvyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="va">vt_survey_design</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span></code></pre></div>
@@ -306,22 +306,22 @@
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html">summarize</a></span><span class="op">(</span>
     age_25_up <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html">survey_total</a></span><span class="op">(</span>vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,
-    ba_above <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html">survey_total</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,
-    ba_pct <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html">survey_mean</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>
+    ba_above_n <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html">survey_total</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,
+    ba_above_pct <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html">survey_mean</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>
     <span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 8 x 11
 ## # Groups:   PUMA [4]
-##   PUMA  SEX_label age_25_up age_25_up_low age_25_up_upp ba_above ba_above_low ba_above_upp ba_pct
-##   &lt;chr&gt; &lt;ord&gt;         &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;  &lt;dbl&gt;
-## 1 00100 Male          72680        70216.        75144.    34113       29913.       38313.  0.469
-## 2 00100 Female        77966        75671.        80261.    36873       32202.       41544.  0.473
-## 3 00200 Male          52278        50826.        53730.    15831       13327.       18335.  0.303
-## 4 00200 Female        55162        53643.        56681.    20248       17679.       22817.  0.367
-## 5 00300 Male          45634        44743.        46525.    14869       12638.       17100.  0.326
-## 6 00300 Female        49546        48576.        50516.    21527       19010.       24044.  0.434
-## 7 00400 Male          45960        45067.        46853.    12788       10699.       14877.  0.278
-## 8 00400 Female        48601        47783.        49419.    18980       16540.       21420.  0.391
-## # … with 2 more variables: ba_pct_low &lt;dbl&gt;, ba_pct_upp &lt;dbl&gt;</code></pre>
+##   PUMA  SEX_label age_25_up age_25_up_low age_25_up_upp ba_above_n ba_above_n_low ba_above_n_upp
+##   &lt;chr&gt; &lt;ord&gt;         &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;
+## 1 00100 Male          72680        70216.        75144.      34113         29913.         38313.
+## 2 00100 Female        77966        75671.        80261.      36873         32202.         41544.
+## 3 00200 Male          52278        50826.        53730.      15831         13327.         18335.
+## 4 00200 Female        55162        53643.        56681.      20248         17679.         22817.
+## 5 00300 Male          45634        44743.        46525.      14869         12638.         17100.
+## 6 00300 Female        49546        48576.        50516.      21527         19010.         24044.
+## 7 00400 Male          45960        45067.        46853.      12788         10699.         14877.
+## 8 00400 Female        48601        47783.        49419.      18980         16540.         21420.
+## # … with 3 more variables: ba_above_pct &lt;dbl&gt;, ba_above_pct_low &lt;dbl&gt;, ba_above_pct_upp &lt;dbl&gt;</code></pre>
 </div>
 <div id="modeling-with-pums-data" class="section level2">
 <h2 class="hasAnchor">
@@ -361,11 +361,10 @@
     mean_commute   <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html">survey_mean</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span>,
     median_commute <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_quantile.html">survey_median</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span>
     <span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 10
-##        n  n_se mean_wage mean_wage_se median_wage median_wage_se mean_commute mean_commute_se
-##    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;          &lt;dbl&gt;        &lt;dbl&gt;           &lt;dbl&gt;
-## 1 282733 3395.    44601.         527.       35000           255.         23.3           0.256
-## # … with 2 more variables: median_commute &lt;dbl&gt;, median_commute_se &lt;dbl&gt;</code></pre>
+<pre><code>##        n     n_se mean_wage mean_wage_se median_wage median_wage_se mean_commute mean_commute_se
+## 1 282733 3395.452  44600.91     527.3466       35000       255.0725     23.31421       0.2560602
+##   median_commute median_commute_se
+## 1             20         0.5101451</code></pre>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count</a></span><span class="op">(</span><span class="va">emp_type</span><span class="op">)</span></code></pre></div>
@@ -522,10 +521,8 @@
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">filter</a></span><span class="op">(</span><span class="fu">between</span><span class="op">(</span><span class="va">AGEP</span>, <span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html">summarize</a></span><span class="op">(</span>age_0_4 <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html">survey_total</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 2
-##   age_0_4 age_0_4_se
-##     &lt;dbl&gt;      &lt;dbl&gt;
-## 1   86452       944.</code></pre>
+<pre><code>##   age_0_4 age_0_4_se
+## 1   86452   944.1839</code></pre>
 <p>3 for 3 – yay!</p>
 </div>
 <div id="more-resources-for-analyzing-pums-data" class="section level2">
