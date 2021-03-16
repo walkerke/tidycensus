@@ -14,7 +14,6 @@ get_flows(
   county = NULL,
   cbsa = NULL,
   geometry = FALSE,
-  shift_geo = FALSE,
   key = NULL,
   moe_level = 90,
   show_call = FALSE,
@@ -54,13 +53,12 @@ character CBSA GEOIDs are accepted. When specifying CBSAs, geography must
 be set to `"cbsa"` and `state` and `county` must be `NULL`. Defaults to
 NULL.}
 
-\item{geometry}{if FALSE (the default), return a regular tibble of ACS data.
-if TRUE, uses the tigris package to return an sf tibble with simple feature
-geometry in the `geometry` column. **NOT YET IMPLEMENTED**}
-
-\item{shift_geo}{if TRUE, returns geometry with Alaska and Hawaii shifted for
-thematic mapping of the entire US. Geometry was originally obtained from
-the albersusa R package. **NOT YET IMPLEMENTED**}
+\item{geometry}{if FALSE (the default), return a tibble of ACS Migration
+Flows data. If TRUE, return an sf object with the centroids of both origin
+and destination as `sfc_POINT` columns. The origin point feature is
+returned in a column named `centroid1` and is the active geometry column in
+the sf object. The destination point feature is returned in the `centroid2`
+column.}
 
 \item{key}{Your Census API key. Obtain one at
 \url{http://api.census.gov/data/key_signup.html}}
