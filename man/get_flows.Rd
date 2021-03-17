@@ -87,5 +87,13 @@ get_flows(
   state = "VT",
   county = c("Washington", "Chittenden")
   )
+
+get_flows(
+   geography = "cbsa",
+   variables = c("POP1YR", "POP1YRAGO"),
+   geometry = TRUE,
+   output = "wide",
+   show_call = TRUE
+  )
 }
 }
