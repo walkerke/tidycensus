@@ -927,7 +927,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
 
 
 load_data_flows <- function(geography, variables, key, year, state = NULL,
-                            county = NULL, cbsa = NULL, show_call = FALSE) {
+                            county = NULL, msa = NULL, show_call = FALSE) {
 
   base <- paste("https://api.census.gov/data", year, "acs", "flows", sep = "/")
 
@@ -953,9 +953,9 @@ load_data_flows <- function(geography, variables, key, year, state = NULL,
     county <- paste(map_chr(county, ~ validate_county(state, .x)), collapse = ",")
   }
 
-  # if cbsa codes specified, collapse into string for api call
-  if (!is.null(cbsa)) {
-    cbsa <- paste0(cbsa, collapse = ",")
+  # if msa codes specified, collapse into string for api call
+  if (!is.null(msa)) {
+    msa <- paste0(msa, collapse = ",")
   }
 
   # define counties (for) within states (in) for filtering in api call
@@ -978,10 +978,10 @@ load_data_flows <- function(geography, variables, key, year, state = NULL,
     }
   }
 
-  # if cbsas are specified construct for call to filter by cbsa
+  # if msas are specified construct for call to filter by msa
   if (geography == "metropolitan statistical area/micropolitan statistical area") {
-    if (!is.null(cbsa)) {
-      for_area <- paste0(geography, ":", cbsa)
+    if (!is.null(msa)) {
+      for_area <- paste0(geography, ":", msa)
     }
   }
 

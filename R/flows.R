@@ -2,7 +2,7 @@
 #' Flows
 #'
 #' @param geography The geography of your requested data. Possible values are
-#'   `"county"`, `"county subdivision"`, and `"cbsa"`.
+#'   `"county"`, `"county subdivision"`, and `"metropolitan statistical area"`.
 #' @param variables Character string or vector of character strings of variable
 #'   names. By default, `get_flows()` returns the GEOID and names of the
 #'   geographies as well as the number of people who moved in and out of each
@@ -20,12 +20,11 @@
 #' @param county The county for which you are requesting data. County names and
 #'   FIPS codes are accepted. Must be combined with a value supplied to `state`.
 #'   Defaults to NULL.
-#' @param cbsa The core-based statistical area (metropolitan/micropolitan
-#'   statistical area) for which you are requesting data. Specify a single value
-#'   or a vector of values to get data for more than one CBSA. Numeric or
-#'   character CBSA GEOIDs are accepted. When specifying CBSAs, geography must
-#'   be set to `"cbsa"` and `state` and `county` must be `NULL`. Defaults to
-#'   NULL.
+#' @param msa The metropolitan statistical area for which you are requesting
+#'   data. Specify a single value or a vector of values to get data for more
+#'   than one MSA. Numeric or character MSA GEOIDs are accepted. When specifying
+#'   MSAs, geography must be set to `"metropolitan statistical area"` and
+#'   `state` and `county` must be `NULL`. Defaults to NULL.
 #' @param geometry if FALSE (the default), return a tibble of ACS Migration
 #'   Flows data. If TRUE, return an sf object with the centroids of both origin
 #'   and destination as `sfc_POINT` columns. The origin point feature is
@@ -40,7 +39,6 @@
 #'   useful in debugging and determining if error messages returned are due to
 #'   tidycensus or the Census API. Copy to the API call into a browser and see
 #'   what is returned by the API directly. Defaults to FALSE.
-#' @param ... Other keyword arguments
 #'
 #' @return A tibble or sf tibble of ACS Migration Flows data
 #' @examples \dontrun{
@@ -51,7 +49,7 @@
 #'   )
 #'
 #' get_flows(
-#'    geography = "cbsa",
+#'    geography = "metropolitan statistical area",
 #'    variables = c("POP1YR", "POP1YRAGO"),
 #'    geometry = TRUE,
 #'    output = "wide",
@@ -60,8 +58,8 @@
 #' }
 #' @export
 get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
-                      state = NULL, county = NULL, cbsa = NULL, geometry = FALSE,
-                      key = NULL, moe_level = 90, show_call = FALSE, ...) {
+                      state = NULL, county = NULL, msa = NULL, geometry = FALSE,
+                      key = NULL, moe_level = 90, show_call = FALSE) {
 
   # a bunch of checks to make sure the get_flows() call is specified correctly
   if (Sys.getenv('CENSUS_API_KEY') != '') {
@@ -70,7 +68,7 @@ get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
     stop('A Census API key is required. Obtain one at http://api.census.gov/data/key_signup.html, and then supply the key to the `census_api_key` function to use it throughout your tidycensus session.')
   }
 
-  if (geography == "cbsa") {
+  if (geography %in% c("cbsa", "msa", "metropolitan statistical area")) {
     geography <- "metropolitan statistical area/micropolitan statistical area"
   }
 
@@ -79,7 +77,7 @@ get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
   }
 
   if (!geography %in% c("county", "county subdivision", "metropolitan statistical area/micropolitan statistical area")) {
-    stop('ACS Migration Flows API provides data at "county", "county subdivision", and "cbsa" levels only', call. = FALSE)
+    stop('ACS Migration Flows API provides data at "county", "county subdivision", and "metropolitan statistical area" levels only', call. = FALSE)
   }
 
   if (geography == "county" && !is.null(county)) {
@@ -96,7 +94,7 @@ get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
   }
 
   if (geography == "metropolitan statistical area/micropolitan statistical area" && !(is.null(state) && is.null(county))) {
-    stop("When requesting CBSA data, `state` and `county` must be NULL.", call. = FALSE)
+    stop("When requesting MSA data, `state` and `county` must be NULL.", call. = FALSE)
   }
 
   if (year < 2010) {
@@ -131,7 +129,7 @@ get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
     year = year,
     state = state,
     county = county,
-    cbsa = cbsa,
+    msa = msa,
     show_call = show_call
     )
 

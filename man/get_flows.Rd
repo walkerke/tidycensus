@@ -12,7 +12,7 @@ get_flows(
   output = "tidy",
   state = NULL,
   county = NULL,
-  cbsa = NULL,
+  msa = NULL,
   geometry = FALSE,
   key = NULL,
   moe_level = 90,
@@ -22,7 +22,7 @@ get_flows(
 }
 \arguments{
 \item{geography}{The geography of your requested data. Possible values are
-`"county"`, `"county subdivision"`, and `"cbsa"`.}
+`"county"`, `"county subdivision"`, and `"metropolitan statistical area"`.}
 
 \item{variables}{Character string or vector of character strings of variable
 names. By default, `get_flows()` returns the GEOID and names of the
@@ -46,12 +46,11 @@ NULL.}
 FIPS codes are accepted. Must be combined with a value supplied to `state`.
 Defaults to NULL.}
 
-\item{cbsa}{The core-based statistical area (metropolitan/micropolitan
-statistical area) for which you are requesting data. Specify a single value
-or a vector of values to get data for more than one CBSA. Numeric or
-character CBSA GEOIDs are accepted. When specifying CBSAs, geography must
-be set to `"cbsa"` and `state` and `county` must be `NULL`. Defaults to
-NULL.}
+\item{msa}{The metropolitan statistical area for which you are requesting
+data. Specify a single value or a vector of values to get data for more
+than one MSA. Numeric or character MSA GEOIDs are accepted. When specifying
+MSAs, geography must be set to `"metropolitan statistical area"` and
+`state` and `county` must be `NULL`. Defaults to NULL.}
 
 \item{geometry}{if FALSE (the default), return a tibble of ACS Migration
 Flows data. If TRUE, return an sf object with the centroids of both origin
@@ -89,7 +88,7 @@ get_flows(
   )
 
 get_flows(
-   geography = "cbsa",
+   geography = "metropolitan statistical area",
    variables = c("POP1YR", "POP1YRAGO"),
    geometry = TRUE,
    output = "wide",
