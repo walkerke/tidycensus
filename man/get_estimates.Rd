@@ -29,8 +29,8 @@ get_estimates(
 \item{product}{The data product (optional). \code{"population"}, \code{"components"}
 \code{"housing"}, and \code{"characteristics"} are supported.}
 
-\item{variables}{A character string or vector of requested variables to get
-from the population, components, or housing API.}
+\item{variables}{A character string or vector of character strings of requested variables
+to get from either the population, components, or housing API.}
 
 \item{breakdown}{The population breakdown used when \code{product = "characteristics"}.
 Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
