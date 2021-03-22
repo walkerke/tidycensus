@@ -3,8 +3,8 @@
 #' @param geography The geography of your data.
 #' @param product The data product (optional). \code{"population"}, \code{"components"}
 #'                \code{"housing"}, and \code{"characteristics"} are supported.
-#' @param variables A character string of requested variables to get specific
-#'                  variables from the population, components, and housing APIs.
+#' @param variables A character string or vector of requested variables to get
+#'                  from the population, components, or housing API.
 #' @param breakdown The population breakdown used when \code{product = "characteristics"}.
 #'                  Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
 #'                  \code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
