@@ -486,7 +486,7 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   for_area <- paste0(geography, ":*")
 
-  if (year == 2019) {
+  if (year >= 2019) {
     geo_name <- "NAME"
   } else {
     geo_name <- "GEONAME"
@@ -494,7 +494,7 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   if (is.null(variables)) {
     if (is.null(product)) {
-      stop("Either a product or a vector of variables is required.", call. = FALSE)
+      stop("Either a product or a vector of variables (from a single product) is required.", call. = FALSE)
     } else {
       if (product == "population") {
         vars_to_get <- paste0(geo_name, ",POP,DENSITY")
@@ -514,10 +514,17 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
     } else {
       if (all(variables %in% c("POP", "DENSITY"))) {
         product <- "population"
-      } else if (all(variables %in% c("BIRTHS", "DEATHS","DOMESTICMIG","INTERNATIONALMIG","NATURALINC","NETMIG","RBIRTH","RDEATH","RDOMESTICMIG","RINTERNATIONALMIG","RNATURALINC","RNETMIG"))) {
+      } else if (all(variables %in% c("BIRTHS", "DEATHS", "DOMESTICMIG", "INTERNATIONALMIG", "NATURALINC", "NETMIG", "RBIRTH", "RDEATH", "RDOMESTICMIG", "RINTERNATIONALMIG", "RNATURALINC", "RNETMIG"))) {
         product <- "components"
-      } else if (variables == "HUEST") {
+      } else if (all(variables %in% c("HUEST"))) {
         product <- "housing"
+      } else {
+        stop(
+          paste('Variables must be a subset of only one of the following sets of valid variables:',
+                'for population estimates, c("POP", "DENSITY");',
+                'for housing unit estimates, c("HUEST");',
+                'and for components of change estimates, c("BIRTHS", "DEATHS", "DOMESTICMIG", "INTERNATIONALMIG", "NATURALINC", "NETMIG", "RBIRTH", "RDEATH", "RDOMESTICMIG", "RINTERNATIONALMIG", "RNATURALINC", "RNETMIG").'),
+          call. = FALSE)
       }
     }
     vars_to_get <- paste0(geo_name, ",", paste0(variables, collapse = ","))
