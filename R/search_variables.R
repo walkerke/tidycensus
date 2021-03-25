@@ -57,7 +57,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
     dataset <- paste0("dec/", dataset)
   }
 
-  if (dataset %in% c("acs1", "acs3", "acs5")) {
+  if (dataset %in% c("acs1", "acs3", "acs5", "acsse")) {
     dataset <- paste0("acs/", dataset)
   }
 
