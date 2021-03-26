@@ -117,6 +117,12 @@ get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
                    "MOVEDIN", "MOVEDIN_M", "MOVEDOUT", "MOVEDOUT_M",
                    "MOVEDNET", "MOVEDNET_M")
 
+  # these are all the possible demographic variables available
+  # need to know them to pivot returned data to tidy format later
+  mig_dem_vars <- c("AGE", "HSGP", "RACE", "SEX", "HHT", "REL", "TEN", "ENG",
+                    "POB", "YEARS", "ESR", "OCC", "WKS", "AHINC", "APINC",
+                    "SCHL", "HISP_ORIGIN")
+
   # if additional variables are requested, combine with always vars
   # and remove vars duplicated in variables specified
   variables <- c(always_vars, variables[!variables %in% always_vars])
@@ -136,6 +142,7 @@ get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
   # do some reshaping if requested and adjust moe if needed
   if (output == "tidy") {
     dat <- dat %>%
+      dplyr::mutate(dplyr::across(dplyr::any_of(mig_dem_vars), as.character)) %>% # crossed demographic vars should be chr so they don't get pivoted
       tidyr::pivot_longer(cols = where(is.numeric), names_to = "variable") %>%
       tidyr::separate(.data$variable, into = c("variable", "type"), sep = "_", fill = "right") %>%
       dplyr::mutate(type = ifelse(is.na(.data$type), "estimate", "moe")) %>%
