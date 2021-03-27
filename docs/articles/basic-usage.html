@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.7</span>
       </span>
     </div>
 
@@ -110,7 +110,7 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/census_api_key.html">census_api_key</a></span><span class="op">(</span><span class="st">"YOUR API KEY GOES HERE"</span><span class="op">)</span></code></pre></div>
-<p>There are two major functions implemented in <strong>tidycensus</strong>: <code><a href="../reference/get_decennial.html">get_decennial()</a></code>, which grants access to the 2000 and 2010 decennial US Census APIs, and <code><a href="../reference/get_acs.html">get_acs()</a></code>, which grants access to the 1-year and 5-year American Community Survey APIs. <em>Note: at the moment, access to the 1990 (SF1 and SF3) and 2000 (SF3) APIs has been suspended.</em></p>
+<p>There are two major functions implemented in <strong>tidycensus</strong>: <code><a href="../reference/get_decennial.html">get_decennial()</a></code>, which grants access to the 2000 and 2010 decennial US Census APIs, and <code><a href="../reference/get_acs.html">get_acs()</a></code>, which grants access to the 1-year and 5-year American Community Survey APIs.</p>
 <p>In this basic example, let’s look at median age by state in 2010:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">age10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_decennial.html">get_decennial</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"state"</span>, 
@@ -387,7 +387,8 @@
 <div id="working-with-acs-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#working-with-acs-data" class="anchor"></a>Working with ACS data</h2>
-<p>American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population. In turn, ACS data points are <strong>estimates</strong> characterized by a <strong>margin of error</strong>. <strong>tidycensus</strong> will always return the estimate and margin of error together for any requested variables when using <code><a href="../reference/get_acs.html">get_acs()</a></code>. In turn, when requesting ACS data with <strong>tidycensus</strong>, it is not necessary to specify the <code>"E"</code> or <code>"M"</code> suffix for a variable name. Let’s fetch median household income data from the 2014-2018 ACS for counties in Vermont.</p>
+<p>American Community Survey (ACS) data are available from the 1-year ACS since 2005 for geographies of population 65,000 and greater, and from the 5-year ACS for all geographies down to the block group level starting with the 2005-2009 dataset. <code><a href="../reference/get_acs.html">get_acs()</a></code> defaults to the 5-year ACS with the argument <code>survey = "acs5"</code>, but 1-year ACS data are available using <code>survey = "acs1"</code>.</p>
+<p>ACS data differ from decennial Census data as they are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population. In turn, ACS data points are <strong>estimates</strong> characterized by a <strong>margin of error</strong>. <strong>tidycensus</strong> will always return the estimate and margin of error together for any requested variables when using <code><a href="../reference/get_acs.html">get_acs()</a></code>. In turn, when requesting ACS data with <strong>tidycensus</strong>, it is not necessary to specify the <code>"E"</code> or <code>"M"</code> suffix for a variable name. Let’s fetch median household income data from the 2014-2018 ACS for counties in Vermont.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, 
               variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>medincome <span class="op">=</span> <span class="st">"B19013_001"</span><span class="op">)</span>, 
