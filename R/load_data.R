@@ -740,9 +740,18 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
     if (length(variables) > 0) {
       var <- paste0(variables, collapse = ",")
 
-      vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
+      # Handle housing-only query
+      if ("SPORDER" %in% filter_names) {
+        vars_to_get <- paste0("SERIALNO,WGTP,PWGTP,", var)
+      } else {
+        vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
+      }
     } else {
-      vars_to_get <- "SERIALNO,SPORDER,WGTP,PWGTP"
+      if ("SPORDER" %in% filter_names) {
+        vars_to_get <- "SERIALNO,WGTP,PWGTP"
+      } else {
+        vars_to_get <- "SERIALNO,SPORDER,WGTP,PWGTP"
+      }
     }
 
     # If geo is NULL, state should be added back in here
@@ -809,7 +818,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
 
   colnames(dat) <- dat[1,]
 
-  dat <- as_tibble(dat)
+  dat <- dplyr::as_tibble(dat, .name_repair = "minimal")
 
   dat <- dat[-1,]
 

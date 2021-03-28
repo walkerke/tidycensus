@@ -14,7 +14,9 @@
 #' @param variables_filter A named list of filters you'd like to return from the
 #'   PUMS API.  For example, passing \code{list(AGE = 25:50, SEX = 1)} will return
 #'   only males aged 25 to 50 in your output dataset.  Defaults to \code{NULL},
-#'   which returns all records.
+#'   which returns all records. If a housing-only dataset is required,
+#'   use \code{list(SPORDER = 1)} to only return householder records (taking care
+#'   in your analysis to use the household weight \code{WGTP}).
 #' @param rep_weights Whether or not to return housing unit, person, or both
 #'   housing and person-level replicate weights for calculation of standard
 #'   errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.
