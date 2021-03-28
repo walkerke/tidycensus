@@ -191,7 +191,9 @@ named vector of state/PUMA pairs and set <code>state = "multiple"</code>.</p></t
       <td><p>A named list of filters you'd like to return from the
 PUMS API.  For example, passing <code><a href='https://rdrr.io/r/base/list.html'>list(AGE = 25:50, SEX = 1)</a></code> will return
 only males aged 25 to 50 in your output dataset.  Defaults to <code>NULL</code>,
-which returns all records.</p></td>
+which returns all records. If a housing-only dataset is required,
+use <code><a href='https://rdrr.io/r/base/list.html'>list(SPORDER = 1)</a></code> to only return householder records (taking care
+in your analysis to use the household weight <code>WGTP</code>).</p></td>
     </tr>
     <tr>
       <th>rep_weights</th>
