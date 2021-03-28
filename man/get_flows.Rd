@@ -8,6 +8,8 @@ Flows}
 get_flows(
   geography,
   variables = NULL,
+  breakdown = NULL,
+  breakdown_labels = FALSE,
   year = 2018,
   output = "tidy",
   state = NULL,
@@ -16,8 +18,7 @@ get_flows(
   geometry = FALSE,
   key = NULL,
   moe_level = 90,
-  show_call = FALSE,
-  ...
+  show_call = FALSE
 )
 }
 \arguments{
@@ -30,6 +31,20 @@ geographies as well as the number of people who moved in and out of each
 geography (`MOVEDIN` and `MOVEDOUT`). If additional variables are
 specified, they are pulled in addition to the default variables.}
 
+\item{breakdown}{A character vector of the population breakdown
+characteristics to be crossed with migration flows data. For datasets
+between 2006-2010 and 2011-2015, selected demography characteristics such
+as age, race, employment status, etc. are available. Possible values are
+`"AGE"`, `"SEX"`, `"RACE"`, `"HSGP"`, `"REL"`, `"HHT"`, `"TEN"`, `"ENG"`,
+`"POB"`, `"YEARS"`, `"ESR"`, `"OCC"`, `"WKS"`, `"SCHL"`, `"AHINC"`,
+`"APINC"`, and `"HISP_ORIGIN"`. For more information and to see which
+characteristics are available in each year, visit the [Census Migration
+Flows documentation](https://www.census.gov/data/developers/data-sets/acs-migration-flows.html).
+Note: not all characteristics are available in all years.}
+
+\item{breakdown_labels}{Whether or not to add columns with labels for the
+breakdown characteristic codes. Defaults to `FALSE`.}
+
 \item{year}{The year, or endyear, of the ACS sample. The Migration Flows API
 is available for 5-year ACS samples from 2010 to 2018. Defaults to 2018.}
 
@@ -39,18 +54,16 @@ represents an enumeration unit and the variables are in the columns.}
 
 \item{state}{An optional vector of states for which you are requesting data.
 State names, postal codes, and FIPS codes are accepted. When requesting
-county subdivision data, you must specify at least one state. Defaults to
-NULL.}
+county subdivision data, you must specify at least one state.}
 
 \item{county}{The county for which you are requesting data. County names and
-FIPS codes are accepted. Must be combined with a value supplied to `state`.
-Defaults to NULL.}
+FIPS codes are accepted. Must be combined with a value supplied to `state`.}
 
 \item{msa}{The metropolitan statistical area for which you are requesting
 data. Specify a single value or a vector of values to get data for more
 than one MSA. Numeric or character MSA GEOIDs are accepted. When specifying
 MSAs, geography must be set to `"metropolitan statistical area"` and
-`state` and `county` must be `NULL`. Defaults to NULL.}
+`state` and `county` must be `NULL`.}
 
 \item{geometry}{if FALSE (the default), return a tibble of ACS Migration
 Flows data. If TRUE, return an sf object with the centroids of both origin
@@ -69,8 +82,6 @@ of 90 (the default), 95, or 99.}
 useful in debugging and determining if error messages returned are due to
 tidycensus or the Census API. Copy to the API call into a browser and see
 what is returned by the API directly. Defaults to FALSE.}
-
-\item{...}{Other keyword arguments}
 }
 \value{
 A tibble or sf tibble of ACS Migration Flows data
@@ -85,6 +96,16 @@ get_flows(
   geography = "county",
   state = "VT",
   county = c("Washington", "Chittenden")
+  )
+
+get_flows(
+  geography = "county subdivision",
+  breakdown = "RACE",
+  breakdown_labels = TRUE,
+  state = "NY",
+  county = "Westchester",
+  output = "wide",
+  year = 2015
   )
 
 get_flows(

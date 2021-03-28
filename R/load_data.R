@@ -980,8 +980,16 @@ load_data_flows <- function(geography, variables, key, year, state = NULL,
 
   # if msas are specified construct for call to filter by msa
   if (geography == "metropolitan statistical area/micropolitan statistical area") {
+
+    # before 2016 msa geography name in api is different
+    if (year <= 2015) {
+      geography <- "metropolitan statistical areas"
+    }
+
     if (!is.null(msa)) {
       for_area <- paste0(geography, ":", msa)
+    } else {
+      for_area <- paste0(geography, ":*")
     }
   }
 
@@ -1031,7 +1039,8 @@ load_data_flows <- function(geography, variables, key, year, state = NULL,
 
   # remove columns that contains geographies automatically returned by api - we already have this as GEOID1
   dat <- dat[, !(names(dat) %in% c("state", "county", "county subdivision",
-                                   "metropolitan statistical area/micropolitan statistical area"))]
+                                   "metropolitan statistical area/micropolitan statistical area",
+                                   "metropolitan statistical areas"))]
 
   # convert vars to numeric, skip geoids and names
   str_vars <- variables[grepl("_NAME|GEOID|^STATE|^COUNTY|^MCD|^METRO", variables)]

@@ -8,6 +8,18 @@
 #'   geographies as well as the number of people who moved in and out of each
 #'   geography (`MOVEDIN` and `MOVEDOUT`). If additional variables are
 #'   specified, they are pulled in addition to the default variables.
+#' @param breakdown A character vector of the population breakdown
+#'   characteristics to be crossed with migration flows data. For datasets
+#'   between 2006-2010 and 2011-2015, selected demography characteristics such
+#'   as age, race, employment status, etc. are available. Possible values are
+#'   `"AGE"`, `"SEX"`, `"RACE"`, `"HSGP"`, `"REL"`, `"HHT"`, `"TEN"`, `"ENG"`,
+#'   `"POB"`, `"YEARS"`, `"ESR"`, `"OCC"`, `"WKS"`, `"SCHL"`, `"AHINC"`,
+#'   `"APINC"`, and `"HISP_ORIGIN"`. For more information and to see which
+#'   characteristics are available in each year, visit the [Census Migration
+#'   Flows documentation](https://www.census.gov/data/developers/data-sets/acs-migration-flows.html).
+#'   Note: not all characteristics are available in all years.
+#' @param breakdown_labels Whether or not to add columns with labels for the
+#'   breakdown characteristic codes. Defaults to `FALSE`.
 #' @param year The year, or endyear, of the ACS sample. The Migration Flows API
 #'   is available for 5-year ACS samples from 2010 to 2018. Defaults to 2018.
 #' @param output One of "tidy" (the default) in which each row represents an
@@ -15,16 +27,14 @@
 #'   represents an enumeration unit and the variables are in the columns.
 #' @param state An optional vector of states for which you are requesting data.
 #'   State names, postal codes, and FIPS codes are accepted. When requesting
-#'   county subdivision data, you must specify at least one state. Defaults to
-#'   NULL.
+#'   county subdivision data, you must specify at least one state.
 #' @param county The county for which you are requesting data. County names and
 #'   FIPS codes are accepted. Must be combined with a value supplied to `state`.
-#'   Defaults to NULL.
 #' @param msa The metropolitan statistical area for which you are requesting
 #'   data. Specify a single value or a vector of values to get data for more
 #'   than one MSA. Numeric or character MSA GEOIDs are accepted. When specifying
 #'   MSAs, geography must be set to `"metropolitan statistical area"` and
-#'   `state` and `county` must be `NULL`. Defaults to NULL.
+#'   `state` and `county` must be `NULL`.
 #' @param geometry if FALSE (the default), return a tibble of ACS Migration
 #'   Flows data. If TRUE, return an sf object with the centroids of both origin
 #'   and destination as `sfc_POINT` columns. The origin point feature is
@@ -49,6 +59,16 @@
 #'   )
 #'
 #' get_flows(
+#'   geography = "county subdivision",
+#'   breakdown = "RACE",
+#'   breakdown_labels = TRUE,
+#'   state = "NY",
+#'   county = "Westchester",
+#'   output = "wide",
+#'   year = 2015
+#'   )
+#'
+#' get_flows(
 #'    geography = "metropolitan statistical area",
 #'    variables = c("POP1YR", "POP1YRAGO"),
 #'    geometry = TRUE,
@@ -57,7 +77,8 @@
 #'   )
 #' }
 #' @export
-get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
+get_flows <- function(geography, variables = NULL, breakdown = NULL,
+                      breakdown_labels = FALSE, year = 2018, output = "tidy",
                       state = NULL, county = NULL, msa = NULL, geometry = FALSE,
                       key = NULL, moe_level = 90, show_call = FALSE) {
 
@@ -70,6 +91,9 @@ get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
 
   if (geography %in% c("cbsa", "msa", "metropolitan statistical area")) {
     geography <- "metropolitan statistical area/micropolitan statistical area"
+    if (year <= 2012) {
+      stop("Data at the MSA-level is only avaialable beginning with the 2013 5-year ACS", .call = FALSE)
+    }
   }
 
   if (geography == "mcd") {
@@ -94,7 +118,11 @@ get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
   }
 
   if (geography == "metropolitan statistical area/micropolitan statistical area" && !(is.null(state) && is.null(county))) {
-    stop("When requesting MSA data, `state` and `county` must be NULL.", call. = FALSE)
+    stop("When requesting MSA data, `state` and `county` must be NULL", call. = FALSE)
+  }
+
+  if (!is.null(breakdown) && year > 2015) {
+    stop("Breakdown characteristics are only available for surveys before 2016", call. = FALSE)
   }
 
   if (year < 2010) {
@@ -117,15 +145,19 @@ get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
                    "MOVEDIN", "MOVEDIN_M", "MOVEDOUT", "MOVEDOUT_M",
                    "MOVEDNET", "MOVEDNET_M")
 
-  # these are all the possible demographic variables available
+  # these are all the possible characteristic variables available
   # need to know them to pivot returned data to tidy format later
-  mig_dem_vars <- c("AGE", "HSGP", "RACE", "SEX", "HHT", "REL", "TEN", "ENG",
-                    "POB", "YEARS", "ESR", "OCC", "WKS", "AHINC", "APINC",
-                    "SCHL", "HISP_ORIGIN")
+  all_breakdown_vars <- tidycensus::mig_recodes %>%
+    dplyr::distinct(.data$characteristic) %>%
+    dplyr::pull()
 
-  # if additional variables are requested, combine with always vars
+  # if additional variables are requested, combine with always vars, breakdown_vars
   # and remove vars duplicated in variables specified
-  variables <- c(always_vars, variables[!variables %in% always_vars])
+  variables <- c(
+    always_vars,
+    breakdown,
+    variables[!variables %in% c(always_vars, all_breakdown_vars)]
+    )
 
   # pull data from api
   dat <- load_data_flows(
@@ -139,10 +171,83 @@ get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
     show_call = show_call
     )
 
+  if (!is.null(breakdown)) {
+
+    # breakdown vars returned need to be padded with 0
+    dat <- dat %>%
+      dplyr::mutate(dplyr::across(dplyr::any_of(all_breakdown_vars),
+                                    ~ stringr::str_pad(.x, 2, side = "left", pad = "0")))
+
+    if (breakdown_labels) {
+
+      # vector of characteristics that are possible to recode
+      vars_to_recode <- tidycensus::mig_recodes %>%
+        dplyr::distinct(.data$characteristic) %>%
+        dplyr::pull()
+
+      # add id so we can join after adding label cols
+      to_recode <- dat %>%
+        dplyr::mutate(id = dplyr::row_number())
+
+      # pivot to long format and join variable codes to lookup table with labels
+      recoded_long <- suppressWarnings(
+        to_recode %>%
+          dplyr::select(.data$id, dplyr::any_of(vars_to_recode)) %>%
+          tidyr::pivot_longer(
+            cols = -c(.data$id),
+            names_to = "characteristic",
+            values_to = "code"
+          ) %>%
+          dplyr::left_join(tidycensus::mig_recodes, by = c("characteristic", "code")) %>%
+          dplyr::select(-.data$ordered, -.data$code)
+        )
+
+      # pivot back to wide format with recoded label cols
+      recoded_wide <- recoded_long %>%
+        tidyr::pivot_wider(
+          names_from = .data$characteristic,
+          values_from = .data$desc,
+          names_glue = "{characteristic}_label",
+        )
+
+      # characteristic vars that should be ordered factors
+      breakdown_ordered <- tidycensus::mig_recodes %>%
+        dplyr::filter(ordered) %>%
+        dplyr::distinct(.data$characteristic) %>%
+        dplyr::pull() %>%
+        paste0("_label")
+
+      # get col names to be turned into factors
+      factor_v <- names(recoded_wide)[names(recoded_wide) %in% breakdown_ordered]
+
+      # create ordered factors of each label column should be ordered
+      if (length(factor_v) > 0) {
+
+        for (var in factor_v) {
+
+          # get correct order from lookup table
+          order_v <- tidycensus::mig_recodes %>%
+            dplyr::filter(.data$characteristic == stringr::str_remove(var, "_label")) %>%
+            dplyr::pull(.data$desc)
+
+          # replace label col with ordered factor label
+          recoded_wide[[var]] <- factor(recoded_wide[[var]], ordered = TRUE, levels = order_v)
+          }
+        }
+
+      # join back to original data and drop id col
+      dat <- to_recode %>%
+        dplyr::left_join(recoded_wide, by = "id") %>%
+        dplyr::select(-id)
+
+    # # we need to know all the possible vars NOT to pivot if ouput = tidy in next steop
+    # all_breakdown_vars <- c(all_breakdown_vars, breakdown_ordered)
+      }
+    }
+
   # do some reshaping if requested and adjust moe if needed
   if (output == "tidy") {
     dat <- dat %>%
-      dplyr::mutate(dplyr::across(dplyr::any_of(mig_dem_vars), as.character)) %>% # crossed demographic vars should be chr so they don't get pivoted
       tidyr::pivot_longer(cols = where(is.numeric), names_to = "variable") %>%
       tidyr::separate(.data$variable, into = c("variable", "type"), sep = "_", fill = "right") %>%
       dplyr::mutate(type = ifelse(is.na(.data$type), "estimate", "moe")) %>%
@@ -150,8 +255,12 @@ get_flows <- function(geography, variables = NULL, year = 2018, output = "tidy",
       dplyr::mutate(moe = .data$moe * moe_factor)
   } else if (output == "wide") {
     dat <- dat %>%
-      mutate(dplyr::across(dplyr::ends_with("_M"), ~ .x * moe_factor))
+      dplyr::mutate(dplyr::across(dplyr::ends_with("_M"), ~ .x * moe_factor))
   }
+
+  # move all numeric vars to the end
+  dat <- dat %>%
+    dplyr::select(where(~ is.character(.x) || is.factor(.x)), dplyr::everything())
 
   # join to centroid data file twice to get point geometry of origin and destination centroids
   # convert to sf object making origin centroid active geometry col
