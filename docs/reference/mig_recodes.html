@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dataset with FIPS codes for US states and counties — fips_codes • tidycensus</title>
+<title>Dataset with Migration Flows characteristic recodes — mig_recodes • tidycensus</title>
 
 
 <!-- jquery -->
@@ -39,15 +39,13 @@
 
 
 
-<meta property="og:title" content="Dataset with FIPS codes for US states and counties — fips_codes" />
-<meta property="og:description" content="Built-in dataset for smart state and county lookup.
-             To access the data directly, issue the command data(fips_codes).
+<meta property="og:title" content="Dataset with Migration Flows characteristic recodes — mig_recodes" />
+<meta property="og:description" content="Built-in dataset for Migration Flows code label lookup.
 
-county: County name, title-case
-county_code: County code. (3-digit, 0-padded, character)
-state: Upper-case abbreviation of state
-state_code: State FIPS code (2-digit, 0-padded, character)
-state_name: Title-case name of state
+characteristic: Characteristic variable name
+code: Characteristic calue code
+desc: Characteristic calue label
+ordered: Whether or not recoded value should be ordered factor
 
 " />
 
@@ -144,43 +142,36 @@ state_name: Title-case name of state
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Dataset with FIPS codes for US states and counties</h1>
+    <h1>Dataset with Migration Flows characteristic recodes</h1>
     <small class="dont-index">Source: <a href='https://github.com/walkerke/tidycensus/blob/master/R/fips_codes.R'><code>R/fips_codes.R</code></a></small>
-    <div class="hidden name"><code>fips_codes.Rd</code></div>
+    <div class="hidden name"><code>mig_recodes.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Built-in dataset for smart state and county lookup.
-             To access the data directly, issue the command <code><a href='https://rdrr.io/r/utils/data.html'>data(fips_codes)</a></code>.</p>
+    <p>Built-in dataset for Migration Flows code label lookup.</p>
 <ul>
-<li><p><code>county</code>: County name, title-case</p></li>
-<li><p><code>county_code</code>: County code. (3-digit, 0-padded, character)</p></li>
-<li><p><code>state</code>: Upper-case abbreviation of state</p></li>
-<li><p><code>state_code</code>: State FIPS code (2-digit, 0-padded, character)</p></li>
-<li><p><code>state_name</code>: Title-case name of state</p></li>
+<li><p><code>characteristic</code>: Characteristic variable name</p></li>
+<li><p><code>code</code>: Characteristic calue code</p></li>
+<li><p><code>desc</code>: Characteristic calue label</p></li>
+<li><p><code>ordered</code>: Whether or not recoded value should be ordered factor</p></li>
 </ul>
 
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>fips_codes</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>mig_recodes</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>An object of class <code>data.frame</code> with 3237 rows and 5 columns.</p>
+    <p>An object of class <code>spec_tbl_df</code> (inherits from <code>tbl_df</code>, <code>tbl</code>, <code>data.frame</code>) with 120 rows and 4 columns.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Dataset with FIPS codes for US states and counties</p>
-<p>Built-in dataset for use with the <code>lookup_code</code> function.
-To access the data directly, issue the command <code><a href='https://rdrr.io/r/utils/data.html'>data(fips_codes)</a></code>.</p>
-<p>Note: this dataset includes FIPS codes for all counties that have appeared in
-the decennial Census or American Community Survey from 2010 to the present.
-This means that counties that have been renamed or absorbed into other
-geographic entities since 2010 remain in this dataset along with newly added
-or renamed counties.</p>
-<p>If you need the FIPS codes and names for counties for a particular Census
-year, you can use the <a href='https://rdrr.io/pkg/tigris/man/counties.html'>counties</a> function from the tigris
-package and set the year parameter as required.</p>
+    <p>Dataset with Migration Flows characteristic recodes</p>
+<p>Built-in dataset that is created from the
+<a href='https://www.census.gov/data/developers/data-sets/acs-migration-flows.html'>Migration
+Flows API documentation</a>. This dataset contains labels for the coded values
+returned by the Census API and is used when <code>breakdown_labels = TRUE</code> in
+<code><a href='get_flows.html'>get_flows</a></code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
