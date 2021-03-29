@@ -192,16 +192,11 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   if (geography == "puma") geography <- "public use microdata area"
 
-  if (geography == "zip code tabulation area" && (!is.null(state) || !is.null(county))) {
+  if (geography == "zip code tabulation area" && !is.null(county)) {
 
     if (year < 2019) {
-      stop("For ACS years prior to 2019, ZCTAs can only be requested for the entire country or by specifying ZCTAs, not within states or counties.",
+      stop("ZCTAs are available by state, but not by county.",
            call. = FALSE)
-    } else {
-      if (!is.null(county)) {
-        stop("ZCTAs for ACS years 2019 and later are available by state, but not by county.",
-             call. = FALSE)
-      }
     }
   }
 
@@ -764,8 +759,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     dat2[dat2 == -999999999] <- NA
   }
 
-  # For ZCTAs 2019 and later, strip the state code from GEOID (issue #338)
-  if (geography == "zip code tabulation area" && year > 2018) {
+  # For ZCTAs, strip the state code from GEOID (issue #338 and #358)
+  if (geography == "zip code tabulation area" && year > 2012) {
     dat2 <- dat2 %>%
       dplyr::mutate(
         GEOID = stringr::str_sub(GEOID, start = 3L)

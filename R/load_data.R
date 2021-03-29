@@ -486,7 +486,7 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   for_area <- paste0(geography, ":*")
 
-  if (year == 2019) {
+  if (year >= 2019) {
     geo_name <- "NAME"
   } else {
     geo_name <- "GEONAME"
@@ -494,7 +494,7 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   if (is.null(variables)) {
     if (is.null(product)) {
-      stop("Either a product or a vector of variables is required.", call. = FALSE)
+      stop("Either a product or a vector of variables (from a single product) is required.", call. = FALSE)
     } else {
       if (product == "population") {
         vars_to_get <- paste0(geo_name, ",POP,DENSITY")
@@ -514,10 +514,17 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
     } else {
       if (all(variables %in% c("POP", "DENSITY"))) {
         product <- "population"
-      } else if (all(variables %in% c("BIRTHS", "DEATHS","DOMESTICMIG","INTERNATIONALMIG","NATURALINC","NETMIG","RBIRTH","RDEATH","RDOMESTICMIG","RINTERNATIONALMIG","RNATURALINC","RNETMIG"))) {
+      } else if (all(variables %in% c("BIRTHS", "DEATHS", "DOMESTICMIG", "INTERNATIONALMIG", "NATURALINC", "NETMIG", "RBIRTH", "RDEATH", "RDOMESTICMIG", "RINTERNATIONALMIG", "RNATURALINC", "RNETMIG"))) {
         product <- "components"
-      } else if (variables == "HUEST") {
+      } else if (all(variables %in% c("HUEST"))) {
         product <- "housing"
+      } else {
+        stop(
+          paste('Variables must be a subset of only one of the following sets of valid variables:',
+                'for population estimates, c("POP", "DENSITY");',
+                'for housing unit estimates, c("HUEST");',
+                'and for components of change estimates, c("BIRTHS", "DEATHS", "DOMESTICMIG", "INTERNATIONALMIG", "NATURALINC", "NETMIG", "RBIRTH", "RDEATH", "RDOMESTICMIG", "RINTERNATIONALMIG", "RNATURALINC", "RNETMIG").'),
+          call. = FALSE)
       }
     }
     vars_to_get <- paste0(geo_name, ",", paste0(variables, collapse = ","))
@@ -733,9 +740,18 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
     if (length(variables) > 0) {
       var <- paste0(variables, collapse = ",")
 
-      vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
+      # Handle housing-only query
+      if ("SPORDER" %in% filter_names) {
+        vars_to_get <- paste0("SERIALNO,WGTP,PWGTP,", var)
+      } else {
+        vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
+      }
     } else {
-      vars_to_get <- "SERIALNO,SPORDER,WGTP,PWGTP"
+      if ("SPORDER" %in% filter_names) {
+        vars_to_get <- "SERIALNO,WGTP,PWGTP"
+      } else {
+        vars_to_get <- "SERIALNO,SPORDER,WGTP,PWGTP"
+      }
     }
 
     # If geo is NULL, state should be added back in here
@@ -802,7 +818,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
 
   colnames(dat) <- dat[1,]
 
-  dat <- as_tibble(dat)
+  dat <- dplyr::as_tibble(dat, .name_repair = "minimal")
 
   dat <- dat[-1,]
 
@@ -924,7 +940,6 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
     }
   return(dat)
 }
-
 
 load_data_flows <- function(geography, variables, key, year, state = NULL,
                             county = NULL, msa = NULL, show_call = FALSE) {

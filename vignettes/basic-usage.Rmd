@@ -21,7 +21,7 @@ library(tidyverse)
 census_api_key("YOUR API KEY GOES HERE")
 ```
 
-There are two major functions implemented in __tidycensus__: `get_decennial()`, which grants access to the 2000 and 2010 decennial US Census APIs, and `get_acs()`, which grants access to the 1-year and 5-year American Community Survey APIs.  _Note: at the moment, access to the 1990 (SF1 and SF3) and 2000 (SF3) APIs has been suspended._ 
+There are two major functions implemented in __tidycensus__: `get_decennial()`, which grants access to the 2000 and 2010 decennial US Census APIs, and `get_acs()`, which grants access to the 1-year and 5-year American Community Survey APIs.  
 
 In this basic example, let's look at median age by state in 2010: 
 
@@ -96,7 +96,9 @@ By filtering for "median age" I can quickly view the variable IDs that correspon
 
 ## Working with ACS data
 
-American Community Survey data differ from decennial Census data in that ACS data are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population.  In turn, ACS data points are __estimates__ characterized by a __margin of error__.  __tidycensus__ will always return the estimate and margin of error together for any requested variables when using `get_acs()`.  In turn, when requesting ACS data with __tidycensus__, it is not necessary to specify the `"E"` or `"M"` suffix for a variable name.  Let's fetch median household income data from the 2014-2018 ACS for counties in Vermont. 
+American Community Survey (ACS) data are available from the 1-year ACS since 2005 for geographies of population 65,000 and greater, and from the 5-year ACS for all geographies down to the block group level starting with the 2005-2009 dataset.  `get_acs()` defaults to the 5-year ACS with the argument `survey = "acs5"`, but 1-year ACS data are available using `survey = "acs1"`. 
+
+ACS data differ from decennial Census data as they are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population.  In turn, ACS data points are __estimates__ characterized by a __margin of error__.  __tidycensus__ will always return the estimate and margin of error together for any requested variables when using `get_acs()`.  In turn, when requesting ACS data with __tidycensus__, it is not necessary to specify the `"E"` or `"M"` suffix for a variable name.  Let's fetch median household income data from the 2014-2018 ACS for counties in Vermont. 
 
 ```{r}
 vt <- get_acs(geography = "county", 
