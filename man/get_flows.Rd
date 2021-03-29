@@ -23,24 +23,29 @@ get_flows(
 }
 \arguments{
 \item{geography}{The geography of your requested data. Possible values are
-`"county"`, `"county subdivision"`, and `"metropolitan statistical area"`.}
+`"county"`, `"county subdivision"`, and `"metropolitan statistical area"`.
+MSA data is only available beginning with the 2009-2013 5-year ACS.}
 
 \item{variables}{Character string or vector of character strings of variable
 names. By default, `get_flows()` returns the GEOID and names of the
-geographies as well as the number of people who moved in and out of each
-geography (`MOVEDIN` and `MOVEDOUT`). If additional variables are
-specified, they are pulled in addition to the default variables.}
+geographies as well as the number of people who moved in, out, and net
+movers of each geography (`MOVEDIN`, `MOVEDOUT`, `MOVEDNET`). If additional
+variables are specified, they are pulled in addition to the default
+variables. The names of additional variables can be found in the [Census
+Migration Flows API
+documentation](https://api.census.gov/data/2018/acs/flows/variables.html).}
 
 \item{breakdown}{A character vector of the population breakdown
 characteristics to be crossed with migration flows data. For datasets
-between 2006-2010 and 2011-2015, selected demography characteristics such
+between 2006-2010 and 2011-2015, selected demographic characteristics such
 as age, race, employment status, etc. are available. Possible values are
 `"AGE"`, `"SEX"`, `"RACE"`, `"HSGP"`, `"REL"`, `"HHT"`, `"TEN"`, `"ENG"`,
 `"POB"`, `"YEARS"`, `"ESR"`, `"OCC"`, `"WKS"`, `"SCHL"`, `"AHINC"`,
 `"APINC"`, and `"HISP_ORIGIN"`. For more information and to see which
 characteristics are available in each year, visit the [Census Migration
-Flows documentation](https://www.census.gov/data/developers/data-sets/acs-migration-flows.html).
-Note: not all characteristics are available in all years.}
+Flows
+documentation](https://www.census.gov/data/developers/data-sets/acs-migration-flows.html).
+ Note: not all characteristics are available in all years.}
 
 \item{breakdown_labels}{Whether or not to add columns with labels for the
 breakdown characteristic codes. Defaults to `FALSE`.}
