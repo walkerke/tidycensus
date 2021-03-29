@@ -940,3 +940,128 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
     }
   return(dat)
 }
+
+load_data_flows <- function(geography, variables, key, year, state = NULL,
+                            county = NULL, msa = NULL, show_call = FALSE) {
+
+  base <- paste("https://api.census.gov/data", year, "acs", "flows", sep = "/")
+
+  # collapse variables in a single string for api call
+  vars_to_get <- paste0(variables, collapse = ",")
+
+  # get all in a given geography unless specified
+  for_area <- paste0(geography, ":*")
+  in_area <- NULL
+
+  # turn text states into fips if specified, else get all states
+  # collapse into string for api call
+  if (!is.null(state)) {
+    state <- paste(map_chr(state, ~ validate_state(.x)), collapse = ",")
+  } else {
+    state <- "*"
+  }
+
+  # turn text counties into fips if specified, validate with specified state
+  # collapse into string for api call
+  # can only filter counties for one state
+  if (!is.null(county)) {
+    county <- paste(map_chr(county, ~ validate_county(state, .x)), collapse = ",")
+  }
+
+  # if msa codes specified, collapse into string for api call
+  if (!is.null(msa)) {
+    msa <- paste0(msa, collapse = ",")
+  }
+
+  # define counties (for) within states (in) for filtering in api call
+  if (geography == "county") {
+    if (!is.null(county)) {
+    for_area <- paste0("county:", county)
+    }
+    if (!is.null(state)) {
+      in_area <- paste0("state:", state)
+    }
+  }
+
+  # if county is defined, construct for call using state and county
+  # otherwise filter only at state level
+  if (geography == "county subdivision") {
+    if (!is.null(county)) {
+      in_area <- paste0("state:", state, " ", "county:", county)
+    } else {
+      in_area <- paste0("state:", state)
+    }
+  }
+
+  # if msas are specified construct for call to filter by msa
+  if (geography == "metropolitan statistical area/micropolitan statistical area") {
+
+    # before 2016 msa geography name in api is different
+    if (year <= 2015) {
+      geography <- "metropolitan statistical areas"
+    }
+
+    if (!is.null(msa)) {
+      for_area <- paste0(geography, ":", msa)
+    } else {
+      for_area <- paste0(geography, ":*")
+    }
+  }
+
+  # build query for api call
+  # for calls where in_area is not defined, "in" will be NULL and not included in GET()
+  query <- list(get = vars_to_get,
+                "for" = for_area,
+                "in" = in_area,
+                key = key)
+
+  # execute api call
+  call <- GET(base, query = query)
+
+  # print nicely formatted api call if requested
+  if (show_call) {
+    call_url <- gsub("&key.*", "", call$url)
+    message(paste("Census API call:", utils::URLdecode(call_url)))
+  }
+
+  # Make sure call status returns 200, else, print the error message for the user.
+  if (call$status_code != 200) {
+    msg <- content(call, as = "text")
+
+    if (grepl("The requested resource is not available", msg)) {
+      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
+    } else {
+      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
+    }
+  }
+
+  # convert json response to text
+  content <- content(call, as = "text")
+
+  if (grepl("You included a key with this request", content)) {
+    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
+  }
+
+  # convert response to json
+  dat <- fromJSON(content)
+
+  # first row of response are colnames
+  colnames(dat) <- dat[1, ]
+  dat <- dat[-1, ]
+
+  # convert to tibble
+  dat <- as_tibble(dat)
+
+  # remove columns that contains geographies automatically returned by api - we already have this as GEOID1
+  dat <- dat[, !(names(dat) %in% c("state", "county", "county subdivision",
+                                   "metropolitan statistical area/micropolitan statistical area",
+                                   "metropolitan statistical areas"))]
+
+  # convert vars to numeric, skip geoids and names
+  str_vars <- variables[grepl("_NAME|GEOID|^STATE|^COUNTY|^MCD|^METRO", variables)]
+  num_vars <- variables[!variables %in% str_vars]
+  dat[num_vars] <- lapply(dat[num_vars], as.numeric)
+
+  return(dat)
+
+}

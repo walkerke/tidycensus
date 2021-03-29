@@ -1,0 +1,121 @@
+characteristic,code,desc,ordered
+AGE,0,All ages,TRUE
+AGE,1,1 to 4 years,TRUE
+AGE,2,5 to 17 years,TRUE
+AGE,3,18 to 19 years,TRUE
+AGE,4,20 to 24 years,TRUE
+AGE,5,25 to 29 years,TRUE
+AGE,6,30 to 34 years,TRUE
+AGE,7,35 to 39 years,TRUE
+AGE,8,40 to 44 years,TRUE
+AGE,9,45 to 49 years,TRUE
+AGE,10,50 to 54 years,TRUE
+AGE,11,55 to 59 years,TRUE
+AGE,12,60 to 64 years,TRUE
+AGE,13,65 to 69 years,TRUE
+AGE,14,70 to 74 years,TRUE
+AGE,15,75 year and over,TRUE
+SEX,0,All sexes,FALSE
+SEX,1,Male,FALSE
+SEX,2,Female,FALSE
+RACE,0,All races,FALSE
+RACE,1,White alone,FALSE
+RACE,2,Black or African American alone,FALSE
+RACE,3,Asian alone,FALSE
+RACE,4,Other race alone or Two or more races,FALSE
+HSGP,0,All ethnicities,FALSE
+HSGP,1,"White alone, not Hispanic or Latino",FALSE
+HSGP,2,"Not white alone, not Hispanic or Latino",FALSE
+HSGP,3,Hispanic or Latino,FALSE
+REL,0,All relationships,FALSE
+REL,1,Householder,FALSE
+REL,2,Spouse,FALSE
+REL,3,Child,FALSE
+REL,4,Other relative,FALSE
+REL,5,Nonrelative,FALSE
+HHT,0,All household types,FALSE
+HHT,1,In married-couple family household with children under 18 years,FALSE
+HHT,2,In married-couple family household without children under 18 years,FALSE
+HHT,3,In other family household with children under 18 years,FALSE
+HHT,4,In other family household without children under 18 years,FALSE
+HHT,5,Nonfamily household,FALSE
+TEN,0,All housing tenures,FALSE
+TEN,1,In owner-occupied housing units,FALSE
+TEN,2,In renter-occupied housing units,FALSE
+ENG,0,All English abilities,FALSE
+ENG,1,Speak only English,FALSE
+ENG,2,"Speak a language other than English, speak English very well",FALSE
+ENG,3,"Speak a language other than English, speak English less than very well",FALSE
+POB,0,All places of birth,FALSE
+POB,1,Same state as current residence and residence 1 year ago,FALSE
+POB,2,"Same state as current residence, different state from residence 1 year ago ",FALSE
+POB,3,"Different state than current residence, same state as residence 1 year ago",FALSE
+POB,4,Different state than current residence or residence 1 year ago ,FALSE
+POB,5,Born in US Island Area,FALSE
+POB,6,Born in Germany,FALSE
+POB,7,Born in remainder of Europe,FALSE
+POB,8,Born in China,FALSE
+POB,9,Born in India,FALSE
+POB,10,Born in the Philippines,FALSE
+POB,11,Born in remainder of Asia,FALSE
+POB,12,Born in Northern America,FALSE
+POB,13,Born in Mexico,FALSE
+POB,14,Born in remainder of Central America,FALSE
+POB,15,Born in the Caribbean,FALSE
+POB,16,Born in South America,FALSE
+POB,17,Born in Africa,FALSE
+POB,18,Born in Oceania or At Sea,FALSE
+YEARS,0,All years in the US,TRUE
+YEARS,1,Born in the United States,TRUE
+YEARS,2,Entered the United States 5 years ago or less,TRUE
+YEARS,3,Entered the United States 6 to 15 years ago,TRUE
+YEARS,4,Entered the United States 16 years ago or more,TRUE
+ESR,0,All employment statuses,FALSE
+ESR,1,"In labor force, employed civilian",FALSE
+ESR,2,"In labor force, unemployed",FALSE
+ESR,3,"In labor force, in Armed Forces",FALSE
+ESR,4,Not in labor force,FALSE
+OCC,0,All occupations,FALSE
+OCC,1,"Management, business, science, and arts occupations",FALSE
+OCC,2,Service occupations,FALSE
+OCC,3,Sales and office occupations,FALSE
+OCC,4,"Natural resources, construction, and maintenance occupations",FALSE
+OCC,5,"Production, transportation, and material moving occupations",FALSE
+OCC,6,Military specific occupations,FALSE
+WKS,0,All work statuses,FALSE
+WKS,1,Worked 50 to 52 weeks in the past 12 months and usually worked 35 or more hours per week,FALSE
+WKS,2,Worked 50 to 52 weeks in the past 12 months and usually worked less than 35 hours per week,FALSE
+WKS,3,Worked 1 to 49 weeks in the past 12 months and usually worked 35 or more hours per week,FALSE
+WKS,4,Worked 1 to 49 weeks in the past 12 months and usually worked less than 35 hours per week,FALSE
+WKS,5,Last worked 1 to 5 years ago,FALSE
+WKS,6,Last worked over 5 years ago or never worked,FALSE
+SCHL,0,All educational attainments,TRUE
+SCHL,1,Less than high school graduate,TRUE
+SCHL,2,High school graduate (includes equivalency),TRUE
+SCHL,3,Some college or associate’s degree,TRUE
+SCHL,4,Bachelor’s degree,TRUE
+SCHL,5,Graduate or professional degree,TRUE
+AHINC,0,All income levels,TRUE
+AHINC,1,"Less than $10,000",TRUE
+AHINC,2,"$10,000 to $14,999",TRUE
+AHINC,3,"$15,000 to $24,999",TRUE
+AHINC,4,"$25,000 to $34,999",TRUE
+AHINC,5,"$35,000 to $49,999",TRUE
+AHINC,6,"$50,000 to $74,999",TRUE
+AHINC,7,"$75,000 to $99,999",TRUE
+AHINC,8,"$100,000 to $149,999",TRUE
+AHINC,9,"$150,000 or more",TRUE
+APINC,0,All income levels,TRUE
+APINC,1,No income,TRUE
+APINC,2,"$1 to $9,999 or loss",TRUE
+APINC,3,"$10,000 to $14,999",TRUE
+APINC,4,"$15,000 to $24,999",TRUE
+APINC,5,"$25,000 to $34,999",TRUE
+APINC,6,"$35,000 to $49,999",TRUE
+APINC,7,"$50,000 to $64,999",TRUE
+APINC,8,"$65,000 to $74,999",TRUE
+APINC,9,"$75,000 or more",TRUE
+HISP_ORIGIN,0,All ethnicities,FALSE
+HISP_ORIGIN,1,"White alone, not Hispanic or Latino",FALSE
+HISP_ORIGIN,2,"Not white alone, not Hispanic or Latino",FALSE
+HISP_ORIGIN,3,Hispanic or Latino,
