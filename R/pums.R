@@ -203,16 +203,16 @@ get_pums <- function(variables = NULL,
 #' @description This helper function takes a data frame returned by
 #'   \code{\link{get_pums}} and converts it to a tbl_svy from the srvyr
 #'   \code{\link[srvyr]{as_survey}} package or a svyrep.design object from the
-#'   \code{\link[survey]{svrepdesign}} package. You can then use functions from the
-#'   srvyr or survey to calculate weighted estimates with replicate weights
+#'   \code{\link[survey]{svrepdesign}} package. You can then use functions from
+#'   the srvyr or survey to calculate weighted estimates with replicate weights
 #'   included to provide accurate standard errors.
 #'
 #' @param df A data frame with PUMS person or housing weight variables, most
 #'   likely returned by \code{\link{get_pums}}.
 #' @param type Whether to use person or housing-level weights; either
 #'   \code{"housing"} or \code{"person"} (the default).
-#' @param design Whether to use a cluster or replicate weight survey design;
-#'   either \code{"cluster"} or \code{"rep_weights"} (the default).
+#' @param design The survey design to use when creating a survey object.
+#'   Currently the only option is code{"rep_weights"}/.
 #' @param class Whether to convert to a srvyr or survey object; either
 #'   \code{"survey"} or \code{"srvyr"} (the default).
 #'
@@ -228,7 +228,7 @@ get_pums <- function(variables = NULL,
 to_survey <- function(df,
                       type = c("person", "housing"),
                       class = c("srvyr", "survey"),
-                      design = c("rep_weights", "cluster")) {
+                      design = "rep_weights") {
 
   type <- match.arg(type)
   class <- match.arg(class)
@@ -244,11 +244,11 @@ to_survey <- function(df,
          call. = FALSE)
   }
 
-  if (design == "cluster") {
-    if (!all(c("SERIALNO", "PUMA") %in% names(df))) {
-      stop('"SERIALNO" and "PUMA" must both be present in the input data.', call. = FALSE)
-    }
-  }
+  # if (design == "cluster") {
+  #   if (!all(c("SERIALNO", "PUMA") %in% names(df))) {
+  #     stop('"SERIALNO" and "PUMA" must both be present in the input data.', call. = FALSE)
+  #   }
+  # }
 
   if (type == "person") {
 
@@ -286,14 +286,15 @@ to_survey <- function(df,
     }
   }
 
-  if (design == "cluster") {
-    survey <- survey::svydesign(
-      variables = variables,
-      weights = weights,
-      ids = df$SERIALNO,
-      strata = df$PUMA
-    )
-  }
+  # # remove option for cluster design for now pending more research/discussion
+  # if (design == "cluster") {
+  #   survey <- survey::svydesign(
+  #     variables = variables,
+  #     weights = weights,
+  #     ids = df$SERIALNO,
+  #     strata = df$PUMA
+  #   )
+  # }
 
   if (design == "rep_weights"){
     survey <- survey::svrepdesign(

@@ -8,7 +8,7 @@ to_survey(
   df,
   type = c("person", "housing"),
   class = c("srvyr", "survey"),
-  design = c("rep_weights", "cluster")
+  design = "rep_weights"
 )
 }
 \arguments{
@@ -21,8 +21,8 @@ likely returned by \code{\link{get_pums}}.}
 \item{class}{Whether to convert to a srvyr or survey object; either
 \code{"survey"} or \code{"srvyr"} (the default).}
 
-\item{design}{Whether to use a cluster or replicate weight survey design;
-either \code{"cluster"} or \code{"rep_weights"} (the default).}
+\item{design}{The survey design to use when creating a survey object.
+Currently the only option is code{"rep_weights"}/.}
 }
 \value{
 A tbl_svy or svyrep.design object.
@@ -31,8 +31,8 @@ A tbl_svy or svyrep.design object.
 This helper function takes a data frame returned by
   \code{\link{get_pums}} and converts it to a tbl_svy from the srvyr
   \code{\link[srvyr]{as_survey}} package or a svyrep.design object from the
-  \code{\link[survey]{svrepdesign}} package. You can then use functions from the
-  srvyr or survey to calculate weighted estimates with replicate weights
+  \code{\link[survey]{svrepdesign}} package. You can then use functions from
+  the srvyr or survey to calculate weighted estimates with replicate weights
   included to provide accurate standard errors.
 }
 \examples{
