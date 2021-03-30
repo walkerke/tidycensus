@@ -143,3 +143,9 @@ simpleCapSO <- function(x) {
   paste0(toupper(substring(s, 1,1)), substring(s, 2),
          collapse=" ")
 }
+
+# print message with api call and decode special characters
+print_api_call <- function(url) {
+  url <- gsub("&key.*", "", url)
+  message(paste("Census API call:", utils::URLdecode(url)))
+}
