@@ -153,6 +153,7 @@ get_pums <- function(variables = NULL,
 
     if (!is.null(variables_filter)) {
       var_names <- names(variables_filter)
+      var_names <- var_names[!var_names == "SPORDER"]
 
       if (recode) {
         check_type <- pums_variables %>%
