@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Install a CENSUS API Key in Your <code>.Renviron</code> File for Repeated Use — census_api_key • tidycensus</title>
+<title>Install a CENSUS API Key in Your .Renviron File for Repeated Use — census_api_key • tidycensus</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Install a CENSUS API Key in Your <code>.Renviron</code> File for Repeated Use — census_api_key" />
+<meta property="og:title" content="Install a CENSUS API Key in Your .Renviron File for Repeated Use — census_api_key" />
 <meta property="og:description" content="This function will add your CENSUS API key to your .Renviron file so it can be called securely without being stored
 in your code. After you have installed your key, it can be called any time by typing Sys.getenv(&quot;CENSUS_API_KEY&quot;) and can be
 used in package functions by simply typing CENSUS_API_KEY If you do not have an .Renviron file, the function will create on for you.
@@ -76,7 +76,7 @@ original file for disaster recovery purposes." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.9</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@ original file for disaster recovery purposes." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -115,11 +115,14 @@ original file for disaster recovery purposes." />
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/walkerke/tidycensus">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -149,7 +152,7 @@ If you already have an <code>.Renviron</code> file, the function will append the
 original file for disaster recovery purposes.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>census_api_key</span>(<span class='no'>key</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>install</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>census_api_key</span><span class='op'>(</span><span class='va'>key</span>, overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>, install <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -171,22 +174,23 @@ original file for disaster recovery purposes.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'>census_api_key</span>(<span class='st'>"111111abc"</span>, <span class='kw'>install</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>census_api_key</span><span class='op'>(</span><span class='st'>"111111abc"</span>, install <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='co'># First time, reload your environment so you can use the key without restarting R.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/readRenviron.html'>readRenviron</a></span>(<span class='st'>"~/.Renviron"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/readRenviron.html'>readRenviron</a></span><span class='op'>(</span><span class='st'>"~/.Renviron"</span><span class='op'>)</span>
 <span class='co'># You can check it with:</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"CENSUS_API_KEY"</span>)
-}
+<span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"CENSUS_API_KEY"</span><span class='op'>)</span>
+<span class='op'>}</span>
 
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># If you need to overwrite an existing key:</span>
-<span class='fu'>census_api_key</span>(<span class='st'>"111111abc"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>install</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>census_api_key</span><span class='op'>(</span><span class='st'>"111111abc"</span>, overwrite <span class='op'>=</span> <span class='cn'>TRUE</span>, install <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='co'># First time, relead your environment so you can use the key without restarting R.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/readRenviron.html'>readRenviron</a></span>(<span class='st'>"~/.Renviron"</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/readRenviron.html'>readRenviron</a></span><span class='op'>(</span><span class='st'>"~/.Renviron"</span><span class='op'>)</span>
 <span class='co'># You can check it with:</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"CENSUS_API_KEY"</span>)
-}</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"CENSUS_API_KEY"</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -202,7 +206,7 @@ original file for disaster recovery purposes.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

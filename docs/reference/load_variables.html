@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.9</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -111,11 +111,14 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/walkerke/tidycensus">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -141,25 +144,28 @@
     <p>Load variables from a decennial Census or American Community Survey dataset to search in R</p>
     </div>
 
-    <pre class="usage"><span class='fu'>load_variables</span>(<span class='no'>year</span>, <span class='no'>dataset</span>, <span class='kw'>cache</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>load_variables</span><span class='op'>(</span><span class='va'>year</span>, <span class='va'>dataset</span>, cache <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>year</th>
-      <td><p>The year for which you are requesting variables.  Either the year of the decennial Census,
-or the endyear for a 5-year ACS sample.</p></td>
+      <td><p>The year for which you are requesting variables. Either the year
+or endyear of the decennial Census or ACS sample. 5-year ACS data is
+available from 2009 through 2018. 1-year ACS data is available from 2005
+through 2019.</p></td>
     </tr>
     <tr>
       <th>dataset</th>
-      <td><p>One of "sf1", "sf3", "acs1", "acs3", "acs5", "acs1/profile", "acs3/profile, "acs5/profile",
-"acs1/subject", "acs3/subject", or "acs5/subject".</p></td>
+      <td><p>One of "sf1", "sf3", "acs1", "acs3", "acs5", "acs1/profile",
+"acs3/profile, "acs5/profile", "acs1/subject", "acs3/subject", or
+"acs5/subject".</p></td>
     </tr>
     <tr>
       <th>cache</th>
-      <td><p>Whether you would like to cache the dataset for future access, or load the dataset
-from an existing cache. Defaults to FALSE.</p></td>
+      <td><p>Whether you would like to cache the dataset for future access,
+or load the dataset from an existing cache. Defaults to FALSE.</p></td>
     </tr>
     </table>
 
@@ -168,10 +174,11 @@ from an existing cache. Defaults to FALSE.</p></td>
     <p>A tibble of variables from the requested dataset.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>v15</span> <span class='kw'>&lt;-</span> <span class='fu'>load_variables</span>(<span class='fl'>2015</span>, <span class='st'>"acs5"</span>, <span class='kw'>cache</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>v15</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>v15</span> <span class='op'>&lt;-</span> <span class='fu'>load_variables</span><span class='op'>(</span><span class='fl'>2015</span>, <span class='st'>"acs5"</span>, cache <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span><span class='op'>(</span><span class='va'>v15</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -187,7 +194,7 @@ from an existing cache. Defaults to FALSE.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

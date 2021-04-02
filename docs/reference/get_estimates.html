@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.9</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -111,11 +111,14 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/walkerke/tidycensus">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -141,24 +144,24 @@
     <p>Get data from the US Census Bureau Population Estimates APIs</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_estimates</span>(
-  <span class='no'>geography</span>,
-  <span class='kw'>product</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>variables</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>breakdown</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>breakdown_labels</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2018</span>,
-  <span class='kw'>state</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>county</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>time_series</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>output</span> <span class='kw'>=</span> <span class='st'>"tidy"</span>,
-  <span class='kw'>geometry</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>keep_geo_vars</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>shift_geo</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>show_call</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>get_estimates</span><span class='op'>(</span>
+  <span class='va'>geography</span>,
+  product <span class='op'>=</span> <span class='cn'>NULL</span>,
+  variables <span class='op'>=</span> <span class='cn'>NULL</span>,
+  breakdown <span class='op'>=</span> <span class='cn'>NULL</span>,
+  breakdown_labels <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  year <span class='op'>=</span> <span class='fl'>2019</span>,
+  state <span class='op'>=</span> <span class='cn'>NULL</span>,
+  county <span class='op'>=</span> <span class='cn'>NULL</span>,
+  time_series <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  output <span class='op'>=</span> <span class='st'>"tidy"</span>,
+  geometry <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  keep_geo_vars <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  shift_geo <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  key <span class='op'>=</span> <span class='cn'>NULL</span>,
+  show_call <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,8 +177,8 @@
     </tr>
     <tr>
       <th>variables</th>
-      <td><p>A character string of requested variables to get specific
-variables from the population, components, and housing APIs.</p></td>
+      <td><p>A character string or vector of character strings of requested variables
+to get from either the population, components, or housing API.</p></td>
     </tr>
     <tr>
       <th>breakdown</th>
@@ -192,7 +195,7 @@ combinations of these breakdowns.</p></td>
     </tr>
     <tr>
       <th>year</th>
-      <td><p>The data year (defaults to 2018)</p></td>
+      <td><p>The data year (defaults to 2019)</p></td>
     </tr>
     <tr>
       <th>state</th>
@@ -212,7 +215,7 @@ to `state`.  Defaults to NULL.</p></td>
 of 2010. The returned column is either "DATE", representing a particular estimate date, or "PERIOD",
 representing a time period (e.g. births between 2016 and 2017), and contains integers representing
 those values.  Integer to date or period mapping is available at
-<a href='https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2018.html'>https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2018.html</a>.</p></td>
+<a href='https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2019.html'>https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2019.html</a>.</p></td>
     </tr>
     <tr>
       <th>output</th>
@@ -275,7 +278,7 @@ a browser and see what is returned by the API directly. Defaults to FALSE.</p></
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -6,6 +6,12 @@ table.mapview-popup {
     border-collapse: collapse;
 }
 
+/*
+table.mapview-popup tr:first-child td {
+    background: #A8E6A8;
+}
+*/
+
 table.mapview-popup tr:nth-child(even) {
     background: #D1E0FF;
 }

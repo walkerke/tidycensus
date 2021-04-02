@@ -162,3 +162,9 @@ construct_filter <- function(x, y) {
     purrr::set_names(as.list(x), rep(y, length(x)))
   }
 }
+
+# print message with api call and decode special characters
+print_api_call <- function(url) {
+  url <- gsub("&key.*", "", url)
+  message(paste("Census API call:", utils::URLdecode(url)))
+}

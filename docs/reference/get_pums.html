@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.9</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -111,11 +111,14 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/walkerke/tidycensus">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -141,24 +144,26 @@
     <p>Load data from the American Community Survey Public Use Microdata Series API</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_pums</span>(
-  <span class='no'>variables</span>,
-  <span class='kw'>state</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>puma</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>year</span> <span class='kw'>=</span> <span class='fl'>2018</span>,
-  <span class='kw'>survey</span> <span class='kw'>=</span> <span class='st'>"acs5"</span>,
-  <span class='kw'>rep_weights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>recode</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>show_call</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>key</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>get_pums</span><span class='op'>(</span>
+  variables <span class='op'>=</span> <span class='cn'>NULL</span>,
+  state <span class='op'>=</span> <span class='cn'>NULL</span>,
+  puma <span class='op'>=</span> <span class='cn'>NULL</span>,
+  year <span class='op'>=</span> <span class='fl'>2019</span>,
+  survey <span class='op'>=</span> <span class='st'>"acs5"</span>,
+  variables_filter <span class='op'>=</span> <span class='cn'>NULL</span>,
+  rep_weights <span class='op'>=</span> <span class='cn'>NULL</span>,
+  recode <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  show_call <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  key <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>variables</th>
-      <td><p>A vector of variables from the PUMS API.</p></td>
+      <td><p>A vector of variables from the PUMS API.
+Use <code><a href='https://rdrr.io/r/utils/View.html'>View(pums_variables)</a></code> to browse variable options.</p></td>
     </tr>
     <tr>
       <th>state</th>
@@ -174,12 +179,21 @@ named vector of state/PUMA pairs and set <code>state = "multiple"</code>.</p></t
     <tr>
       <th>year</th>
       <td><p>The data year of the 1-year ACS sample or the endyear of the
-5-year sample. Defaults to 2018.</p></td>
+5-year sample. Defaults to 2019.</p></td>
     </tr>
     <tr>
       <th>survey</th>
       <td><p>The ACS survey; one of either <code>"acs1"</code> or <code>"acs5"</code>
 (the default).</p></td>
+    </tr>
+    <tr>
+      <th>variables_filter</th>
+      <td><p>A named list of filters you'd like to return from the
+PUMS API.  For example, passing <code><a href='https://rdrr.io/r/base/list.html'>list(AGE = 25:50, SEX = 1)</a></code> will return
+only males aged 25 to 50 in your output dataset.  Defaults to <code>NULL</code>,
+which returns all records. If a housing-only dataset is required,
+use <code><a href='https://rdrr.io/r/base/list.html'>list(SPORDER = 1)</a></code> to only return householder records (taking care
+in your analysis to use the household weight <code>WGTP</code>).</p></td>
     </tr>
     <tr>
       <th>rep_weights</th>
@@ -191,7 +205,7 @@ errors; one of <code>"person"</code>, <code>"housing"</code>, or <code>"both"</c
       <th>recode</th>
       <td><p>If TRUE, recodes variable values using Census data dictionary
 and creates a new <code>*_label</code> column for each variable that is recoded.
-Only available for 2017 and 2018 data. Defaults to FALSE.</p></td>
+Available for 2017 - 2019 data. Defaults to FALSE.</p></td>
     </tr>
     <tr>
       <th>show_call</th>
@@ -212,11 +226,14 @@ what is returned by the API directly. Defaults to FALSE.</p></td>
     <p>A tibble of microdata from the ACS PUMS API.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>)
-<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"AGEP"</span>, <span class='st'>"ANC1P"</span>), <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>, <span class='kw'>recode</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>get_pums</span>(<span class='kw'>variables</span> <span class='kw'>=</span> <span class='st'>"AGEP"</span>, <span class='kw'>state</span> <span class='kw'>=</span> <span class='st'>"VT"</span>, <span class='kw'>survey</span> <span class='kw'>=</span> <span class='st'>"acs1"</span>, <span class='kw'>rep_weights</span> <span class='kw'>=</span> <span class='st'>"person"</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>get_pums</span><span class='op'>(</span>variables <span class='op'>=</span> <span class='st'>"AGEP"</span>, state <span class='op'>=</span> <span class='st'>"VT"</span><span class='op'>)</span>
+<span class='fu'>get_pums</span><span class='op'>(</span>variables <span class='op'>=</span> <span class='st'>"AGEP"</span>, state <span class='op'>=</span> <span class='st'>"multiple"</span>, puma <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"UT"</span> <span class='op'>=</span> <span class='fl'>35008</span>, <span class='st'>"NV"</span> <span class='op'>=</span> <span class='fl'>00403</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>get_pums</span><span class='op'>(</span>variables <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AGEP"</span>, <span class='st'>"ANC1P"</span><span class='op'>)</span>, state <span class='op'>=</span> <span class='st'>"VT"</span>, recode <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>get_pums</span><span class='op'>(</span>variables <span class='op'>=</span> <span class='st'>"AGEP"</span>, state <span class='op'>=</span> <span class='st'>"VT"</span>, survey <span class='op'>=</span> <span class='st'>"acs1"</span>, rep_weights <span class='op'>=</span> <span class='st'>"person"</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -232,7 +249,7 @@ what is returned by the API directly. Defaults to FALSE.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

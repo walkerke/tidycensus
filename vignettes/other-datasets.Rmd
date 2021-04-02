@@ -7,15 +7,17 @@ output: html_document
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8)
 ```
 
-The main intent of the tidycensus package is to return population characteristics of the United States in tidy format allowing for integration with simple feature geometries.  Its intent is not, and has never been, to wrap the universe of APIs and datasets available from the US Census Bureau. For datasets not included in tidycensus, I recommend Hannah Recht's __censusapi__ package (https://github.com/hrecht/censusapi), which allows R users to access all Census APIs, and packages such as Jamaal Green's __lehdr__ package (https://github.com/jamgreen/lehdr) which grants R users access to Census Bureau LODES data.  
+The main intent of the tidycensus package is to return population characteristics of the United States in tidy format allowing for integration with simple feature geometries.  Its intent is not, and has never been, to wrap the universe of APIs and datasets available from the US Census Bureau.  For datasets not included in tidycensus, I recommend Hannah Recht's __censusapi__ package (https://github.com/hrecht/censusapi), which allows R users to access all Census APIs, and packages such as Jamaal Green's __lehdr__ package (https://github.com/jamgreen/lehdr) which grants R users access to Census Bureau LODES data.   
 
-However, tidycensus will ultimately incorporate a select number of Census Bureau datasets outside the decennial Census and ACS that are aligned with the basic goals of the package.  One such dataset is the __Population Estimates API__, which includes information on a wide variety of population characteristics that is updated annually.  
+However, tidycensus incorporates a select number of Census Bureau datasets outside the decennial Census and ACS that are aligned with the basic goals of the package.  One such dataset is the [__Population Estimates API__](https://www.census.gov/data/developers/data-sets/popest-popproj/popest.html), which includes information on a wide variety of population characteristics that is updated annually.  Also available through tidycensus is the [__Migration Flows API__](https://www.census.gov/data/developers/data-sets/acs-migration-flows.html), which estimates the number of people that have moved between pairs of places in a given year.
 
-Population estimates are available in tidycensus through the `get_estimates()` function.  Estimates are organized into __products__, which in tidycensus include `"population"`, `"components"`, `"housing"`, and `"characteristics"`.  The population and housing products contain population/density and housing unit estimates, respectively.  The components of change and characteristics products, in contrast, include a wider range of possible variables.  
+## Population estimates
 
-## Components of change population estimates
+Population estimates are available in tidycensus through the `get_estimates()` function.   Estimates are organized into __products__, which in tidycensus include `"population"`, `"components"`, `"housing"`, and `"characteristics"`.  The population and housing products contain population/density and housing unit estimates, respectively.   The components of change and characteristics products, in contrast, include a wider range of possible variables.   
 
-By default, specifying `"population"`, `"components"`, or `"housing"` as the `product` in `get_estimates()` returns all variables associated with that component.  For example, we can request all components of change variables for US states in 2017: 
+### Components of change population estimates
+
+By default, specifying `"population"`, `"components"`, or `"housing"` as the `product` in `get_estimates()` returns all variables associated with that component.   For example, we can request all components of change variables for US states in 2019: 
 
 ```{r}
 library(tidycensus)
@@ -27,15 +29,15 @@ us_components <- get_estimates(geography = "state", product = "components")
 us_components
 ```
 
-The variables included in the components of change product consist of both estimates of _counts_ and _rates_.  Rates are preceded by an `R` in the variable name and are calculated per 1000 residents.  
+The variables included in the components of change product consist of both estimates of _counts_ and _rates_.   Rates are preceded by an `R` in the variable name and are calculated per 1000 residents.   
 
 ```{r}
 unique(us_components$variable)
 ```
 
-Available geographies include `"us"`, `"state"`, `"county"`, `"metropolitan statistical area/micropolitan statistical area"`, and `"combined statistical area"`.  
+Available geographies include `"us"`, `"state"`, `"county"`, `"metropolitan statistical area/micropolitan statistical area"`, and `"combined statistical area"`.   
 
-If desired, users can request a specific component or components by supplying a character vector to the `variables` parameter, as in other tidycensus functions.  `get_estimates()` also supports simple feature geometry integration to facilitate mapping.  In the example below, we'll acquire data on the net migration rate between 2016 and 2017 for all counties in the United States, and request shifted and re-scaled feature geometry for Alaska and Hawaii to facilitate national mapping.  
+If desired, users can request a specific component or components by supplying a character vector to the `variables` parameter, as in other tidycensus functions.   `get_estimates()` also supports simple feature geometry integration to facilitate mapping.   In the example below, we'll acquire data on the net migration rate between 2018 and 2019 for all counties in the United States, and request shifted and re-scaled feature geometry for Alaska and Hawaii to facilitate national mapping.   
 
 ```{r}
 
@@ -48,7 +50,7 @@ net_migration
 
 ```
 
-We'll next use tidyverse tools to generate a `groups` column that bins the net migration rates into comprehensible categories, and plot the result using `geom_sf()` and ggplot2.  
+We'll next use tidyverse tools to generate a `groups` column that bins the net migration rates into comprehensible categories, and plot the result using `geom_sf()` and ggplot2.   
 
 ```{r}
 order = c("-15 and below", "-15 to -5", "-5 to +5", "+5 to +15", "+15 and up")
@@ -71,16 +73,16 @@ ggplot() +
   coord_sf(datum = NA) +
   theme_minimal(base_family = "Roboto") +
   labs(title = "Net migration per 1000 residents by county",
-       subtitle = "US Census Bureau 2017 Population Estimates",
+       subtitle = "US Census Bureau 2019 Population Estimates",
        fill = "Rate",
        caption = "Data acquired with the R tidycensus package | @kyle_e_walker")
 ```
 
-## Estimates of population characteristics
+### Estimates of population characteristics
 
-The fourth population estimates product available in `get_estimates()`, `"characteristics"`, is formatted differently than the other three.  It returns population estimates broken down by categories of `AGEGROUP`, `SEX`, `RACE`, and `HISP`, for Hispanic origin.  Requested breakdowns should be specified as a character vector supplied to the `breakdown` parameter when the `product` is set to `"characteristics"`.  
+The fourth population estimates product available in `get_estimates()`, `"characteristics"`, is formatted differently than the other three.   It returns population estimates broken down by categories of `AGEGROUP`, `SEX`, `RACE`, and `HISP`, for Hispanic origin.   Requested breakdowns should be specified as a character vector supplied to the `breakdown` parameter when the `product` is set to `"characteristics"`.   
 
-By default, the returned categories are formatted as integers that map onto the Census Bureau definitions explained here: https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html.  However, by specifying `breakdown_labels = TRUE`, the function will return the appropriate labels instead.  For example: 
+By default, the returned categories are formatted as integers that map onto the Census Bureau definitions explained here: https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html.   However, by specifying `breakdown_labels = TRUE`, the function will return the appropriate labels instead.   For example: 
 
 ```{r}
 la_age_hisp <- get_estimates(geography = "county", 
@@ -93,7 +95,7 @@ la_age_hisp <- get_estimates(geography = "county",
 la_age_hisp
 ```
 
-With some additional data wrangling, the returned format facilitates analysis and visualization.  For example, we can compare population pyramids for Hispanic and non-Hispanic populations in Los Angeles County:  
+With some additional data wrangling, the returned format facilitates analysis and visualization.   For example, we can compare population pyramids for Hispanic and non-Hispanic populations in Los Angeles County:  
 
 ```{r}
 compare <- filter(la_age_hisp, str_detect(AGEGROUP, "^Age"), 
@@ -110,7 +112,7 @@ ggplot(compare, aes(x = AGEGROUP, y = value, fill = SEX)) +
   coord_flip() + 
   facet_wrap(~HISP) + 
   labs(x = "", 
-       y = "2017 Census Bureau population estimate", 
+       y = "2019 Census Bureau population estimate", 
        title = "Population structure by Hispanic origin", 
        subtitle = "Los Angeles County, California", 
        fill = "", 
@@ -120,4 +122,122 @@ ggplot(compare, aes(x = AGEGROUP, y = value, fill = SEX)) +
 
 ```
 
+## Migration flows
 
+The American Community Survey Migration Flows dataset estimates the number of people that have moved between pairs of places.  The estimates are calculated based on where a person lived when surveyed and where they lived one year prior to being surveyed.  The data is available at three geographic levels: county, county subdivision (minor civil division), and metropolitan statistical area (MSA).  Because the number of movers may be small for some pairs of counties, the data is aggregated over a five-year period.  The estimates for each five-year period represent the number of people that moved between places *each year* during that period.
+
+The data is set up such that for each county, you can find the number of people that *moved to* that county from each of the other counties in the US as well as the number of people that *moved from* that county to each of the other counties.  The net migration for each pair of counties is also provided (although this is simply the moved to minus moved from).
+
+### Using `get_flows()` 
+
+The `get_flows()` function from tidycensus provides access to these estimates.  The only required argument for `get_flows()` is `geography`, which can be set to `"county"`, `"county subdivision"`, or `"metropolitan statistical area"`.  If geography is set to `"county"` and no other arguments are set, data for all pairs of counties is pulled from the Census API.  This is a large data request as it will get all combinations of counties that had movers.  More commonly, you might be interested in knowing the flows in and out of one county, county subdivision, or MSA.  In this case, you can specify the state and county or MSA.
+
+Here we get county-to-county flow data for Westchester County, NY:
+
+```{r}
+wch_flows <- get_flows(
+  geography = "county",
+  state = "NY",
+  county = "Westchester",
+  year = 2018
+  )
+
+wch_flows %>% 
+  filter(!is.na(GEOID2)) %>% 
+  head()
+```
+
+With the default setting of `get_flows()`, data is returned in a "tidy" or long format.  Notice that for each pair of places, there are three rows returned with one row for each variable (`MOVEDIN`, `MOVEDOUT`, and `MOVEDNET`) and the the estimate and margin of error for these variables are in columns.  `GEOID1` and `FULL1_NAME` are the FIPS code and name of the origin county.  In this case, it will also be Westchester County since that is the only county we requested.  `GEOID2` and `FULL2_NAME` are the FIPS code and name of the destination county.
+
+One simple question we can answer with this data is, to which county did the most people move from Westchester?
+
+```{r}
+wch_flows %>% 
+  filter(variable == "MOVEDOUT") %>% 
+  arrange(desc(estimate)) %>% 
+  head()
+```
+
+The `MOVEDOUT` variable only estimates the number of people that moved out of Westchester County and doesn't account for the number of people that moved in to Westchester from each county.  If you are interested in net migration (moved in - moved out), you can use the `MOVEDNET` variable.
+
+```{r}
+wch_flows %>% 
+  filter(variable == "MOVEDNET") %>% 
+  arrange(estimate) %>% 
+  head()
+```
+
+You may have noticed that there are some destination geographies that are not other counties.  For people that moved into to Westchester from outside the United States, the Migration Flows data reports the region that they moved from, such as Africa or Asia.  Since this dataset is based on the American Community Survey, there is no way of knowing how many people moved out of the United States, so for all pairs of US to non-US places, the value of `MOVEDOUT` and `MOVEDNET` is `NA`.  The `GEOID` of non-US places is also `NA`.
+
+```{r}
+wch_flows %>% 
+  filter(is.na(GEOID2)) %>% 
+  head()
+```
+
+### Demographic characteristics
+
+Datasets between 2006-2010 and 2011-2015 have the ability to cross flow data with selected demographic characteristics such as age, race, employment status.  For instance, the following call will get the number of movers to and from the Los Angeles-Long Beach Metro Area by race.
+
+```{r}
+la_flows <- get_flows(
+  geography = "metropolitan statistical area",
+  breakdown = "RACE",
+  breakdown_labels = TRUE,
+  msa = 31080,   # los angeles msa fips code
+  year = 2015
+  )
+
+# net migration between la and san francisco
+la_flows %>% 
+  filter(str_detect(FULL2_NAME, "San Fran"), variable == "MOVEDNET")
+```
+
+Note that the demographic characteristics must be specified in the `breakdown` argument of `get_flows()` (not the `variable` argument).  For each dataset there are three or four demographic characteristics to choose from.  For more information and to see which characteristics are available in each year, visit the [Census Migration Flows documentation](https://www.census.gov/data/developers/data-sets/acs-migration-flows.html).
+
+### Mapping migration flows
+
+An additional feature of `get_flows()` is an option to return spatial data associated with each place.  In contrast to other spatial data available through tidycensus, `get_flows()` returns point rather than polygon geometry.  To get geometry with the flows data, set `geometry = TRUE`.  The return of `get_flows()` will now be an **sf** object with the centroids of both origin and destination as `sfc_POINT` columns.  The origin point feature is returned in a column named `centroid1` and is the active geometry column in the sf object.  The destination point feature is returned in the `centroid2` column.
+
+```{r}
+phx_flows <- get_flows(
+  geography = "metropolitan statistical area",
+  msa = 38060,
+  year = 2018,
+  geometry = TRUE
+  )
+
+phx_flows %>% 
+  head()
+```
+
+With the centroids attached to each pair of places, it is straightforward to map the migration flows.  Here, we look at the most common origin MSAs for people moving to Phoenix-Mesa-Scottsdale, AZ.  To make an interactive map of the flows, we'll use the excellent [**mapdeck** package](https://symbolixau.github.io/mapdeck/articles/mapdeck.html).  To use mapdeck, you'll need a [Mapbox account and access token](https://docs.mapbox.com/help/getting-started/access-tokens/).
+
+```{r, eval=FALSE}
+library(mapdeck)
+
+top_move_in <- phx_flows %>% 
+  filter(!is.na(GEOID2), variable == "MOVEDIN") %>% 
+  slice_max(n = 25, order_by = estimate) %>% 
+  mutate(
+    width = estimate / 500,
+    tooltip = paste0(
+      scales::comma(estimate * 5, 1),
+      " people moved from ", str_remove(FULL2_NAME, "Metro Area"),
+      " to ", str_remove(FULL1_NAME, "Metro Area"), " between 2014 and 2018"
+      )
+    )
+
+top_move_in %>% 
+  mapdeck(style = mapdeck_style("dark"), pitch = 45) %>% 
+  add_arc(
+    origin = "centroid1",
+    destination = "centroid2",
+    stroke_width = "width",
+    auto_highlight = TRUE,
+    highlight_colour = "#8c43facc",
+    tooltip = "tooltip"
+  )
+```
+
+<img src="img/mig-flow-map.png" alt="Migration Flow map showingpeople moving to Phoenix with arcs from the top 25 Metro areas whose width represents the number of people moving"/>

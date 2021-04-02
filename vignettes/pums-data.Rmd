@@ -75,7 +75,8 @@ To download PUMS data from the Census API, use the `get_pums()` function. If you
 vt_pums <- get_pums(
   variables = c("PUMA", "SEX", "AGEP", "SCHL"),
   state = "VT",
-  survey = "acs1"
+  survey = "acs1",
+  year = 2018
   )
 ```
 ```{r}
@@ -91,6 +92,7 @@ vt_pums_recoded <- get_pums(
   variables = c("PUMA", "SEX", "AGEP", "SCHL"),
   state = "VT",
   survey = "acs1",
+  year = 2018,
   recode = TRUE
   )
 ```
@@ -142,6 +144,7 @@ vt_pums_rep_weights <- get_pums(
   variables = c("PUMA", "SEX", "AGEP", "SCHL"),
   state = "VT",
   survey = "acs1",
+  year = 2018,
   recode = TRUE,
   rep_weights = "person"
   )
@@ -153,7 +156,7 @@ To easily convert this data frame to a survey or srvyr object, we can use the `t
 vt_survey_design <- to_survey(vt_pums_rep_weights)
 ```
 
-By default, `to_survey()` converts a data frame to a `tbl_svy` object by using person replicate weights. You can change the arguments in `to_survey` if you are analyzing housing-unit data (`type = "housing"`), if you prefer to use a cluster/strata survey design without replicate weights (`design = "cluster"`), or if you want a survey object instead of a srvyr object. (Although, `tbl_svy` objects also have a svyrep.design class so you can [use survey functions on srvyr objects](http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects).)
+By default, `to_survey()` converts a data frame to a `tbl_svy` object by using person replicate weights. You can change the arguments in `to_survey` if you are analyzing housing-unit data (`type = "housing"`) or if you want a survey object instead of a srvyr object. (Although, `tbl_svy` objects also have a svyrep.design class so you can [use survey functions on srvyr objects](http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects).)
 
 Now, with our srvyr design object defined, we can calculate the same estimates as above, but we now get column with standard errors as well. 
 ```{r}
@@ -180,8 +183,8 @@ vt_survey_design %>%
   group_by(PUMA, SEX_label) %>% 
   summarize(
     age_25_up = survey_total(vartype = "ci"),
-    ba_above = survey_total(ba_above, vartype = "ci"),
-    ba_pct = survey_mean(ba_above, vartype = "ci")
+    ba_above_n = survey_total(ba_above, vartype = "ci"),
+    ba_above_pct = survey_mean(ba_above, vartype = "ci")
     )
 ```
 
@@ -193,11 +196,14 @@ An important use case for PUMS data is doing regression analysis or other modeli
 vt_pums_to_model <- get_pums(
   variables = c("PUMA", "WAGP", "JWMNP", "JWTR", "COW", "ESR"),
   state = "VT",
-  survey = "acs5"
+  survey = "acs5",
+  year = 2018,
+  rep_weights = "person"
   )
 ```
 
-Now, we filter out observations that aren't relevant, do a little recoding of the class of worker variable, and finally convert the data frame to a survey design object. Note that we did not request replicate weights from the API, so we specify `design = "cluster"` when we create the survey design. This creates the survey using a cluster design with the household (`SERIALNO`) as the primary sampling unit, the PUMA as the strata, and `PWGTP` as the weight.
+Now, we filter out observations that aren't relevant, do a little recoding of the class of worker variable, and finally convert the data frame to a survey design object.
+<!-- Note that we did not request replicate weights from the API, so we specify `design = "cluster"` when we create the survey design. This creates the survey using a cluster design with the household (`SERIALNO`) as the primary sampling unit, the PUMA as the strata, and `PWGTP` as the weight. -->
 
 ```{r}
 vt_model_sd <- vt_pums_to_model %>% 
@@ -214,7 +220,7 @@ vt_model_sd <- vt_pums_to_model %>%
       TRUE                      ~ "self"
       )
     ) %>%
-  to_survey(design = "cluster")
+  to_survey()
 ```
 
 Let's quickly check out some summary stats using `srvyr`.
@@ -256,7 +262,8 @@ Next we download the income-to-poverty ratio from the PUMS dataset and calculate
 ne_pums <- get_pums(
   variables = c("PUMA", "POVPIP"),
   state = ne_states,
-  survey = "acs1"
+  survey = "acs1",
+  year = 2018
   )
 
 ne_pov <- ne_pums %>%
@@ -303,6 +310,7 @@ wy_relp <- get_pums(
   variables = "RELP",
   state = "Wyoming",
   survey = "acs1",
+  year = 2018,
   rep_weights = "person"
 )
 
@@ -310,6 +318,7 @@ ut_ten <- get_pums(
   variables = "TEN",
   state = "Utah",
   survey = "acs1",
+  year = 2018,
   rep_weights = "housing"
 )
 
@@ -317,6 +326,7 @@ hi_age <- get_pums(
   variables = "AGEP",
   state = "Hawaii",
   survey = "acs1",
+  year = 2018,
   rep_weights = "person"
 )
 ```

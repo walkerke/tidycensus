@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.10.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.9</span>
       </span>
     </div>
 
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -70,11 +70,14 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/walkerke/tidycensus">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -88,7 +91,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="margins-of-error_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Margins of error in the ACS</h1>
@@ -106,18 +109,19 @@
 <p>While the main function of the decennial census is to provide <em>counts</em> of people for the purpose of congressional apportionment and legislative redistricting, the primary purpose of the ACS is to measure the changing social and economic <em>characteristics</em> of the U.S. population. As a result, the ACS does not provide official counts of the population in between censuses. <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 </blockquote>
 <p>In turn, ACS data <strong>do not</strong> represent precise counts of population subgroups, but are rather designed to give a general sense of how socioeconomic indicators vary across the country. In many cases, ACS margins of error can be quite large - at times exceeding the estimate. Let’s say we want to study aging populations in Ramsey County, Minnesota from the 2012-2016 ACS by Census tracts. We can pull up a dataset with <code>get_acs</code>:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidycensus</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyverse</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 
-<span class="no">vars</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"B01001_0"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">20</span>:<span class="fl">25</span>, <span class="fl">44</span>:<span class="fl">49</span>))
+<span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"B01001_0"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">25</span>, <span class="fl">44</span><span class="op">:</span><span class="fl">49</span><span class="op">)</span><span class="op">)</span>
 
-<span class="no">ramsey</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span>(<span class="kw">geography</span> <span class="kw">=</span> <span class="st">"tract"</span>,
-                  <span class="kw">variables</span> <span class="kw">=</span> <span class="no">vars</span>,
-                  <span class="kw">state</span> <span class="kw">=</span> <span class="st">"MN"</span>,
-                  <span class="kw">county</span> <span class="kw">=</span> <span class="st">"Ramsey"</span>,
-                  <span class="kw">year</span> <span class="kw">=</span> <span class="fl">2016</span>)
+<span class="va">ramsey</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"tract"</span>, 
+                  variables <span class="op">=</span> <span class="va">vars</span>, 
+                  state <span class="op">=</span> <span class="st">"MN"</span>, 
+                  county <span class="op">=</span> <span class="st">"Ramsey"</span>, 
+                  year <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ramsey</span> <span class="kw">%&gt;%</span> <span class="fu">select</span>(-<span class="no">NAME</span>))</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ramsey</span> <span class="op">%&gt;%</span> <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">NAME</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 4
 ##   GEOID       variable   estimate   moe
 ##   &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
@@ -129,12 +133,13 @@
 ## 6 27123030100 B01001_025       23    18</code></pre>
 <p>We can see that in two instances the margin of error exceeds the estimate. One way to address this is through data aggregation. While the specific group estimates in this Census tract may be unreliable, the estimate for the total population over age 65 in the tract is likely better, but is not available directly from the ACS detailed tables. In turn, we can summarize our data.</p>
 <p>The US Census Bureau publishes guidelines on how to calculate margins of error for derived estimates (see the footnotes). These formulas are implemented in <strong>tidycensus</strong> in the <code>moe_sum</code>, <code>moe_prop</code>, <code>moe_ratio</code>, and <code>moe_product</code> functions. The example below illustrates the use of <code>moe_sum</code> to calculate the margin of error around a derived estimate for Census tract population over age 65.</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">ramsey65</span> <span class="kw">&lt;-</span> <span class="no">ramsey</span> <span class="kw">%&gt;%</span>
-  <span class="fu">group_by</span>(<span class="no">GEOID</span>) <span class="kw">%&gt;%</span>
-  <span class="fu">summarize</span>(<span class="kw">sumest</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">estimate</span>),
-            <span class="kw">summoe</span> <span class="kw">=</span> <span class="fu"><a href="../reference/moe_sum.html">moe_sum</a></span>(<span class="no">moe</span>, <span class="no">estimate</span>))
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ramsey65</span> <span class="op">&lt;-</span> <span class="va">ramsey</span> <span class="op">%&gt;%</span>
+  <span class="fu">group_by</span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">summarize</span><span class="op">(</span>sumest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span>, 
+            summoe <span class="op">=</span> <span class="fu"><a href="../reference/moe_sum.html">moe_sum</a></span><span class="op">(</span><span class="va">moe</span>, <span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">ramsey65</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ramsey65</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 3
 ##   GEOID       sumest summoe
 ##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
@@ -174,7 +179,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

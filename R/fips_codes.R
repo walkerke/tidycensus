@@ -106,3 +106,29 @@
 "pums_variables"
 
 
+#' Dataset with Migration Flows characteristic recodes
+#'
+#' Built-in dataset that is created from the
+#' \href{https://www.census.gov/data/developers/data-sets/acs-migration-flows.html}{Migration
+#' Flows API documentation}. This dataset contains labels for the coded values
+#' returned by the Census API and is used when \code{breakdown_labels = TRUE} in
+#' \code{\link{get_flows}}.
+#'
+#' @title Dataset with Migration Flows characteristic recodes
+#' @description Built-in dataset for Migration Flows code label lookup.
+#'
+#' \itemize{
+#'   \item \code{characteristic}: Characteristic variable name
+#'   \item \code{code}: Characteristic calue code
+#'   \item \code{desc}: Characteristic calue label
+#'   \item \code{ordered}: Whether or not recoded value should be ordered factor
+#' }
+#'
+#' @docType data
+#' @keywords datasets
+#' @name mig_recodes
+#'
+#' @usage data(mig_recodes)
+"mig_recodes"
+
+

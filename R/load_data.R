@@ -225,10 +225,8 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
                                    key = key))
   }
 
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", call_url))
-  }
+  # print nicely formatted api call if requested
+  if (show_call) print_api_call(call$url)
 
   # Make sure call status returns 200, else, print the error message for the user.
   if (call$status_code != 200) {
@@ -384,10 +382,8 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
                                    key = key))
   }
 
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", call_url))
-  }
+  # print nicely formatted api call if requested
+  if (show_call) print_api_call(call$url)
 
   # Make sure call status returns 200, else, print the error message for the user.
   if (call$status_code != 200) {
@@ -486,7 +482,7 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   for_area <- paste0(geography, ":*")
 
-  if (year == 2019) {
+  if (year >= 2019) {
     geo_name <- "NAME"
   } else {
     geo_name <- "GEONAME"
@@ -494,7 +490,7 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   if (is.null(variables)) {
     if (is.null(product)) {
-      stop("Either a product or a vector of variables is required.", call. = FALSE)
+      stop("Either a product or a vector of variables (from a single product) is required.", call. = FALSE)
     } else {
       if (product == "population") {
         vars_to_get <- paste0(geo_name, ",POP,DENSITY")
@@ -514,10 +510,17 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
     } else {
       if (all(variables %in% c("POP", "DENSITY"))) {
         product <- "population"
-      } else if (all(variables %in% c("BIRTHS", "DEATHS","DOMESTICMIG","INTERNATIONALMIG","NATURALINC","NETMIG","RBIRTH","RDEATH","RDOMESTICMIG","RINTERNATIONALMIG","RNATURALINC","RNETMIG"))) {
+      } else if (all(variables %in% c("BIRTHS", "DEATHS", "DOMESTICMIG", "INTERNATIONALMIG", "NATURALINC", "NETMIG", "RBIRTH", "RDEATH", "RDOMESTICMIG", "RINTERNATIONALMIG", "RNATURALINC", "RNETMIG"))) {
         product <- "components"
-      } else if (variables == "HUEST") {
+      } else if (all(variables %in% c("HUEST"))) {
         product <- "housing"
+      } else {
+        stop(
+          paste('Variables must be a subset of only one of the following sets of valid variables:',
+                'for population estimates, c("POP", "DENSITY");',
+                'for housing unit estimates, c("HUEST");',
+                'and for components of change estimates, c("BIRTHS", "DEATHS", "DOMESTICMIG", "INTERNATIONALMIG", "NATURALINC", "NETMIG", "RBIRTH", "RDEATH", "RDOMESTICMIG", "RINTERNATIONALMIG", "RNATURALINC", "RNETMIG").'),
+          call. = FALSE)
       }
     }
     vars_to_get <- paste0(geo_name, ",", paste0(variables, collapse = ","))
@@ -606,10 +609,8 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
                                    key = key))
   }
 
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", call_url))
-  }
+  # print nicely formatted api call if requested
+  if (show_call) print_api_call(call$url)
 
   # Make sure call status returns 200, else, print the error message for the user.
   if (call$status_code != 200) {
@@ -664,15 +665,12 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
 
 
-load_data_pums <- function(variables, state, puma, key, year, survey, recode, show_call) {
+load_data_pums <- function(variables, state, puma, key, year, survey,
+                           variables_filter, recode, show_call) {
 
   # for which years is data dictionary available in pums_variables?
   # we'll use this a couple times later on
   recode_years <- 2017:2019
-
-  var <- paste0(variables, collapse = ",")
-
-  vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
 
   base <- sprintf("https://api.census.gov/data/%s/acs/%s/pums",
                   year, survey)
@@ -700,7 +698,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
     } else {
       # if PUMAs requested are in one state only
       state <- validate_state(state)
-      geo <- map_chr(puma, function(x) {
+      geo <- purrr::map_chr(puma, function(x) {
         paste0("7950000US", state, x)
       })
 
@@ -711,7 +709,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
   } else {
     # if no PUMAs specified, get all PUMAs in each state requested
     if (!is.null(state)) {
-      geo <- map_chr(state, function(x) {
+      geo <- purrr::map_chr(state, function(x) {
         paste0("0400000US", validate_state(x))
       })
 
@@ -725,16 +723,69 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
     }
   }
 
-  call <- GET(base,
-              query = list(get = vars_to_get,
-                           ucgid = geo,
-                           key = key),
-              progress())
+  # Handle variables & variable filter
+  # If a variables filter is supplied, those variables should be removed from
+  # variables (if applicable)
+  if (!is.null(variables_filter)) {
+    filter_names <- names(variables_filter)
 
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", call_url))
+    variables <- variables[!variables %in% filter_names]
+
+    if (length(variables) > 0) {
+      var <- paste0(variables, collapse = ",")
+
+      # Handle housing-only query
+      if ("SPORDER" %in% filter_names) {
+        vars_to_get <- paste0("SERIALNO,WGTP,PWGTP,", var)
+      } else {
+        vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
+      }
+    } else {
+      if ("SPORDER" %in% filter_names) {
+        vars_to_get <- "SERIALNO,WGTP,PWGTP"
+      } else {
+        vars_to_get <- "SERIALNO,SPORDER,WGTP,PWGTP"
+      }
+    }
+
+    # If geo is NULL, state should be added back in here
+    if (is.null(geo)) {
+      vars_to_get <- paste0(vars_to_get, ",ST")
+    }
+
+    # Combine the default query with the variables filter query
+    query_default <- list(get = vars_to_get,
+                          ucgid = geo,
+                          key = key)
+
+    # Collapse vectors if supplied
+    variables_filter_collapsed <- purrr::map(variables_filter,
+                                             ~{paste0(.x, collapse = ",")})
+
+    query <- c(
+      list(get = vars_to_get),
+      variables_filter_collapsed,
+      list(ucgid = geo, key = key)
+    )
+
+  } else {
+
+    var <- paste0(variables, collapse = ",")
+
+    vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
+
+    query <- list(get = vars_to_get,
+                  ucgid = geo,
+                  key = key)
+
   }
+
+  call <- httr::GET(base,
+                    query = query,
+                    httr::progress())
+
+  # print nicely formatted api call if requested
+  if (show_call) print_api_call(call$url)
 
   # Make sure call status returns 200, else, print the error message for the user.
   if (call$status_code != 200) {
@@ -748,18 +799,17 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
 
   }
 
-
-  content <- content(call, as = "text")
+  content <- httr::content(call, as = "text")
 
   if (grepl("You included a key with this request", content)) {
     stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
   }
 
-  dat <- fromJSON(content)
+  dat <- jsonlite::fromJSON(content)
 
   colnames(dat) <- dat[1,]
 
-  dat <- as_tibble(dat)
+  dat <- dplyr::as_tibble(dat, .name_repair = "minimal")
 
   dat <- dat[-1,]
 
@@ -882,6 +932,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey, recode, sh
   return(dat)
 }
 
+
 load_data_cps <- function(variables, state, year, month, var_filter, show_call, key) {
 
   # before may 2004, HRHHID2 didn't exist so don't request it
@@ -975,6 +1026,127 @@ load_data_cps <- function(variables, state, year, month, var_filter, show_call, 
       rename(HRYEAR4 = .data$HRYEAR) %>%
       mutate(HRYEAR4 = paste0("19", .data$HRYEAR4))
   }
+
+  return(dat)
+}
+
+load_data_flows <- function(geography, variables, key, year, state = NULL,
+                            county = NULL, msa = NULL, show_call = FALSE) {
+
+  base <- paste("https://api.census.gov/data", year, "acs", "flows", sep = "/")
+
+  # collapse variables in a single string for api call
+  vars_to_get <- paste0(variables, collapse = ",")
+
+  # get all in a given geography unless specified
+  for_area <- paste0(geography, ":*")
+  in_area <- NULL
+
+  # turn text states into fips if specified, else get all states
+  # collapse into string for api call
+  if (!is.null(state)) {
+    state <- paste(map_chr(state, ~ validate_state(.x)), collapse = ",")
+  } else {
+    state <- "*"
+  }
+
+  # turn text counties into fips if specified, validate with specified state
+  # collapse into string for api call
+  # can only filter counties for one state
+  if (!is.null(county)) {
+    county <- paste(map_chr(county, ~ validate_county(state, .x)), collapse = ",")
+  }
+
+  # if msa codes specified, collapse into string for api call
+  if (!is.null(msa)) {
+    msa <- paste0(msa, collapse = ",")
+  }
+
+  # define counties (for) within states (in) for filtering in api call
+  if (geography == "county") {
+    if (!is.null(county)) {
+    for_area <- paste0("county:", county)
+    }
+    if (!is.null(state)) {
+      in_area <- paste0("state:", state)
+    }
+  }
+
+  # if county is defined, construct for call using state and county
+  # otherwise filter only at state level
+  if (geography == "county subdivision") {
+    if (!is.null(county)) {
+      in_area <- paste0("state:", state, " ", "county:", county)
+    } else {
+      in_area <- paste0("state:", state)
+    }
+  }
+
+  # if msas are specified construct for call to filter by msa
+  if (geography == "metropolitan statistical area/micropolitan statistical area") {
+
+    # before 2016 msa geography name in api is different
+    if (year <= 2015) {
+      geography <- "metropolitan statistical areas"
+    }
+
+    if (!is.null(msa)) {
+      for_area <- paste0(geography, ":", msa)
+    } else {
+      for_area <- paste0(geography, ":*")
+    }
+  }
+
+  # build query for api call
+  # for calls where in_area is not defined, "in" will be NULL and not included in GET()
+  query <- list(get = vars_to_get,
+                "for" = for_area,
+                "in" = in_area,
+                key = key)
+
+  # execute api call
+  call <- GET(base, query = query)
+
+  # print nicely formatted api call if requested
+  if (show_call) print_api_call(call$url)
+
+  # Make sure call status returns 200, else, print the error message for the user.
+  if (call$status_code != 200) {
+    msg <- content(call, as = "text")
+
+    if (grepl("The requested resource is not available", msg)) {
+      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
+    } else {
+      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
+    }
+  }
+
+  # convert json response to text
+  content <- content(call, as = "text")
+
+  if (grepl("You included a key with this request", content)) {
+    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
+  }
+
+  # convert response to json
+  dat <- fromJSON(content)
+
+  # first row of response are colnames
+  colnames(dat) <- dat[1, ]
+  dat <- dat[-1, ]
+
+  # convert to tibble
+  dat <- as_tibble(dat)
+
+  # remove columns that contains geographies automatically returned by api - we already have this as GEOID1
+  dat <- dat[, !(names(dat) %in% c("state", "county", "county subdivision",
+                                   "metropolitan statistical area/micropolitan statistical area",
+                                   "metropolitan statistical areas"))]
+
+  # convert vars to numeric, skip geoids and names
+  str_vars <- variables[grepl("_NAME|GEOID|^STATE|^COUNTY|^MCD|^METRO", variables)]
+  num_vars <- variables[!variables %in% str_vars]
+  dat[num_vars] <- lapply(dat[num_vars], as.numeric)
 
   return(dat)
 }
