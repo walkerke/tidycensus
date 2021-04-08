@@ -184,7 +184,12 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
     } else {
 
-      in_area <- paste0("state:", state)
+      if (year > 2013 && geography == "block group" && is.null(county)) {
+          in_area <- paste0("state:", state,
+                            "&in=county:*")
+      } else {
+        in_area <- paste0("state:", state)
+      }
 
     }
 
@@ -225,8 +230,10 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
                                    key = key))
   }
 
-  # print nicely formatted api call if requested
-  if (show_call) print_api_call(call$url)
+  if (show_call) {
+    call_url <- gsub("&key.*", "", call$url)
+    message(paste("Census API call:", call_url))
+  }
 
   # Make sure call status returns 200, else, print the error message for the user.
   if (call$status_code != 200) {
@@ -382,8 +389,10 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
                                    key = key))
   }
 
-  # print nicely formatted api call if requested
-  if (show_call) print_api_call(call$url)
+  if (show_call) {
+    call_url <- gsub("&key.*", "", call$url)
+    message(paste("Census API call:", call_url))
+  }
 
   # Make sure call status returns 200, else, print the error message for the user.
   if (call$status_code != 200) {
@@ -609,8 +618,10 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
                                    key = key))
   }
 
-  # print nicely formatted api call if requested
-  if (show_call) print_api_call(call$url)
+  if (show_call) {
+    call_url <- gsub("&key.*", "", call$url)
+    message(paste("Census API call:", call_url))
+  }
 
   # Make sure call status returns 200, else, print the error message for the user.
   if (call$status_code != 200) {
@@ -784,8 +795,10 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
                     query = query,
                     httr::progress())
 
-  # print nicely formatted api call if requested
-  if (show_call) print_api_call(call$url)
+  if (show_call) {
+    call_url <- gsub("&key.*", "", call$url)
+    message(paste("Census API call:", call_url))
+  }
 
   # Make sure call status returns 200, else, print the error message for the user.
   if (call$status_code != 200) {
@@ -798,6 +811,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
     }
 
   }
+
 
   content <- httr::content(call, as = "text")
 
@@ -1010,7 +1024,10 @@ load_data_flows <- function(geography, variables, key, year, state = NULL,
   call <- GET(base, query = query)
 
   # print nicely formatted api call if requested
-  if (show_call) print_api_call(call$url)
+  if (show_call) {
+    call_url <- gsub("&key.*", "", call$url)
+    message(paste("Census API call:", utils::URLdecode(call_url)))
+  }
 
   # Make sure call status returns 200, else, print the error message for the user.
   if (call$status_code != 200) {

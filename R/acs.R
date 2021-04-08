@@ -208,92 +208,97 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   insist_get_acs <- purrr::insistently(get_acs)
 
-  # Allow users to get all block groups in a state
-  # If only one state is specified, get all county FIPS codes in state from tigirs and continue
+  # Allow users to get all block groups in a state (2012 and earlier)
+  # If only one state is specified, get all county FIPS codes in state from tigris and continue
+  if (year < 2013) {
 
-  if ((geography == "block group" && length(state) == 1 && is.null(county))) {
-    st <- suppressMessages(validate_state(state))
+    if ((geography == "block group" && length(state) == 1 && is.null(county))) {
+      st <- suppressMessages(validate_state(state))
 
-    # Get year-specific county IDs from tigris
-    if (year < 2013) {
-      tigris_yr <- 2010
-    } else {
-      tigris_yr <- year
+      # Get year-specific county IDs from tigris
+      if (year < 2013) {
+        tigris_yr <- 2010
+      } else {
+        tigris_yr <- year
+      }
+
+      cty_year <- suppressMessages(counties(state = st, cb = TRUE,
+                                            resolution = "20m", year = tigris_yr, class = "sf"))
+
+      county <- cty_year$COUNTYFP
+
     }
 
-    cty_year <- suppressMessages(counties(state = st, cb = TRUE,
-                                          resolution = "20m", year = tigris_yr, class = "sf"))
+    # If more than one state requested, iterate over the states, calling get_acs and combine results
 
-    county <- cty_year$COUNTYFP
+    if (geography == "block group" && length(state) > 1) {
+
+      if (!is.null(county)) {
+        stop("Don't know which counties belong to which states. County must be null when requesting multiple states.",
+             call. = FALSE)
+      } else {
+
+        message("Fetching block group data by state and county and combining the result.")
+
+        if (geometry) {
+          result <- map(state, ~{
+            suppressMessages(
+              insist_get_acs(geography = geography,
+                             variables = variables,
+                             table = table,
+                             cache_table = cache_table,
+                             year = year,
+                             output = output,
+                             state = .x,
+                             county = county,
+                             zcta = zcta,
+                             summary_var = summary_var,
+                             geometry = geometry,
+                             keep_geo_vars = keep_geo_vars,
+                             shift_geo = FALSE,
+                             key = key,
+                             moe_level = moe_level,
+                             survey = survey,
+                             show_call = show_call))
+          }) %>%
+            reduce(rbind)
+          geoms <- unique(st_geometry_type(result))
+          if (length(geoms) > 1) {
+            result <- st_cast(result, "MULTIPOLYGON")
+          }
+          result <- result %>%
+            as_tibble() %>%
+            st_as_sf()
+        } else {
+          result <- map_df(state, ~{
+            suppressMessages(
+              insist_get_acs(geography = geography,
+                             variables = variables,
+                             table = table,
+                             cache_table = cache_table,
+                             year = year,
+                             output = output,
+                             state = .x,
+                             county = county,
+                             zcta = zcta,
+                             summary_var = summary_var,
+                             geometry = geometry,
+                             keep_geo_vars = keep_geo_vars,
+                             shift_geo = FALSE,
+                             key = key,
+                             moe_level = moe_level,
+                             survey = survey,
+                             show_call = show_call))
+          })
+        }
+
+        return(result)
+      }
+    }
 
   }
 
-  # If more than one state requested, iterate over the states, calling get_acs and combine results
 
-  if (geography == "block group" && length(state) > 1) {
-
-    if (!is.null(county)) {
-      stop("Don't know which counties belong to which states. County must be null when requesting multiple states.",
-           call. = FALSE)
-    } else {
-
-    message("Fetching block group data by state and county and combining the result.")
-
-    if (geometry) {
-      result <- map(state, ~{
-        suppressMessages(
-          insist_get_acs(geography = geography,
-                         variables = variables,
-                         table = table,
-                         cache_table = cache_table,
-                         year = year,
-                         output = output,
-                         state = .x,
-                         county = county,
-                         zcta = zcta,
-                         summary_var = summary_var,
-                         geometry = geometry,
-                         keep_geo_vars = keep_geo_vars,
-                         shift_geo = FALSE,
-                         key = key,
-                         moe_level = moe_level,
-                         survey = survey,
-                         show_call = show_call))
-      }) %>%
-        reduce(rbind)
-      geoms <- unique(st_geometry_type(result))
-      if (length(geoms) > 1) {
-        result <- st_cast(result, "MULTIPOLYGON")
-      }
-      result <- result %>%
-        as_tibble() %>%
-        st_as_sf()
-    } else {
-      result <- map_df(state, ~{
-        suppressMessages(
-          insist_get_acs(geography = geography,
-                         variables = variables,
-                         table = table,
-                         cache_table = cache_table,
-                         year = year,
-                         output = output,
-                         state = .x,
-                         county = county,
-                         zcta = zcta,
-                         summary_var = summary_var,
-                         geometry = geometry,
-                         keep_geo_vars = keep_geo_vars,
-                         shift_geo = FALSE,
-                         key = key,
-                         moe_level = moe_level,
-                         survey = survey,
-                         show_call = show_call))
-      })
-    }
-
-    return(result)
-      }
-    }
 
   # if variables from more than one type of table (e.g. "S1701_C03_002" and "B05002_013"))
   # are requested - take care of this under the hood by having the function
@@ -476,11 +481,11 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   }
 
 
-  # If more than one state specified for tracts - or more than one county
-  # for block groups - take care of this under the hood by having the function
+  # If more than one state specified for tracts/block groups take care of
+  # this under the hood by having the function
   # call itself and return the result
-  if (geography == "tract" && length(state) > 1) {
-    message("Fetching tract data by state and combining the result.")
+  if ((geography == "tract" || geography == "block group") && length(state) > 1) {
+    message(sprintf("Fetching %s data by state and combining the result.", geography))
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
       result <- map(state,~{
@@ -537,62 +542,66 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     return(result)
   }
 
-  if ((geography == "block group" && length(county) > 1)) {
-    if (geometry) {
-      message("Fetching block group data by county and combining the result.")
-      result <- map(county, ~{
-        suppressMessages(
-          insist_get_acs(geography = geography,
-                variables = variables,
-                table = table,
-                cache_table = cache_table,
-                year = year,
-                output = output,
-                state = state,
-                county = .x,
-                zcta = zcta,
-                summary_var = summary_var,
-                geometry = geometry,
-                keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE,
-                key = key,
-                moe_level = moe_level,
-                survey = survey,
-                show_call = show_call)) %>%
-          st_cast("MULTIPOLYGON")
-      }) %>%
-        reduce(rbind)
-      geoms <- unique(st_geometry_type(result))
-      if (length(geoms) > 1) {
-        result <- st_cast(result, "MULTIPOLYGON")
+  # This should be cleaned up and combined with some of the code earlier up
+  # but we still need to iterate through counties for block groups earlier than 2013
+  if (year < 2013) {
+    if ((geography == "block group" && length(county) > 1)) {
+      if (geometry) {
+        message("Fetching block group data by county and combining the result.")
+        result <- map(county, ~{
+          suppressMessages(
+            insist_get_acs(geography = geography,
+                           variables = variables,
+                           table = table,
+                           cache_table = cache_table,
+                           year = year,
+                           output = output,
+                           state = state,
+                           county = .x,
+                           zcta = zcta,
+                           summary_var = summary_var,
+                           geometry = geometry,
+                           keep_geo_vars = keep_geo_vars,
+                           shift_geo = FALSE,
+                           key = key,
+                           moe_level = moe_level,
+                           survey = survey,
+                           show_call = show_call)) %>%
+            st_cast("MULTIPOLYGON")
+        }) %>%
+          reduce(rbind)
+        geoms <- unique(st_geometry_type(result))
+        if (length(geoms) > 1) {
+          result <- st_cast(result, "MULTIPOLYGON")
+        }
+        result <- result %>%
+          as_tibble() %>%
+          st_as_sf()
+      } else {
+        message("Fetching block group data by county and combining the result.")
+        result <- map_df(county, ~{
+          suppressMessages(
+            insist_get_acs(geography = geography,
+                           variables = variables,
+                           table = table,
+                           cache_table = cache_table,
+                           year = year,
+                           output = output,
+                           state = state,
+                           county = .x,
+                           zcta = zcta,
+                           summary_var = summary_var,
+                           geometry = geometry,
+                           keep_geo_vars = keep_geo_vars,
+                           shift_geo = FALSE,
+                           key = key,
+                           moe_level = moe_level,
+                           survey = survey,
+                           show_call = show_call))
+        })
       }
-      result <- result %>%
-        as_tibble() %>%
-        st_as_sf()
-    } else {
-      message("Fetching block group data by county and combining the result.")
-      result <- map_df(county, ~{
-        suppressMessages(
-          insist_get_acs(geography = geography,
-                variables = variables,
-                table = table,
-                cache_table = cache_table,
-                year = year,
-                output = output,
-                state = state,
-                county = .x,
-                zcta = zcta,
-                summary_var = summary_var,
-                geometry = geometry,
-                keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE,
-                key = key,
-                moe_level = moe_level,
-                survey = survey,
-                show_call = show_call))
-      })
+      return(result)
     }
-    return(result)
   }
 
   if (moe_level == 90) {
