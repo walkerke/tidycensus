@@ -228,58 +228,6 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
     return(result)
   }
 
-  # if ((geography %in% c("block group", "block") && length(county) > 1) || (geography == "tract" && length(county) > 1)) {
-  #   # mc <- match.call(expand.dots = TRUE)
-  #   if (geometry) {
-  #     result <- map(county, ~{
-  #       suppressMessages(
-  #         insist_get_decennial(geography = geography,
-  #                              variables = variables,
-  #                              table = table,
-  #                              cache_table = cache_table,
-  #                              year = year,
-  #                              sumfile = sumfile,
-  #                              output = output,
-  #                              state = state,
-  #                              county = .x,
-  #                              geometry = geometry,
-  #                              keep_geo_vars = keep_geo_vars,
-  #                              shift_geo = FALSE,
-  #                              summary_var = summary_var,
-  #                              key = key,
-  #                              show_call = show_call))
-  #     }) %>%
-  #       reduce(rbind)
-  #     geoms <- unique(st_geometry_type(result))
-  #     if (length(geoms) > 1) {
-  #       st_cast(result, "MULTIPOLYGON")
-  #     }
-  #     result <- result %>%
-  #       as_tibble() %>%
-  #       st_as_sf()
-  #   } else {
-  #     result <- map_df(county, ~{
-  #       suppressMessages(
-  #         insist_get_decennial(geography = geography,
-  #                              variables = variables,
-  #                              table = table,
-  #                              cache_table = cache_table,
-  #                              year = year,
-  #                              sumfile = sumfile,
-  #                              output = output,
-  #                              state = state,
-  #                              county = .x,
-  #                              geometry = geometry,
-  #                              keep_geo_vars = keep_geo_vars,
-  #                              shift_geo = FALSE,
-  #                              summary_var = summary_var,
-  #                              key = key,
-  #                              show_call = show_call))
-  #     })
-  #   }
-  #   return(result)
-  # }
-
   # Get data for an entire table if needed
   if (!is.null(table)) {
     variables <- variables_from_table_decennial(table, year, sumfile, cache_table)
