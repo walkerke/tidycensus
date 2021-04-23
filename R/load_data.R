@@ -789,7 +789,12 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
     var <- paste0(variables, collapse = ",")
 
     vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
-
+    
+    # If geo is NULL, state should be added back in here
+    if (is.null(geo)) {
+      vars_to_get <- paste0(vars_to_get, ",ST")
+    }
+    
     query <- list(get = vars_to_get,
                   ucgid = geo,
                   key = key)
