@@ -57,7 +57,7 @@ moe_prop <- function(num, denom, moe_num, moe_denom) {
 
   x <- moe_num^2 - (prop^2 * moe_denom^2)
 
-  pos_x <- x >= 0 & !is.na(x)
+  pos_x <- x > 0 & !is.na(x)
 
   result[pos_x] <- sqrt(x[pos_x]) / denom[pos_x]
 
