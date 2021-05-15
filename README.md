@@ -1,6 +1,6 @@
 ## tidycensus
 
-<img src=tools/readme/tidycensus_sticker.png style="width: 250px">
+<img src=tools/readme/tidycensus_sticker.png style="width: 100px">
 
 [![R build status](https://github.com/walkerke/tidycensus/workflows/R-CMD-check/badge.svg)](https://github.com/walkerke/tidycensus/actions) ![CRAN Badge](http://www.r-pkg.org/badges/version/tidycensus)  ![CRAN Downloads](http://cranlogs.r-pkg.org/badges/tidycensus)
 
