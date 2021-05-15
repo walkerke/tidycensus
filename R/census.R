@@ -360,8 +360,12 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
     } else {
 
-      geom <- suppressMessages(use_tigris(geography = geography, year = year,
-                                          state = state, county = county, ...))
+      geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
+                                          state = state, county = county, ...)))
+
+      if ("try-error" %in% class(geom)) {
+        stop("Your geometry data download failed. Please try again later or check the status of the Census Bureau website at https://www2.census.gov/geo/tiger/", call. = FALSE)
+      }
     }
 
     if (! keep_geo_vars) {
