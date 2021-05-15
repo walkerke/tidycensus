@@ -69,8 +69,9 @@ with simple feature geometry in the `geometry` column.}
 \item{keep_geo_vars}{if TRUE, keeps all the variables from the Census
 shapefile obtained by tigris.  Defaults to FALSE.}
 
-\item{shift_geo}{if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
-mapping of the entire US.}
+\item{shift_geo}{(deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
+mapping of the entire US.  As of May 2021, we recommend using \code{tigris::shift_geometry()}
+instead.}
 
 \item{key}{Your Census API key.
 Obtain one at \url{http://api.census.gov/data/key_signup.html}.  Can be stored

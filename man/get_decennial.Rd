@@ -65,8 +65,10 @@ columns.}
 \item{keep_geo_vars}{if TRUE, keeps all the variables from the Census
 shapefile obtained by tigris.  Defaults to FALSE.}
 
-\item{shift_geo}{if TRUE, returns geometry with Alaska and Hawaii shifted for thematic mapping of the entire US.
-Geometry was originally obtained from the albersusa R package.}
+\item{shift_geo}{(deprecated) if TRUE, returns geometry with Alaska and Hawaii
+shifted for thematic mapping of the entire US.
+Geometry was originally obtained from the albersusa R package.  As of May 2021,
+we recommend using \code{tigris::shift_geometry()} instead.}
 
 \item{summary_var}{Character string of a "summary variable" from the decennial Census
 to be included in your output. Usually a variable (e.g. total population)

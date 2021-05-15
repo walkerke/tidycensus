@@ -33,8 +33,9 @@
 #'                 with simple feature geometry in the `geometry` column.
 #' @param keep_geo_vars if TRUE, keeps all the variables from the Census
 #'                      shapefile obtained by tigris.  Defaults to FALSE.
-#' @param shift_geo if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
-#'                  mapping of the entire US.
+#' @param shift_geo (deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
+#'                  mapping of the entire US.  As of May 2021, we recommend using \code{tigris::shift_geometry()}
+#'                  instead.
 #' @param key Your Census API key.
 #'            Obtain one at \url{http://api.census.gov/data/key_signup.html}.  Can be stored
 #'            in your .Renviron with \code{census_api_key("YOUR KEY", install = TRUE)}
@@ -52,6 +53,10 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
                           time_series = FALSE,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, show_call = FALSE, ...) {
+
+  if (shift_geo) {
+    warning("The `shift_geo` argument is deprecated and will be removed in a future release. We recommend using `tigris::shift_geometry()` instead.", call. = FALSE)
+  }
 
   if (year < 2015) {
     stop("The Population Estimates API is not available in tidycensus for years prior to 2015. Consider using `time_series = TRUE` or the censusapi package for earlier estimates.")

@@ -30,8 +30,10 @@
 #'               columns.
 #' @param keep_geo_vars if TRUE, keeps all the variables from the Census
 #'                      shapefile obtained by tigris.  Defaults to FALSE.
-#' @param shift_geo if TRUE, returns geometry with Alaska and Hawaii shifted for thematic mapping of the entire US.
-#'                  Geometry was originally obtained from the albersusa R package.
+#' @param shift_geo (deprecated) if TRUE, returns geometry with Alaska and Hawaii
+#'                  shifted for thematic mapping of the entire US.
+#'                  Geometry was originally obtained from the albersusa R package.  As of May 2021,
+#'                  we recommend using \code{tigris::shift_geometry()} instead.
 #' @param summary_var Character string of a "summary variable" from the decennial Census
 #'                    to be included in your output. Usually a variable (e.g. total population)
 #'                    that you'll want to use as a denominator or comparison.
@@ -67,6 +69,11 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
                           sumfile = "sf1", state = NULL, county = NULL, geometry = FALSE, output = "tidy",
                           keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL, key = NULL,
                           show_call = FALSE, ...) {
+
+  if (shift_geo) {
+    warning("The `shift_geo` argument is deprecated and will be removed in a future release. We recommend using `tigris::shift_geometry()` instead.", call. = FALSE)
+  }
+
 
   if (geography == "cbg") geography <- "block group"
 

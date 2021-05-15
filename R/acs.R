@@ -34,9 +34,10 @@
 #'   geometry in the `geometry` column.
 #' @param keep_geo_vars if TRUE, keeps all the variables from the Census
 #'   shapefile obtained by tigris.  Defaults to FALSE.
-#' @param shift_geo if TRUE, returns geometry with Alaska and Hawaii shifted for
+#' @param shift_geo (deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for
 #'   thematic mapping of the entire US. Geometry was originally obtained from
-#'   the albersusa R package.
+#'   the albersusa R package. As of May 2021, we recommend using \code{tigris::shift_geometry()}
+#'   instead.
 #' @param summary_var Character string of a "summary variable" from the ACS to
 #'   be included in your output. Usually a variable (e.g. total population) that
 #'   you'll want to use as a denominator or comparison.
@@ -89,6 +90,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                     geometry = FALSE, keep_geo_vars = FALSE,
                     shift_geo = FALSE, summary_var = NULL, key = NULL,
                     moe_level = 90, survey = "acs5", show_call = FALSE, ...) {
+
+  if (shift_geo) {
+    warning("The `shift_geo` argument is deprecated and will be removed in a future release. We recommend using `tigris::shift_geometry()` instead.", call. = FALSE)
+  }
 
   if (survey == "acs5" && year < 2009) {
     stop("5-year ACS support in tidycensus begins with the 2005-2009 5-year ACS. Consider using decennial Census data instead.", call. = FALSE)
