@@ -2,6 +2,7 @@ library(tidycensus)
 library(tidyverse)
 library(tigris)
 library(sf)
+options(tigris_use_cache = TRUE)
 
 # states with county subdivisions for migration flows
 mcd_states <- c("Connecticut", "Maine", "Massachusetts", "Michigan", "Minnesota",
@@ -28,9 +29,9 @@ centroids <- bind_rows(list(county_poly, mcd_poly, cbsa_poly)) %>%
   slice_head(n = 1) %>%
   ungroup() %>%
   select(GEOID) %>%
-  st_centroid() %>%
+  st_centroid(of_largest_polygon = TRUE) %>%
   mutate(centroid = geometry) %>%
   st_drop_geometry() %>%
   as_tibble()
 
-usethis::use_data(centroids, internal = TRUE)
+usethis::use_data(centroids, internal = TRUE, overwrite = TRUE)
