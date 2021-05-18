@@ -277,8 +277,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "school district (elementary)") {
 
-    # tigris did not support CB files for school districts prior to 0.9.3
-    if (packageVersion("tigris") < "0.9.3") {
+    if (year < 2016) {
       sde <- school_districts(state = state, type = "elementary", year = year,
                               class = "sf", ...)
     } else {
@@ -292,8 +291,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "school district (secondary)") {
 
-    # tigris did not support CB files for school districts prior to 0.9.3
-    if (packageVersion("tigris") < "0.9.3") {
+    if (year < 2016) {
       sds <- school_districts(state = state, type = "secondary", year = year,
                               class = "sf", ...)
     } else {
@@ -305,8 +303,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "school district (unified)") {
 
-    # tigris did not support CB files for school districts prior to 0.9.3
-    if (packageVersion("tigris") < "0.9.3") {
+    if (year < 2016) {
       sdu <- school_districts(state = state, type = "unified", year = year,
                               class = "sf", ...)
     } else {
