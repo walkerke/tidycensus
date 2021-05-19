@@ -13,3 +13,4 @@ index.md
 ^.github$
 ^\.github$
 logo.png
+^pkgdown$
