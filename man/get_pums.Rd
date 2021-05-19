@@ -55,7 +55,7 @@ tidycensus or the Census API. Copy to the API call into a browser and see
 what is returned by the API directly. Defaults to FALSE.}
 
 \item{key}{Your Census API key. Obtain one at
-\url{http://api.census.gov/data/key_signup.html}}
+\url{https://api.census.gov/data/key_signup.html}}
 }
 \value{
 A tibble of microdata from the ACS PUMS API.

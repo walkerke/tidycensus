@@ -31,9 +31,9 @@ names. By default, `get_flows()` returns the GEOID and names of the
 geographies as well as the number of people who moved in, out, and net
 movers of each geography (`MOVEDIN`, `MOVEDOUT`, `MOVEDNET`). If additional
 variables are specified, they are pulled in addition to the default
-variables. The names of additional variables can be found in the [Census
+variables. The names of additional variables can be found in the Census
 Migration Flows API
-documentation](https://api.census.gov/data/2018/acs/flows/variables.html).}
+documentation at \url{https://api.census.gov/data/2018/acs/flows/variables.html}.}
 
 \item{breakdown}{A character vector of the population breakdown
 characteristics to be crossed with migration flows data. For datasets
@@ -42,9 +42,9 @@ as age, race, employment status, etc. are available. Possible values are
 `"AGE"`, `"SEX"`, `"RACE"`, `"HSGP"`, `"REL"`, `"HHT"`, `"TEN"`, `"ENG"`,
 `"POB"`, `"YEARS"`, `"ESR"`, `"OCC"`, `"WKS"`, `"SCHL"`, `"AHINC"`,
 `"APINC"`, and `"HISP_ORIGIN"`. For more information and to see which
-characteristics are available in each year, visit the [Census Migration
+characteristics are available in each year, visit the Census Migration
 Flows
-documentation](https://www.census.gov/data/developers/data-sets/acs-migration-flows.html).
+documentation at \url{https://www.census.gov/data/developers/data-sets/acs-migration-flows.html}.
  Note: not all characteristics are available in all years.}
 
 \item{breakdown_labels}{Whether or not to add columns with labels for the
@@ -78,7 +78,7 @@ the sf object. The destination point feature is returned in the `centroid2`
 column.}
 
 \item{key}{Your Census API key. Obtain one at
-\url{http://api.census.gov/data/key_signup.html}}
+\url{https://api.census.gov/data/key_signup.html}}
 
 \item{moe_level}{The confidence level of the returned margin of error.  One
 of 90 (the default), 95, or 99.}

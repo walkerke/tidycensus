@@ -75,7 +75,7 @@ to be included in your output. Usually a variable (e.g. total population)
 that you'll want to use as a denominator or comparison.}
 
 \item{key}{Your Census API key.
-Obtain one at \url{http://api.census.gov/data/key_signup.html}}
+Obtain one at \url{https://api.census.gov/data/key_signup.html}}
 
 \item{show_call}{if TRUE, display call made to Census API. This can be very useful
 in debugging and determining if error messages returned are

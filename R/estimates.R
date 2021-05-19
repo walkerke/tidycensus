@@ -37,7 +37,7 @@
 #'                  mapping of the entire US.  As of May 2021, we recommend using \code{tigris::shift_geometry()}
 #'                  instead.
 #' @param key Your Census API key.
-#'            Obtain one at \url{http://api.census.gov/data/key_signup.html}.  Can be stored
+#'            Obtain one at \url{https://api.census.gov/data/key_signup.html}.  Can be stored
 #'            in your .Renviron with \code{census_api_key("YOUR KEY", install = TRUE)}
 #' @param show_call if TRUE, display call made to Census API. This can be very useful
 #'                  in debugging and determining if error messages returned are

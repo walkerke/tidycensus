@@ -74,7 +74,7 @@ mapping of the entire US.  As of May 2021, we recommend using \code{tigris::shif
 instead.}
 
 \item{key}{Your Census API key.
-Obtain one at \url{http://api.census.gov/data/key_signup.html}.  Can be stored
+Obtain one at \url{https://api.census.gov/data/key_signup.html}.  Can be stored
 in your .Renviron with \code{census_api_key("YOUR KEY", install = TRUE)}}
 
 \item{show_call}{if TRUE, display call made to Census API. This can be very useful
