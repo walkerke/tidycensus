@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
       </span>
     </div>
 
@@ -237,8 +237,9 @@ shapefile obtained by tigris.  Defaults to FALSE.</p></td>
     </tr>
     <tr>
       <th>shift_geo</th>
-      <td><p>if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
-mapping of the entire US.</p></td>
+      <td><p>(deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
+mapping of the entire US.  As of May 2021, we recommend using <code><a href='https://rdrr.io/pkg/tigris/man/shift_geometry.html'>tigris::shift_geometry()</a></code>
+instead.</p></td>
     </tr>
     <tr>
       <th>key</th>

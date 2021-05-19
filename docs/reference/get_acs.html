@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
       </span>
     </div>
 
@@ -241,9 +241,10 @@ shapefile obtained by tigris.  Defaults to FALSE.</p></td>
     </tr>
     <tr>
       <th>shift_geo</th>
-      <td><p>if TRUE, returns geometry with Alaska and Hawaii shifted for
+      <td><p>(deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for
 thematic mapping of the entire US. Geometry was originally obtained from
-the albersusa R package.</p></td>
+the albersusa R package. As of May 2021, we recommend using <code><a href='https://rdrr.io/pkg/tigris/man/shift_geometry.html'>tigris::shift_geometry()</a></code>
+instead.</p></td>
     </tr>
     <tr>
       <th>summary_var</th>
@@ -287,7 +288,7 @@ what is returned by the API directly. Defaults to FALSE.</p></td>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/walkerke/tidycensus'>tidycensus</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/sjmgarnier/viridis'>viridis</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://sjmgarnier.github.io/viridis/'>viridis</a></span><span class='op'>)</span>
 <span class='fu'><a href='census_api_key.html'>census_api_key</a></span><span class='op'>(</span><span class='st'>"YOUR KEY GOES HERE"</span><span class='op'>)</span>
 
 <span class='va'>tarr</span> <span class='op'>&lt;-</span> <span class='fu'>get_acs</span><span class='op'>(</span>geography <span class='op'>=</span> <span class='st'>"tract"</span>, variables <span class='op'>=</span> <span class='st'>"B19013_001"</span>,
@@ -296,8 +297,8 @@ what is returned by the API directly. Defaults to FALSE.</p></td>
 <span class='fu'>ggplot</span><span class='op'>(</span><span class='va'>tarr</span>, <span class='fu'>aes</span><span class='op'>(</span>fill <span class='op'>=</span> <span class='va'>estimate</span>, color <span class='op'>=</span> <span class='va'>estimate</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'>geom_sf</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'>coord_sf</span><span class='op'>(</span>crs <span class='op'>=</span> <span class='fl'>26914</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/viridis/man/scale_viridis.html'>scale_fill_viridis</a></span><span class='op'>(</span>option <span class='op'>=</span> <span class='st'>"magma"</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://rdrr.io/pkg/viridis/man/scale_viridis.html'>scale_color_viridis</a></span><span class='op'>(</span>option <span class='op'>=</span> <span class='st'>"magma"</span><span class='op'>)</span>
+  <span class='fu'><a href='https://sjmgarnier.github.io/viridis/reference/scale_viridis.html'>scale_fill_viridis</a></span><span class='op'>(</span>option <span class='op'>=</span> <span class='st'>"magma"</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'><a href='https://sjmgarnier.github.io/viridis/reference/scale_viridis.html'>scale_color_viridis</a></span><span class='op'>(</span>option <span class='op'>=</span> <span class='st'>"magma"</span><span class='op'>)</span>
 
 
 <span class='va'>vt</span> <span class='op'>&lt;-</span> <span class='fu'>get_acs</span><span class='op'>(</span>geography <span class='op'>=</span> <span class='st'>"county"</span>, variables <span class='op'>=</span> <span class='st'>"B19013_001"</span>, state <span class='op'>=</span> <span class='st'>"VT"</span><span class='op'>)</span>
