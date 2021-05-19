@@ -44,6 +44,7 @@ If desired, users can request a specific component or components by supplying a 
 
 net_migration <- get_estimates(geography = "county",
                                variables = "RNETMIG",
+                               year = 2019,
                                geometry = TRUE,
                                resolution = "20m") %>%
   shift_geometry()
@@ -67,9 +68,16 @@ net_migration <- net_migration %>%
   )) %>%
   mutate(groups = factor(groups, levels = order))
 
+state_overlay <- states(
+  cb = TRUE,
+  resolution = "20m"
+) %>%
+  filter(GEOID != "72") %>%
+  shift_geometry()
+
 ggplot() +
-  geom_sf(data = net_migration, aes(fill = groups, color = groups), lwd = 0.1) +
-  geom_sf(data = tidycensus::state_laea, fill = NA, color = "black", lwd = 0.1) +
+  geom_sf(data = net_migration, aes(fill = groups, color = groups), size = 0.1) +
+  geom_sf(data = state_overlay, fill = NA, color = "black", size = 0.1) +
   scale_fill_brewer(palette = "PuOr", direction = -1) +
   scale_color_brewer(palette = "PuOr", direction = -1, guide = FALSE) +
   coord_sf(datum = NA) +

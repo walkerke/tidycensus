@@ -149,6 +149,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">net_migration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_estimates.html">get_estimates</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>,
                                variables <span class="op">=</span> <span class="st">"RNETMIG"</span>,
+                               year <span class="op">=</span> <span class="fl">2019</span>,
                                geometry <span class="op">=</span> <span class="cn">TRUE</span>,
                                resolution <span class="op">=</span> <span class="st">"20m"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html">shift_geometry</a></span><span class="op">(</span><span class="op">)</span>
@@ -187,9 +188,16 @@
   <span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">mutate</span><span class="op">(</span>groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">groups</span>, levels <span class="op">=</span> <span class="va">order</span><span class="op">)</span><span class="op">)</span>
 
+<span class="va">state_overlay</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/states.html">states</a></span><span class="op">(</span>
+  cb <span class="op">=</span> <span class="cn">TRUE</span>,
+  resolution <span class="op">=</span> <span class="st">"20m"</span>
+<span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">GEOID</span> <span class="op">!=</span> <span class="st">"72"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html">shift_geometry</a></span><span class="op">(</span><span class="op">)</span>
+
 <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">geom_sf</span><span class="op">(</span>data <span class="op">=</span> <span class="va">net_migration</span>, <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">groups</span>, color <span class="op">=</span> <span class="va">groups</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">geom_sf</span><span class="op">(</span>data <span class="op">=</span> <span class="fu">tidycensus</span><span class="fu">::</span><span class="va"><a href="../reference/state_laea.html">state_laea</a></span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"black"</span>, lwd <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_sf</span><span class="op">(</span>data <span class="op">=</span> <span class="va">net_migration</span>, <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">groups</span>, color <span class="op">=</span> <span class="va">groups</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_sf</span><span class="op">(</span>data <span class="op">=</span> <span class="va">state_overlay</span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"black"</span>, size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">scale_fill_brewer</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"PuOr"</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">scale_color_brewer</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"PuOr"</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, guide <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">coord_sf</span><span class="op">(</span>datum <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>
