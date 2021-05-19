@@ -1,6 +1,4 @@
-## tidycensus
-
-# pkgdown <img src="tools/readme/tidycensus_sticker.png" align="right" />
+# tidycensus <img src=logo.png width = "250px" align = "right">
 
 [![Build Status](https://travis-ci.org/walkerke/tidycensus.svg?branch=master)](https://travis-ci.org/walkerke/tidycensus) ![CRAN Badge](http://www.r-pkg.org/badges/version/tidycensus)  ![CRAN Downloads](http://cranlogs.r-pkg.org/badges/tidycensus)
 
