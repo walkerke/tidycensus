@@ -271,8 +271,8 @@ get_flows <- function(geography, variables = NULL, breakdown = NULL,
   # convert to sf object making origin centroid active geometry col
   if (geometry) {
     dat <- dat %>%
-      dplyr::left_join(tidycensus:::centroids, by = c("GEOID1" = "GEOID")) %>%
-      dplyr::left_join(tidycensus:::centroids, by = c("GEOID2" = "GEOID"), suffix = c("1", "2")) %>%
+      dplyr::left_join(centroids, by = c("GEOID1" = "GEOID")) %>%
+      dplyr::left_join(centroids, by = c("GEOID2" = "GEOID"), suffix = c("1", "2")) %>%
       sf::st_as_sf(sf_column_name = "centroid1")
   }
   return(dat)
