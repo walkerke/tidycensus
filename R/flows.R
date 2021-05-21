@@ -2,12 +2,12 @@
 #' Flows
 #'
 #' @param geography The geography of your requested data. Possible values are
-#'   `"county"`, `"county subdivision"`, and `"metropolitan statistical area"`.
+#'   \code{"county"}, \code{"county subdivision"}, and \code{"metropolitan statistical area"}.
 #'   MSA data is only available beginning with the 2009-2013 5-year ACS.
 #' @param variables Character string or vector of character strings of variable
-#'   names. By default, `get_flows()` returns the GEOID and names of the
+#'   names. By default, \code{get_flows()} returns the GEOID and names of the
 #'   geographies as well as the number of people who moved in, out, and net
-#'   movers of each geography (`MOVEDIN`, `MOVEDOUT`, `MOVEDNET`). If additional
+#'   movers of each geography (\code{"MOVEDIN"}, \code{"MOVEDOUT"}, \code{"MOVEDNET"}). If additional
 #'   variables are specified, they are pulled in addition to the default
 #'   variables. The names of additional variables can be found in the Census
 #'   Migration Flows API
@@ -16,15 +16,15 @@
 #'   characteristics to be crossed with migration flows data. For datasets
 #'   between 2006-2010 and 2011-2015, selected demographic characteristics such
 #'   as age, race, employment status, etc. are available. Possible values are
-#'   `"AGE"`, `"SEX"`, `"RACE"`, `"HSGP"`, `"REL"`, `"HHT"`, `"TEN"`, `"ENG"`,
-#'   `"POB"`, `"YEARS"`, `"ESR"`, `"OCC"`, `"WKS"`, `"SCHL"`, `"AHINC"`,
-#'   `"APINC"`, and `"HISP_ORIGIN"`. For more information and to see which
+#'   "AGE", "SEX", "RACE", "HSGP", "REL", "HHT", "TEN", "ENG",
+#'   "POB", "YEARS", "ESR", "OCC", "WKS", "SCHL", "AHINC",
+#'   "APINC", and "HISP_ORIGIN". For more information and to see which
 #'   characteristics are available in each year, visit the Census Migration
 #'   Flows
 #'   documentation at \url{https://www.census.gov/data/developers/data-sets/acs-migration-flows.html}.
 #'    Note: not all characteristics are available in all years.
 #' @param breakdown_labels Whether or not to add columns with labels for the
-#'   breakdown characteristic codes. Defaults to `FALSE`.
+#'   breakdown characteristic codes. Defaults to \code{FALSE}.
 #' @param year The year, or endyear, of the ACS sample. The Migration Flows API
 #'   is available for 5-year ACS samples from 2010 to 2018. Defaults to 2018.
 #' @param output One of "tidy" (the default) in which each row represents an
@@ -38,13 +38,13 @@
 #' @param msa The metropolitan statistical area for which you are requesting
 #'   data. Specify a single value or a vector of values to get data for more
 #'   than one MSA. Numeric or character MSA GEOIDs are accepted. When specifying
-#'   MSAs, geography must be set to `"metropolitan statistical area"` and
-#'   `state` and `county` must be `NULL`.
+#'   MSAs, geography must be set to \code{"metropolitan statistical area"} and
+#'   \code{state} and \code{county} must be \code{NULL}.
 #' @param geometry if FALSE (the default), return a tibble of ACS Migration
 #'   Flows data. If TRUE, return an sf object with the centroids of both origin
-#'   and destination as `sfc_POINT` columns. The origin point feature is
-#'   returned in a column named `centroid1` and is the active geometry column in
-#'   the sf object. The destination point feature is returned in the `centroid2`
+#'   and destination as \code{sfc_POINT} columns. The origin point feature is
+#'   returned in a column named \code{centroid1} and is the active geometry column in
+#'   the sf object. The destination point feature is returned in the \code{centroid2}
 #'   column.
 #' @param key Your Census API key. Obtain one at
 #'   \url{https://api.census.gov/data/key_signup.html}
