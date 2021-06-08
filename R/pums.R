@@ -65,12 +65,6 @@ get_pums <- function(variables = NULL,
                     startyear, year))
   }
 
-  # Allow users to get all states by specifying "all"
-  if (all(state == "all")) {
-    message("Requesting data for the entire United States. This can take several minutes to complete.")
-    state <- NULL
-  }
-
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 
     key <- Sys.getenv('CENSUS_API_KEY')
@@ -78,6 +72,30 @@ get_pums <- function(variables = NULL,
   } else if (is.null(key)) {
 
     stop('A Census API key is required.  Obtain one at http://api.census.gov/data/key_signup.html, and then supply the key to the `census_api_key` function to use it throughout your tidycensus session.')
+
+  }
+
+
+  # Allow users to get all states by specifying "all"
+  # To avoid large data timeout errors, iterate through the states instead.
+  if (all(state == "all")) {
+    message("Requesting data for the entire United States by state then combining the result.\nThis can take several minutes to complete.\nFor large data extract workflows, consider downloading data from the Census FTP server\nor from IPUMS (https://ipums.org) instead.")
+    output <- purrr::map_dfr(c(state.abb, "DC"), function(each_state) {
+      suppressMessages(get_pums(
+        state = each_state,
+        variables = variables,
+        puma = NULL,
+        year = year,
+        survey = survey,
+        variables_filter = variables_filter,
+        rep_weights = rep_weights,
+        recode = recode,
+        show_call = TRUE,
+        key = key
+      ))
+    })
+
+    return(output)
 
   }
 
