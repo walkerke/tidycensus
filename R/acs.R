@@ -493,7 +493,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     message(sprintf("Fetching %s data by state and combining the result.", geography))
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
-      result <- map(state,~{
+      result <- map(state, function(s, ...) {
         suppressMessages(
           insist_get_acs(geography = geography,
                 variables = variables,
@@ -501,7 +501,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 cache_table = cache_table,
                 year = year,
                 output = output,
-                state = .x,
+                state = s,
                 county = county,
                 zcta = zcta,
                 summary_var = summary_var,
@@ -511,9 +511,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 key = key,
                 moe_level = moe_level,
                 survey = survey,
-                show_call = show_call)) %>%
+                show_call = show_call,
+                ...)) %>%
           st_cast("MULTIPOLYGON")
-      }) %>%
+      }, ...) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
       if (length(geoms) > 1) {
