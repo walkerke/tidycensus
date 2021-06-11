@@ -246,7 +246,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         message("Fetching block group data by state and county and combining the result.")
 
         if (geometry) {
-          result <- map(state, ~{
+          result <- map(state, function(s, ...) {
             suppressMessages(
               insist_get_acs(geography = geography,
                              variables = variables,
@@ -264,8 +264,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                              key = key,
                              moe_level = moe_level,
                              survey = survey,
-                             show_call = show_call))
-          }) %>%
+                             show_call = show_call,
+                             ...))
+          }, ...) %>%
             reduce(rbind)
           geoms <- unique(st_geometry_type(result))
           if (length(geoms) > 1) {
@@ -303,11 +304,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   }
 
-
-
   # if variables from more than one type of table (e.g. "S1701_C03_002" and "B05002_013"))
   # are requested - take care of this under the hood by having the function
-  # call itself for "B" variables, "S" variabls and "DP" variables then combining the results
+  # call itself for "B" variables, "S" variables and "DP" variables then combining the results
 
   if (length(unique(substr(variables, 1, 1))) > 1 && !all(unique(substr(variables, 1, 1)) %in% c("B", "C"))) {
 
@@ -354,7 +353,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
             key = key,
             moe_level = moe_level,
             survey = survey,
-            show_call = show_call
+            show_call = show_call,
+            ...
             )
           )
 
@@ -412,7 +412,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
             key = key,
             moe_level = moe_level,
             survey = survey,
-            show_call = show_call
+            show_call = show_call,
+            ...
           )
         )
       ) %>%
@@ -554,7 +555,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     if ((geography == "block group" && length(county) > 1)) {
       if (geometry) {
         message("Fetching block group data by county and combining the result.")
-        result <- map(county, ~{
+        result <- map(county, function(co, ...) {
           suppressMessages(
             insist_get_acs(geography = geography,
                            variables = variables,
@@ -563,7 +564,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                            year = year,
                            output = output,
                            state = state,
-                           county = .x,
+                           county = co,
                            zcta = zcta,
                            summary_var = summary_var,
                            geometry = geometry,
@@ -572,9 +573,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                            key = key,
                            moe_level = moe_level,
                            survey = survey,
-                           show_call = show_call)) %>%
+                           show_call = show_call,
+                           ...)) %>%
             st_cast("MULTIPOLYGON")
-        }) %>%
+        }, ...) %>%
           reduce(rbind)
         geoms <- unique(st_geometry_type(result))
         if (length(geoms) > 1) {
