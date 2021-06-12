@@ -393,11 +393,11 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       } else {
       # if output is tidy, we don't need to worry about this as results can
       # be combined using rbind
-      result <- map(vars_by_type, ~
+      result <- map(vars_by_type, function(v, ...) {
         suppressMessages(
           insist_get_acs(
             geography = geography,
-            variables = .x,
+            variables = v,
             table = table,
             cache_table = cache_table,
             year = year,
@@ -416,6 +416,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
             ...
           )
         )
+      }, ...
       ) %>%
         reduce(rbind)
       }
