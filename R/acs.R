@@ -254,7 +254,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                              cache_table = cache_table,
                              year = year,
                              output = output,
-                             state = .x,
+                             state = s,
                              county = county,
                              zcta = zcta,
                              summary_var = summary_var,
