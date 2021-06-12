@@ -216,7 +216,11 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   # Allow users to get all block groups in a state (2012 and earlier)
   # If only one state is specified, get all county FIPS codes in state from tigris and continue
   if (year < 2013) {
+    if (geography == "block group") {
+      stop("Block groups are not currently available for the 2008-2012 ACS and earlier.\nIf access to these datasets is restored, tidycensus will again support them.", call. = FALSE)
+    }
 
+    # Leave in all this code if Census restores block group availability for these years
     if ((geography == "block group" && length(state) == 1 && is.null(county))) {
       st <- suppressMessages(validate_state(state))
 
