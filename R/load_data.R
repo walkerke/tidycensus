@@ -155,10 +155,6 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
            call. = FALSE)
     }
 
-    if (length(state) > 1) {
-      stop("The Census API cannot accept multi-state/multi-ZCTA combinations. Instead, leave `zcta` NULL, request data for the states you need, and then filter by ZCTA.", call. = FALSE)
-    }
-
     state <- map_chr(state, function(x) {
       validate_state(x)
     })

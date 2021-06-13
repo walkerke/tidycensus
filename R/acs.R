@@ -197,19 +197,23 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   if (geography == "puma") geography <- "public use microdata area"
 
-  if (geography == "zip code tabulation area" && !is.null(county)) {
-
-    if (year < 2019) {
-      stop("ZCTAs are available by state, but not by county.",
-           call. = FALSE)
-    }
-  }
-
 
   if (!is.null(zcta) && geography != "zip code tabulation area") {
     stop("ZCTAs can only be specified when requesting data at the zip code tabulation area-level.",
          call. = FALSE)
   }
+
+  # If multiple states and multiple ZCTAs are requested, handle the filtering on the
+  # R side rather than the tidycensus side
+  if (geography == "zip code tabulation area" && length(state) > 1 && !is.null(zcta)) {
+    zips_to_get <- zcta
+
+    zcta <- NULL
+
+  } else {
+    zips_to_get <- NULL
+  }
+
 
   insist_get_acs <- purrr::insistently(get_acs)
 
@@ -787,6 +791,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       dplyr::mutate(
         GEOID = stringr::str_sub(GEOID, start = 3L)
       )
+  }
+
+  # If multiple ZCTAs are requested for multiple states, handle the filtering here
+  if (!is.null(zips_to_get)) {
+    dat2 <- dat2 %>%
+      dplyr::filter(GEOID %in% zips_to_get)
   }
 
   if (geometry) {
