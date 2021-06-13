@@ -83,7 +83,7 @@ Flows" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
       </span>
     </div>
 
@@ -179,19 +179,19 @@ Flows</p>
     <tr>
       <th>geography</th>
       <td><p>The geography of your requested data. Possible values are
-`"county"`, `"county subdivision"`, and `"metropolitan statistical area"`.
+<code>"county"</code>, <code>"county subdivision"</code>, and <code>"metropolitan statistical area"</code>.
 MSA data is only available beginning with the 2009-2013 5-year ACS.</p></td>
     </tr>
     <tr>
       <th>variables</th>
       <td><p>Character string or vector of character strings of variable
-names. By default, `get_flows()` returns the GEOID and names of the
+names. By default, <code>get_flows()</code> returns the GEOID and names of the
 geographies as well as the number of people who moved in, out, and net
-movers of each geography (`MOVEDIN`, `MOVEDOUT`, `MOVEDNET`). If additional
+movers of each geography (<code>"MOVEDIN"</code>, <code>"MOVEDOUT"</code>, <code>"MOVEDNET"</code>). If additional
 variables are specified, they are pulled in addition to the default
-variables. The names of additional variables can be found in the [Census
+variables. The names of additional variables can be found in the Census
 Migration Flows API
-documentation](https://api.census.gov/data/2018/acs/flows/variables.html).</p></td>
+documentation at <a href='https://api.census.gov/data/2018/acs/flows/variables.html'>https://api.census.gov/data/2018/acs/flows/variables.html</a>.</p></td>
     </tr>
     <tr>
       <th>breakdown</th>
@@ -199,18 +199,18 @@ documentation](https://api.census.gov/data/2018/acs/flows/variables.html).</p></
 characteristics to be crossed with migration flows data. For datasets
 between 2006-2010 and 2011-2015, selected demographic characteristics such
 as age, race, employment status, etc. are available. Possible values are
-`"AGE"`, `"SEX"`, `"RACE"`, `"HSGP"`, `"REL"`, `"HHT"`, `"TEN"`, `"ENG"`,
-`"POB"`, `"YEARS"`, `"ESR"`, `"OCC"`, `"WKS"`, `"SCHL"`, `"AHINC"`,
-`"APINC"`, and `"HISP_ORIGIN"`. For more information and to see which
-characteristics are available in each year, visit the [Census Migration
+"AGE", "SEX", "RACE", "HSGP", "REL", "HHT", "TEN", "ENG",
+"POB", "YEARS", "ESR", "OCC", "WKS", "SCHL", "AHINC",
+"APINC", and "HISP_ORIGIN". For more information and to see which
+characteristics are available in each year, visit the Census Migration
 Flows
-documentation](https://www.census.gov/data/developers/data-sets/acs-migration-flows.html).
+documentation at <a href='https://www.census.gov/data/developers/data-sets/acs-migration-flows.html'>https://www.census.gov/data/developers/data-sets/acs-migration-flows.html</a>.
  Note: not all characteristics are available in all years.</p></td>
     </tr>
     <tr>
       <th>breakdown_labels</th>
       <td><p>Whether or not to add columns with labels for the
-breakdown characteristic codes. Defaults to `FALSE`.</p></td>
+breakdown characteristic codes. Defaults to <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>year</th>
@@ -239,22 +239,22 @@ FIPS codes are accepted. Must be combined with a value supplied to `state`.</p><
       <td><p>The metropolitan statistical area for which you are requesting
 data. Specify a single value or a vector of values to get data for more
 than one MSA. Numeric or character MSA GEOIDs are accepted. When specifying
-MSAs, geography must be set to `"metropolitan statistical area"` and
-`state` and `county` must be `NULL`.</p></td>
+MSAs, geography must be set to <code>"metropolitan statistical area"</code> and
+<code>state</code> and <code>county</code> must be <code>NULL</code>.</p></td>
     </tr>
     <tr>
       <th>geometry</th>
       <td><p>if FALSE (the default), return a tibble of ACS Migration
 Flows data. If TRUE, return an sf object with the centroids of both origin
-and destination as `sfc_POINT` columns. The origin point feature is
-returned in a column named `centroid1` and is the active geometry column in
-the sf object. The destination point feature is returned in the `centroid2`
+and destination as <code>sfc_POINT</code> columns. The origin point feature is
+returned in a column named <code>centroid1</code> and is the active geometry column in
+the sf object. The destination point feature is returned in the <code>centroid2</code>
 column.</p></td>
     </tr>
     <tr>
       <th>key</th>
       <td><p>Your Census API key. Obtain one at
-<a href='http://api.census.gov/data/key_signup.html'>http://api.census.gov/data/key_signup.html</a></p></td>
+<a href='https://api.census.gov/data/key_signup.html'>https://api.census.gov/data/key_signup.html</a></p></td>
     </tr>
     <tr>
       <th>moe_level</th>
