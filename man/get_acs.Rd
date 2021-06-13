@@ -63,8 +63,8 @@ Defaults to NULL.}
 \item{zcta}{The zip code tabulation area(s) for which you are requesting
 data. Specify a single value or a vector of values to get data for more
 than one ZCTA. Numeric or character ZCTA GEOIDs are accepted. When
-specifying ZCTAs, geography must be set to `"zcta"` and `state` and
-`county` must be `NULL`. Defaults to NULL.}
+specifying ZCTAs, geography must be set to `"zcta"` and `state` must be specified with
+`county` left as `NULL`. Defaults to NULL.}
 
 \item{geometry}{if FALSE (the default), return a regular tibble of ACS data.
 if TRUE, uses the tigris package to return an sf tibble with simple feature
