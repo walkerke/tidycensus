@@ -208,7 +208,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
     } else {
 
-      if (year > 2013 && geography == "block group" && is.null(county)) {
+      if (geography == "block group" && is.null(county)) {
           in_area <- paste0("state:", state,
                             "&in=county:*")
       } else {
