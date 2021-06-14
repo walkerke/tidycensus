@@ -6,8 +6,8 @@ Authors@R: c(
     person(given = "Kyle", family = "Walker", email="kyle@walker-data.com", role=c("aut", "cre")),
     person(given = "Matt", family = "Herman", email = "mfherman@gmail.com", role = "aut"),
     person(given = "Kris", family = "Eberwein", email = "eberwein@knights.ucf.edu", role = "ctb"))
-Date: 2021-06-13
-URL: https://github.com/walkerke/tidycensus
+Date: 2021-06-14
+URL: https://walker-data.com/tidycensus
 BugReports: https://github.com/walkerke/tidycensus/issues
 Description: An integrated R interface to the decennial US Census and American Community Survey APIs and
     the US Census Bureau's geographic boundary files. Allows R users to return Census and ACS data as
