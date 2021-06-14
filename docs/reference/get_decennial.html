@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
       </span>
     </div>
 
@@ -253,7 +253,7 @@ that you'll want to use as a denominator or comparison.</p></td>
     <tr>
       <th>key</th>
       <td><p>Your Census API key.
-Obtain one at <a href='http://api.census.gov/data/key_signup.html'>http://api.census.gov/data/key_signup.html</a></p></td>
+Obtain one at <a href='https://api.census.gov/data/key_signup.html'>https://api.census.gov/data/key_signup.html</a></p></td>
     </tr>
     <tr>
       <th>show_call</th>
@@ -276,7 +276,7 @@ a browser and see what is returned by the API directly. Defaults to FALSE.</p></
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># Plot of race/ethnicity by county in Illinois for 2010</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/walkerke/tidycensus'>tidycensus</a></span><span class='op'>)</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://sjmgarnier.github.io/viridis/'>viridis</a></span><span class='op'>)</span>
 <span class='fu'><a href='census_api_key.html'>census_api_key</a></span><span class='op'>(</span><span class='st'>"YOUR KEY GOES HERE"</span><span class='op'>)</span>
 <span class='va'>vars10</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"P005003"</span>, <span class='st'>"P005004"</span>, <span class='st'>"P005006"</span>, <span class='st'>"P004003"</span><span class='op'>)</span>

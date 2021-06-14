@@ -185,7 +185,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
   if ((geography == "tract" || geography == "block group" || geography == "block") && length(state) > 1) {
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
-      result <- map(state, ~{
+      result <- map(state, function(s, ...) {
         suppressMessages(
           insist_get_decennial(geography = geography,
                                variables = variables,
@@ -194,16 +194,17 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
                                year = year,
                                sumfile = sumfile,
                                output = output,
-                               state = .x,
+                               state = s,
                                county = county,
                                geometry = geometry,
                                keep_geo_vars = keep_geo_vars,
                                shift_geo = FALSE,
                                summary_var = summary_var,
                                key = key,
-                               show_call = show_call)
+                               show_call = show_call,
+                               ...)
           )
-      }) %>%
+      }, ...) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
       if (length(geoms) > 1) {

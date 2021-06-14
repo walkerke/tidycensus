@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
 
       
 
-      </header><script src="other-datasets_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="other-datasets_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Other Census Bureau datasets</h1>
@@ -123,7 +123,7 @@
 <p>By default, specifying <code>"population"</code>, <code>"components"</code>, or <code>"housing"</code> as the <code>product</code> in <code><a href="../reference/get_estimates.html">get_estimates()</a></code> returns all variables associated with that component. For example, we can request all components of change variables for US states in 2019:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tigris">tigris</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
@@ -238,10 +238,10 @@
 ##  4 06037 Los Angeles County, C…   579856 Both se… Age 0 to 4 ye… Both Hispanic …
 ##  5 06037 Los Angeles County, C…   236459 Both se… Age 0 to 4 ye… Non-Hispanic   
 ##  6 06037 Los Angeles County, C…   343397 Both se… Age 0 to 4 ye… Hispanic       
-##  7 06037 Los Angeles County, C…   600191 Both se… Age 5 to 9 ye… Both Hispanic …
-##  8 06037 Los Angeles County, C…   229438 Both se… Age 5 to 9 ye… Non-Hispanic   
-##  9 06037 Los Angeles County, C…   370753 Both se… Age 5 to 9 ye… Hispanic       
-## 10 06037 Los Angeles County, C…   601542 Both se… Age 10 to 14 … Both Hispanic …
+##  7 06037 Los Angeles County, C…   378447 Both se… Age 10 to 14 … Hispanic       
+##  8 06037 Los Angeles County, C…   600191 Both se… Age 5 to 9 ye… Both Hispanic …
+##  9 06037 Los Angeles County, C…   229438 Both se… Age 5 to 9 ye… Non-Hispanic   
+## 10 06037 Los Angeles County, C…   370753 Both se… Age 5 to 9 ye… Hispanic       
 ## # … with 200 more rows</code></pre>
 <p>With some additional data wrangling, the returned format facilitates analysis and visualization. For example, we can compare population pyramids for Hispanic and non-Hispanic populations in Los Angeles County:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">

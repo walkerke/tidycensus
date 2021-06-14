@@ -142,11 +142,35 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
     base <- paste0(base, "/subject")
   }
 
-
-
   for_area <- paste0(geography, ":*")
 
-  if (!is.null(state)) {
+  if (!is.null(zcta))  {
+
+    if (is.null(state)) {
+      stop("The `zcta` argument requires specifying a state.", call. = FALSE)
+    }
+
+    if (!is.null(county)) {
+      stop("ZCTAs do not nest within counties, so `county` should not be specified.",
+           call. = FALSE)
+    }
+
+    state <- map_chr(state, function(x) {
+      validate_state(x)
+    })
+
+    for_area <- paste0(zcta, collapse = ",")
+
+    in_area <- paste0("state:", state)
+
+    vars_to_get <- paste0(formatted_variables, ",NAME")
+
+    call <- GET(base, query = list(get = vars_to_get,
+                                   "for" = paste0(geography, ":", for_area),
+                                   "in" = in_area,
+                                   key = key))
+
+  } else if (!is.null(state) && is.null(zcta)) {
 
     state <- map_chr(state, function(x) {
       validate_state(x)
@@ -208,18 +232,6 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
                                      key = key))
     }
 
-
-  }
-
-  else if (!is.null(zcta))  {
-
-    for_area <- paste0(zcta, collapse = ",")
-
-    vars_to_get <- paste0(formatted_variables, ",NAME")
-
-    call <- GET(base, query = list(get = vars_to_get,
-                                   "for" = paste0(geography, ":", for_area),
-                                   key = key))
 
   } else {
 
@@ -789,12 +801,12 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
     var <- paste0(variables, collapse = ",")
 
     vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
-    
+
     # If geo is NULL, state should be added back in here
     if (is.null(geo)) {
       vars_to_get <- paste0(vars_to_get, ",ST")
     }
-    
+
     query <- list(get = vars_to_get,
                   ucgid = geo,
                   key = key)

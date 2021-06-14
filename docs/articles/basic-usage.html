@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
 
       
 
-      </header><script src="basic-usage_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="basic-usage_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Basic usage of tidycensus</h1>
@@ -114,7 +114,7 @@
 <p>To get started working with <strong>tidycensus</strong>, users should load the package along with the <strong>tidyverse</strong> package, and set their Census API key. A key can be obtained from <a href="http://api.census.gov/data/key_signup.html" class="uri">http://api.census.gov/data/key_signup.html</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/census_api_key.html">census_api_key</a></span><span class="op">(</span><span class="st">"YOUR API KEY GOES HERE"</span><span class="op">)</span></code></pre></div>
 <p>There are two major functions implemented in <strong>tidycensus</strong>: <code><a href="../reference/get_decennial.html">get_decennial()</a></code>, which grants access to the 2000 and 2010 decennial US Census APIs, and <code><a href="../reference/get_acs.html">get_acs()</a></code>, which grants access to the 1-year and 5-year American Community Survey APIs.</p>

@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
       </span>
     </div>
 
@@ -148,7 +148,7 @@
 
     <div id="tidycensus-10" class="section level1">
 <h1 class="page-header" data-toc-text="1.0">
-<a href="#tidycensus-10" class="anchor"></a>tidycensus 1.0<small> Unreleased </small>
+<a href="#tidycensus-10" class="anchor"></a>tidycensus 1.0<small> 2021-05-19 </small>
 </h1>
 <ul>
 <li>Support for the ACS Migration Flows API is available in a new function, <code><a href="../reference/get_flows.html">get_flows()</a></code>. <a href="https://walker-data.com/tidycensus/articles/other-datasets.html#migration-flows-1">Browse the supporting documentation</a> for information on how to analyze and map migration flows data in tidycensus.</li>
@@ -234,7 +234,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/">viridis</a></span><span class="op">)</span>
 
 <span class="va">us_county_income</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, variables <span class="op">=</span> <span class="st">"B19013_001"</span>, 
