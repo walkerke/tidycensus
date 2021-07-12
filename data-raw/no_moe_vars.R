@@ -8,17 +8,24 @@ library(stringr)
 library(httr)
 library(jsonlite)
 
-j <- GET("https://api.census.gov/data/2017/acs/acs5/variables.json") %>%
-  content(as = "text")
+get_no_moe_vars <- function(year){
+  GET(str_c("https://api.census.gov/data/", year,"/acs/acs5/variables.json")) %>%
+    content(as = "text") %>%
+    fromJSON() %>%
+    flatten_dfr(.id = "name") %>%
+    mutate(moe = if_else(str_detect(attributes, "M"), TRUE, FALSE)) %>%
+    filter(moe == FALSE) %>%
+    mutate(name = str_sub(name, 1, -2)) %>%
+    arrange(name) %>%
+    select(name)
+}
 
-no_moe_vars <- j %>%
-  fromJSON() %>%
-  flatten_dfr(.id = "name") %>%
-  mutate(moe = if_else(str_detect(attributes, "M"), TRUE, FALSE)) %>%
-  filter(moe == FALSE) %>%
-  mutate(name = str_sub(name, 1, -2)) %>%
+no_moe_vars <- 2017:2019 %>%
+  map_df(get_no_moe_vars) %>%
+  distinct(name) %>%
   arrange(name) %>%
   pull(name)
+
 
 # copy output vector to clipboard
 clipr::write_clip(no_moe_vars)
