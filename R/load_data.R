@@ -850,8 +850,15 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
   dat <- dat[-1,]
 
   # Convert the weights columns to numeric
-  dat$WGTP <- as.numeric(dat$WGTP)
-  dat$PWGTP <- as.numeric(dat$PWGTP)
+  dat <- dat %>%
+    dplyr::mutate(
+      dplyr::across(
+        .cols = dplyr::contains("WGTP"),
+        as.numeric
+      )
+    )
+  # dat$WGTP <- as.numeric(dat$WGTP)
+  # dat$PWGTP <- as.numeric(dat$PWGTP)
 
   # Filter the pums lookup table for the selected year and survey
   pums_variables_filter <- tidycensus::pums_variables %>%
