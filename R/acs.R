@@ -835,8 +835,17 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     } else {
 
-      geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
-                                          state = state, county = county, ...)))
+      # state and county need to be NULL for ZCTAs as these args aren't available in tigris
+      # for `zctas()`
+      if (geography == "zip code tabulation area") {
+        geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
+                                                state = NULL, county = NULL, ...)))
+      } else {
+        geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
+                                                state = state, county = county, ...)))
+      }
+
+
 
       if ("try-error" %in% class(geom)) {
         stop("Your geometry data download failed. Please try again later or check the status of the Census Bureau website at https://www2.census.gov/geo/tiger/", call. = FALSE)
@@ -849,7 +858,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     }
 
-    if (shift_geo) {
+    if (shift_geo || geography == "zip code tabulation area") {
       out <- inner_join(geom, dat2, by = "GEOID") %>%
         st_as_sf()
     } else {
