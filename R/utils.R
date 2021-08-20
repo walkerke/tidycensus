@@ -144,6 +144,25 @@ simpleCapSO <- function(x) {
          collapse=" ")
 }
 
+
+# check if a vector is made up of sequential integers
+is_sequential <- function(x) {
+  if (!isTRUE(all(x == floor(x)))) {
+    stop("All filter values must be integers", call. = FALSE)
+  }
+  isTRUE(all(diff(x) == 1))
+}
+
+# build a named list of variable names and values
+# to filter api calls and request subsets of data from api
+construct_filter <- function(x, y) {
+  if(is_sequential(x)) {
+    paste0(min(x), ":", max(x))
+  } else {
+    purrr::set_names(as.list(x), rep(y, length(x)))
+  }
+}
+
 # print message with api call and decode special characters
 print_api_call <- function(url) {
   url <- gsub("&key.*", "", url)
