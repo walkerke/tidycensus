@@ -77,7 +77,7 @@ However, there may be circumstances in which your mapping requires more detail. 
 
 ```{r, message = FALSE, warning = FALSE}
 library(tidycensus)
-library(mapview)
+library(tidyverse)
 options(tigris_use_cache = TRUE)
 
 ny <- get_acs(geography = "tract", 
@@ -86,7 +86,10 @@ ny <- get_acs(geography = "tract",
               county = "New York", 
               geometry = TRUE)
 
-mapview(ny, zcol = "estimate", legend = TRUE)
+ggplot(ny, aes(fill = estimate)) + 
+  geom_sf() + 
+  theme_void() + 
+  scale_fill_viridis_c(labels = scales::dollar)
 
 ```
 
@@ -125,7 +128,10 @@ ny_erase <- st_erase(ny2, ny_water)
 After performing this operation, we can visualize the result: 
 
 ```{r, message = FALSE, warning = FALSE}
-mapview(ny_erase, zcol = "estimate", legend = TRUE)
+ggplot(ny_erase, aes(fill = estimate)) + 
+  geom_sf() + 
+  theme_void() + 
+  scale_fill_viridis_c(labels = scales::dollar)
 ```
 
 The map appears as before, but instead the polygons now hug the shoreline of Manhattan.  

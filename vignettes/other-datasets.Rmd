@@ -22,6 +22,7 @@ By default, specifying `"population"`, `"components"`, or `"housing"` as the `pr
 ```{r}
 library(tidycensus)
 library(tidyverse)
+library(tigris)
 options(tigris_use_cache = TRUE)
 
 us_components <- get_estimates(geography = "state", product = "components")
@@ -37,14 +38,16 @@ unique(us_components$variable)
 
 Available geographies include `"us"`, `"state"`, `"county"`, `"metropolitan statistical area/micropolitan statistical area"`, and `"combined statistical area"`.   
 
-If desired, users can request a specific component or components by supplying a character vector to the `variables` parameter, as in other tidycensus functions.   `get_estimates()` also supports simple feature geometry integration to facilitate mapping.   In the example below, we'll acquire data on the net migration rate between 2018 and 2019 for all counties in the United States, and request shifted and re-scaled feature geometry for Alaska and Hawaii to facilitate national mapping.   
+If desired, users can request a specific component or components by supplying a character vector to the `variables` parameter, as in other tidycensus functions.   `get_estimates()` also supports simple feature geometry integration to facilitate mapping.   In the example below, we'll acquire data on the net migration rate between 2018 and 2019 for all counties in the United States. We'll also use the `shift_geometry()` function from the __tigris__ package to shift and rescale counties outside the continental US for national mapping.   
 
 ```{r}
 
 net_migration <- get_estimates(geography = "county",
                                variables = "RNETMIG",
+                               year = 2019,
                                geometry = TRUE,
-                               shift_geo = TRUE)
+                               resolution = "20m") %>%
+  shift_geometry()
 
 net_migration
 
@@ -65,9 +68,16 @@ net_migration <- net_migration %>%
   )) %>%
   mutate(groups = factor(groups, levels = order))
 
+state_overlay <- states(
+  cb = TRUE,
+  resolution = "20m"
+) %>%
+  filter(GEOID != "72") %>%
+  shift_geometry()
+
 ggplot() +
-  geom_sf(data = net_migration, aes(fill = groups, color = groups), lwd = 0.1) +
-  geom_sf(data = tidycensus::state_laea, fill = NA, color = "black", lwd = 0.1) +
+  geom_sf(data = net_migration, aes(fill = groups, color = groups), size = 0.1) +
+  geom_sf(data = state_overlay, fill = NA, color = "black", size = 0.1) +
   scale_fill_brewer(palette = "PuOr", direction = -1) +
   scale_color_brewer(palette = "PuOr", direction = -1, guide = FALSE) +
   coord_sf(datum = NA) +

@@ -1,6 +1,6 @@
-## tidycensus
+# tidycensus <img src=logo.png width = "250px" align = "right">
 
-[![Build Status](https://travis-ci.org/walkerke/tidycensus.svg?branch=master)](https://travis-ci.org/walkerke/tidycensus) ![CRAN Badge](http://www.r-pkg.org/badges/version/tidycensus)  ![CRAN Downloads](http://cranlogs.r-pkg.org/badges/tidycensus)
+[![R build status](https://github.com/walkerke/tidycensus/workflows/R-CMD-check/badge.svg)](https://github.com/walkerke/tidycensus/actions) ![CRAN Badge](http://www.r-pkg.org/badges/version/tidycensus)  ![CRAN Downloads](http://cranlogs.r-pkg.org/badges/tidycensus)
 
 __tidycensus__ is an R package that allows users to interface with the US Census Bureau's decennial Census and five-year American Community APIs and return tidyverse-ready data frames, optionally with simple feature geometry included.  Install from CRAN with the following command: 
 

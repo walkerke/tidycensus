@@ -30,13 +30,15 @@
 #'               columns.
 #' @param keep_geo_vars if TRUE, keeps all the variables from the Census
 #'                      shapefile obtained by tigris.  Defaults to FALSE.
-#' @param shift_geo if TRUE, returns geometry with Alaska and Hawaii shifted for thematic mapping of the entire US.
-#'                  Geometry was originally obtained from the albersusa R package.
+#' @param shift_geo (deprecated) if TRUE, returns geometry with Alaska and Hawaii
+#'                  shifted for thematic mapping of the entire US.
+#'                  Geometry was originally obtained from the albersusa R package.  As of May 2021,
+#'                  we recommend using \code{tigris::shift_geometry()} instead.
 #' @param summary_var Character string of a "summary variable" from the decennial Census
 #'                    to be included in your output. Usually a variable (e.g. total population)
 #'                    that you'll want to use as a denominator or comparison.
 #' @param key Your Census API key.
-#'            Obtain one at \url{http://api.census.gov/data/key_signup.html}
+#'            Obtain one at \url{https://api.census.gov/data/key_signup.html}
 #' @param show_call if TRUE, display call made to Census API. This can be very useful
 #'                  in debugging and determining if error messages returned are
 #'                  due to tidycensus or the Census API. Copy to the API call into
@@ -67,6 +69,11 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
                           sumfile = "sf1", state = NULL, county = NULL, geometry = FALSE, output = "tidy",
                           keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL, key = NULL,
                           show_call = FALSE, ...) {
+
+  if (shift_geo) {
+    warning("The `shift_geo` argument is deprecated and will be removed in a future release. We recommend using `tigris::shift_geometry()` instead.", call. = FALSE)
+  }
+
 
   if (geography == "cbg") geography <- "block group"
 
@@ -172,13 +179,13 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
   insist_get_decennial <- purrr::insistently(get_decennial)
 
-  # If more than one state specified for tracts - or more than one county
-  # for block groups - take care of this under the hood by having the function
+  # If more than one state specified for tracts, block groups, or blocks
+  # take care of this under the hood by having the function
   # call itself and return the result
-  if (geography == "tract" && length(state) > 1) {
+  if ((geography == "tract" || geography == "block group" || geography == "block") && length(state) > 1) {
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
-      result <- map(state, ~{
+      result <- map(state, function(s, ...) {
         suppressMessages(
           insist_get_decennial(geography = geography,
                                variables = variables,
@@ -187,16 +194,17 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
                                year = year,
                                sumfile = sumfile,
                                output = output,
-                               state = .x,
+                               state = s,
                                county = county,
                                geometry = geometry,
                                keep_geo_vars = keep_geo_vars,
                                shift_geo = FALSE,
                                summary_var = summary_var,
                                key = key,
-                               show_call = show_call)
+                               show_call = show_call,
+                               ...)
           )
-      }) %>%
+      }, ...) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
       if (length(geoms) > 1) {
@@ -217,58 +225,6 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
                                output = output,
                                state = .x,
                                county = county,
-                               geometry = geometry,
-                               keep_geo_vars = keep_geo_vars,
-                               shift_geo = FALSE,
-                               summary_var = summary_var,
-                               key = key,
-                               show_call = show_call))
-      })
-    }
-    return(result)
-  }
-
-  if ((geography %in% c("block group", "block") && length(county) > 1) || (geography == "tract" && length(county) > 1)) {
-    # mc <- match.call(expand.dots = TRUE)
-    if (geometry) {
-      result <- map(county, ~{
-        suppressMessages(
-          insist_get_decennial(geography = geography,
-                               variables = variables,
-                               table = table,
-                               cache_table = cache_table,
-                               year = year,
-                               sumfile = sumfile,
-                               output = output,
-                               state = state,
-                               county = .x,
-                               geometry = geometry,
-                               keep_geo_vars = keep_geo_vars,
-                               shift_geo = FALSE,
-                               summary_var = summary_var,
-                               key = key,
-                               show_call = show_call))
-      }) %>%
-        reduce(rbind)
-      geoms <- unique(st_geometry_type(result))
-      if (length(geoms) > 1) {
-        st_cast(result, "MULTIPOLYGON")
-      }
-      result <- result %>%
-        as_tibble() %>%
-        st_as_sf()
-    } else {
-      result <- map_df(county, ~{
-        suppressMessages(
-          insist_get_decennial(geography = geography,
-                               variables = variables,
-                               table = table,
-                               cache_table = cache_table,
-                               year = year,
-                               sumfile = sumfile,
-                               output = output,
-                               state = state,
-                               county = .x,
                                geometry = geometry,
                                keep_geo_vars = keep_geo_vars,
                                shift_geo = FALSE,
@@ -405,8 +361,12 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
     } else {
 
-      geom <- suppressMessages(use_tigris(geography = geography, year = year,
-                                          state = state, county = county, ...))
+      geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
+                                          state = state, county = county, ...)))
+
+      if ("try-error" %in% class(geom)) {
+        stop("Your geometry data download failed. Please try again later or check the status of the Census Bureau website at https://www2.census.gov/geo/tiger/", call. = FALSE)
+      }
     }
 
     if (! keep_geo_vars) {

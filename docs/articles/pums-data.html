@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Working with Census microdata • tidycensus</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -13,6 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Working with Census microdata">
 <meta property="og:description" content="tidycensus">
+<meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -31,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
       </span>
     </div>
 
@@ -91,7 +98,7 @@
 
       
 
-      </header><script src="pums-data_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><script src="pums-data_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Working with Census microdata</h1>
@@ -122,7 +129,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"survey"</span>, <span class="st">"srvyr"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
 
 <span class="va">pums_vars_2018</span> <span class="op">&lt;-</span> <span class="va">pums_variables</span> <span class="op">%&gt;%</span> 
@@ -178,11 +185,11 @@
 <pre><code>## # A tibble: 6,436 x 9
 ##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX  
 ##   &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 2018GQ0002083       1     0    59    20 00100 50    19    2    
-## 2 2018GQ0002131       1     0     2    51 00400 50    16    1    
-## 3 2018GQ0002587       1     0    52    18 00400 50    16    1    
-## 4 2018GQ0003751       1     0    34    19 00100 50    19    2    
-## 5 2018GQ0003853       1     0   129    20 00400 50    19    1    
+## 1 2018GQ0000859       1     0    61    19 00200 50    19    1    
+## 2 2018GQ0001119       1     0    67    80 00200 50    11    2    
+## 3 2018GQ0001888       1     0   177    82 00400 50    16    2    
+## 4 2018GQ0002438       1     0    17    17 00100 50    16    2    
+## 5 2018GQ0003293       1     0    68    20 00400 50    19    2    
 ## # … with 6,431 more rows</code></pre>
 <p>We get 6436 rows and 9 columns. In addition to the variables we specified, <code><a href="../reference/get_pums.html">get_pums()</a></code> also always returns <code>SERIALNO</code>, <code>SPORDER</code>, <code>WGTP</code>, <code>PWGTP</code>, and <code>ST</code>. <code>SERIALNO</code> and <code>SPORDER</code> are the variables that uniquely identify observations, <code>WGTP</code> and <code>PWGTP</code> are the housing-unit and person weights, and <code>ST</code> is the state code.</p>
 <p>Notice that <code>ST</code>, <code>SEX</code> and <code>SCHL</code> return coded character variables. You can look up what these codes represent in the <code>pums_variables</code> dataset provided or set <code>recode = TRUE</code> in <code><a href="../reference/get_pums.html">get_pums()</a></code> to return additional columns with the values of these variables recoded.</p>
@@ -271,7 +278,7 @@
 <p>To easily convert this data frame to a survey or srvyr object, we can use the <code><a href="../reference/to_survey.html">to_survey()</a></code> function.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_survey_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="va">vt_pums_rep_weights</span><span class="op">)</span></code></pre></div>
-<p>By default, <code><a href="../reference/to_survey.html">to_survey()</a></code> converts a data frame to a <code>tbl_svy</code> object by using person replicate weights. You can change the arguments in <code>to_survey</code> if you are analyzing housing-unit data (<code>type = "housing"</code>), if you prefer to use a cluster/strata survey design without replicate weights (<code>design = "cluster"</code>), or if you want a survey object instead of a srvyr object. (Although, <code>tbl_svy</code> objects also have a svyrep.design class so you can <a href="http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects">use survey functions on srvyr objects</a>.)</p>
+<p>By default, <code><a href="../reference/to_survey.html">to_survey()</a></code> converts a data frame to a <code>tbl_svy</code> object by using person replicate weights. You can change the arguments in <code>to_survey</code> if you are analyzing housing-unit data (<code>type = "housing"</code>) or if you want a survey object instead of a srvyr object. (Although, <code>tbl_svy</code> objects also have a svyrep.design class so you can <a href="http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects">use survey functions on srvyr objects</a>.)</p>
 <p>Now, with our srvyr design object defined, we can calculate the same estimates as above, but we now get column with standard errors as well.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://gdfe.co/srvyr/">srvyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -332,9 +339,10 @@
   variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"WAGP"</span>, <span class="st">"JWMNP"</span>, <span class="st">"JWTR"</span>, <span class="st">"COW"</span>, <span class="st">"ESR"</span><span class="op">)</span>,
   state <span class="op">=</span> <span class="st">"VT"</span>,
   survey <span class="op">=</span> <span class="st">"acs5"</span>,
-  year <span class="op">=</span> <span class="fl">2018</span>
+  year <span class="op">=</span> <span class="fl">2018</span>,
+  rep_weights <span class="op">=</span> <span class="st">"person"</span>
   <span class="op">)</span></code></pre></div>
-<p>Now, we filter out observations that aren’t relevant, do a little recoding of the class of worker variable, and finally convert the data frame to a survey design object. Note that we did not request replicate weights from the API, so we specify <code>design = "cluster"</code> when we create the survey design. This creates the survey using a cluster design with the household (<code>SERIALNO</code>) as the primary sampling unit, the PUMA as the strata, and <code>PWGTP</code> as the weight.</p>
+<p>Now, we filter out observations that aren’t relevant, do a little recoding of the class of worker variable, and finally convert the data frame to a survey design object. <!-- Note that we did not request replicate weights from the API, so we specify `design = "cluster"` when we create the survey design. This creates the survey using a cluster design with the household (`SERIALNO`) as the primary sampling unit, the PUMA as the strata, and `PWGTP` as the weight. --></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op">&lt;-</span> <span class="va">vt_pums_to_model</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">filter</a></span><span class="op">(</span>
@@ -350,7 +358,7 @@
       <span class="cn">TRUE</span>                      <span class="op">~</span> <span class="st">"self"</span>
       <span class="op">)</span>
     <span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span>design <span class="op">=</span> <span class="st">"cluster"</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Let’s quickly check out some summary stats using <code>srvyr</code>.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op">%&gt;%</span> 
@@ -362,42 +370,43 @@
     median_commute <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_quantile.html">survey_median</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span>
     <span class="op">)</span></code></pre></div>
 <pre><code>##        n     n_se mean_wage mean_wage_se median_wage median_wage_se mean_commute mean_commute_se
-## 1 282733 3395.452  44600.91     527.3466       35000       255.0725     23.31421       0.2560602
+## 1 282733 1933.376  44600.91     436.5873       35000       326.5593     23.31421       0.2327614
 ##   median_commute median_commute_se
-## 1             20         0.5101451</code></pre>
+## 1             20          1.255997</code></pre>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count</a></span><span class="op">(</span><span class="va">emp_type</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 3
 ##   emp_type      n  n_se
 ##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 private  224760 3128.
-## 2 public    42966 1356.
-## 3 self      15007  763.</code></pre>
+## 1 private  224760 2001.
+## 2 public    42966 1374.
+## 3 self      15007  756.</code></pre>
 <p>And now we’re ready to fit a simple linear regression model.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svyglm.html">svyglm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span> <span class="op">+</span> <span class="va">emp_type</span> <span class="op">+</span> <span class="va">PUMA</span>, design <span class="op">=</span> <span class="va">vt_model_sd</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## Call:
-## svyglm(formula = log(JWMNP) ~ log(WAGP) + emp_type + PUMA, design = vt_model_sd)
+## survey::svyglm(formula = log(JWMNP) ~ log(WAGP) + emp_type + 
+##     PUMA, design = vt_model_sd)
 ## 
 ## Survey design:
 ## Called via srvyr
 ## 
 ## Coefficients:
 ##                 Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)     1.699601   0.093094  18.257  &lt; 2e-16 ***
-## log(WAGP)       0.113913   0.008817  12.920  &lt; 2e-16 ***
-## emp_typepublic -0.052845   0.025339  -2.086   0.0371 *  
-## emp_typeself   -0.306227   0.045270  -6.764 1.42e-11 ***
-## PUMA00200       0.007800   0.028076   0.278   0.7812    
-## PUMA00300       0.023629   0.028526   0.828   0.4075    
-## PUMA00400      -0.117300   0.027733  -4.230 2.36e-05 ***
+## (Intercept)     1.699601   0.102181  16.633  &lt; 2e-16 ***
+## log(WAGP)       0.113913   0.009548  11.931  &lt; 2e-16 ***
+## emp_typepublic -0.052845   0.027420  -1.927   0.0578 .  
+## emp_typeself   -0.306227   0.050016  -6.123 4.20e-08 ***
+## PUMA00200       0.007800   0.023943   0.326   0.7455    
+## PUMA00300       0.023629   0.025111   0.941   0.3498    
+## PUMA00400      -0.117300   0.026028  -4.507 2.46e-05 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## (Dispersion parameter for gaussian family taken to be 0.6817393)
+## (Dispersion parameter for gaussian family taken to be 9328.921)
 ## 
 ## Number of Fisher Scoring iterations: 2</code></pre>
 </div>

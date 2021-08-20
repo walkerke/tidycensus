@@ -1,3 +1,9 @@
+# tidycensus 1.0
+
+* Support for the ACS Migration Flows API is available in a new function, `get_flows()`. [Browse the supporting documentation](https://walker-data.com/tidycensus/articles/other-datasets.html#migration-flows-1) for information on how to analyze and map migration flows data in tidycensus. 
+* The `shift_geo` argument is deprecated in favor of using the new `tigris::shift_geometry()` function. This allows for shifting of geometries for any geography in national mapping projects. 
+* Various bug fixes and performance improvements; browse [the GitHub issues](https://github.com/walkerke/tidycensus/issues) for a complete listing.
+
 # tidycensus 0.11.4
 
 * Added support for the 2015-2019 5-year ACS PUMS data in `get_pums()`.  Updated variable definitions are found in the data object `pums_variables`. 

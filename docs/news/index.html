@@ -8,6 +8,13 @@
 
 <title>Changelog • tidycensus</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -40,6 +47,7 @@
 
 
 <meta property="og:title" content="Changelog" />
+<meta property="og:image" content="/logo.png" />
 
 
 
@@ -71,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.11.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
       </span>
     </div>
 
@@ -138,6 +146,16 @@
       <small>Source: <a href='https://github.com/walkerke/tidycensus/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="tidycensus-10" class="section level1">
+<h1 class="page-header" data-toc-text="1.0">
+<a href="#tidycensus-10" class="anchor"></a>tidycensus 1.0<small> 2021-05-19 </small>
+</h1>
+<ul>
+<li>Support for the ACS Migration Flows API is available in a new function, <code><a href="../reference/get_flows.html">get_flows()</a></code>. <a href="https://walker-data.com/tidycensus/articles/other-datasets.html#migration-flows-1">Browse the supporting documentation</a> for information on how to analyze and map migration flows data in tidycensus.</li>
+<li>The <code>shift_geo</code> argument is deprecated in favor of using the new <code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html">tigris::shift_geometry()</a></code> function. This allows for shifting of geometries for any geography in national mapping projects.</li>
+<li>Various bug fixes and performance improvements; browse <a href="https://github.com/walkerke/tidycensus/issues">the GitHub issues</a> for a complete listing.</li>
+</ul>
+</div>
     <div id="tidycensus-0114" class="section level1">
 <h1 class="page-header" data-toc-text="0.11.4">
 <a href="#tidycensus-0114" class="anchor"></a>tidycensus 0.11.4<small> 2021-01-20 </small>
@@ -216,8 +234,8 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sjmgarnier/viridis">viridis</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/">viridis</a></span><span class="op">)</span>
 
 <span class="va">us_county_income</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, variables <span class="op">=</span> <span class="st">"B19013_001"</span>, 
                             shift_geo <span class="op">=</span> <span class="cn">TRUE</span>, geometry <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>

@@ -69,11 +69,12 @@ with simple feature geometry in the `geometry` column.}
 \item{keep_geo_vars}{if TRUE, keeps all the variables from the Census
 shapefile obtained by tigris.  Defaults to FALSE.}
 
-\item{shift_geo}{if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
-mapping of the entire US.}
+\item{shift_geo}{(deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
+mapping of the entire US.  As of May 2021, we recommend using \code{tigris::shift_geometry()}
+instead.}
 
 \item{key}{Your Census API key.
-Obtain one at \url{http://api.census.gov/data/key_signup.html}.  Can be stored
+Obtain one at \url{https://api.census.gov/data/key_signup.html}.  Can be stored
 in your .Renviron with \code{census_api_key("YOUR KEY", install = TRUE)}}
 
 \item{show_call}{if TRUE, display call made to Census API. This can be very useful

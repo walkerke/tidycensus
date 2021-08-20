@@ -63,8 +63,8 @@ Defaults to NULL.}
 \item{zcta}{The zip code tabulation area(s) for which you are requesting
 data. Specify a single value or a vector of values to get data for more
 than one ZCTA. Numeric or character ZCTA GEOIDs are accepted. When
-specifying ZCTAs, geography must be set to `"zcta"` and `state` and
-`county` must be `NULL`. Defaults to NULL.}
+specifying ZCTAs, geography must be set to `"zcta"` and `state` must be specified with
+`county` left as `NULL`. Defaults to NULL.}
 
 \item{geometry}{if FALSE (the default), return a regular tibble of ACS data.
 if TRUE, uses the tigris package to return an sf tibble with simple feature
@@ -73,16 +73,17 @@ geometry in the `geometry` column.}
 \item{keep_geo_vars}{if TRUE, keeps all the variables from the Census
 shapefile obtained by tigris.  Defaults to FALSE.}
 
-\item{shift_geo}{if TRUE, returns geometry with Alaska and Hawaii shifted for
+\item{shift_geo}{(deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for
 thematic mapping of the entire US. Geometry was originally obtained from
-the albersusa R package.}
+the albersusa R package. As of May 2021, we recommend using \code{tigris::shift_geometry()}
+instead.}
 
 \item{summary_var}{Character string of a "summary variable" from the ACS to
 be included in your output. Usually a variable (e.g. total population) that
 you'll want to use as a denominator or comparison.}
 
 \item{key}{Your Census API key. Obtain one at
-\url{http://api.census.gov/data/key_signup.html}}
+\url{https://api.census.gov/data/key_signup.html}}
 
 \item{moe_level}{The confidence level of the returned margin of error.  One
 of 90 (the default), 95, or 99.}
