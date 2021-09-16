@@ -39,7 +39,7 @@ Defaults to FALSE; if TRUE, only needs to be called once per
 dataset.  If variables dataset is already cached via the
 \code{load_variables} function, this can be bypassed.}
 
-\item{year}{The year for which you are requesting data.  1990, 2000, and 2010 are available.}
+\item{year}{The year for which you are requesting data.   are available.}
 
 \item{sumfile}{The Census summary file.  Defaults to sf1; the function will look in sf3 if it
 cannot find a variable in sf1.}
@@ -55,7 +55,7 @@ to `state`.  Defaults to NULL.}
 \item{geometry}{if FALSE (the default), return a regular tibble of ACS data.
 if TRUE, uses the tigris package to return an sf tibble
 with simple feature geometry in the `geometry` column.  state, county, tract, and block group are
-supported for 1990 through 2010; block and ZCTA geometry are supported for 2000 and 2010.}
+supported for 2000 through 2020; block and ZCTA geometry are supported for 2000 and 2010.}
 
 \item{output}{One of "tidy" (the default) in which each row represents an
 enumeration unit-variable combination, or "wide" in which each

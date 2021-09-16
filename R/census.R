@@ -11,7 +11,7 @@
 #'                    Defaults to FALSE; if TRUE, only needs to be called once per
 #'                    dataset.  If variables dataset is already cached via the
 #'                    \code{load_variables} function, this can be bypassed.
-#' @param year The year for which you are requesting data.  1990, 2000, and 2010 are available.
+#' @param year The year for which you are requesting data.   are available.
 #' @param sumfile The Census summary file.  Defaults to sf1; the function will look in sf3 if it
 #'                cannot find a variable in sf1.
 #' @param state The state for which you are requesting data. State
@@ -23,7 +23,7 @@
 #' @param geometry if FALSE (the default), return a regular tibble of ACS data.
 #'                 if TRUE, uses the tigris package to return an sf tibble
 #'                 with simple feature geometry in the `geometry` column.  state, county, tract, and block group are
-#'                 supported for 1990 through 2010; block and ZCTA geometry are supported for 2000 and 2010.
+#'                 supported for 2000 through 2020; block and ZCTA geometry are supported for 2000 and 2010.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'               enumeration unit-variable combination, or "wide" in which each
 #'               row represents an enumeration unit and the variables are in the
@@ -78,6 +78,10 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
   if (geography == "cbg") geography <- "block group"
 
   message(sprintf("Getting data from the %s decennial Census", year))
+
+  if (year == 2020) {
+    sumfile <- "pl"
+  }
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 
@@ -203,7 +207,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
                                key = key,
                                show_call = show_call,
                                ...)
-          )
+        )
       }, ...) %>%
         reduce(rbind)
       geoms <- unique(st_geometry_type(result))
@@ -248,7 +252,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
     dat <- map(l, function(x) {
       d <- try(load_data_decennial(geography, x, key, year, sumfile, state, county, show_call = show_call),
-                 silent = silent)
+               silent = silent)
       # If sf1 fails, try to get it from sf3
       if (inherits(d, "try-error") && year < 2010) {
 
@@ -259,8 +263,10 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
       } else {
         if (sumfile == "sf3") {
           message("Using Census Summary File 3")
-        } else {
+        } else if (sumfile == "sf1") {
           message("Using Census Summary File 1")
+        } else if (sumfile == "pl") {
+          message("Using the PL 94-171 Redistricting Data summary file")
         }
       }
       d
@@ -281,8 +287,10 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
     } else {
       if (sumfile == "sf3") {
         message("Using Census Summary File 3")
-      } else {
+      } else if (sumfile == "sf1") {
         message("Using Census Summary File 1")
+      } else if (sumfile == "pl") {
+        message("Using the PL 94-171 Redistricting Data summary file")
       }
     }
 
@@ -321,11 +329,11 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
   if (!is.null(summary_var)) {
 
     sumdat <- suppressMessages(try(load_data_decennial(geography, summary_var, key, year,
-                                                   sumfile, state, county, show_call = show_call)))
+                                                       sumfile, state, county, show_call = show_call)))
 
     if (inherits(sumdat, "try-error")) {
       sumdat <- suppressMessages(try(load_data_decennial(geography, summary_var, key, year,
-                                        sumfile = "sf3", state, county, show_call = show_call)))
+                                                         sumfile = "sf3", state, county, show_call = show_call)))
     }
 
     dat2 <- dat2 %>%
@@ -362,7 +370,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
     } else {
 
       geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
-                                          state = state, county = county, ...)))
+                                              state = state, county = county, ...)))
 
       if ("try-error" %in% class(geom)) {
         stop("Your geometry data download failed. Please try again later or check the status of the Census Bureau website at https://www2.census.gov/geo/tiger/", call. = FALSE)
