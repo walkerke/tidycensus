@@ -83,6 +83,10 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
     sumfile <- "pl"
   }
 
+  if (year == 2020 && sumfile == "pl" && geography == "public use microdata area") {
+    stop("PUMAs are not defined yet for the 2020 decennial Census.", call. = FALSE)
+  }
+
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 
     key <- Sys.getenv('CENSUS_API_KEY')
@@ -129,6 +133,10 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
   if (geography == "zip code tabulation area" && !is.null(state)) {
     geography <- "zip code tabulation area (or part)"
+  }
+
+  if (year == 2020 && sumfile == "pl" && geography == "zip code tabulation area") {
+    stop("ZCTAs are not currently available for the 2020 decennial Census.", call. = FALSE)
   }
 
   # if (geography == "zip code tabulation area" && is.null(state)) {
