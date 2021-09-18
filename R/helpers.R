@@ -202,6 +202,9 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "public use microdata area") {
 
+    # Right now, PUMAs are not defined for 2020 and are not in the CB file
+    if (year == 2020) cb <- FALSE
+
     state_ids <- c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
                    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA",
                    "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY",
@@ -268,6 +271,9 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     return(csa)
 
   } else if (geography == "urban area") {
+
+    # Right now, urban areas are not defined for 2020 and are not in the CB file
+    if (year == 2020) cb <- FALSE
 
     ua <- urban_areas(cb = cb, year = year, class = "sf", ...)
 
