@@ -359,7 +359,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(anrc)
 
-  } else if (geography == "voting districts") {
+  } else if (geography == "voting district") {
 
     if (!is.null(county) && length(county) == 1) {
       vtds <- voting_districts(state = state, county = county,
@@ -367,6 +367,8 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     } else {
       vtds <- voting_districts(state = state, year = 2020, cb = cb, ...)
     }
+
+    vtds <- dplyr::rename(vtds, GEOID = GEOID20)
 
     return(vtds)
 

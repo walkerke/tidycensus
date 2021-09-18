@@ -87,7 +87,7 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
     stop("PUMAs are not defined yet for the 2020 decennial Census.", call. = FALSE)
   }
 
-  if (geography == "voting districts" && year != 2020) {
+  if (geography == "voting district" && year != 2020) {
     stop("`year` must be 2020 for voting districts.", call. = FALSE)
   }
 
