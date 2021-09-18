@@ -172,10 +172,12 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     bl <- blocks(state = state, county = county, year = year, class = "sf", ...)
 
-    if (year > 2000) {
+    if (year == 2010) {
       bl <- rename(bl, GEOID = GEOID10)
     } else if (year == 2000) {
       bl <- rename(bl, GEOID = BLKIDFP00)
+    } else if (year == 2020) {
+      bl <- rename(bl, GEOID = GEOID20)
     }
 
     return(bl)
@@ -238,9 +240,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(slc)
 
-  } else if (geography %in% c("american indian area/alaska native area/hawaiian home land",
-                              "american indian area/alaska native area (reservation or statistical entity only)",
-                              "american indian area (off-reservation trust land only)/hawaiian home land")) {
+  } else if (geography == c("american indian area/alaska native area/hawaiian home land")) {
 
     nv <- native_areas(cb = cb, year = year, class = "sf", ...)
 
@@ -346,6 +346,12 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     div <- divisions(year = year, class = "sf", ...)
 
     return(div)
+
+  } else if (geography == "alaska native regional corporation") {
+
+    anrc <- alaska_native_regional_corporations(year = year, ...)
+
+    return(anrc)
 
   } else {
 
