@@ -19,4 +19,6 @@
 #' @importFrom xml2 read_html
 #' @import units
 #' @importFrom utils packageVersion installed.packages
+#' @importFrom rlang warn
+#' @importFrom crayon cyan silver
 NULL
