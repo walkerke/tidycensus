@@ -79,8 +79,11 @@ get_pums <- function(variables = NULL,
   # Allow users to get all states by specifying "all"
   # To avoid large data timeout errors, iterate through the states instead.
   if (all(state == "all")) {
+
+    state_codes <- unique(fips_codes$state_code)[1:51]
+
     message("Requesting data for the entire United States by state then combining the result.\nThis can take several minutes to complete.\nFor large data extract workflows, consider downloading data from the Census FTP server\nor from IPUMS (https://ipums.org) instead.")
-    output <- purrr::map_dfr(c(state.abb, "DC"), function(each_state) {
+    output <- purrr::map_dfr(state_codes, function(each_state) {
       suppressMessages(get_pums(
         state = each_state,
         variables = variables,
