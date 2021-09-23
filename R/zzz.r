@@ -46,7 +46,7 @@ utils::globalVariables(c("variable", "value", "GEOID", "NAME", "type", "moe",
                          "GEOID00", "POP", "PERIOD", "DATE", "PERIOD_CODE", "DATE_CODE",
                          "DATE_", "STATEFP00", "STATEFP10", "CNTYIDFP00", "CTIDFP00",
                          "BKGPIDFP00", "var_code", "val_label", "where", "pums_variables",
-                         "data_type"))
+                         "data_type", "GEOID20"))
 
 #' @importFrom rlang .data
 NULL
