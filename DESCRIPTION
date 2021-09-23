@@ -7,12 +7,13 @@ Authors@R: c(
     person(given = "Matt", family = "Herman", email = "mfherman@gmail.com", role = "aut"),
     person(given = "Kris", family = "Eberwein", email = "eberwein@knights.ucf.edu", role = "ctb"))
 Date: 2021-09-23
-URL: https://walker-data.com/tidycensus
+URL: https://walker-data.com/tidycensus/
 BugReports: https://github.com/walkerke/tidycensus/issues
-Description: An integrated R interface to the decennial US Census and American Community Survey APIs and
-    the US Census Bureau's geographic boundary files. Allows R users to return Census and ACS data as
-    tidyverse-ready data frames, and optionally returns a list-column with feature geometry for all Census 
-    geographies. 
+Description: An integrated R interface to several United States Census Bureau 
+    APIs (<https://www.census.gov/data/developers/data-sets.html>) and the US Census Bureau's 
+    geographic boundary files. Allows R users to return Census and ACS data as 
+    tidyverse-ready data frames, and optionally returns a list-column with feature geometry for mapping 
+    and spatial analysis. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
