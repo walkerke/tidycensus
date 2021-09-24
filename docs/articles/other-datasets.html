@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
       </span>
     </div>
 
@@ -46,7 +46,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -84,7 +84,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/walkerke/tidycensus">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -98,7 +98,7 @@
 
       
 
-      </header><script src="other-datasets_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
+      </header><script src="other-datasets_files/header-attrs-2.10.5/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Other Census Bureau datasets</h1>
@@ -122,7 +122,7 @@
 <a href="#components-of-change-population-estimates" class="anchor"></a>Components of change population estimates</h3>
 <p>By default, specifying <code>"population"</code>, <code>"components"</code>, or <code>"housing"</code> as the <code>product</code> in <code><a href="../reference/get_estimates.html">get_estimates()</a></code> returns all variables associated with that component. For example, we can request all components of change variables for US states in 2019:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tigris">tigris</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -130,7 +130,7 @@
 <span class="va">us_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_estimates.html">get_estimates</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"state"</span>, product <span class="op">=</span> <span class="st">"components"</span><span class="op">)</span>
 
 <span class="va">us_components</span></code></pre></div>
-<pre><code>## # A tibble: 624 x 4
+<pre><code>## # A tibble: 624 × 4
 ##    NAME           GEOID variable  value
 ##    &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;
 ##  1 Mississippi    28    BIRTHS    35978
@@ -167,19 +167,19 @@
 ## Dimension:     XY
 ## Bounding box:  xmin: -3112200 ymin: -1697728 xmax: 2258154 ymax: 1558935
 ## Projected CRS: USA_Contiguous_Albers_Equal_Area_Conic
-## # A tibble: 3,142 x 5
-##    GEOID NAME          variable  value                                  geometry
-##    &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt;     &lt;dbl&gt;                        &lt;MULTIPOLYGON [m]&gt;
-##  1 29227 Worth County… RNETMIG   -8.91 (((114835.6 345071.6, 123075.8 345080.1,…
-##  2 31061 Franklin Cou… RNETMIG  -14.4  (((-267685.1 323958.5, -229593.3 322742.…
-##  3 36013 Chautauqua C… RNETMIG   -3.54 (((1324221 647717.4, 1334027 655638.7, 1…
-##  4 37181 Vance County… RNETMIG   -3.25 (((1544260 32202.52, 1547238 35809.1, 15…
-##  5 47183 Weakley Coun… RNETMIG   -1.02 (((625934.5 -98887.34, 637691 -97934.11,…
-##  6 44003 Kent County,… RNETMIG    2.29 (((1977965 726702.3, 2004385 734463.7, 2…
-##  7 08101 Pueblo Count… RNETMIG    6.15 (((-783174.5 122269, -773778.8 121411.1,…
-##  8 17175 Stark County… RNETMIG  -10.6  (((500559 424779.4, 510231.4 425409.5, 5…
-##  9 29169 Pulaski Coun… RNETMIG    4.42 (((312851.7 46166.36, 312554.6 59459.92,…
-## 10 19151 Pocahontas C… RNETMIG  -12.2  (((88185.95 606331.9, 126423.3 606681.9,…
+## # A tibble: 3,142 × 5
+##    GEOID NAME                         variable  value                   geometry
+##    &lt;chr&gt; &lt;chr&gt;                        &lt;chr&gt;     &lt;dbl&gt;         &lt;MULTIPOLYGON [m]&gt;
+##  1 29227 Worth County, Missouri       RNETMIG   -8.91 (((114835.6 345071.6, 123…
+##  2 31061 Franklin County, Nebraska    RNETMIG  -14.4  (((-267685.1 323958.5, -2…
+##  3 36013 Chautauqua County, New York  RNETMIG   -3.54 (((1324221 647717.4, 1334…
+##  4 37181 Vance County, North Carolina RNETMIG   -3.25 (((1544260 32202.52, 1547…
+##  5 47183 Weakley County, Tennessee    RNETMIG   -1.02 (((625934.5 -98887.34, 63…
+##  6 44003 Kent County, Rhode Island    RNETMIG    2.29 (((1977965 726702.3, 2004…
+##  7 08101 Pueblo County, Colorado      RNETMIG    6.15 (((-783174.5 122269, -773…
+##  8 17175 Stark County, Illinois       RNETMIG  -10.6  (((500559 424779.4, 51023…
+##  9 29169 Pulaski County, Missouri     RNETMIG    4.42 (((312851.7 46166.36, 312…
+## 10 19151 Pocahontas County, Iowa      RNETMIG  -12.2  (((88185.95 606331.9, 126…
 ## # … with 3,132 more rows</code></pre>
 <p>We’ll next use tidyverse tools to generate a <code>groups</code> column that bins the net migration rates into comprehensible categories, and plot the result using <code>geom_sf()</code> and ggplot2.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -229,19 +229,19 @@
                              county <span class="op">=</span> <span class="st">"Los Angeles"</span><span class="op">)</span>
 
 <span class="va">la_age_hisp</span></code></pre></div>
-<pre><code>## # A tibble: 210 x 6
-##    GEOID NAME                      value SEX      AGEGROUP       HISP           
-##    &lt;chr&gt; &lt;chr&gt;                     &lt;dbl&gt; &lt;chr&gt;    &lt;fct&gt;          &lt;chr&gt;          
-##  1 06037 Los Angeles County, C… 10039107 Both se… All ages       Both Hispanic …
-##  2 06037 Los Angeles County, C…  5157137 Both se… All ages       Non-Hispanic   
-##  3 06037 Los Angeles County, C…  4881970 Both se… All ages       Hispanic       
-##  4 06037 Los Angeles County, C…   579856 Both se… Age 0 to 4 ye… Both Hispanic …
-##  5 06037 Los Angeles County, C…   236459 Both se… Age 0 to 4 ye… Non-Hispanic   
-##  6 06037 Los Angeles County, C…   343397 Both se… Age 0 to 4 ye… Hispanic       
-##  7 06037 Los Angeles County, C…   378447 Both se… Age 10 to 14 … Hispanic       
-##  8 06037 Los Angeles County, C…   600191 Both se… Age 5 to 9 ye… Both Hispanic …
-##  9 06037 Los Angeles County, C…   229438 Both se… Age 5 to 9 ye… Non-Hispanic   
-## 10 06037 Los Angeles County, C…   370753 Both se… Age 5 to 9 ye… Hispanic       
+<pre><code>## # A tibble: 210 × 6
+##    GEOID NAME                              value SEX        AGEGROUP    HISP    
+##    &lt;chr&gt; &lt;chr&gt;                             &lt;dbl&gt; &lt;chr&gt;      &lt;fct&gt;       &lt;chr&gt;   
+##  1 06037 Los Angeles County, California 10039107 Both sexes All ages    Both Hi…
+##  2 06037 Los Angeles County, California  5157137 Both sexes All ages    Non-His…
+##  3 06037 Los Angeles County, California  4881970 Both sexes All ages    Hispanic
+##  4 06037 Los Angeles County, California   579856 Both sexes Age 0 to 4… Both Hi…
+##  5 06037 Los Angeles County, California   236459 Both sexes Age 0 to 4… Non-His…
+##  6 06037 Los Angeles County, California   343397 Both sexes Age 0 to 4… Hispanic
+##  7 06037 Los Angeles County, California   378447 Both sexes Age 10 to … Hispanic
+##  8 06037 Los Angeles County, California   600191 Both sexes Age 5 to 9… Both Hi…
+##  9 06037 Los Angeles County, California   229438 Both sexes Age 5 to 9… Non-His…
+## 10 06037 Los Angeles County, California   370753 Both sexes Age 5 to 9… Hispanic
 ## # … with 200 more rows</code></pre>
 <p>With some additional data wrangling, the returned format facilitates analysis and visualization. For example, we can compare population pyramids for Hispanic and non-Hispanic populations in Los Angeles County:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -289,7 +289,7 @@
 <span class="va">wch_flows</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">GEOID2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 7
+<pre><code>## # A tibble: 6 × 7
 ##   GEOID1 GEOID2 FULL1_NAME            FULL2_NAME         variable estimate   moe
 ##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;                 &lt;chr&gt;              &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
 ## 1 36119  01089  Westchester County, … Madison County, A… MOVEDIN         0    28
@@ -305,7 +305,7 @@
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDOUT"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 7
+<pre><code>## # A tibble: 6 × 7
 ##   GEOID1 GEOID2 FULL1_NAME           FULL2_NAME          variable estimate   moe
 ##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;                &lt;chr&gt;               &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
 ## 1 36119  09001  Westchester County,… Fairfield County, … MOVEDOUT     3916   778
@@ -320,7 +320,7 @@
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDNET"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">arrange</span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 7
+<pre><code>## # A tibble: 6 × 7
 ##   GEOID1 GEOID2 FULL1_NAME          FULL2_NAME           variable estimate   moe
 ##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;               &lt;chr&gt;                &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
 ## 1 36119  09001  Westchester County… Fairfield County, C… MOVEDNET    -1768   958
@@ -334,7 +334,7 @@
 <code class="sourceCode R"><span class="va">wch_flows</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">GEOID2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 7
+<pre><code>## # A tibble: 6 × 7
 ##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME variable estimate   moe
 ##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;                        &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
 ## 1 36119  &lt;NA&gt;   Westchester County, New York Africa     MOVEDIN       419   411
@@ -360,7 +360,7 @@
 <span class="co"># net migration between la and san francisco</span>
 <span class="va">la_flows</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu">str_detect</span><span class="op">(</span><span class="va">FULL2_NAME</span>, <span class="st">"San Fran"</span><span class="op">)</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDNET"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 9
+<pre><code>## # A tibble: 5 × 9
 ##   GEOID1 GEOID2 FULL1_NAME  FULL2_NAME  RACE  RACE_label variable estimate   moe
 ##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
 ## 1 31080  41860  Los Angele… San Franci… 00    All races  MOVEDNET    -2433  1585
@@ -390,7 +390,7 @@
 ## Dimension:     XY
 ## Bounding box:  xmin: -112.0705 ymin: 33.18571 xmax: -112.0705 ymax: 33.18571
 ## Geodetic CRS:  NAD83
-## # A tibble: 6 x 9
+## # A tibble: 6 × 9
 ##   GEOID1 GEOID2 FULL1_NAME          FULL2_NAME           variable estimate   moe
 ##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;               &lt;chr&gt;                &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
 ## 1 38060  &lt;NA&gt;   Phoenix-Mesa-Scott… Outside Metro Area … MOVEDIN     21602  1464

@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
       </span>
     </div>
 
@@ -46,7 +46,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -84,7 +84,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/walkerke/tidycensus">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -98,7 +98,7 @@
 
       
 
-      </header><script src="spatial-data_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
+      </header><script src="spatial-data_files/header-attrs-2.10.5/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Spatial data in tidycensus</h1>
@@ -114,7 +114,7 @@
 <p>If requested, <strong>tidycensus</strong> can return simple feature geometry for geographic units along with variables from the decennial US Census or American Community survey. By setting <code>geometry = TRUE</code> in a <strong>tidycensus</strong> function call, <strong>tidycensus</strong> will use the <strong>tigris</strong> package to retrieve the corresponding geographic dataset from the US Census Bureau and pre-merge it with the tabular data obtained from the Census API. As of tidycensus version 0.9.9.2, <code>geometry = TRUE</code> is supported for all geographies currently available in the package.</p>
 <p>The following example shows median household income from the 2015-2019 ACS for Census tracts in Orange County, California:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
@@ -171,15 +171,15 @@
 ## Dimension:     XY
 ## Bounding box:  xmin: -95.37457 ymin: 29.74486 xmax: -95.32409 ymax: 29.80907
 ## Geodetic CRS:  NAD83
-## # A tibble: 6 x 6
-##   GEOID  NAME       variable value summary_value                        geometry
-##   &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;    &lt;dbl&gt;         &lt;dbl&gt;              &lt;MULTIPOLYGON [°]&gt;
-## 1 48201… Census Tr… White     2082          4690 (((-95.37348 29.751, -95.37413…
-## 2 48201… Census Tr… Black     1047          4690 (((-95.37348 29.751, -95.37413…
-## 3 48201… Census Tr… Asian      134          4690 (((-95.37348 29.751, -95.37413…
-## 4 48201… Census Tr… Hispanic  1070          4690 (((-95.37348 29.751, -95.37413…
-## 5 48201… Census Tr… White       35          1620 (((-95.32851 29.80846, -95.324…
-## 6 48201… Census Tr… Black     1195          1620 (((-95.32851 29.80846, -95.324…</code></pre>
+## # A tibble: 6 × 6
+##   GEOID       NAME     variable value summary_value                     geometry
+##   &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;         &lt;dbl&gt;           &lt;MULTIPOLYGON [°]&gt;
+## 1 48201100000 Census … White     2082          4690 (((-95.37348 29.751, -95.37…
+## 2 48201100000 Census … Black     1047          4690 (((-95.37348 29.751, -95.37…
+## 3 48201100000 Census … Asian      134          4690 (((-95.37348 29.751, -95.37…
+## 4 48201100000 Census … Hispanic  1070          4690 (((-95.37348 29.751, -95.37…
+## 5 48201210900 Census … White       35          1620 (((-95.32851 29.80846, -95.…
+## 6 48201210900 Census … Black     1195          1620 (((-95.32851 29.80846, -95.…</code></pre>
 <p>We notice that there are four entries for each Census tract, with each entry representing one of our requested variables. The <code>summary_value</code> column represents the value of the summary variable, which is total population in this instance. When a summary variable is specified in <code>get_acs</code>, both <code>summary_est</code> and <code>summary_moe</code> columns will be returned.</p>
 <p>With this information, we can set up an analysis pipeline in which we calculate a new percent-of-total column; recode the Census variable names into more intuitive labels; and visualize the result for each group in a faceted plot.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -198,7 +198,7 @@
 <p>Geometries in tidycensus default to the Census Bureau’s <a href="https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html">cartographic boundary shapefiles</a>. Cartographic boundary shapefiles are preferred to the core <a href="https://www.census.gov/geo/maps-data/data/tiger-line.html">TIGER/Line shapefiles</a> in tidycensus as their smaller size speeds up processing and because they are pre-clipped to the US coastline.</p>
 <p>However, there may be circumstances in which your mapping requires more detail. A good example of this would be maps of New York City, in which even the cartographic boundary shapefiles include water area. For example, take this example of median household income by Census tract in Manhattan (New York County), NY:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 

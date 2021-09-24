@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
       </span>
     </div>
 
@@ -46,7 +46,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -84,7 +84,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/walkerke/tidycensus">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -98,7 +98,7 @@
 
       
 
-      </header><script src="pums-data_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
+      </header><script src="pums-data_files/header-attrs-2.10.5/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Working with Census microdata</h1>
@@ -130,7 +130,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"survey"</span>, <span class="st">"srvyr"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>
 
 <span class="va">pums_vars_2018</span> <span class="op">&lt;-</span> <span class="va">pums_variables</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2018</span>, <span class="va">survey</span> <span class="op">==</span> <span class="st">"acs1"</span><span class="op">)</span></code></pre></div>
@@ -138,7 +138,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pums_vars_2018</span> <span class="op">%&gt;%</span> 
   <span class="fu">distinct</span><span class="op">(</span><span class="va">var_code</span>, <span class="va">var_label</span>, <span class="va">data_type</span>, <span class="va">level</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 513 x 4
+<pre><code>## # A tibble: 513 × 4
 ##   var_code var_label                                                                      data_type level
 ##   &lt;chr&gt;    &lt;chr&gt;                                                                          &lt;chr&gt;     &lt;chr&gt;
 ## 1 RT       Record Type                                                                    chr       &lt;NA&gt; 
@@ -158,7 +158,7 @@
 <code class="sourceCode R"><span class="va">pums_vars_2018</span> <span class="op">%&gt;%</span> 
   <span class="fu">distinct</span><span class="op">(</span><span class="va">var_code</span>, <span class="va">var_label</span>, <span class="va">data_type</span>, <span class="va">level</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">level</span> <span class="op">==</span> <span class="st">"person"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 279 x 4
+<pre><code>## # A tibble: 279 × 4
 ##   var_code var_label                       data_type level 
 ##   &lt;chr&gt;    &lt;chr&gt;                           &lt;chr&gt;     &lt;chr&gt; 
 ## 1 SPORDER  Person number                   num       person
@@ -182,14 +182,14 @@
   <span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_pums</span></code></pre></div>
-<pre><code>## # A tibble: 6,436 x 9
+<pre><code>## # A tibble: 6,436 × 9
 ##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX  
 ##   &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 2018GQ0000859       1     0    61    19 00200 50    19    1    
-## 2 2018GQ0001119       1     0    67    80 00200 50    11    2    
-## 3 2018GQ0001888       1     0   177    82 00400 50    16    2    
-## 4 2018GQ0002438       1     0    17    17 00100 50    16    2    
-## 5 2018GQ0003293       1     0    68    20 00400 50    19    2    
+## 1 2018GQ0001230       1     0     3    26 00300 50    20    1    
+## 2 2018GQ0002135       1     0    64    18 00100 50    19    2    
+## 3 2018GQ0002999       1     0    62    20 00400 50    19    2    
+## 4 2018GQ0004077       1     0    16    94 00200 50    21    2    
+## 5 2018GQ0006486       1     0    26    20 00400 50    19    1    
 ## # … with 6,431 more rows</code></pre>
 <p>We get 6436 rows and 9 columns. In addition to the variables we specified, <code><a href="../reference/get_pums.html">get_pums()</a></code> also always returns <code>SERIALNO</code>, <code>SPORDER</code>, <code>WGTP</code>, <code>PWGTP</code>, and <code>ST</code>. <code>SERIALNO</code> and <code>SPORDER</code> are the variables that uniquely identify observations, <code>WGTP</code> and <code>PWGTP</code> are the housing-unit and person weights, and <code>ST</code> is the state code.</p>
 <p>Notice that <code>ST</code>, <code>SEX</code> and <code>SCHL</code> return coded character variables. You can look up what these codes represent in the <code>pums_variables</code> dataset provided or set <code>recode = TRUE</code> in <code><a href="../reference/get_pums.html">get_pums()</a></code> to return additional columns with the values of these variables recoded.</p>
@@ -203,14 +203,14 @@
   <span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_pums_recoded</span></code></pre></div>
-<pre><code>## # A tibble: 6,436 x 12
-##   SERIALNO   SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX   ST_label  SCHL_label             SEX_label
-##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;ord&gt;     &lt;ord&gt;                  &lt;ord&gt;    
-## 1 2018GQ000…       1     0     3    26 00300 50    20    1     Vermont/… Associate's degree     Male     
-## 2 2018GQ000…       1     0    64    18 00100 50    19    2     Vermont/… 1 or more years of co… Female   
-## 3 2018GQ000…       1     0    62    20 00400 50    19    2     Vermont/… 1 or more years of co… Female   
-## 4 2018GQ000…       1     0    16    94 00200 50    21    2     Vermont/… Bachelor's degree      Female   
-## 5 2018GQ000…       1     0    26    20 00400 50    19    1     Vermont/… 1 or more years of co… Male     
+<pre><code>## # A tibble: 6,436 × 12
+##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX   ST_label   SCHL_label         SEX_label
+##   &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;ord&gt;      &lt;ord&gt;              &lt;ord&gt;    
+## 1 2018GQ0000859       1     0    61    19 00200 50    19    1     Vermont/VT 1 or more years o… Male     
+## 2 2018GQ0001119       1     0    67    80 00200 50    11    2     Vermont/VT Grade 8            Female   
+## 3 2018GQ0001888       1     0   177    82 00400 50    16    2     Vermont/VT Regular high scho… Female   
+## 4 2018GQ0002438       1     0    17    17 00100 50    16    2     Vermont/VT Regular high scho… Female   
+## 5 2018GQ0003293       1     0    68    20 00400 50    19    2     Vermont/VT 1 or more years o… Female   
 ## # … with 6,431 more rows</code></pre>
 </div>
 <div id="analyzing-pums-data" class="section level2">
@@ -224,7 +224,7 @@
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_pums_recoded</span> <span class="op">%&gt;%</span> 
   <span class="fu">count</span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span>, wt <span class="op">=</span> <span class="va">PWGTP</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 8 x 3
+<pre><code>## # A tibble: 8 × 3
 ##   PUMA  SEX_label      n
 ##   &lt;chr&gt; &lt;ord&gt;      &lt;dbl&gt;
 ## 1 00100 Male      108732
@@ -246,7 +246,7 @@
     ba_above <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">ba_above</span> <span class="op">==</span> <span class="cn">TRUE</span> <span class="op">&amp;</span> <span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">]</span><span class="op">)</span>,
     ba_above_pct <span class="op">=</span> <span class="va">ba_above</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">]</span><span class="op">)</span>
   <span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 8 x 6
+<pre><code>## # A tibble: 8 × 6
 ## # Groups:   PUMA [4]
 ##   PUMA  SEX_label total_pop mean_age ba_above ba_above_pct
 ##   &lt;chr&gt; &lt;ord&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;
@@ -285,7 +285,7 @@
 
 <span class="va">vt_survey_design</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 8 x 4
+<pre><code>## # A tibble: 8 × 4
 ##   PUMA  SEX_label      n  n_se
 ##   &lt;chr&gt; &lt;ord&gt;      &lt;dbl&gt; &lt;dbl&gt;
 ## 1 00100 Male      108732 1123.
@@ -316,7 +316,7 @@
     ba_above_n <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html">survey_total</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,
     ba_above_pct <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html">survey_mean</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>
     <span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 8 x 11
+<pre><code>## # A tibble: 8 × 11
 ## # Groups:   PUMA [4]
 ##   PUMA  SEX_label age_25_up age_25_up_low age_25_up_upp ba_above_n ba_above_n_low ba_above_n_upp
 ##   &lt;chr&gt; &lt;ord&gt;         &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;
@@ -376,7 +376,7 @@
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count</a></span><span class="op">(</span><span class="va">emp_type</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 3
+<pre><code>## # A tibble: 3 × 3
 ##   emp_type      n  n_se
 ##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;
 ## 1 private  224760 2001.
@@ -511,7 +511,7 @@
   <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count</a></span><span class="op">(</span><span class="va">RELP</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">filter</a></span><span class="op">(</span><span class="va">RELP</span> <span class="op">==</span> <span class="st">"16"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 3
+<pre><code>## # A tibble: 1 × 3
 ##   RELP      n  n_se
 ##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 16     7018  2.64</code></pre>
@@ -521,7 +521,7 @@
   <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"housing"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count</a></span><span class="op">(</span><span class="va">TEN</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">filter</a></span><span class="op">(</span><span class="va">TEN</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 3
+<pre><code>## # A tibble: 1 × 3
 ##   TEN        n  n_se
 ##   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;
 ## 1 2     209632 3972.</code></pre>

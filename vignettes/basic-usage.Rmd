@@ -21,7 +21,7 @@ library(tidyverse)
 census_api_key("YOUR API KEY GOES HERE")
 ```
 
-There are two major functions implemented in __tidycensus__: `get_decennial()`, which grants access to the 2000 and 2010 decennial US Census APIs, and `get_acs()`, which grants access to the 1-year and 5-year American Community Survey APIs.  
+There are two major functions implemented in __tidycensus__: `get_decennial()`, which grants access to the 2000, 2010, and 2020 decennial US Census APIs, and `get_acs()`, which grants access to the 1-year and 5-year American Community Survey APIs.  
 
 In this basic example, let's look at median age by state in 2010: 
 
@@ -77,7 +77,8 @@ If __state__ or __county__ is in bold face in "Available by", you are required t
 |`"public use microdata area"`|PUMA (geography associated with Census microdata samples)|state|`get_acs()`| 
 |`"zip code tabulation area"` OR `"zcta"`|Zip code tabulation area||`get_acs()`, `get_decennial()`|  
 |`"state legislative district (upper chamber)"`|State senate districts|__state__|`get_acs()`, `get_decennial()`|  
-|`"state legislative district (lower chamber)"`|State house districts|__state__|`get_acs()`, `get_decennial()`|  
+|`"state legislative district (lower chamber)"`|State house districts|__state__|`get_acs()`, `get_decennial()`|
+|`"voting district"`|Voting districts (2020 only)|__state__|`get_decennial()`|
 
 
 ## Searching for variables

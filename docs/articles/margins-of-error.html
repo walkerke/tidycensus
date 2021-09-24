@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
       </span>
     </div>
 
@@ -46,7 +46,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -84,7 +84,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/walkerke/tidycensus">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -98,7 +98,7 @@
 
       
 
-      </header><script src="margins-of-error_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
+      </header><script src="margins-of-error_files/header-attrs-2.10.5/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Margins of error in the ACS</h1>
@@ -117,7 +117,7 @@
 </blockquote>
 <p>In turn, ACS data <strong>do not</strong> represent precise counts of population subgroups, but are rather designed to give a general sense of how socioeconomic indicators vary across the country. In many cases, ACS margins of error can be quite large - at times exceeding the estimate. Let’s say we want to study aging populations in Ramsey County, Minnesota from the 2012-2016 ACS by Census tracts. We can pull up a dataset with <code>get_acs</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 
 <span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"B01001_0"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">25</span>, <span class="fl">44</span><span class="op">:</span><span class="fl">49</span><span class="op">)</span><span class="op">)</span>
@@ -129,7 +129,7 @@
                   year <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ramsey</span> <span class="op">%&gt;%</span> <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">NAME</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 4
+<pre><code>## # A tibble: 6 × 4
 ##   GEOID       variable   estimate   moe
 ##   &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
 ## 1 27123030100 B01001_020       51    27
@@ -147,7 +147,7 @@
             summoe <span class="op">=</span> <span class="fu"><a href="../reference/moe_sum.html">moe_sum</a></span><span class="op">(</span><span class="va">moe</span>, <span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ramsey65</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 3
+<pre><code>## # A tibble: 6 × 3
 ##   GEOID       sumest summoe
 ##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
 ## 1 27123030100    677  124. 
