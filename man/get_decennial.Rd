@@ -2,7 +2,7 @@
 % Please edit documentation in R/census.R
 \name{get_decennial}
 \alias{get_decennial}
-\title{Obtain data and feature geometry for the decennial Census}
+\title{Obtain data and feature geometry for the decennial US Census}
 \usage{
 get_decennial(
   geography,
@@ -39,7 +39,8 @@ Defaults to FALSE; if TRUE, only needs to be called once per
 dataset.  If variables dataset is already cached via the
 \code{load_variables} function, this can be bypassed.}
 
-\item{year}{The year for which you are requesting data.   are available.}
+\item{year}{The year for which you are requesting data. Defaults to 2010; 2000,
+2010, and 2020 are available.}
 
 \item{sumfile}{The Census summary file.  Defaults to sf1; the function will look in sf3 if it
 cannot find a variable in sf1.}
@@ -88,7 +89,7 @@ a browser and see what is returned by the API directly. Defaults to FALSE.}
 a tibble or sf tibble of decennial Census data
 }
 \description{
-Obtain data and feature geometry for the decennial Census
+Obtain data and feature geometry for the decennial US Census
 }
 \examples{
 \dontrun{
