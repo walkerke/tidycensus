@@ -53,7 +53,8 @@ load_variables <- function(year, dataset, cache = FALSE) {
     var_type <- split[2]
   }
 
-  if (dataset %in% c("sf1", "sf3", "pl")) {
+  if (dataset %in% c("sf1", "sf2", "sf3", "sf4", "pl",
+                     "as", "gu", "mp", "vi")) {
     dataset <- paste0("dec/", dataset)
   }
 
