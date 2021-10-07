@@ -75,6 +75,11 @@ get_pums <- function(variables = NULL,
 
   }
 
+  # Account for missing PUMAs in 2008-2012 through 2011-2015 ACS samples
+  if (year %in% 2012:2015 && survey == "acs5" && (!is.null(puma) || "PUMA" %in% variables)) {
+    stop("PUMAs are not available for end-years between 2012 and 2015 due to inconsistent PUMA boundary definitions.", call. = FALSE)
+  }
+
 
   # Allow users to get all states by specifying "all"
   # To avoid large data timeout errors, iterate through the states instead.
