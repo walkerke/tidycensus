@@ -504,11 +504,14 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
     df <- load_variables(year, sumfile, cache = TRUE)
     names(df) <- tolower(names(df))
 
-    # Check to see if we need to look in sf3
-    if (!any(grepl(table, df$name))) {
-      df <- load_variables(year, dataset = "sf3", cache = TRUE)
-      names(df) <- tolower(names(df))
+    # Check to see if we need to look in sf3 for 2000
+    if (year == 2000) {
+      if (!any(grepl(table, df$name))) {
+        df <- load_variables(year, dataset = "sf3", cache = TRUE)
+        names(df) <- tolower(names(df))
+      }
     }
+
 
     message(sprintf("Loading %s variables for %s from table %s and caching the dataset for faster future access.", toupper(sumfile), year, table))
 
@@ -517,10 +520,12 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
       df <- load_variables(year, sumfile, cache = TRUE)
       names(df) <- tolower(names(df))
 
-      # Check to see if we need to look in sf3
-      if (!any(grepl(table, df$name))) {
-        df <- load_variables(year, dataset = "sf3", cache = TRUE)
-        names(df) <- tolower(names(df))
+      # Check to see if we need to look in sf3 for 2000
+      if (year == 2000) {
+        if (!any(grepl(table, df$name))) {
+          df <- load_variables(year, dataset = "sf3", cache = TRUE)
+          names(df) <- tolower(names(df))
+        }
       }
 
     } else {
@@ -528,18 +533,28 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
       df <- load_variables(year, sumfile, cache = FALSE)
       names(df) <- tolower(names(df))
 
-      # Check to see if we need to look in sf3
-      if (!any(grepl(table, df$name))) {
-        df <- load_variables(year, dataset = "sf3", cache = FALSE)
-        names(df) <- tolower(names(df))
+      # Check to see if we need to look in sf3 for 2000
+      if (year == 2000) {
+        if (!any(grepl(table, df$name))) {
+          df <- load_variables(year, dataset = "sf3", cache = TRUE)
+          names(df) <- tolower(names(df))
+        }
       }
     }
   }
 
   # Find all variables that match the table
-  vars <- df %>%
-    filter(grepl(paste0(table, "[0-9]+"), name)) %>%
-    pull(name)
+
+  if (year == 2020 && sumfile == "pl") {
+    vars <- df %>%
+      filter(grepl(paste0(table, "_[0-9]+"), name)) %>%
+      pull(name)
+  } else {
+    vars <- df %>%
+      filter(grepl(paste0(table, "[0-9]+"), name)) %>%
+      pull(name)
+  }
+
 
   return(vars)
 
