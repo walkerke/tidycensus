@@ -389,13 +389,13 @@
 <div id="searching-for-variables" class="section level2">
 <h2 class="hasAnchor">
 <a href="#searching-for-variables" class="anchor"></a>Searching for variables</h2>
-<p>Getting variables from the Census or ACS requires knowing the variable ID - and there are thousands of these IDs across the different Census files. To rapidly search for variables, use the <code><a href="../reference/load_variables.html">load_variables()</a></code> function. The function takes two required arguments: the year of the Census or endyear of the ACS sample, and the dataset - one of <code>"sf1"</code>, <code>"sf3"</code>, or <code>"acs5"</code>. For ideal functionality, I recommend assigning the result of this function to a variable, setting <code>cache = TRUE</code> to store the result on your computer for future access, and using the <code>View</code> function in RStudio to interactively browse for variables.</p>
+<p>Getting variables from the Census or ACS requires knowing the variable ID - and there are thousands of these IDs across the different Census files. To rapidly search for variables, use the <code><a href="../reference/load_variables.html">load_variables()</a></code> function. The function takes two required arguments: the year of the Census or endyear of the ACS sample, and the dataset name, which varies in availability by year. For the decennial Census, possible dataset choices include <code>"pl"</code> for the redistricting files (currently the only choice for 2020), <code>"sf1"</code> or <code>"sf2"</code> (2000 and 2010) and <code>"sf3"</code> or <code>"sf4"</code> (2000 only) for the various summary files. Special island area summary files are available with <code>"as"</code>, <code>"mp"</code>, <code>"gu"</code>, or <code>"vi"</code>. For the ACS, use either <code>"acs1"</code> or <code>"acs5"</code> for the ACS detailed tables, and append <code>/profile</code> for the Data Profile and <code>/subject</code> for the Subject Tables. To browse these variables, assign the result of this function to a variable and use the <code>View</code> function in RStudio. An optional argument <code>cache = TRUE</code> will cache the dataset on your computer for future use.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">v17</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_variables.html">load_variables</a></span><span class="op">(</span><span class="fl">2017</span>, <span class="st">"acs5"</span>, cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/View.html">View</a></span><span class="op">(</span><span class="va">v17</span><span class="op">)</span></code></pre></div>
 <p><img src="img/view.png" style="width: 100%"></p>
-<p>By filtering for “median age” I can quickly view the variable IDs that correspond to my query.</p>
+<p>By filtering for “median age” variable IDs corresponding to that query can be browsed interactively.</p>
 </div>
 <div id="working-with-acs-data" class="section level2">
 <h2 class="hasAnchor">

@@ -185,11 +185,11 @@
 <pre><code>## # A tibble: 6,436 × 9
 ##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX  
 ##   &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 2018GQ0002083       1     0    59    20 00100 50    19    2    
-## 2 2018GQ0002131       1     0     2    51 00400 50    16    1    
-## 3 2018GQ0002587       1     0    52    18 00400 50    16    1    
-## 4 2018GQ0003751       1     0    34    19 00100 50    19    2    
-## 5 2018GQ0003853       1     0   129    20 00400 50    19    1    
+## 1 2018GQ0001230       1     0     3    26 00300 50    20    1    
+## 2 2018GQ0002135       1     0    64    18 00100 50    19    2    
+## 3 2018GQ0002999       1     0    62    20 00400 50    19    2    
+## 4 2018GQ0004077       1     0    16    94 00200 50    21    2    
+## 5 2018GQ0006486       1     0    26    20 00400 50    19    1    
 ## # … with 6,431 more rows</code></pre>
 <p>We get 6436 rows and 9 columns. In addition to the variables we specified, <code><a href="../reference/get_pums.html">get_pums()</a></code> also always returns <code>SERIALNO</code>, <code>SPORDER</code>, <code>WGTP</code>, <code>PWGTP</code>, and <code>ST</code>. <code>SERIALNO</code> and <code>SPORDER</code> are the variables that uniquely identify observations, <code>WGTP</code> and <code>PWGTP</code> are the housing-unit and person weights, and <code>ST</code> is the state code.</p>
 <p>Notice that <code>ST</code>, <code>SEX</code> and <code>SCHL</code> return coded character variables. You can look up what these codes represent in the <code>pums_variables</code> dataset provided or set <code>recode = TRUE</code> in <code><a href="../reference/get_pums.html">get_pums()</a></code> to return additional columns with the values of these variables recoded.</p>

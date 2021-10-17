@@ -144,7 +144,9 @@
 <p>Our object <code>orange</code> looks much like the basic <strong>tidycensus</strong> output, but with a <code>geometry</code> list-column describing the geometry of each feature, using the geographic coordinate system NAD 1983 (EPSG: 4269) which is the default for Census shapefiles. <strong>tidycensus</strong> uses the Census <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html">cartographic boundary shapefiles</a> for faster processing; if you prefer the TIGER/Line shapefiles, set <code>cb = FALSE</code> in the function call.</p>
 <p>As the dataset is in a tidy format, it can be quickly visualized with the <code>geom_sf</code> functionality currently in the development version of <strong>ggplot2</strong>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">orange</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="co"># crs = 26911 is appropriate for Orange County, but may not be appropriate for your area.</span>
+<span class="co"># Use the crsuggest package to identify an appropriate CRS for your area.</span>
+<span class="va">orange</span> <span class="op">%&gt;%</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu">geom_sf</span><span class="op">(</span>color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu">coord_sf</span><span class="op">(</span>crs <span class="op">=</span> <span class="fl">26911</span><span class="op">)</span> <span class="op">+</span> 
@@ -195,7 +197,7 @@
 <div id="detailed-shoreline-mapping-with-tidycensus" class="section level2">
 <h2 class="hasAnchor">
 <a href="#detailed-shoreline-mapping-with-tidycensus" class="anchor"></a>Detailed shoreline mapping with tidycensus</h2>
-<p>Geometries in tidycensus default to the Census Bureau’s <a href="https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html">cartographic boundary shapefiles</a>. Cartographic boundary shapefiles are preferred to the core <a href="https://www.census.gov/geo/maps-data/data/tiger-line.html">TIGER/Line shapefiles</a> in tidycensus as their smaller size speeds up processing and because they are pre-clipped to the US coastline.</p>
+<p>Geometries in tidycensus default to the Census Bureau’s <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html">cartographic boundary shapefiles</a>. Cartographic boundary shapefiles are preferred to the core <a href="https://www.census.gov/geo/maps-data/data/tiger-line.html">TIGER/Line shapefiles</a> in tidycensus as their smaller size speeds up processing and because they are pre-clipped to the US coastline.</p>
 <p>However, there may be circumstances in which your mapping requires more detail. A good example of this would be maps of New York City, in which even the cartographic boundary shapefiles include water area. For example, take this example of median household income by Census tract in Manhattan (New York County), NY:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>

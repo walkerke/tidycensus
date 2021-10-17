@@ -29,6 +29,8 @@ Our object `orange` looks much like the basic __tidycensus__ output, but with a 
 As the dataset is in a tidy format, it can be quickly visualized with the `geom_sf` functionality currently in the development version of __ggplot2__: 
 
 ```{r}
+# crs = 26911 is appropriate for Orange County, but may not be appropriate for your area.
+# Use the crsuggest package to identify an appropriate CRS for your area.
 orange %>%
   ggplot(aes(fill = estimate)) + 
   geom_sf(color = NA) + 
@@ -71,7 +73,7 @@ harris %>%
 
 ## Detailed shoreline mapping with tidycensus
 
-Geometries in tidycensus default to the Census Bureau's [cartographic boundary shapefiles](https://www.census.gov/geo/maps-data/data/tiger-cart-boundary.html).  Cartographic boundary shapefiles are preferred to the core [TIGER/Line shapefiles](https://www.census.gov/geo/maps-data/data/tiger-line.html) in tidycensus as their smaller size speeds up processing and because they are pre-clipped to the US coastline.
+Geometries in tidycensus default to the Census Bureau's [cartographic boundary shapefiles](https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html).  Cartographic boundary shapefiles are preferred to the core [TIGER/Line shapefiles](https://www.census.gov/geo/maps-data/data/tiger-line.html) in tidycensus as their smaller size speeds up processing and because they are pre-clipped to the US coastline.
 
 However, there may be circumstances in which your mapping requires more detail.  A good example of this would be maps of New York City, in which even the cartographic boundary shapefiles include water area.  For example, take this example of median household income by Census tract in Manhattan (New York County), NY: 
 
