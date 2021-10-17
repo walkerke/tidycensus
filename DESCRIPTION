@@ -1,18 +1,19 @@
 Package: tidycensus
 Type: Package
 Title: Load US Census Boundary and Attribute Data as 'tidyverse' and 'sf'-Ready Data Frames
-Version: 1.0.0.9000
+Version: 1.1.0.9000
 Authors@R: c(
     person(given = "Kyle", family = "Walker", email="kyle@walker-data.com", role=c("aut", "cre")),
     person(given = "Matt", family = "Herman", email = "mfherman@gmail.com", role = "aut"),
     person(given = "Kris", family = "Eberwein", email = "eberwein@knights.ucf.edu", role = "ctb"))
-Date: 2021-08-15
-URL: https://walker-data.com/tidycensus
+Date: 2021-10-07
+URL: https://walker-data.com/tidycensus/
 BugReports: https://github.com/walkerke/tidycensus/issues
-Description: An integrated R interface to the decennial US Census and American Community Survey APIs and
-    the US Census Bureau's geographic boundary files. Allows R users to return Census and ACS data as
-    tidyverse-ready data frames, and optionally returns a list-column with feature geometry for all Census 
-    geographies. 
+Description: An integrated R interface to several United States Census Bureau 
+    APIs (<https://www.census.gov/data/developers/data-sets.html>) and the US Census Bureau's 
+    geographic boundary files. Allows R users to return Census and ACS data as 
+    tidyverse-ready data frames, and optionally returns a list-column with feature geometry for mapping 
+    and spatial analysis. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -32,7 +33,8 @@ Imports:
     xml2,
     units,
     utils,
-    rlang
+    rlang,
+    crayon
 Suggests: 
     ggplot2,
     survey,

@@ -92,8 +92,8 @@ WKS,6,Last worked over 5 years ago or never worked,FALSE
 SCHL,0,All educational attainments,TRUE
 SCHL,1,Less than high school graduate,TRUE
 SCHL,2,High school graduate (includes equivalency),TRUE
-SCHL,3,Some college or associate’s degree,TRUE
-SCHL,4,Bachelor’s degree,TRUE
+SCHL,3,Some college or associateâ€™s degree,TRUE
+SCHL,4,Bachelorâ€™s degree,TRUE
 SCHL,5,Graduate or professional degree,TRUE
 AHINC,0,All income levels,TRUE
 AHINC,1,"Less than $10,000",TRUE

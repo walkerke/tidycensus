@@ -1,3 +1,8 @@
+# tidycensus 1.1
+
+* tidycensus now supports the 2020 decennial Census PL-94171 redistricting data.  Use `year = 2020` in a call to `get_decennial()` to access the data, and `load_variables(2020, "pl")` to look up variable IDs.
+* A new geography, `"voting district"` is now available for 2020 to assist with redistricting analyses.
+
 # tidycensus 1.0
 
 * Support for the ACS Migration Flows API is available in a new function, `get_flows()`. [Browse the supporting documentation](https://walker-data.com/tidycensus/articles/other-datasets.html#migration-flows-1) for information on how to analyze and map migration flows data in tidycensus. 

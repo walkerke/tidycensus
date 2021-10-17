@@ -10,6 +10,6 @@ __tidycensus__ is an R package that allows users to interface with the US Census
 install.packages("tidycensus")
 ```
 
-To learn more about the package, please visit the package documentation at https://walker-data.com/tidycensus. 
+To learn more about the package, please visit the package documentation at https://walker-data.com/tidycensus/ or read the book _Analyzing US Census Data: Methods, Maps, and Models in R_ at https://walker-data.com/census-r/.  
 
 Note: This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau.

@@ -172,10 +172,12 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     bl <- blocks(state = state, county = county, year = year, class = "sf", ...)
 
-    if (year > 2000) {
+    if (year == 2010) {
       bl <- rename(bl, GEOID = GEOID10)
     } else if (year == 2000) {
       bl <- rename(bl, GEOID = BLKIDFP00)
+    } else if (year == 2020) {
+      bl <- rename(bl, GEOID = GEOID20)
     }
 
     return(bl)
@@ -199,6 +201,9 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     return(cd)
 
   } else if (geography == "public use microdata area") {
+
+    # Right now, PUMAs are not defined for 2020 and are not in the CB file
+    if (year == 2020) cb <- FALSE
 
     state_ids <- c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
                    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA",
@@ -238,9 +243,7 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(slc)
 
-  } else if (geography %in% c("american indian area/alaska native area/hawaiian home land",
-                              "american indian area/alaska native area (reservation or statistical entity only)",
-                              "american indian area (off-reservation trust land only)/hawaiian home land")) {
+  } else if (geography == c("american indian area/alaska native area/hawaiian home land")) {
 
     nv <- native_areas(cb = cb, year = year, class = "sf", ...)
 
@@ -268,6 +271,9 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     return(csa)
 
   } else if (geography == "urban area") {
+
+    # Right now, urban areas are not defined for 2020 and are not in the CB file
+    if (year == 2020) cb <- FALSE
 
     ua <- urban_areas(cb = cb, year = year, class = "sf", ...)
 
@@ -346,6 +352,25 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     div <- divisions(year = year, class = "sf", ...)
 
     return(div)
+
+  } else if (geography == "alaska native regional corporation") {
+
+    anrc <- alaska_native_regional_corporations(year = year, ...)
+
+    return(anrc)
+
+  } else if (geography == "voting district") {
+
+    if (!is.null(county) && length(county) == 1) {
+      vtds <- voting_districts(state = state, county = county,
+                               year = 2020, cb = cb, ...)
+    } else {
+      vtds <- voting_districts(state = state, year = 2020, cb = cb, ...)
+    }
+
+    vtds <- dplyr::rename(vtds, GEOID = GEOID20)
+
+    return(vtds)
 
   } else {
 
@@ -479,11 +504,14 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
     df <- load_variables(year, sumfile, cache = TRUE)
     names(df) <- tolower(names(df))
 
-    # Check to see if we need to look in sf3
-    if (!any(grepl(table, df$name))) {
-      df <- load_variables(year, dataset = "sf3", cache = TRUE)
-      names(df) <- tolower(names(df))
+    # Check to see if we need to look in sf3 for 2000
+    if (year == 2000) {
+      if (!any(grepl(table, df$name))) {
+        df <- load_variables(year, dataset = "sf3", cache = TRUE)
+        names(df) <- tolower(names(df))
+      }
     }
+
 
     message(sprintf("Loading %s variables for %s from table %s and caching the dataset for faster future access.", toupper(sumfile), year, table))
 
@@ -492,10 +520,12 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
       df <- load_variables(year, sumfile, cache = TRUE)
       names(df) <- tolower(names(df))
 
-      # Check to see if we need to look in sf3
-      if (!any(grepl(table, df$name))) {
-        df <- load_variables(year, dataset = "sf3", cache = TRUE)
-        names(df) <- tolower(names(df))
+      # Check to see if we need to look in sf3 for 2000
+      if (year == 2000) {
+        if (!any(grepl(table, df$name))) {
+          df <- load_variables(year, dataset = "sf3", cache = TRUE)
+          names(df) <- tolower(names(df))
+        }
       }
 
     } else {
@@ -503,18 +533,28 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
       df <- load_variables(year, sumfile, cache = FALSE)
       names(df) <- tolower(names(df))
 
-      # Check to see if we need to look in sf3
-      if (!any(grepl(table, df$name))) {
-        df <- load_variables(year, dataset = "sf3", cache = FALSE)
-        names(df) <- tolower(names(df))
+      # Check to see if we need to look in sf3 for 2000
+      if (year == 2000) {
+        if (!any(grepl(table, df$name))) {
+          df <- load_variables(year, dataset = "sf3", cache = TRUE)
+          names(df) <- tolower(names(df))
+        }
       }
     }
   }
 
   # Find all variables that match the table
-  vars <- df %>%
-    filter(grepl(paste0(table, "[0-9]+"), name)) %>%
-    pull(name)
+
+  if (year == 2020 && sumfile == "pl") {
+    vars <- df %>%
+      filter(grepl(paste0(table, "_[0-9]+"), name)) %>%
+      pull(name)
+  } else {
+    vars <- df %>%
+      filter(grepl(paste0(table, "[0-9]+"), name)) %>%
+      pull(name)
+  }
+
 
   return(vars)
 

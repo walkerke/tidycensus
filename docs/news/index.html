@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -125,7 +125,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/walkerke/tidycensus">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -146,6 +146,15 @@
       <small>Source: <a href='https://github.com/walkerke/tidycensus/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="tidycensus-11" class="section level1">
+<h1 class="page-header" data-toc-text="1.1">
+<a href="#tidycensus-11" class="anchor"></a>tidycensus 1.1<small> 2021-09-23 </small>
+</h1>
+<ul>
+<li>tidycensus now supports the 2020 decennial Census PL-94171 redistricting data. Use <code>year = 2020</code> in a call to <code><a href="../reference/get_decennial.html">get_decennial()</a></code> to access the data, and <code><a href="../reference/load_variables.html">load_variables(2020, "pl")</a></code> to look up variable IDs.</li>
+<li>A new geography, <code>"voting district"</code> is now available for 2020 to assist with redistricting analyses.</li>
+</ul>
+</div>
     <div id="tidycensus-10" class="section level1">
 <h1 class="page-header" data-toc-text="1.0">
 <a href="#tidycensus-10" class="anchor"></a>tidycensus 1.0<small> 2021-05-19 </small>
@@ -233,7 +242,7 @@
 </ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tidycensus">tidycensus</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/">viridis</a></span><span class="op">)</span>
 

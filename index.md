@@ -2,7 +2,7 @@
 
 [![R build status](https://github.com/walkerke/tidycensus/workflows/R-CMD-check/badge.svg)](https://github.com/walkerke/tidycensus/actions) ![CRAN Badge](http://www.r-pkg.org/badges/version/tidycensus)  ![CRAN Downloads](http://cranlogs.r-pkg.org/badges/tidycensus)
 
-__tidycensus__ is an R package that allows users to interface with the US Census Bureau's decennial Census and five-year American Community APIs and return tidyverse-ready data frames, optionally with simple feature geometry included.  Install from CRAN with the following command: 
+__tidycensus__ is an R package that allows users to interface with a select number of the US Census Bureau's data APIs and return tidyverse-ready data frames, optionally with simple feature geometry included.  Install from CRAN with the following command: 
 
 ```r
 install.packages("tidycensus")
@@ -18,7 +18,7 @@ __tidycensus__ is designed to help R users get Census data that is pre-prepared 
 
 ## Future development
 
-To keep up with on-going development of __tidycensus__ and get even more examples of how to use the package, subscribe to the Walker Data email list below.  You'll also get updates on the forthcoming CRC Press book _Analyzing the US Census with R_, which will cover a wide range of Census data analysis applications.   
+To keep up with on-going development of __tidycensus__ and get even more examples of how to use the package, subscribe to the Walker Data email list below.  You'll also get updates on the forthcoming CRC Press book _Analyzing the US Census with R_, currently available to read online at https://walker-data.com/census-r/.  
 
 <!-- Begin MailChimp Signup Form -->
 <link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
