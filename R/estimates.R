@@ -69,7 +69,7 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
   } else if (is.null(key)) {
 
-    stop('A Census API key is required.  Obtain one at http://api.census.gov/data/key_signup.html, and then supply the key to the `census_api_key` function to use it throughout your tidycensus session.')
+    stop('A Census API key is required.  Obtain one at http://api.census.gov/data/key_signup.html, and then supply the key to the `census_api_key()` function to use it throughout your tidycensus session.')
 
   }
 
