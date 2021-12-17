@@ -126,7 +126,7 @@ vt <- get_acs(geography = "county", variables = "B19013_001", state = "VT")
 vt \%>\%
 mutate(NAME = gsub(" County, Vermont", "", NAME)) \%>\%
  ggplot(aes(x = estimate, y = reorder(NAME, estimate))) +
-  geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
+  geom_errorbar(aes(xmin = estimate - moe, xmax = estimate + moe), width = 0.3, size = 0.5) +
   geom_point(color = "red", size = 3) +
   labs(title = "Household income by county in Vermont",
        subtitle = "2015-2019 American Community Survey",
