@@ -499,6 +499,13 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
 load_data_estimates <- function(geography, product = NULL, variables = NULL, key, year,
                                 time_series, state = NULL, county = NULL, show_call = FALSE) {
 
+  # Account for new variables in 2020/2021 - this may need to be a temporary fix but it'll
+  # make things workable for now (21 December 2021)
+  #
+  # The goal is to make the API for get_estimates() reasonably stable
+
+
+
   if (!is.null(product)) {
     if (!product %in% c("population", "components",
                         "charagegroups", "housing")) {
@@ -518,8 +525,23 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
     if (is.null(product)) {
       stop("Either a product or a vector of variables (from a single product) is required.", call. = FALSE)
     } else {
+
+      # Only the population product is available for 2020 & 2021 as of 22 December 2021
+      if (year %in% 2020:2021) {
+        if (product != "population") {
+          stop("Products other than population are not yet available for 2020 and 2021",
+               call. = FALSE)
+        }
+      }
+
       if (product == "population") {
-        vars_to_get <- paste0(geo_name, ",POP,DENSITY")
+        if (year == 2020) {
+          vars_to_get <- paste0(geo_name, ",POP_2020,DENSITY_2020")
+        } else if (year == 2021) {
+          vars_to_get <- paste0(geo_name, ",POP_2021,DENSITY_2021")
+        } else {
+          vars_to_get <- paste0(geo_name, ",POP,DENSITY")
+        }
       } else if (product == "components") {
         vars_to_get <- paste0(geo_name, ",BIRTHS,DEATHS,DOMESTICMIG,INTERNATIONALMIG,NATURALINC,NETMIG,RBIRTH,RDEATH,RDOMESTICMIG,RINTERNATIONALMIG,RNATURALINC,RNETMIG")
       } else if (product == "housing") {
@@ -534,25 +556,33 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
         stop("Please specify either a product or a vector of variables, but not both.", call. = FALSE)
       }
     } else {
-      if (all(variables %in% c("POP", "DENSITY"))) {
-        product <- "population"
-      } else if (all(variables %in% c("BIRTHS", "DEATHS", "DOMESTICMIG", "INTERNATIONALMIG", "NATURALINC", "NETMIG", "RBIRTH", "RDEATH", "RDOMESTICMIG", "RINTERNATIONALMIG", "RNATURALINC", "RNETMIG"))) {
-        product <- "components"
-      } else if (all(variables %in% c("HUEST"))) {
-        product <- "housing"
-      } else {
-        stop(
-          paste('Variables must be a subset of only one of the following sets of valid variables:',
-                'for population estimates, c("POP", "DENSITY");',
-                'for housing unit estimates, c("HUEST");',
-                'and for components of change estimates, c("BIRTHS", "DEATHS", "DOMESTICMIG", "INTERNATIONALMIG", "NATURALINC", "NETMIG", "RBIRTH", "RDEATH", "RDOMESTICMIG", "RINTERNATIONALMIG", "RNATURALINC", "RNETMIG").'),
-          call. = FALSE)
+      # Relax variables restrictions for 2020 and 2021 (for now) and allow the API to
+      # catch errors
+      if (!year %in% 2020:2021) {
+        if (all(variables %in% c("POP", "DENSITY"))) {
+          product <- "population"
+        } else if (all(variables %in% c("BIRTHS", "DEATHS", "DOMESTICMIG", "INTERNATIONALMIG", "NATURALINC", "NETMIG", "RBIRTH", "RDEATH", "RDOMESTICMIG", "RINTERNATIONALMIG", "RNATURALINC", "RNETMIG"))) {
+          product <- "components"
+        } else if (all(variables %in% c("HUEST"))) {
+          product <- "housing"
+        } else {
+          stop(
+            paste('Variables must be a subset of only one of the following sets of valid variables:',
+                  'for population estimates, c("POP", "DENSITY");',
+                  'for housing unit estimates, c("HUEST");',
+                  'and for components of change estimates, c("BIRTHS", "DEATHS", "DOMESTICMIG", "INTERNATIONALMIG", "NATURALINC", "NETMIG", "RBIRTH", "RDEATH", "RDOMESTICMIG", "RINTERNATIONALMIG", "RNATURALINC", "RNETMIG").'),
+            call. = FALSE)
+        }
       }
     }
     vars_to_get <- paste0(geo_name, ",", paste0(variables, collapse = ","))
   }
 
   if (time_series) {
+    if (year %in% 2020:2021) {
+      stop("The time_series argument is currently unavailable for 2020 and 2021.",
+           call. = FALSE)
+    }
     if (product == "components") {
       if (year >= 2018) {
         vars_to_get <- paste0(vars_to_get, ",PERIOD_CODE")
@@ -566,6 +596,11 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
         vars_to_get <- paste0(vars_to_get, ",DATE_")
       }
     }
+  }
+
+  # Now, switch year to 2021 if 2020 was requested
+  if (year == 2020) {
+    year <- 2021
   }
 
   base <- sprintf("https://api.census.gov/data/%s/pep/%s", year, product)
