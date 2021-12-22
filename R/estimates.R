@@ -344,10 +344,6 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
   }
 
-
-
-
-
   if (geometry) {
 
     if (shift_geo) {
@@ -380,8 +376,14 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
 
     } else {
 
-      geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
-                                          state = state, county = county, ...)))
+      # Right now for 2021 PEP: use 2020 files (fix when 2021 CB is released)
+      if (year == 2021) {
+        geom <- try(suppressMessages(use_tigris(geography = geography, year = 2020,
+                                                state = state, county = county, ...)))
+      } else {
+        geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
+                                                state = state, county = county, ...)))
+      }
 
       if ("try-error" %in% class(geom)) {
         stop("Your geometry data download failed. Please try again later or check the status of the Census Bureau website at https://www2.census.gov/geo/tiger/", call. = FALSE)
