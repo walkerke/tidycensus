@@ -573,6 +573,9 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
                   'and for components of change estimates, c("BIRTHS", "DEATHS", "DOMESTICMIG", "INTERNATIONALMIG", "NATURALINC", "NETMIG", "RBIRTH", "RDEATH", "RDOMESTICMIG", "RINTERNATIONALMIG", "RNATURALINC", "RNETMIG").'),
             call. = FALSE)
         }
+      } else {
+        # Right now, population is the only product available for 2020 and 2021
+        product <- "population"
       }
     }
     vars_to_get <- paste0(geo_name, ",", paste0(variables, collapse = ","))
