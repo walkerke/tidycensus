@@ -62,6 +62,13 @@ get_estimates <- function(geography, product = NULL, variables = NULL,
     stop("The Population Estimates API is not available in tidycensus for years prior to 2015. Consider using `time_series = TRUE` or the censusapi package for earlier estimates.")
   }
 
+  # Account for available geographies for 2020 and 2021 (as of December 2021)
+  if (year %in% 2020:2021) {
+    if (!geography %in% c("us", "region", "division", "state")) {
+      stop("At this time, the only available geographies for 2020 and 2021 population estimates are 'us', 'region', 'division', and 'state'.", call. = FALSE)
+    }
+  }
+
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 
