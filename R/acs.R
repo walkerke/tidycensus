@@ -754,6 +754,18 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   }
 
+  # For ZCTAs, strip the state code from GEOID (issue #338 and #358)
+  # This should only happen if the GEOID is 7 characters; subject tables
+  # don't handle states like this
+  #
+  # Needs to be completed prior to summary variable handling (issue #429)
+  if (geography == "zip code tabulation area" && year > 2012 && unique(nchar(dat2$GEOID)) == 7) {
+    dat2 <- dat2 %>%
+      dplyr::mutate(
+        GEOID = stringr::str_sub(GEOID, start = 3L)
+      )
+  }
+
   if (!is.null(summary_var)) {
 
     if (length(summary_var) > 1) {
@@ -769,6 +781,14 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     sumest <- paste0(summary_var, "E")
 
     summoe <- paste0(summary_var, "M")
+
+    # Check for summary var GEOID issue for zctas
+    if (geography == "zip code tabulation area" && year > 2012 && unique(nchar(sumdat$GEOID)) == 7) {
+      sumdat <- sumdat %>%
+        dplyr::mutate(
+          GEOID = stringr::str_sub(GEOID, start = 3L)
+        )
+    }
 
     dat2 <- dat2 %>%
       inner_join(sumdat, by = "GEOID") %>%
@@ -788,14 +808,6 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     dat2[dat2 == -777777777] <- NA
     dat2[dat2 == -888888888] <- NA
     dat2[dat2 == -999999999] <- NA
-  }
-
-  # For ZCTAs, strip the state code from GEOID (issue #338 and #358)
-  if (geography == "zip code tabulation area" && year > 2012) {
-    dat2 <- dat2 %>%
-      dplyr::mutate(
-        GEOID = stringr::str_sub(GEOID, start = 3L)
-      )
   }
 
   # If multiple ZCTAs are requested for multiple states, handle the filtering here
