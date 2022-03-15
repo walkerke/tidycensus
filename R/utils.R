@@ -149,3 +149,76 @@ print_api_call <- function(url) {
   url <- gsub("&key.*", "", url)
   message(paste("Census API call:", utils::URLdecode(url)))
 }
+
+
+#' Convert Census geometry to dots for dot-density mapping
+#'
+#' @param input_data An input sf object, typically acquired with the tidycensus package
+#' @param value The value column to be used to determine the number of dots
+#' @param values_per_dot The number of values per dot; a value of 100 means that each dot will represent approximately 100 values in the value column.
+#' @param group A column in the dataset that identifies salient groups within which dots should be generated.  For a long-form tidycensus dataset, this will typically be the \code{"variable"} column or some derivative of it.
+#' @param crs The EPSG code of the coordinate reference system you'd like to use for the output dots. If your data are not already in a projected CRS, supplying this argument will improve performance.
+#' @param erase_water If \code{TRUE}, calls \code{tigris::erase_water()} to remove water areas from the polygons prior to generating dots. Recommended if your location includes significant water area.
+#' @param area_threshold The area percentile threshold to be used when erasing water; ranges from 0 (all water area included) to 1 (no water area included)
+#'
+#' @return The original dataset but of geometry type \code{POINT}, with one point corresponding to the given value:dot ratio for a given group.
+#' @export
+as_dot_density <- function(
+    input_data,
+    value,
+    values_per_dot,
+    group = NULL,
+    crs = NULL,
+    erase_water = FALSE,
+    area_threshold = NULL
+) {
+
+  # Ensure that terra package is installed
+  if (!"terra" %in% installed.packages()) {
+    stop("`as_dot_density()` uses the terra package to generate dots. Please install terra first then re-run.", call. = FALSE)
+  }
+
+  if (!is.null(crs)) {
+    input_data <- sf::st_transform(input_data, crs)
+  }
+
+  # If erase water is selected, erase water area from the polygons first
+  if (erase_water) {
+
+    if (is.null(area_threshold)) {
+      area_threshold = 0.75
+    }
+
+    input_data <- tigris::erase_water(input_data,
+                                      area_threshold = area_threshold)
+  }
+
+  # If group is identified, iterate over the groups, shuffle, and combine
+  if (!is.null(group)) {
+
+    groups <- unique(input_data[[group]])
+
+    output_dots <- purrr::map_dfr(groups, function(g) {
+
+      group_data <- input_data[input_data[[group]] == g, ]
+
+      group_data %>%
+        terra::vect() %>%
+        terra::dots(field = value,
+                    size = values_per_dot) %>%
+        sf::st_as_sf()
+    }) %>%
+      dplyr::slice_sample(prop = 1)
+
+  } else {
+    output_dots <- input_data %>%
+      terra::vect() %>%
+      terra::dots(field = value,
+                  size = values_per_dot) %>%
+      sf::st_as_sf()
+  }
+
+  return(output_dots)
+
+
+}
