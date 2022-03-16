@@ -269,6 +269,9 @@ as_dot_density <- function(
       sf::st_as_sf()
   }
 
+  # Sometimes, a strange dot gets thrown in.  Ensure this doesn't get returned.
+  output_dots <- sf::st_filter(output_dots, input_data)
+
   return(output_dots)
 
 
