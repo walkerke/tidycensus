@@ -151,24 +151,75 @@ print_api_call <- function(url) {
 }
 
 
-#' Convert Census geometry to dots for dot-density mapping
+#' Convert polygon geometry to dots for dot-density mapping
 #'
-#' @param input_data An input sf object, typically acquired with the tidycensus package
-#' @param value The value column to be used to determine the number of dots
-#' @param values_per_dot The number of values per dot; a value of 100 means that each dot will represent approximately 100 values in the value column.
-#' @param group A column in the dataset that identifies salient groups within which dots should be generated.  For a long-form tidycensus dataset, this will typically be the \code{"variable"} column or some derivative of it.
-#' @param crs The EPSG code of the coordinate reference system you'd like to use for the output dots. If your data are not already in a projected CRS, supplying this argument will improve performance.
-#' @param erase_water If \code{TRUE}, calls \code{tigris::erase_water()} to remove water areas from the polygons prior to generating dots. Recommended if your location includes significant water area.
+#' Dot-density maps are a compelling alternative to choropleth maps for cartographic visualization of demographic data as they allow for representation of the internal heterogeneity of geographic units.  This function helps users generate dots from an input polygon dataset intended for dot-density mapping.  Dots are placed randomly within polygons according to a given data:dots ratio; for example, a ratio of 100:1 for an input population value column will place approximately 1 dot in the polygon for every 100 people in the geographic unit.  Users can then map the dots using tools like \code{ggplot2::geom_sf()} or \code{tmap::tm_dots()}.
+#'
+#' \code{as_dot_density()} uses \code{terra::dots()} internally for fast creation of dots. As terra is not a hard dependency of the tidycensus package, users must first install terra before using this function.
+#'
+#' The \code{erase_water} parameter will internally call \code{tigris::erase_water()} to fetch water area for a given location in the United States and remove that water area from the polygons before placing dots in polygons. This will slow down performance of the function, but can improve cartographic accuracy in locations with significant water area. It is recommended that users transform their data into a projected coordinate reference system with \code{sf::st_transform()} prior to using this option in order to improve performance.
+#'
+#'
+#' @param input_data An input sf object of geometry type \code{POLYGON} or \code{MULTIPOLYGON} that includes some information that can be converted to dots.  While the function is designed for use with data acquired with the tidycensus package, it will work for arbitrary polygon datasets.
+#' @param value The value column to be used to determine the number of dots to generate. For tidycensus users, this will typically be the \code{"value"} column for decennial Census data or the \code{"estimate"} column for American Community Survey estimates.
+#' @param values_per_dot The number of values per dot; used to determine the output data:dots ratio. A value of 100 means that each dot will represent approximately 100 values in the value column.
+#' @param group A column in the dataset that identifies salient groups within which dots should be generated.  For a long-form tidycensus dataset, this will typically be the \code{"variable"} column or some derivative of it. The output dataset will be randomly shuffled to prevent "stacking" of groups in downstream dot-density maps.
+#' @param erase_water If \code{TRUE}, calls \code{tigris::erase_water()} to remove water areas from the polygons prior to generating dots, allowing for dasymetric dot placement. This option is recommended if your location includes significant water area. If using this option, it is recommended that you first transform your data to a projected coordinate reference system using \code{sf::st_transform()} to improve performance. This argument only works for data in the United States.
 #' @param area_threshold The area percentile threshold to be used when erasing water; ranges from 0 (all water area included) to 1 (no water area included)
 #'
-#' @return The original dataset but of geometry type \code{POINT}, with one point corresponding to the given value:dot ratio for a given group.
+#' @return The original dataset but of geometry type \code{POINT}, with the number of point features corresponding to the given value:dot ratio for a given group.
 #' @export
+#'
+#' @examples \dontrun{
+#'
+#' library(tidycensus)
+#' library(ggplot2)
+#'
+#' # Identify variables for mapping
+#' race_vars <- c(
+#'   Hispanic = "P2_002N",
+#'   White = "P2_005N",
+#'   Black = "P2_006N",
+#'   Asian = "P2_008N"
+#' )
+#'
+#' # Get data from tidycensus
+#' baltimore_race <- get_decennial(
+#'   geography = "tract",
+#'   variables = race_vars,
+#'   state = "MD",
+#'   county = "Baltimore city",
+#'   geometry = TRUE,
+#'   year = 2020
+#' )
+#'
+#' # Convert data to dots
+#' baltimore_dots <- as_dot_density(
+#'   baltimore_race,
+#'   value = "value",
+#'   values_per_dot = 100,
+#'   group = "variable"
+#' )
+#'
+#' # Use one set of polygon geometries as a base layer
+#' baltimore_base <- baltimore_race[baltimore_race$variable == "Hispanic", ]
+#'
+#' # Map with ggplot2
+#' ggplot() +
+#'   geom_sf(data = baltimore_base,
+#'           fill = "white",
+#'           color = "grey") +
+#'   geom_sf(data = baltimore_dots,
+#'           aes(color = variable),
+#'           size = 0.01) +
+#'   theme_void()
+#'
+#' }
 as_dot_density <- function(
     input_data,
     value,
     values_per_dot,
     group = NULL,
-    crs = NULL,
     erase_water = FALSE,
     area_threshold = NULL
 ) {
@@ -176,10 +227,6 @@ as_dot_density <- function(
   # Ensure that terra package is installed
   if (!"terra" %in% installed.packages()) {
     stop("`as_dot_density()` uses the terra package to generate dots. Please install terra first then re-run.", call. = FALSE)
-  }
-
-  if (!is.null(crs)) {
-    input_data <- sf::st_transform(input_data, crs)
   }
 
   # If erase water is selected, erase water area from the polygons first
@@ -191,6 +238,10 @@ as_dot_density <- function(
 
     input_data <- tigris::erase_water(input_data,
                                       area_threshold = area_threshold)
+  } else {
+    if (!is.null(area_threshold)) {
+      message("`area_threshold` is to be used when erasing water from input polygons; ignoring as `erase_water` is currently `FALSE`.")
+    }
   }
 
   # If group is identified, iterate over the groups, shuffle, and combine
