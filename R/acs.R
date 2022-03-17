@@ -91,6 +91,11 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                     shift_geo = FALSE, summary_var = NULL, key = NULL,
                     moe_level = 90, survey = "acs5", show_call = FALSE, ...) {
 
+  # Error message for 1-year 2020 ACS
+  if (year == 2020 && survey == "acs1") {
+    stop("The regular 1-year ACS was not released in 2020 due to low response rates.\nThe Census Bureau released a set of experimental estimates for the 2020 1-year ACS\nthat are not available in tidycensus.\nThese estimates can be downloaded at https://www.census.gov/programs-surveys/acs/data/experimental-data/1-year.html.", call. = FALSE)
+  }
+
   if (shift_geo) {
     warning("The `shift_geo` argument is deprecated and will be removed in a future release. We recommend using `tigris::shift_geometry()` instead.", call. = FALSE)
   }
