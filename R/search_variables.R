@@ -128,8 +128,8 @@ load_variables <- function(year, dataset, cache = FALSE) {
         out <- read_rds(file_loc)
 
         # For 5-year ACS without geography, refresh the table
-        if (year > 2010 && dataset == "acs5") {
-          if (!geography %in% names(out)) {
+        if (year > 2010 && dataset == "acs/acs5") {
+          if (!"geography" %in% names(out)) {
             df <- get_dataset(dataset, year)
             readr::write_rds(df, file_loc)
             return(df)
@@ -137,7 +137,7 @@ load_variables <- function(year, dataset, cache = FALSE) {
         }
 
         # For 2010 decennial Census, must get again if old
-        if (year == 2010 && dataset == "sf1") {
+        if (year == 2010 && dataset == "dec/sf1") {
 
           # Check if an erroring variable is in the file
           if ("H00010001" %in% out$name) {
