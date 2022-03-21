@@ -12,7 +12,8 @@ or endyear of the decennial Census or ACS sample. 5-year ACS data is
 available from 2009 through 2018. 1-year ACS data is available from 2005
 through 2019.}
 
-\item{dataset}{One of "sf1", "sf3", "acs1", "acs3", "acs5", "acs1/profile",
+\item{dataset}{One of "sf1", "sf2", "sf3", "sf4", "pl",
+"as", "gu", "mp", "vi", "acs1", "acs3", "acs5", "acs1/profile",
 "acs3/profile, "acs5/profile", "acs1/subject", "acs3/subject", or
 "acs5/subject".}
 

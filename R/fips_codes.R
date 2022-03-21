@@ -131,4 +131,27 @@
 #' @usage data(mig_recodes)
 "mig_recodes"
 
-
+#' Dataset used to identify geography availability in the 5-year ACS Detailed Tables
+#'
+#' Built-in dataset that includes information on the smallest geography at which
+#' 5-year ACS Detailed Tables data are available, by table, since 2011. This dataset
+#' is used internally by \code{load_variables()} to add a \code{geography} column
+#' when variables are retrieved for a 5-year ACS Detailed Tables dataset.
+#'
+#' @title Dataset used to identify geography availability in the 5-year ACS Detailed Tables
+#' @description Built-in dataset for use by \code{load_variables()} to identify the smallest
+#' geography at which 5-year ACS data are available
+#'
+#' \itemize{
+#'   \item \code{table}: The ACS Table ID
+#'   \item \code{geography}: The smallest geography at which a given table is available
+#'   for a given year
+#'   \item \code{year}: The endyear of the 5-year ACS dataset
+#' }
+#'
+#' @docType data
+#' @keywords datasets
+#' @name acs5_geography
+#'
+#' @usage data(acs5_geography)
+"acs5_geography"

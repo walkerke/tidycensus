@@ -4,8 +4,6 @@ library(furrr)
 
 plan("multisession")
 
-year <- 2019
-survey <- "acs5"
 # Get the first variable in a table for a given year
 # We are assuming here (from the Census docs) that variable availability
 # is by table
@@ -24,7 +22,11 @@ first_var <- load_variables(year, survey) %>%
 # Use a large county as performance is decent in parallel, and some large counties
 # have data available at the county level that smaller ones don't
 table_availability <- future_map_dfr(first_var, function(var) {
-  geographies <- c("block group", "tract", "county", "state", "us")
+  if (year < 2013) {
+    geographies <- c("tract", "county", "state", "us")
+  } else {
+    geographies <- c("block group", "tract", "county", "state", "us")
+  }
 
   for (g in geographies) {
 
@@ -59,4 +61,5 @@ table_availability <- future_map_dfr(first_var, function(var) {
 
 })
 
-readr::write_rds(table_availability, glue::glue("data-raw/geo_availability/{survey}_{year}.rds"))
+# Write out to intermediate file
+readr::write_rds(table_availability, glue::glue("~/dev/tidycensus/data-raw/geo_availability/{survey}_{year}.rds"))
