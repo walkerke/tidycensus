@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2.9000</span>
       </span>
     </div>
 
@@ -83,7 +85,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/walkerke/tidycensus">
+  <a href="https://github.com/walkerke/tidycensus" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -98,29 +100,44 @@
 
       
 
-      </header><script src="margins-of-error_files/header-attrs-2.10.5/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Margins of error in the ACS</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/walkerke/tidycensus/blob/master/vignettes/margins-of-error.Rmd"><code>vignettes/margins-of-error.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/walkerke/tidycensus/blob/HEAD/vignettes/margins-of-error.Rmd" class="external-link"><code>vignettes/margins-of-error.Rmd</code></a></small>
       <div class="hidden name"><code>margins-of-error.Rmd</code></div>
 
     </div>
 
     
     
-<p>As opposed to the decennial Census datasets available with <strong>tidycensus</strong>, datasets from the five-year American Community Survey include <em>estimates</em> with an associated <em>margin of error</em>, as the ACS is based on an annual sample of around 3 million households. As explained by the Census Bureau:</p>
+<p>As opposed to the decennial Census datasets available with
+<strong>tidycensus</strong>, datasets from the five-year American
+Community Survey include <em>estimates</em> with an associated
+<em>margin of error</em>, as the ACS is based on an annual sample of
+around 3 million households. As explained by the Census Bureau:</p>
 <blockquote>
-<p>While the main function of the decennial census is to provide <em>counts</em> of people for the purpose of congressional apportionment and legislative redistricting, the primary purpose of the ACS is to measure the changing social and economic <em>characteristics</em> of the U.S. population. As a result, the ACS does not provide official counts of the population in between censuses. <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>While the main function of the decennial census is to provide
+<em>counts</em> of people for the purpose of congressional apportionment
+and legislative redistricting, the primary purpose of the ACS is to
+measure the changing social and economic <em>characteristics</em> of the
+U.S. population. As a result, the ACS does not provide official counts
+of the population in between censuses. <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 </blockquote>
-<p>In turn, ACS data <strong>do not</strong> represent precise counts of population subgroups, but are rather designed to give a general sense of how socioeconomic indicators vary across the country. In many cases, ACS margins of error can be quite large - at times exceeding the estimate. Let’s say we want to study aging populations in Ramsey County, Minnesota from the 2012-2016 ACS by Census tracts. We can pull up a dataset with <code>get_acs</code>:</p>
+<p>In turn, ACS data <strong>do not</strong> represent precise counts of
+population subgroups, but are rather designed to give a general sense of
+how socioeconomic indicators vary across the country. In many cases, ACS
+margins of error can be quite large - at times exceeding the estimate.
+Let’s say we want to study aging populations in Ramsey County, Minnesota
+from the 2012-2016 ACS by Census tracts. We can pull up a dataset with
+<code>get_acs</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
 
-<span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"B01001_0"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">25</span>, <span class="fl">44</span><span class="op">:</span><span class="fl">49</span><span class="op">)</span><span class="op">)</span>
+<span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"B01001_0"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">25</span>, <span class="fl">44</span><span class="op">:</span><span class="fl">49</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">ramsey</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"tract"</span>, 
                   variables <span class="op">=</span> <span class="va">vars</span>, 
@@ -128,47 +145,78 @@
                   county <span class="op">=</span> <span class="st">"Ramsey"</span>, 
                   year <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ramsey</span> <span class="op">%&gt;%</span> <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">NAME</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 × 4
-##   GEOID       variable   estimate   moe
-##   &lt;chr&gt;       &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
-## 1 27123030100 B01001_020       51    27
-## 2 27123030100 B01001_021       92    40
-## 3 27123030100 B01001_022       48    28
-## 4 27123030100 B01001_023        8    13
-## 5 27123030100 B01001_024       51    52
-## 6 27123030100 B01001_025       23    18</code></pre>
-<p>We can see that in two instances the margin of error exceeds the estimate. One way to address this is through data aggregation. While the specific group estimates in this Census tract may be unreliable, the estimate for the total population over age 65 in the tract is likely better, but is not available directly from the ACS detailed tables. In turn, we can summarize our data.</p>
-<p>The US Census Bureau publishes guidelines on how to calculate margins of error for derived estimates (see the footnotes). These formulas are implemented in <strong>tidycensus</strong> in the <code>moe_sum</code>, <code>moe_prop</code>, <code>moe_ratio</code>, and <code>moe_product</code> functions. The example below illustrates the use of <code>moe_sum</code> to calculate the margin of error around a derived estimate for Census tract population over age 65.</p>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ramsey</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">NAME</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span>
+<span class="co">##   GEOID       variable   estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 27123030100 B01001_020       51    27</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 27123030100 B01001_021       92    40</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 27123030100 B01001_022       48    28</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 27123030100 B01001_023        8    13</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 27123030100 B01001_024       51    52</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 27123030100 B01001_025       23    18</span></code></pre>
+<p>We can see that in two instances the margin of error exceeds the
+estimate. One way to address this is through data aggregation. While the
+specific group estimates in this Census tract may be unreliable, the
+estimate for the total population over age 65 in the tract is likely
+better, but is not available directly from the ACS detailed tables. In
+turn, we can summarize our data.</p>
+<p>The US Census Bureau publishes guidelines on how to calculate margins
+of error for derived estimates (see the footnotes). These formulas are
+implemented in <strong>tidycensus</strong> in the <code>moe_sum</code>,
+<code>moe_prop</code>, <code>moe_ratio</code>, and
+<code>moe_product</code> functions. The example below illustrates the
+use of <code>moe_sum</code> to calculate the margin of error around a
+derived estimate for Census tract population over age 65.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ramsey65</span> <span class="op">&lt;-</span> <span class="va">ramsey</span> <span class="op">%&gt;%</span>
-  <span class="fu">group_by</span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">summarize</span><span class="op">(</span>sumest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="va">ramsey65</span> <span class="op">&lt;-</span> <span class="va">ramsey</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>sumest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span>, 
             summoe <span class="op">=</span> <span class="fu"><a href="../reference/moe_sum.html">moe_sum</a></span><span class="op">(</span><span class="va">moe</span>, <span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ramsey65</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 × 3
-##   GEOID       sumest summoe
-##   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
-## 1 27123030100    677  124. 
-## 2 27123030201    899  201. 
-## 3 27123030202    149   53.8
-## 4 27123030300    783  154. 
-## 5 27123030400    423  131. 
-## 6 27123030500    396  111.</code></pre>
-<p>The margins of error for this aggregate population are more reasonable. However, the Census Bureau does issue this warning:</p>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ramsey65</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 3</span></span>
+<span class="co">##   GEOID       sumest summoe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 27123030100    677  124. </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 27123030201    899  201. </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 27123030202    149   53.8</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 27123030300    783  154. </span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 27123030400    423  131. </span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 27123030500    396  111.</span></code></pre>
+<p>The margins of error for this aggregate population are more
+reasonable. However, the Census Bureau does issue this warning:</p>
 <blockquote>
-<p>These methods do not consider the correlation or covariance between the basic estimates. They may be overestimates or underestimates of the derived estimate’s standard error, depending on whether the two basic estimates are highly correlated in either the positive or negative direction. As a result, the approximated standard error may not match direct calculations of standard errors or calculations obtained through other methods. <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<p>These methods do not consider the correlation or covariance between
+the basic estimates. They may be overestimates or underestimates of the
+derived estimate’s standard error, depending on whether the two basic
+estimates are highly correlated in either the positive or negative
+direction. As a result, the approximated standard error may not match
+direct calculations of standard errors or calculations obtained through
+other methods. <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
 </blockquote>
-<p>Dealing with margins of error in the ACS is a complex, yet important topic. This is especially true when dealing with spatial data, and considering ways to aggregate areal units to improve the reliability of estimates. I recommend the following papers for further reading:</p>
-<p>Spielman, S.E., and Folch, D.C. (2015). Reducing Uncertainty in the American Community Survey through Data-Driven Regionalization. <em>PLOS ONE</em>. <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115626" class="uri">http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115626</a>; Python implementation at <a href="https://github.com/geoss/ACS_Regionalization" class="uri">https://github.com/geoss/ACS_Regionalization</a></p>
-<p>Spielman, S.E., and Singleton, A. (2015) Studying Neighborhoods Using Uncertain Data from the American Community Survey: A Contextual Approach. <em>Annals of the Association of American Geographers</em>. <a href="http://www.tandfonline.com/doi/full/10.1080/00045608.2015.1052335" class="uri">http://www.tandfonline.com/doi/full/10.1080/00045608.2015.1052335</a>; R implementation at <a href="https://github.com/geoss/acs_demographic_clusters" class="uri">https://github.com/geoss/acs_demographic_clusters</a>.</p>
-<p>Wong, D.W., and Sun, M. (2013). Handling Data Quality Information of Survey Data in GIS: A Case of Using the American Community Survey Data. <em>Spatial Demography</em>. <a href="https://link.springer.com/article/10.1007/BF03354884" class="uri">https://link.springer.com/article/10.1007/BF03354884</a>.</p>
-<div class="footnotes">
+<p>Dealing with margins of error in the ACS is a complex, yet important
+topic. This is especially true when dealing with spatial data, and
+considering ways to aggregate areal units to improve the reliability of
+estimates. I recommend the following papers for further reading:</p>
+<p>Spielman, S.E., and Folch, D.C. (2015). Reducing Uncertainty in the
+American Community Survey through Data-Driven Regionalization. <em>PLOS
+ONE</em>. <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115626" class="external-link uri">http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0115626</a>;
+Python implementation at <a href="https://github.com/geoss/ACS_Regionalization" class="external-link uri">https://github.com/geoss/ACS_Regionalization</a></p>
+<p>Spielman, S.E., and Singleton, A. (2015) Studying Neighborhoods Using
+Uncertain Data from the American Community Survey: A Contextual
+Approach. <em>Annals of the Association of American Geographers</em>. <a href="http://www.tandfonline.com/doi/full/10.1080/00045608.2015.1052335" class="external-link uri">http://www.tandfonline.com/doi/full/10.1080/00045608.2015.1052335</a>;
+R implementation at <a href="https://github.com/geoss/acs_demographic_clusters" class="external-link uri">https://github.com/geoss/acs_demographic_clusters</a>.</p>
+<p>Wong, D.W., and Sun, M. (2013). Handling Data Quality Information of
+Survey Data in GIS: A Case of Using the American Community Survey Data.
+<em>Spatial Demography</em>. <a href="https://link.springer.com/article/10.1007/BF03354884" class="external-link uri">https://link.springer.com/article/10.1007/BF03354884</a>.</p>
+<div class="footnotes footnotes-end-of-document">
 <hr>
 <ol>
-<li id="fn1"><p>United States Census Bureau (2008). A Compass for Understanding and Using American Community Survey Data. <a href="https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf" class="uri">https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf</a>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>United States Census Bureau (2016). Instructions for Applying Statistical Testing to the 2011-2015 ACS 5-Year Data. <a href="https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2015StatisticalTesting5year.pdf" class="uri">https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2015StatisticalTesting5year.pdf</a>.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>United States Census Bureau (2008). A Compass for
+Understanding and Using American Community Survey Data. <a href="https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf" class="external-link uri">https://www.census.gov/content/dam/Census/library/publications/2008/acs/ACSGeneralHandbook.pdf</a>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>United States Census Bureau (2016). Instructions for
+Applying Statistical Testing to the 2011-2015 ACS 5-Year Data. <a href="https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2015StatisticalTesting5year.pdf" class="external-link uri">https://www2.census.gov/programs-surveys/acs/tech_docs/statistical_testing/2015StatisticalTesting5year.pdf</a>.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
@@ -182,11 +230,14 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Kyle Walker, Matt Herman.</p>
+  <p></p>
+<p>Developed by Kyle Walker, Matt Herman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.1.</p>
 </div>
 
       </footer>
@@ -194,6 +245,8 @@
 
   
 
+
+  
 
   </body>
 </html>

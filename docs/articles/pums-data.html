@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2.9000</span>
       </span>
     </div>
 
@@ -83,7 +85,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/walkerke/tidycensus">
+  <a href="https://github.com/walkerke/tidycensus" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -98,104 +100,177 @@
 
       
 
-      </header><script src="pums-data_files/header-attrs-2.10.5/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Working with Census microdata</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/walkerke/tidycensus/blob/master/vignettes/pums-data.Rmd"><code>vignettes/pums-data.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/walkerke/tidycensus/blob/HEAD/vignettes/pums-data.Rmd" class="external-link"><code>vignettes/pums-data.Rmd</code></a></small>
       <div class="hidden name"><code>pums-data.Rmd</code></div>
 
     </div>
 
     
     
-<p>Most of the data available through tidycensus and the Census API is aggregated to certain geographic levels (tract, county, state, etc.). In other words, the data we get by executing <code><a href="../reference/get_acs.html">get_acs()</a></code> has been summarized by the Census Bureau so that we are able to learn how many people live in a particular county or what the median household income of a state is. There are thousands of individual variables that the Census aggregates and publishes in tabular form.</p>
-<p>For many purposes, these pre-aggregated tables have enough information to work with. But, the Census Bureau also releases <strong>microdata</strong> from the American Community Survey. Microdata is the individual-level responses to the ACS that is used to create the summary and detail tables the Census publishes. Instead of a getting one row per state from a table, we can get one row per respondent. For the American Community Survey, this data is called the <a href="https://www.census.gov/programs-surveys/acs/technical-documentation/pums/about.html"><strong>Public Use Microdata Sample</strong> (PUMS)</a>.</p>
-<p>Using PUMS data instead of the published tables can be a very powerful tool. It can, for instance, allow you to create custom estimates that aren’t available in pre-aggregated tables. You can also use microdata to fit models on individual-level data instead of modeling block groups or census tracts.</p>
-<p>Until recently, PUMS data was only available from the <a href="https://www2.census.gov/programs-surveys/acs/data/pums/2018/1-Year/">Census Bureau FTP site</a> and was somewhat cumbersome to use. Now, PUMS data is available via web API, which means you can easily access it in R by using tidycensus.</p>
-<div id="pumas" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pumas" class="anchor"></a>PUMAs</h2>
-<p>One trade-off with using PUMS data as compared to aggregated data is that you only get the state and <a href="https://www.census.gov/programs-surveys/geography/guidance/geo-areas/pumas.html">public use microdata area (PUMA)</a> of each individual in the microdata. PUMAs are Census geographies that contain at least 100,000 people and are entirely within a single state. They are built from census tracts and counties and may or may not be similar to other recognized geographic boundaries. In New York City, for instance, PUMAs are closely aligned to <a href="https://www1.nyc.gov/assets/planning/download/pdf/data-maps/nyc-population/census2010/puma_cd_map.pdf">Community Districts</a>. So, if you are interested in pulling data about block groups, census tracts, or other small areas, you can’t use PUMS data.</p>
+<p>Most of the data available through tidycensus and the Census API is
+aggregated to certain geographic levels (tract, county, state, etc.). In
+other words, the data we get by executing <code><a href="../reference/get_acs.html">get_acs()</a></code> has
+been summarized by the Census Bureau so that we are able to learn how
+many people live in a particular county or what the median household
+income of a state is. There are thousands of individual variables that
+the Census aggregates and publishes in tabular form.</p>
+<p>For many purposes, these pre-aggregated tables have enough
+information to work with. But, the Census Bureau also releases
+<strong>microdata</strong> from the American Community Survey. Microdata
+is the individual-level responses to the ACS that is used to create the
+summary and detail tables the Census publishes. Instead of a getting one
+row per state from a table, we can get one row per respondent. For the
+American Community Survey, this data is called the <a href="https://www.census.gov/programs-surveys/acs/technical-documentation/pums/about.html" class="external-link"><strong>Public
+Use Microdata Sample</strong> (PUMS)</a>.</p>
+<p>Using PUMS data instead of the published tables can be a very
+powerful tool. It can, for instance, allow you to create custom
+estimates that aren’t available in pre-aggregated tables. You can also
+use microdata to fit models on individual-level data instead of modeling
+block groups or census tracts.</p>
+<p>Until recently, PUMS data was only available from the <a href="https://www2.census.gov/programs-surveys/acs/data/pums/2018/1-Year/" class="external-link">Census
+Bureau FTP site</a> and was somewhat cumbersome to use. Now, PUMS data
+is available via web API, which means you can easily access it in R by
+using tidycensus.</p>
+<div class="section level2">
+<h2 id="pumas">PUMAs<a class="anchor" aria-label="anchor" href="#pumas"></a>
+</h2>
+<p>One trade-off with using PUMS data as compared to aggregated data is
+that you only get the state and <a href="https://www.census.gov/programs-surveys/geography/guidance/geo-areas/pumas.html" class="external-link">public
+use microdata area (PUMA)</a> of each individual in the microdata. PUMAs
+are Census geographies that contain at least 100,000 people and are
+entirely within a single state. They are built from census tracts and
+counties and may or may not be similar to other recognized geographic
+boundaries. In New York City, for instance, PUMAs are closely aligned to
+<a href="https://www1.nyc.gov/assets/planning/download/pdf/data-maps/nyc-population/census2010/puma_cd_map.pdf" class="external-link">Community
+Districts</a>. So, if you are interested in pulling data about block
+groups, census tracts, or other small areas, you can’t use PUMS
+data.</p>
 </div>
-<div id="pums-data-dictionaries" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pums-data-dictionaries" class="anchor"></a>PUMS data dictionaries</h2>
-<p>The first place to start is to identify the variables you want to download. There are hundreds of PUMS variables and each describes characteristics of a person or a housing unit. <code>pums_variables</code> is a dataset built into tidycensus that contains names, descriptions, codes, and other metadata about the PUMS variables.</p>
-<p>Because PUMS variables and codes can change slightly by year, you should select which year’s data you will be working with and filter <code>pums_variables</code> for only that year and survey. In the following example, we will be working with the 2018 1-year American Community Survey.</p>
-<p>Later in this vignette, we use the <a href="http://r-survey.r-forge.r-project.org/survey/"><strong>survey</strong></a> and <a href="http://gdfe.co/srvyr/"><strong>srvyr</strong></a> to calculate PUMS estimates, so if you want to follow along and you don’t already have them installed, you should install these two packages from CRAN.</p>
+<div class="section level2">
+<h2 id="pums-data-dictionaries">PUMS data dictionaries<a class="anchor" aria-label="anchor" href="#pums-data-dictionaries"></a>
+</h2>
+<p>The first place to start is to identify the variables you want to
+download. There are hundreds of PUMS variables and each describes
+characteristics of a person or a housing unit.
+<code>pums_variables</code> is a dataset built into tidycensus that
+contains names, descriptions, codes, and other metadata about the PUMS
+variables.</p>
+<p>Because PUMS variables and codes can change slightly by year, you
+should select which year’s data you will be working with and filter
+<code>pums_variables</code> for only that year and survey. In the
+following example, we will be working with the 2018 1-year American
+Community Survey.</p>
+<p>Later in this vignette, we use the <a href="http://r-survey.r-forge.r-project.org/survey/" class="external-link"><strong>survey</strong></a>
+and <a href="http://gdfe.co/srvyr/" class="external-link"><strong>srvyr</strong></a> to
+calculate PUMS estimates, so if you want to follow along and you don’t
+already have them installed, you should install these two packages from
+CRAN.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"survey"</span>, <span class="st">"srvyr"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"survey"</span>, <span class="st">"srvyr"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span>
 
-<span class="va">pums_vars_2018</span> <span class="op">&lt;-</span> <span class="va">pums_variables</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2018</span>, <span class="va">survey</span> <span class="op">==</span> <span class="st">"acs1"</span><span class="op">)</span></code></pre></div>
-<p><code>pums_variables</code> contains both the variables as well as their possible values. So let’s just look at the unique variables.</p>
+<span class="va">pums_vars_2018</span> <span class="op">&lt;-</span> <span class="va">pums_variables</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2018</span>, <span class="va">survey</span> <span class="op">==</span> <span class="st">"acs1"</span><span class="op">)</span></code></pre></div>
+<p><code>pums_variables</code> contains both the variables as well as
+their possible values. So let’s just look at the unique variables.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pums_vars_2018</span> <span class="op">%&gt;%</span> 
-  <span class="fu">distinct</span><span class="op">(</span><span class="va">var_code</span>, <span class="va">var_label</span>, <span class="va">data_type</span>, <span class="va">level</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 513 × 4
-##   var_code var_label                                                                      data_type level
-##   &lt;chr&gt;    &lt;chr&gt;                                                                          &lt;chr&gt;     &lt;chr&gt;
-## 1 RT       Record Type                                                                    chr       &lt;NA&gt; 
-## 2 SERIALNO Housing unit/GQ person serial number                                           chr       &lt;NA&gt; 
-## 3 DIVISION Division code based on 2010 Census definitions                                 chr       &lt;NA&gt; 
-## 4 PUMA     Public use microdata area code (PUMA) based on 2010 Census definition (areas … chr       &lt;NA&gt; 
-## 5 REGION   Region code based on 2010 Census definitions                                   chr       &lt;NA&gt; 
-## # … with 508 more rows</code></pre>
-<p>If you’re new to PUMS data, this is a good dataset to browse to get a feel for what variables are available.</p>
+<code class="sourceCode R"><span class="va">pums_vars_2018</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">var_code</span>, <span class="va">var_label</span>, <span class="va">data_type</span>, <span class="va">level</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 513 × 4</span></span>
+<span class="co">##   var_code var_label                                                                      data_type level</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> RT       Record Type                                                                    chr       <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> SERIALNO Housing unit/GQ person serial number                                           chr       <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> DIVISION Division code based on 2010 Census definitions                                 chr       <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> PUMA     Public use microdata area code (PUMA) based on 2010 Census definition (areas … chr       <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> REGION   Region code based on 2010 Census definitions                                   chr       <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">## <span style="color: #949494;"># … with 508 more rows</span></span></code></pre>
+<p>If you’re new to PUMS data, this is a good dataset to browse to get a
+feel for what variables are available.</p>
 </div>
-<div id="person-vs--housing-unit" class="section level2">
-<h2 class="hasAnchor">
-<a href="#person-vs--housing-unit" class="anchor"></a>Person vs. housing unit</h2>
-<p>Some PUMS variables relate to individuals (e.g. age, race, educational attainment) while others relate to households/housing units (e.g. number of bedrooms, electricity cost, property value).</p>
-<p>Individuals in PUMS data are always nested within a housing unit (The ACS is sent to an housing unit address and all people living in that unit complete the survey.) Housing units are uniquely identified by the <code>SERIALNO</code> variable and persons are uniquely identified by the combination of <code>SERIALNO</code> and <code>SPORDER</code>. In the data dictionary included in tidycensus, variables are identified as either “housing” or “person” variables in the level column. Here, for example, are the first five person-level variables in the data dictionary.</p>
+<div class="section level2">
+<h2 id="person-vs--housing-unit">Person vs. housing unit<a class="anchor" aria-label="anchor" href="#person-vs--housing-unit"></a>
+</h2>
+<p>Some PUMS variables relate to individuals (e.g. age, race,
+educational attainment) while others relate to households/housing units
+(e.g. number of bedrooms, electricity cost, property value).</p>
+<p>Individuals in PUMS data are always nested within a housing unit (The
+ACS is sent to an housing unit address and all people living in that
+unit complete the survey.) Housing units are uniquely identified by the
+<code>SERIALNO</code> variable and persons are uniquely identified by
+the combination of <code>SERIALNO</code> and <code>SPORDER</code>. In
+the data dictionary included in tidycensus, variables are identified as
+either “housing” or “person” variables in the level column. Here, for
+example, are the first five person-level variables in the data
+dictionary.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pums_vars_2018</span> <span class="op">%&gt;%</span> 
-  <span class="fu">distinct</span><span class="op">(</span><span class="va">var_code</span>, <span class="va">var_label</span>, <span class="va">data_type</span>, <span class="va">level</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">level</span> <span class="op">==</span> <span class="st">"person"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 279 × 4
-##   var_code var_label                       data_type level 
-##   &lt;chr&gt;    &lt;chr&gt;                           &lt;chr&gt;     &lt;chr&gt; 
-## 1 SPORDER  Person number                   num       person
-## 2 PWGTP    Person's weight                 num       person
-## 3 AGEP     Age                             num       person
-## 4 CIT      Citizenship status              chr       person
-## 5 CITWP    Year of naturalization write-in num       person
-## # … with 274 more rows</code></pre>
-<p>It is important to be mindful of whether the variables you choose to analyze are person- or household-level variables.</p>
+<code class="sourceCode R"><span class="va">pums_vars_2018</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">var_code</span>, <span class="va">var_label</span>, <span class="va">data_type</span>, <span class="va">level</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">level</span> <span class="op">==</span> <span class="st">"person"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 279 × 4</span></span>
+<span class="co">##   var_code var_label                       data_type level </span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> SPORDER  Person number                   num       person</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> PWGTP    Person's weight                 num       person</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> AGEP     Age                             num       person</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> CIT      Citizenship status              chr       person</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> CITWP    Year of naturalization write-in num       person</span>
+<span class="co">## <span style="color: #949494;"># … with 274 more rows</span></span></code></pre>
+<p>It is important to be mindful of whether the variables you choose to
+analyze are person- or household-level variables.</p>
 </div>
-<div id="using-get_pums-to-download-pums-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-get_pums-to-download-pums-data" class="anchor"></a>Using <code>get_pums()</code> to download PUMS data</h2>
-<p>To download PUMS data from the Census API, use the <code><a href="../reference/get_pums.html">get_pums()</a></code> function. If you’ve used other <code>get_*()</code> functions in tidycensus, it should be familiar to you. The key arguments to specify are <code>variables</code>, <code>state</code>, <code>survey</code>, and <code>year</code>. Here we get <code>PUMA</code>, <code>SEX</code>, <code>AGEP</code>, and <code>SCHL</code> variables for Vermont from the 2018 1-year ACS.</p>
+<div class="section level2">
+<h2 id="using-get_pums-to-download-pums-data">Using <code>get_pums()</code> to download PUMS data<a class="anchor" aria-label="anchor" href="#using-get_pums-to-download-pums-data"></a>
+</h2>
+<p>To download PUMS data from the Census API, use the
+<code><a href="../reference/get_pums.html">get_pums()</a></code> function. If you’ve used other
+<code>get_*()</code> functions in tidycensus, it should be familiar to
+you. The key arguments to specify are <code>variables</code>,
+<code>state</code>, <code>survey</code>, and <code>year</code>. Here we
+get <code>PUMA</code>, <code>SEX</code>, <code>AGEP</code>, and
+<code>SCHL</code> variables for Vermont from the 2018 1-year ACS.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_pums</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,
+  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,
   state <span class="op">=</span> <span class="st">"VT"</span>,
   survey <span class="op">=</span> <span class="st">"acs1"</span>,
   year <span class="op">=</span> <span class="fl">2018</span>
   <span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_pums</span></code></pre></div>
-<pre><code>## # A tibble: 6,436 × 9
-##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX  
-##   &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-## 1 2018GQ0001230       1     0     3    26 00300 50    20    1    
-## 2 2018GQ0002135       1     0    64    18 00100 50    19    2    
-## 3 2018GQ0002999       1     0    62    20 00400 50    19    2    
-## 4 2018GQ0004077       1     0    16    94 00200 50    21    2    
-## 5 2018GQ0006486       1     0    26    20 00400 50    19    1    
-## # … with 6,431 more rows</code></pre>
-<p>We get 6436 rows and 9 columns. In addition to the variables we specified, <code><a href="../reference/get_pums.html">get_pums()</a></code> also always returns <code>SERIALNO</code>, <code>SPORDER</code>, <code>WGTP</code>, <code>PWGTP</code>, and <code>ST</code>. <code>SERIALNO</code> and <code>SPORDER</code> are the variables that uniquely identify observations, <code>WGTP</code> and <code>PWGTP</code> are the housing-unit and person weights, and <code>ST</code> is the state code.</p>
-<p>Notice that <code>ST</code>, <code>SEX</code> and <code>SCHL</code> return coded character variables. You can look up what these codes represent in the <code>pums_variables</code> dataset provided or set <code>recode = TRUE</code> in <code><a href="../reference/get_pums.html">get_pums()</a></code> to return additional columns with the values of these variables recoded.</p>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6,436 × 9</span></span>
+<span class="co">##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX  </span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 2018GQ0002083       1     0    59    20 00100 50    19    2    </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 2018GQ0002131       1     0     2    51 00400 50    16    1    </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 2018GQ0002587       1     0    52    18 00400 50    16    1    </span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 2018GQ0003751       1     0    34    19 00100 50    19    2    </span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 2018GQ0003853       1     0   129    20 00400 50    19    1    </span>
+<span class="co">## <span style="color: #949494;"># … with 6,431 more rows</span></span></code></pre>
+<p>We get 6436 rows and 9 columns. In addition to the variables we
+specified, <code><a href="../reference/get_pums.html">get_pums()</a></code> also always returns
+<code>SERIALNO</code>, <code>SPORDER</code>, <code>WGTP</code>,
+<code>PWGTP</code>, and <code>ST</code>. <code>SERIALNO</code> and
+<code>SPORDER</code> are the variables that uniquely identify
+observations, <code>WGTP</code> and <code>PWGTP</code> are the
+housing-unit and person weights, and <code>ST</code> is the state
+code.</p>
+<p>Notice that <code>ST</code>, <code>SEX</code> and <code>SCHL</code>
+return coded character variables. You can look up what these codes
+represent in the <code>pums_variables</code> dataset provided or set
+<code>recode = TRUE</code> in <code><a href="../reference/get_pums.html">get_pums()</a></code> to return
+additional columns with the values of these variables recoded.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_pums_recoded</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,
+  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,
   state <span class="op">=</span> <span class="st">"VT"</span>,
   survey <span class="op">=</span> <span class="st">"acs1"</span>,
   year <span class="op">=</span> <span class="fl">2018</span>,
@@ -203,257 +278,332 @@
   <span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_pums_recoded</span></code></pre></div>
-<pre><code>## # A tibble: 6,436 × 12
-##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX   ST_label   SCHL_label         SEX_label
-##   &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;ord&gt;      &lt;ord&gt;              &lt;ord&gt;    
-## 1 2018GQ0001230       1     0     3    26 00300 50    20    1     Vermont/VT Associate's degree Male     
-## 2 2018GQ0002135       1     0    64    18 00100 50    19    2     Vermont/VT 1 or more years o… Female   
-## 3 2018GQ0002999       1     0    62    20 00400 50    19    2     Vermont/VT 1 or more years o… Female   
-## 4 2018GQ0004077       1     0    16    94 00200 50    21    2     Vermont/VT Bachelor's degree  Female   
-## 5 2018GQ0006486       1     0    26    20 00400 50    19    1     Vermont/VT 1 or more years o… Male     
-## # … with 6,431 more rows</code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6,436 × 12</span></span>
+<span class="co">##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX   ST_label   SCHL_label         SEX_label</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>    </span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 2018GQ0002083       1     0    59    20 00100 50    19    2     Vermont/VT 1 or more years o… Female   </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 2018GQ0002131       1     0     2    51 00400 50    16    1     Vermont/VT Regular high scho… Male     </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 2018GQ0002587       1     0    52    18 00400 50    16    1     Vermont/VT Regular high scho… Male     </span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 2018GQ0003751       1     0    34    19 00100 50    19    2     Vermont/VT 1 or more years o… Female   </span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 2018GQ0003853       1     0   129    20 00400 50    19    1     Vermont/VT 1 or more years o… Male     </span>
+<span class="co">## <span style="color: #949494;"># … with 6,431 more rows</span></span></code></pre>
 </div>
-<div id="analyzing-pums-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#analyzing-pums-data" class="anchor"></a>Analyzing PUMS data</h2>
-<p>Remember that PUMS data is a sample of about 1% of the US population. When we want to estimate a variable that represents the entire population rather than a sample, we have to apply a weighting adjustment. A simple way to think about PUMS weights is that for each observation in the sample, the weight variable tells us the number of people in the population that the observation represents. So, if we simply add up all the person weights in our VT PUMS data, we get the (estimated) population of Vermont.</p>
+<div class="section level2">
+<h2 id="analyzing-pums-data">Analyzing PUMS data<a class="anchor" aria-label="anchor" href="#analyzing-pums-data"></a>
+</h2>
+<p>Remember that PUMS data is a sample of about 1% of the US population.
+When we want to estimate a variable that represents the entire
+population rather than a sample, we have to apply a weighting
+adjustment. A simple way to think about PUMS weights is that for each
+observation in the sample, the weight variable tells us the number of
+people in the population that the observation represents. So, if we
+simply add up all the person weights in our VT PUMS data, we get the
+(estimated) population of Vermont.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">vt_pums_recoded</span><span class="op">$</span><span class="va">PWGTP</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] 626299</code></pre>
-<p>Another convenient approach to weighting PUMS data is to use the <code>wt</code> argument in <code><a href="https://dplyr.tidyverse.org/reference/count.html">dplyr::count()</a></code>. Here, we calculate the population by sex for each PUMA in Vermont (there are only four in the whole state!).</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">vt_pums_recoded</span><span class="op">$</span><span class="va">PWGTP</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] 626299</span></code></pre>
+<p>Another convenient approach to weighting PUMS data is to use the
+<code>wt</code> argument in <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">dplyr::count()</a></code>. Here, we
+calculate the population by sex for each PUMA in Vermont (there are only
+four in the whole state!).</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_pums_recoded</span> <span class="op">%&gt;%</span> 
-  <span class="fu">count</span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span>, wt <span class="op">=</span> <span class="va">PWGTP</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 8 × 3
-##   PUMA  SEX_label      n
-##   &lt;chr&gt; &lt;ord&gt;      &lt;dbl&gt;
-## 1 00100 Male      108732
-## 2 00100 Female    111564
-## 3 00200 Male       73768
-## 4 00200 Female     73416
-## 5 00300 Male       61601
-## 6 00300 Female     64806
-## 7 00400 Male       65675
-## 8 00400 Female     66737</code></pre>
-<p>Many of the variables included in the PUMS data are categorical and we might want to group some categories together and estimate the proportion of the population with these characteristics. In this example, we first create a new variable that is whether or not the person has a Bachelor’s degree or above, group by PUMA and sex, then calculate the total population, average age, total with BA or above (only for people 25 and older), and percent with BA or above.</p>
+<code class="sourceCode R"><span class="va">vt_pums_recoded</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span>, wt <span class="op">=</span> <span class="va">PWGTP</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 8 × 3</span></span>
+<span class="co">##   PUMA  SEX_label      n</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male      <span style="text-decoration: underline;">108</span>732</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female    <span style="text-decoration: underline;">111</span>564</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male       <span style="text-decoration: underline;">73</span>768</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female     <span style="text-decoration: underline;">73</span>416</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male       <span style="text-decoration: underline;">61</span>601</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female     <span style="text-decoration: underline;">64</span>806</span>
+<span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male       <span style="text-decoration: underline;">65</span>675</span>
+<span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female     <span style="text-decoration: underline;">66</span>737</span></code></pre>
+<p>Many of the variables included in the PUMS data are categorical and
+we might want to group some categories together and estimate the
+proportion of the population with these characteristics. In this
+example, we first create a new variable that is whether or not the
+person has a Bachelor’s degree or above, group by PUMA and sex, then
+calculate the total population, average age, total with BA or above
+(only for people 25 and older), and percent with BA or above.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_pums_recoded</span> <span class="op">%&gt;%</span> 
-  <span class="fu">mutate</span><span class="op">(</span>ba_above <span class="op">=</span> <span class="va">SCHL</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"21"</span>, <span class="st">"22"</span>, <span class="st">"23"</span>, <span class="st">"24"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">group_by</span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">summarize</span><span class="op">(</span>
-    total_pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">)</span>,
-    mean_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html">weighted.mean</a></span><span class="op">(</span><span class="va">AGEP</span>, <span class="va">PWGTP</span><span class="op">)</span>,
-    ba_above <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">ba_above</span> <span class="op">==</span> <span class="cn">TRUE</span> <span class="op">&amp;</span> <span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">]</span><span class="op">)</span>,
-    ba_above_pct <span class="op">=</span> <span class="va">ba_above</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">]</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">vt_pums_recoded</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ba_above <span class="op">=</span> <span class="va">SCHL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"21"</span>, <span class="st">"22"</span>, <span class="st">"23"</span>, <span class="st">"24"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>
+    total_pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">)</span>,
+    mean_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">AGEP</span>, <span class="va">PWGTP</span><span class="op">)</span>,
+    ba_above <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">ba_above</span> <span class="op">==</span> <span class="cn">TRUE</span> <span class="op">&amp;</span> <span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">]</span><span class="op">)</span>,
+    ba_above_pct <span class="op">=</span> <span class="va">ba_above</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">]</span><span class="op">)</span>
   <span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 8 × 6
-## # Groups:   PUMA [4]
-##   PUMA  SEX_label total_pop mean_age ba_above ba_above_pct
-##   &lt;chr&gt; &lt;ord&gt;         &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;
-## 1 00100 Male         108732     38.2    34113        0.469
-## 2 00100 Female       111564     40.4    36873        0.473
-## 3 00200 Male          73768     41.4    15831        0.303
-## 4 00200 Female        73416     43.6    20248        0.367
-## 5 00300 Male          61601     43.7    14869        0.326
-## 6 00300 Female        64806     45.0    21527        0.434
-## 7 00400 Male          65675     41.9    12788        0.278
-## 8 00400 Female        66737     44.6    18980        0.391</code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 8 × 6</span></span>
+<span class="co">## <span style="color: #949494;"># Groups:   PUMA [4]</span></span>
+<span class="co">##   PUMA  SEX_label total_pop mean_age ba_above ba_above_pct</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male         <span style="text-decoration: underline;">108</span>732     38.2    <span style="text-decoration: underline;">34</span>113        0.469</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female       <span style="text-decoration: underline;">111</span>564     40.4    <span style="text-decoration: underline;">36</span>873        0.473</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male          <span style="text-decoration: underline;">73</span>768     41.4    <span style="text-decoration: underline;">15</span>831        0.303</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female        <span style="text-decoration: underline;">73</span>416     43.6    <span style="text-decoration: underline;">20</span>248        0.367</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male          <span style="text-decoration: underline;">61</span>601     43.7    <span style="text-decoration: underline;">14</span>869        0.326</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female        <span style="text-decoration: underline;">64</span>806     45.0    <span style="text-decoration: underline;">21</span>527        0.434</span>
+<span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male          <span style="text-decoration: underline;">65</span>675     41.9    <span style="text-decoration: underline;">12</span>788        0.278</span>
+<span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female        <span style="text-decoration: underline;">66</span>737     44.6    <span style="text-decoration: underline;">18</span>980        0.391</span></code></pre>
 </div>
-<div id="calculating-standard-errors" class="section level2">
-<h2 class="hasAnchor">
-<a href="#calculating-standard-errors" class="anchor"></a>Calculating standard errors</h2>
-<p>In the previous examples, you might have noticed that we calculate a point estimate, but do not get a standard error or margin of error as is included in aggregated Census tables. It is important to calculate standard errors when making custom estimates using PUMS data, because it can be easy to create a very small sub-group where there are not enough observations in the sample to make a reliable estimate.</p>
-<p>The standard package for calculating estimates and fitting models with complex survey objects is the <a href="http://r-survey.r-forge.r-project.org/survey/"><strong>survey</strong> package</a>. The <a href="http://gdfe.co/srvyr/index.html"><strong>srvyr</strong> package</a> is an alternative and wraps some survey functions to allow for analyzing surveys using <strong>dplyr</strong>-style syntax. tidycensus provides a function, <code><a href="../reference/to_survey.html">to_survey()</a></code>, that converts data frames returned by <code><a href="../reference/get_pums.html">get_pums()</a></code> into either a survey or srvyr object.</p>
-<p>In order to generate reliable standard errors, the Census Bureau provides a set of <a href="https://usa.ipums.org/usa/repwt.shtml">replicate weights</a> for each observation in the PUMS dataset. These replicate weights are used to simulate multiple samples from the single PUMS sample and can be used to calculate more precise standard errors. PUMS data contains both person- and housing-unit-level replicate weights.</p>
-<p>To download replicate weights along with PUMS data, set the <code>rep_weights</code> argument in <code><a href="../reference/get_pums.html">get_pums()</a></code> to <code>"person"</code>, <code>"housing"</code>, or <code>"both"</code>. Here we get the same Vermont PUMS data as above in addition to the 80 person replicate weight columns.</p>
+<div class="section level2">
+<h2 id="calculating-standard-errors">Calculating standard errors<a class="anchor" aria-label="anchor" href="#calculating-standard-errors"></a>
+</h2>
+<p>In the previous examples, you might have noticed that we calculate a
+point estimate, but do not get a standard error or margin of error as is
+included in aggregated Census tables. It is important to calculate
+standard errors when making custom estimates using PUMS data, because it
+can be easy to create a very small sub-group where there are not enough
+observations in the sample to make a reliable estimate.</p>
+<p>The standard package for calculating estimates and fitting models
+with complex survey objects is the <a href="http://r-survey.r-forge.r-project.org/survey/" class="external-link"><strong>survey</strong>
+package</a>. The <a href="http://gdfe.co/srvyr/index.html" class="external-link"><strong>srvyr</strong>
+package</a> is an alternative and wraps some survey functions to allow
+for analyzing surveys using <strong>dplyr</strong>-style syntax.
+tidycensus provides a function, <code><a href="../reference/to_survey.html">to_survey()</a></code>, that converts
+data frames returned by <code><a href="../reference/get_pums.html">get_pums()</a></code> into either a survey or
+srvyr object.</p>
+<p>In order to generate reliable standard errors, the Census Bureau
+provides a set of <a href="https://usa.ipums.org/usa/repwt.shtml" class="external-link">replicate weights</a> for
+each observation in the PUMS dataset. These replicate weights are used
+to simulate multiple samples from the single PUMS sample and can be used
+to calculate more precise standard errors. PUMS data contains both
+person- and housing-unit-level replicate weights.</p>
+<p>To download replicate weights along with PUMS data, set the
+<code>rep_weights</code> argument in <code><a href="../reference/get_pums.html">get_pums()</a></code> to
+<code>"person"</code>, <code>"housing"</code>, or <code>"both"</code>.
+Here we get the same Vermont PUMS data as above in addition to the 80
+person replicate weight columns.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_pums_rep_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,
+  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,
   state <span class="op">=</span> <span class="st">"VT"</span>,
   survey <span class="op">=</span> <span class="st">"acs1"</span>,
   year <span class="op">=</span> <span class="fl">2018</span>,
   recode <span class="op">=</span> <span class="cn">TRUE</span>,
   rep_weights <span class="op">=</span> <span class="st">"person"</span>
   <span class="op">)</span></code></pre></div>
-<p>To easily convert this data frame to a survey or srvyr object, we can use the <code><a href="../reference/to_survey.html">to_survey()</a></code> function.</p>
+<p>To easily convert this data frame to a survey or srvyr object, we can
+use the <code><a href="../reference/to_survey.html">to_survey()</a></code> function.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_survey_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="va">vt_pums_rep_weights</span><span class="op">)</span></code></pre></div>
-<p>By default, <code><a href="../reference/to_survey.html">to_survey()</a></code> converts a data frame to a <code>tbl_svy</code> object by using person replicate weights. You can change the arguments in <code>to_survey</code> if you are analyzing housing-unit data (<code>type = "housing"</code>) or if you want a survey object instead of a srvyr object. (Although, <code>tbl_svy</code> objects also have a svyrep.design class so you can <a href="http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects">use survey functions on srvyr objects</a>.)</p>
-<p>Now, with our srvyr design object defined, we can calculate the same estimates as above, but we now get column with standard errors as well.</p>
+<p>By default, <code><a href="../reference/to_survey.html">to_survey()</a></code> converts a data frame to a
+<code>tbl_svy</code> object by using person replicate weights. You can
+change the arguments in <code>to_survey</code> if you are analyzing
+housing-unit data (<code>type = "housing"</code>) or if you want a
+survey object instead of a srvyr object. (Although, <code>tbl_svy</code>
+objects also have a svyrep.design class so you can <a href="http://gdfe.co/srvyr/articles/srvyr-vs-survey.html#using-survey-functions-on-srvyr-objects" class="external-link">use
+survey functions on srvyr objects</a>.)</p>
+<p>Now, with our srvyr design object defined, we can calculate the same
+estimates as above, but we now get column with standard errors as
+well.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://gdfe.co/srvyr/">srvyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://gdfe.co/srvyr/" class="external-link">srvyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
-<span class="va">vt_survey_design</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 8 × 4
-##   PUMA  SEX_label      n  n_se
-##   &lt;chr&gt; &lt;ord&gt;      &lt;dbl&gt; &lt;dbl&gt;
-## 1 00100 Male      108732 1123.
-## 2 00100 Female    111564 1360.
-## 3 00200 Male       73768  754.
-## 4 00200 Female     73416  809.
-## 5 00300 Male       61601  491.
-## 6 00300 Female     64806  578.
-## 7 00400 Male       65675  702.
-## 8 00400 Female     66737  776.</code></pre>
-<p>The srvyr syntax is very similar to standard dplyr syntax, so this should look familiar; we’ve swapped out <code>count()</code> for <code><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count()</a></code> and we don’t need a <code>wt</code> argument because we defined the weights when we set up the srvyr object.</p>
+<span class="va">vt_survey_design</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 8 × 4</span></span>
+<span class="co">##   PUMA  SEX_label      n  n_se</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male      <span style="text-decoration: underline;">108</span>732 <span style="text-decoration: underline;">1</span>123.</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female    <span style="text-decoration: underline;">111</span>564 <span style="text-decoration: underline;">1</span>360.</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male       <span style="text-decoration: underline;">73</span>768  754.</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female     <span style="text-decoration: underline;">73</span>416  809.</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male       <span style="text-decoration: underline;">61</span>601  491.</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female     <span style="text-decoration: underline;">64</span>806  578.</span>
+<span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male       <span style="text-decoration: underline;">65</span>675  702.</span>
+<span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female     <span style="text-decoration: underline;">66</span>737  776.</span></code></pre>
+<p>The srvyr syntax is very similar to standard dplyr syntax, so this
+should look familiar; we’ve swapped out <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> for
+<code><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count()</a></code> and we don’t need a <code>wt</code> argument
+because we defined the weights when we set up the srvyr object.</p>
 <p>The equivalent estimate using survey syntax looks like this:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svyby.html">svyby</a></span><span class="op">(</span><span class="op">~</span><span class="va">SEX_label</span>, <span class="op">~</span><span class="va">PUMA</span>, design <span class="op">=</span> <span class="va">vt_survey_design</span>, <span class="fu">survey</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/survey/man/surveysummary.html">svytotal</a></span><span class="op">)</span></code></pre></div>
-<pre><code>##        PUMA SEX_labelMale SEX_labelFemale       se1       se2
-## 00100 00100        108732          111564 1122.9765 1360.3476
-## 00200 00200         73768           73416  754.0906  808.7364
-## 00300 00300         61601           64806  490.5432  578.3529
-## 00400 00400         65675           66737  702.0659  775.9812</code></pre>
-<p>We can also repeat the estimate we did above and calculate the percentage of people that are 25 and up with a bachelor’s degree, while this time returning the upper and lower bounds of the confidence interval for these estimates. This time though, we have to subset our data frame to only those 25 and older before we summarize.</p>
+<code class="sourceCode R"><span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svyby.html" class="external-link">svyby</a></span><span class="op">(</span><span class="op">~</span><span class="va">SEX_label</span>, <span class="op">~</span><span class="va">PUMA</span>, design <span class="op">=</span> <span class="va">vt_survey_design</span>, <span class="fu">survey</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/survey/man/surveysummary.html" class="external-link">svytotal</a></span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##        PUMA SEX_labelMale SEX_labelFemale       se1       se2</span>
+<span class="co">## 00100 00100        108732          111564 1122.9765 1360.3476</span>
+<span class="co">## 00200 00200         73768           73416  754.0906  808.7364</span>
+<span class="co">## 00300 00300         61601           64806  490.5432  578.3529</span>
+<span class="co">## 00400 00400         65675           66737  702.0659  775.9812</span></code></pre>
+<p>We can also repeat the estimate we did above and calculate the
+percentage of people that are 25 and up with a bachelor’s degree, while
+this time returning the upper and lower bounds of the confidence
+interval for these estimates. This time though, we have to subset our
+data frame to only those 25 and older before we summarize.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_survey_design</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">mutate</a></span><span class="op">(</span>ba_above <span class="op">=</span> <span class="va">SCHL</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"21"</span>, <span class="st">"22"</span>, <span class="st">"23"</span>, <span class="st">"24"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">filter</a></span><span class="op">(</span><span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html">summarize</a></span><span class="op">(</span>
-    age_25_up <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html">survey_total</a></span><span class="op">(</span>vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,
-    ba_above_n <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html">survey_total</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,
-    ba_above_pct <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html">survey_mean</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">vt_survey_design</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">mutate</a></span><span class="op">(</span>ba_above <span class="op">=</span> <span class="va">SCHL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"21"</span>, <span class="st">"22"</span>, <span class="st">"23"</span>, <span class="st">"24"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>
+    age_25_up <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span>vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,
+    ba_above_n <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,
+    ba_above_pct <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html" class="external-link">survey_mean</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>
     <span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 8 × 11
-## # Groups:   PUMA [4]
-##   PUMA  SEX_label age_25_up age_25_up_low age_25_up_upp ba_above_n ba_above_n_low ba_above_n_upp
-##   &lt;chr&gt; &lt;ord&gt;         &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;
-## 1 00100 Male          72680        70216.        75144.      34113         29913.         38313.
-## 2 00100 Female        77966        75671.        80261.      36873         32202.         41544.
-## 3 00200 Male          52278        50826.        53730.      15831         13327.         18335.
-## 4 00200 Female        55162        53643.        56681.      20248         17679.         22817.
-## 5 00300 Male          45634        44743.        46525.      14869         12638.         17100.
-## 6 00300 Female        49546        48576.        50516.      21527         19010.         24044.
-## 7 00400 Male          45960        45067.        46853.      12788         10699.         14877.
-## 8 00400 Female        48601        47783.        49419.      18980         16540.         21420.
-## # … with 3 more variables: ba_above_pct &lt;dbl&gt;, ba_above_pct_low &lt;dbl&gt;, ba_above_pct_upp &lt;dbl&gt;</code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 8 × 11</span></span>
+<span class="co">## <span style="color: #949494;"># Groups:   PUMA [4]</span></span>
+<span class="co">##   PUMA  SEX_label age_25_up age_25_up_low age_25_up_upp ba_above_n ba_above_n_low ba_above_n_upp</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male          <span style="text-decoration: underline;">72</span>680        <span style="text-decoration: underline;">70</span>216.        <span style="text-decoration: underline;">75</span>144.      <span style="text-decoration: underline;">34</span>113         <span style="text-decoration: underline;">29</span>913.         <span style="text-decoration: underline;">38</span>313.</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female        <span style="text-decoration: underline;">77</span>966        <span style="text-decoration: underline;">75</span>671.        <span style="text-decoration: underline;">80</span>261.      <span style="text-decoration: underline;">36</span>873         <span style="text-decoration: underline;">32</span>202.         <span style="text-decoration: underline;">41</span>544.</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male          <span style="text-decoration: underline;">52</span>278        <span style="text-decoration: underline;">50</span>826.        <span style="text-decoration: underline;">53</span>730.      <span style="text-decoration: underline;">15</span>831         <span style="text-decoration: underline;">13</span>327.         <span style="text-decoration: underline;">18</span>335.</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female        <span style="text-decoration: underline;">55</span>162        <span style="text-decoration: underline;">53</span>643.        <span style="text-decoration: underline;">56</span>681.      <span style="text-decoration: underline;">20</span>248         <span style="text-decoration: underline;">17</span>679.         <span style="text-decoration: underline;">22</span>817.</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male          <span style="text-decoration: underline;">45</span>634        <span style="text-decoration: underline;">44</span>743.        <span style="text-decoration: underline;">46</span>525.      <span style="text-decoration: underline;">14</span>869         <span style="text-decoration: underline;">12</span>638.         <span style="text-decoration: underline;">17</span>100.</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female        <span style="text-decoration: underline;">49</span>546        <span style="text-decoration: underline;">48</span>576.        <span style="text-decoration: underline;">50</span>516.      <span style="text-decoration: underline;">21</span>527         <span style="text-decoration: underline;">19</span>010.         <span style="text-decoration: underline;">24</span>044.</span>
+<span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male          <span style="text-decoration: underline;">45</span>960        <span style="text-decoration: underline;">45</span>067.        <span style="text-decoration: underline;">46</span>853.      <span style="text-decoration: underline;">12</span>788         <span style="text-decoration: underline;">10</span>699.         <span style="text-decoration: underline;">14</span>877.</span>
+<span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female        <span style="text-decoration: underline;">48</span>601        <span style="text-decoration: underline;">47</span>783.        <span style="text-decoration: underline;">49</span>419.      <span style="text-decoration: underline;">18</span>980         <span style="text-decoration: underline;">16</span>540.         <span style="text-decoration: underline;">21</span>420.</span>
+<span class="co">## <span style="color: #949494;"># … with 3 more variables: ba_above_pct &lt;dbl&gt;, ba_above_pct_low &lt;dbl&gt;, ba_above_pct_upp &lt;dbl&gt;</span></span></code></pre>
 </div>
-<div id="modeling-with-pums-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#modeling-with-pums-data" class="anchor"></a>Modeling with PUMS data</h2>
-<p>An important use case for PUMS data is doing regression analysis or other modeling. Let’s try to predict the length of an individual’s commute to work (<code>JWMNP</code>) based on their wages, employer type (private, public, self), and which PUMA they live in. We’ll use the 2018 5-year estimates so we have a bigger sample to work with.</p>
+<div class="section level2">
+<h2 id="modeling-with-pums-data">Modeling with PUMS data<a class="anchor" aria-label="anchor" href="#modeling-with-pums-data"></a>
+</h2>
+<p>An important use case for PUMS data is doing regression analysis or
+other modeling. Let’s try to predict the length of an individual’s
+commute to work (<code>JWMNP</code>) based on their wages, employer type
+(private, public, self), and which PUMA they live in. We’ll use the 2018
+5-year estimates so we have a bigger sample to work with.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt_pums_to_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"WAGP"</span>, <span class="st">"JWMNP"</span>, <span class="st">"JWTR"</span>, <span class="st">"COW"</span>, <span class="st">"ESR"</span><span class="op">)</span>,
+  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"WAGP"</span>, <span class="st">"JWMNP"</span>, <span class="st">"JWTR"</span>, <span class="st">"COW"</span>, <span class="st">"ESR"</span><span class="op">)</span>,
   state <span class="op">=</span> <span class="st">"VT"</span>,
   survey <span class="op">=</span> <span class="st">"acs5"</span>,
   year <span class="op">=</span> <span class="fl">2018</span>,
   rep_weights <span class="op">=</span> <span class="st">"person"</span>
   <span class="op">)</span></code></pre></div>
-<p>Now, we filter out observations that aren’t relevant, do a little recoding of the class of worker variable, and finally convert the data frame to a survey design object. <!-- Note that we did not request replicate weights from the API, so we specify `design = "cluster"` when we create the survey design. This creates the survey using a cluster design with the household (`SERIALNO`) as the primary sampling unit, the PUMA as the strata, and `PWGTP` as the weight. --></p>
+<p>Now, we filter out observations that aren’t relevant, do a little
+recoding of the class of worker variable, and finally convert the data
+frame to a survey design object.
+<!-- Note that we did not request replicate weights from the API, so we specify `design = "cluster"` when we create the survey design. This creates the survey using a cluster design with the household (`SERIALNO`) as the primary sampling unit, the PUMA as the strata, and `PWGTP` as the weight. --></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op">&lt;-</span> <span class="va">vt_pums_to_model</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">filter</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op">&lt;-</span> <span class="va">vt_pums_to_model</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">filter</a></span><span class="op">(</span>
     <span class="va">ESR</span> <span class="op">==</span> <span class="fl">1</span>,   <span class="co"># civilian employed</span>
     <span class="va">JWTR</span> <span class="op">!=</span> <span class="fl">11</span>, <span class="co"># does not work at home</span>
     <span class="va">WAGP</span> <span class="op">&gt;</span> <span class="fl">0</span>,   <span class="co"># earned wages last year</span>
     <span class="va">JWMNP</span> <span class="op">&gt;</span> <span class="fl">0</span>   <span class="co"># commute more than zero min</span>
-    <span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">mutate</a></span><span class="op">(</span>
-    emp_type <span class="op">=</span> <span class="fu">case_when</span><span class="op">(</span>
-      <span class="va">COW</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"2"</span><span class="op">)</span>      <span class="op">~</span> <span class="st">"private"</span>,
-      <span class="va">COW</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"public"</span>,
+    <span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">mutate</a></span><span class="op">(</span>
+    emp_type <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
+      <span class="va">COW</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"2"</span><span class="op">)</span>      <span class="op">~</span> <span class="st">"private"</span>,
+      <span class="va">COW</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"public"</span>,
       <span class="cn">TRUE</span>                      <span class="op">~</span> <span class="st">"self"</span>
       <span class="op">)</span>
-    <span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>Let’s quickly check out some summary stats using <code>srvyr</code>.</p>
+<p>Let’s quickly check out some summary stats using
+<code>srvyr</code>.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html">summarize</a></span><span class="op">(</span>
-    n              <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html">survey_total</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,
-    mean_wage      <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html">survey_mean</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span>,
-    median_wage    <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_quantile.html">survey_median</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span>,
-    mean_commute   <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html">survey_mean</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span>,
-    median_commute <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_quantile.html">survey_median</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>
+    n              <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,
+    mean_wage      <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html" class="external-link">survey_mean</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span>,
+    median_wage    <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_quantile.html" class="external-link">survey_median</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span>,
+    mean_commute   <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html" class="external-link">survey_mean</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span>,
+    median_commute <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_quantile.html" class="external-link">survey_median</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span>
     <span class="op">)</span></code></pre></div>
-<pre><code>##        n     n_se mean_wage mean_wage_se median_wage median_wage_se mean_commute mean_commute_se
-## 1 282733 1933.376  44600.91     436.5873       35000       326.5593     23.31421       0.2327614
-##   median_commute median_commute_se
-## 1             20          1.255997</code></pre>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 1 × 10</span></span>
+<span class="co">##        n  n_se mean_wage mean_wage_se median_wage median_wage_se mean_commute mean_commute_se</span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> <span style="text-decoration: underline;">282</span>733 <span style="text-decoration: underline;">1</span>933.    <span style="text-decoration: underline;">44</span>601.         437.       <span style="text-decoration: underline;">35</span>000           251.         23.3           0.233</span>
+<span class="co">## <span style="color: #949494;"># … with 2 more variables: median_commute &lt;dbl&gt;, median_commute_se &lt;dbl&gt;</span></span></code></pre>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count</a></span><span class="op">(</span><span class="va">emp_type</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 3 × 3
-##   emp_type      n  n_se
-##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 private  224760 2001.
-## 2 public    42966 1374.
-## 3 self      15007  756.</code></pre>
+<code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">emp_type</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span>
+<span class="co">##   emp_type      n  n_se</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> private  <span style="text-decoration: underline;">224</span>760 <span style="text-decoration: underline;">2</span>001.</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> public    <span style="text-decoration: underline;">42</span>966 <span style="text-decoration: underline;">1</span>374.</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> self      <span style="text-decoration: underline;">15</span>007  756.</span></code></pre>
 <p>And now we’re ready to fit a simple linear regression model.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svyglm.html">svyglm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span> <span class="op">+</span> <span class="va">emp_type</span> <span class="op">+</span> <span class="va">PUMA</span>, design <span class="op">=</span> <span class="va">vt_model_sd</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></code></pre></div>
-<pre><code>## 
-## Call:
-## survey::svyglm(formula = log(JWMNP) ~ log(WAGP) + emp_type + 
-##     PUMA, design = vt_model_sd)
-## 
-## Survey design:
-## Called via srvyr
-## 
-## Coefficients:
-##                 Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)     1.699601   0.102181  16.633  &lt; 2e-16 ***
-## log(WAGP)       0.113913   0.009548  11.931  &lt; 2e-16 ***
-## emp_typepublic -0.052845   0.027420  -1.927   0.0578 .  
-## emp_typeself   -0.306227   0.050016  -6.123 4.20e-08 ***
-## PUMA00200       0.007800   0.023943   0.326   0.7455    
-## PUMA00300       0.023629   0.025111   0.941   0.3498    
-## PUMA00400      -0.117300   0.026028  -4.507 2.46e-05 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for gaussian family taken to be 9328.921)
-## 
-## Number of Fisher Scoring iterations: 2</code></pre>
+<code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svyglm.html" class="external-link">svyglm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span> <span class="op">+</span> <span class="va">emp_type</span> <span class="op">+</span> <span class="va">PUMA</span>, design <span class="op">=</span> <span class="va">vt_model_sd</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## </span>
+<span class="co">## Call:</span>
+<span class="co">## survey::svyglm(formula = log(JWMNP) ~ log(WAGP) + emp_type + </span>
+<span class="co">##     PUMA, design = vt_model_sd)</span>
+<span class="co">## </span>
+<span class="co">## Survey design:</span>
+<span class="co">## Called via srvyr</span>
+<span class="co">## </span>
+<span class="co">## Coefficients:</span>
+<span class="co">##                 Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">## (Intercept)     1.699601   0.102181  16.633  &lt; 2e-16 ***</span>
+<span class="co">## log(WAGP)       0.113913   0.009548  11.931  &lt; 2e-16 ***</span>
+<span class="co">## emp_typepublic -0.052845   0.027420  -1.927   0.0578 .  </span>
+<span class="co">## emp_typeself   -0.306227   0.050016  -6.123 4.20e-08 ***</span>
+<span class="co">## PUMA00200       0.007800   0.023943   0.326   0.7455    </span>
+<span class="co">## PUMA00300       0.023629   0.025111   0.941   0.3498    </span>
+<span class="co">## PUMA00400      -0.117300   0.026028  -4.507 2.46e-05 ***</span>
+<span class="co">## ---</span>
+<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
+<span class="co">## </span>
+<span class="co">## (Dispersion parameter for gaussian family taken to be 9328.921)</span>
+<span class="co">## </span>
+<span class="co">## Number of Fisher Scoring iterations: 2</span></code></pre>
 </div>
-<div id="mapping-pums-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#mapping-pums-data" class="anchor"></a>Mapping PUMS data</h2>
-<p>If you’ve used the spatial functionality in tidycensus before, you might also want to put your custom PUMS estimates on a map. To do this, let’s use <code>tigris</code> to download PUMA boundaries for the states in New England as an <code>sf</code> object.</p>
+<div class="section level2">
+<h2 id="mapping-pums-data">Mapping PUMS data<a class="anchor" aria-label="anchor" href="#mapping-pums-data"></a>
+</h2>
+<p>If you’ve used the spatial functionality in tidycensus before, you
+might also want to put your custom PUMS estimates on a map. To do this,
+let’s use <code>tigris</code> to download PUMA boundaries for the states
+in New England as an <code>sf</code> object.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ne_states</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"VT"</span>, <span class="st">"NH"</span>, <span class="st">"ME"</span>, <span class="st">"MA"</span>, <span class="st">"CT"</span>, <span class="st">"RI"</span><span class="op">)</span>
-<span class="va">ne_pumas</span> <span class="op">&lt;-</span> <span class="fu">map</span><span class="op">(</span><span class="va">ne_states</span>, <span class="fu">tigris</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/tigris/man/pumas.html">pumas</a></span>, class <span class="op">=</span> <span class="st">"sf"</span>, cb <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">reduce</span><span class="op">(</span><span class="va">rbind</span><span class="op">)</span></code></pre></div>
-<p>Next we download the income-to-poverty ratio from the PUMS dataset and calculate the percentage of population below 200% of the poverty line for each PUMA.</p>
+<code class="sourceCode R"><span class="va">ne_states</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"VT"</span>, <span class="st">"NH"</span>, <span class="st">"ME"</span>, <span class="st">"MA"</span>, <span class="st">"CT"</span>, <span class="st">"RI"</span><span class="op">)</span>
+<span class="va">ne_pumas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">ne_states</span>, <span class="fu">tigris</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/tigris/man/pumas.html" class="external-link">pumas</a></span>, class <span class="op">=</span> <span class="st">"sf"</span>, cb <span class="op">=</span> <span class="cn">TRUE</span>, year <span class="op">=</span> <span class="fl">2018</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://purrr.tidyverse.org/reference/reduce.html" class="external-link">reduce</a></span><span class="op">(</span><span class="va">rbind</span><span class="op">)</span></code></pre></div>
+<p>Next we download the income-to-poverty ratio from the PUMS dataset
+and calculate the percentage of population below 200% of the poverty
+line for each PUMA.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ne_pums</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"POVPIP"</span><span class="op">)</span>,
+  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"POVPIP"</span><span class="op">)</span>,
   state <span class="op">=</span> <span class="va">ne_states</span>,
   survey <span class="op">=</span> <span class="st">"acs1"</span>,
   year <span class="op">=</span> <span class="fl">2018</span>
   <span class="op">)</span>
 
-<span class="va">ne_pov</span> <span class="op">&lt;-</span> <span class="va">ne_pums</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">ST</span>, <span class="va">PUMA</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html">summarize</a></span><span class="op">(</span>
-    total_pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">)</span>,
-    pct_in_pov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">POVPIP</span> <span class="op">&lt;</span> <span class="fl">200</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">total_pop</span>
+<span class="va">ne_pov</span> <span class="op">&lt;-</span> <span class="va">ne_pums</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">ST</span>, <span class="va">PUMA</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>
+    total_pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">)</span>,
+    pct_in_pov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">POVPIP</span> <span class="op">&lt;</span> <span class="fl">200</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">total_pop</span>
   <span class="op">)</span></code></pre></div>
-<p>And now we can make a choropleth map by joining the PUMA boundaries with the PUMS data.</p>
+<p>And now we can make a choropleth map by joining the PUMA boundaries
+with the PUMS data.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ne_pumas</span> <span class="op">%&gt;%</span>
-  <span class="fu">left_join</span><span class="op">(</span><span class="va">ne_pov</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"STATEFP10"</span> <span class="op">=</span> <span class="st">"ST"</span>, <span class="st">"PUMACE10"</span> <span class="op">=</span> <span class="st">"PUMA"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">pct_in_pov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">geom_sf</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">scale_fill_viridis_b</span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">ne_pumas</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ne_pov</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STATEFP10"</span> <span class="op">=</span> <span class="st">"ST"</span>, <span class="st">"PUMACE10"</span> <span class="op">=</span> <span class="st">"PUMA"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">pct_in_pov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_b</a></span><span class="op">(</span>
     name <span class="op">=</span> <span class="cn">NULL</span>,
     option <span class="op">=</span> <span class="st">"magma"</span>,
-    labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_percent.html">label_percent</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+    labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_percent.html" class="external-link">label_percent</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
     <span class="op">)</span> <span class="op">+</span>
-  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Percentage of population below 200% of the poverty line"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Percentage of population below 200% of the poverty line"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="pums-data_files/figure-html/unnamed-chunk-23-1.png" width="768"></p>
 </div>
-<div id="verification-of-pums-estimates" class="section level2">
-<h2 class="hasAnchor">
-<a href="#verification-of-pums-estimates" class="anchor"></a>Verification of PUMS estimates</h2>
-<p>The Census provides <a href="https://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2018.html">calculated estimates and standard errors</a> for a number of states and variables to ensure that users’ analysis of PUMS data matches the expected values.</p>
-<p>In the following example, we generate a few estimates using the methodology described above. You may want to perform a similar verification on your system to ensure your PUMS estimates will be accurate.</p>
-<p>Here are a few estimates we’ll verify from the 2018 ACS 1-year PUMS estimates for user verification file:</p>
+<div class="section level2">
+<h2 id="verification-of-pums-estimates">Verification of PUMS estimates<a class="anchor" aria-label="anchor" href="#verification-of-pums-estimates"></a>
+</h2>
+<p>The Census provides <a href="https://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2018.html" class="external-link">calculated
+estimates and standard errors</a> for a number of states and variables
+to ensure that users’ analysis of PUMS data matches the expected
+values.</p>
+<p>In the following example, we generate a few estimates using the
+methodology described above. You may want to perform a similar
+verification on your system to ensure your PUMS estimates will be
+accurate.</p>
+<p>Here are a few estimates we’ll verify from the 2018 ACS 1-year PUMS
+estimates for user verification file:</p>
 <table class="table">
 <thead><tr class="header">
 <th>State</th>
@@ -507,41 +657,46 @@
   rep_weights <span class="op">=</span> <span class="st">"person"</span>
 <span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">wy_relp</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count</a></span><span class="op">(</span><span class="va">RELP</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">filter</a></span><span class="op">(</span><span class="va">RELP</span> <span class="op">==</span> <span class="st">"16"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 1 × 3
-##   RELP      n  n_se
-##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 16     7018  2.64</code></pre>
+<code class="sourceCode R"><span class="va">wy_relp</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">RELP</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">RELP</span> <span class="op">==</span> <span class="st">"16"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span>
+<span class="co">##   RELP      n  n_se</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 16     <span style="text-decoration: underline;">7</span>018  2.64</span></code></pre>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ut_ten</span> <span class="op">%&gt;%</span> 
-  <span class="fu">distinct</span><span class="op">(</span><span class="va">SERIALNO</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"housing"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html">survey_count</a></span><span class="op">(</span><span class="va">TEN</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">filter</a></span><span class="op">(</span><span class="va">TEN</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 1 × 3
-##   TEN        n  n_se
-##   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 2     209632 3972.</code></pre>
+<code class="sourceCode R"><span class="va">ut_ten</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">SERIALNO</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"housing"</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">TEN</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">TEN</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span>
+<span class="co">##   TEN        n  n_se</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 2     <span style="text-decoration: underline;">209</span>632 <span style="text-decoration: underline;">3</span>972.</span></code></pre>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">hi_age</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">filter</a></span><span class="op">(</span><span class="fu">between</span><span class="op">(</span><span class="va">AGEP</span>, <span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html">summarize</a></span><span class="op">(</span>age_0_4 <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html">survey_total</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>##   age_0_4 age_0_4_se
-## 1   86452   944.1839</code></pre>
+<code class="sourceCode R"><span class="va">hi_age</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="va">AGEP</span>, <span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>age_0_4 <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 1 × 2</span></span>
+<span class="co">##   age_0_4 age_0_4_se</span>
+<span class="co">##     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span>   <span style="text-decoration: underline;">86</span>452       944.</span></code></pre>
 <p>3 for 3 – yay!</p>
 </div>
-<div id="more-resources-for-analyzing-pums-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#more-resources-for-analyzing-pums-data" class="anchor"></a>More resources for analyzing PUMS data</h2>
+<div class="section level2">
+<h2 id="more-resources-for-analyzing-pums-data">More resources for analyzing PUMS data<a class="anchor" aria-label="anchor" href="#more-resources-for-analyzing-pums-data"></a>
+</h2>
 <ul>
-<li><a href="http://gdfe.co/srvyr/"><strong>srvyr</strong> website</a></li>
-<li><a href="http://r-survey.r-forge.r-project.org/survey/"><strong>survey</strong> website</a></li>
-<li><a href="https://www.census.gov/programs-surveys/acs/technical-documentation/pums.html">Census Bureau PUMS documention</a></li>
-<li><a href="https://usa.ipums.org/usa-action/faq">IPUMS FAQs</a></li>
+<li><a href="http://gdfe.co/srvyr/" class="external-link"><strong>srvyr</strong>
+website</a></li>
+<li><a href="http://r-survey.r-forge.r-project.org/survey/" class="external-link"><strong>survey</strong>
+website</a></li>
+<li><a href="https://www.census.gov/programs-surveys/acs/technical-documentation/pums.html" class="external-link">Census
+Bureau PUMS documention</a></li>
+<li><a href="https://usa.ipums.org/usa-action/faq" class="external-link">IPUMS FAQs</a></li>
 </ul>
 </div>
   </div>
@@ -557,11 +712,14 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Kyle Walker, Matt Herman.</p>
+  <p></p>
+<p>Developed by Kyle Walker, Matt Herman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.1.</p>
 </div>
 
       </footer>
@@ -569,6 +727,8 @@
 
   
 
+
+  
 
   </body>
 </html>

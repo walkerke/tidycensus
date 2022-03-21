@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2.9000</span>
       </span>
     </div>
 
@@ -83,7 +85,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/walkerke/tidycensus">
+  <a href="https://github.com/walkerke/tidycensus" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -98,164 +100,225 @@
 
       
 
-      </header><script src="spatial-data_files/header-attrs-2.10.5/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Spatial data in tidycensus</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/walkerke/tidycensus/blob/master/vignettes/spatial-data.Rmd"><code>vignettes/spatial-data.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/walkerke/tidycensus/blob/HEAD/vignettes/spatial-data.Rmd" class="external-link"><code>vignettes/spatial-data.Rmd</code></a></small>
       <div class="hidden name"><code>spatial-data.Rmd</code></div>
 
     </div>
 
     
     
-<p>If requested, <strong>tidycensus</strong> can return simple feature geometry for geographic units along with variables from the decennial US Census or American Community survey. By setting <code>geometry = TRUE</code> in a <strong>tidycensus</strong> function call, <strong>tidycensus</strong> will use the <strong>tigris</strong> package to retrieve the corresponding geographic dataset from the US Census Bureau and pre-merge it with the tabular data obtained from the Census API. As of tidycensus version 0.9.9.2, <code>geometry = TRUE</code> is supported for all geographies currently available in the package.</p>
-<p>The following example shows median household income from the 2015-2019 ACS for Census tracts in Orange County, California:</p>
+<p>If requested, <strong>tidycensus</strong> can return simple feature
+geometry for geographic units along with variables from the decennial US
+Census or American Community survey. By setting
+<code>geometry = TRUE</code> in a <strong>tidycensus</strong> function
+call, <strong>tidycensus</strong> will use the <strong>tigris</strong>
+package to retrieve the corresponding geographic dataset from the US
+Census Bureau and pre-merge it with the tabular data obtained from the
+Census API.</p>
+<p>The following example shows median household income from the
+2016-2020 ACS for Census tracts in Orange County, California:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="va">orange</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"CA"</span>, county <span class="op">=</span> <span class="st">"Orange"</span>, geography <span class="op">=</span> <span class="st">"tract"</span>, 
-                  variables <span class="op">=</span> <span class="st">"B19013_001"</span>, geometry <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+                  variables <span class="op">=</span> <span class="st">"B19013_001"</span>, geometry <span class="op">=</span> <span class="cn">TRUE</span>,
+                  year <span class="op">=</span> <span class="fl">2020</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">orange</span><span class="op">)</span></code></pre></div>
-<pre><code>## Simple feature collection with 6 features and 5 fields
-## Geometry type: MULTIPOLYGON
-## Dimension:     XY
-## Bounding box:  xmin: -117.9723 ymin: 33.634 xmax: -117.8209 ymax: 33.88027
-## Geodetic CRS:  NAD83
-##         GEOID                                           NAME   variable
-## 1 06059074108 Census Tract 741.08, Orange County, California B19013_001
-## 2 06059076202 Census Tract 762.02, Orange County, California B19013_001
-## 3 06059089105 Census Tract 891.05, Orange County, California B19013_001
-## 4 06059099222 Census Tract 992.22, Orange County, California B19013_001
-## 5 06059099239 Census Tract 992.39, Orange County, California B19013_001
-## 6 06059011403 Census Tract 114.03, Orange County, California B19013_001
-##   estimate   moe                       geometry
-## 1    84665  9113 MULTIPOLYGON (((-117.922 33...
-## 2    87521  9317 MULTIPOLYGON (((-117.8464 3...
-## 3    62042  7646 MULTIPOLYGON (((-117.9203 3...
-## 4    64391  8385 MULTIPOLYGON (((-117.9723 3...
-## 5   121771 23235 MULTIPOLYGON (((-117.9711 3...
-## 6    67604  9565 MULTIPOLYGON (((-117.9155 3...</code></pre>
-<p>Our object <code>orange</code> looks much like the basic <strong>tidycensus</strong> output, but with a <code>geometry</code> list-column describing the geometry of each feature, using the geographic coordinate system NAD 1983 (EPSG: 4269) which is the default for Census shapefiles. <strong>tidycensus</strong> uses the Census <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html">cartographic boundary shapefiles</a> for faster processing; if you prefer the TIGER/Line shapefiles, set <code>cb = FALSE</code> in the function call.</p>
-<p>As the dataset is in a tidy format, it can be quickly visualized with the <code>geom_sf</code> functionality currently in the development version of <strong>ggplot2</strong>:</p>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">orange</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Simple feature collection with 6 features and 5 fields</span>
+<span class="co">## Geometry type: MULTIPOLYGON</span>
+<span class="co">## Dimension:     XY</span>
+<span class="co">## Bounding box:  xmin: -118.0369 ymin: 33.69354 xmax: -117.7822 ymax: 33.85749</span>
+<span class="co">## Geodetic CRS:  NAD83</span>
+<span class="co">##         GEOID                                            NAME   variable</span>
+<span class="co">## 1 06059086701  Census Tract 867.01, Orange County, California B19013_001</span>
+<span class="co">## 2 06059075901  Census Tract 759.01, Orange County, California B19013_001</span>
+<span class="co">## 3 06059075303  Census Tract 753.03, Orange County, California B19013_001</span>
+<span class="co">## 4 06059052527  Census Tract 525.27, Orange County, California B19013_001</span>
+<span class="co">## 5 06059110109 Census Tract 1101.09, Orange County, California B19013_001</span>
+<span class="co">## 6 06059087106  Census Tract 871.06, Orange County, California B19013_001</span>
+<span class="co">##   estimate   moe                       geometry</span>
+<span class="co">## 1    86922 11391 MULTIPOLYGON (((-117.9762 3...</span>
+<span class="co">## 2    78846 10972 MULTIPOLYGON (((-117.8618 3...</span>
+<span class="co">## 3   123654 21900 MULTIPOLYGON (((-117.8824 3...</span>
+<span class="co">## 4   135097 10971 MULTIPOLYGON (((-117.8035 3...</span>
+<span class="co">## 5   107463 12665 MULTIPOLYGON (((-118.0369 3...</span>
+<span class="co">## 6    45327  8700 MULTIPOLYGON (((-117.9414 3...</span></code></pre>
+<p>Our object <code>orange</code> looks much like the basic
+<strong>tidycensus</strong> output, but with a <code>geometry</code>
+list-column describing the geometry of each feature, using the
+geographic coordinate system NAD 1983 (EPSG: 4269) which is the default
+for Census shapefiles. <strong>tidycensus</strong> uses the Census <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html" class="external-link">cartographic
+boundary shapefiles</a> for faster processing; if you prefer the
+TIGER/Line shapefiles, set <code>cb = FALSE</code> in the function
+call.</p>
+<p>As the dataset is in a tidy format, it can be quickly visualized with
+the <code>geom_sf</code> functionality currently in the development
+version of <strong>ggplot2</strong>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># crs = 26911 is appropriate for Orange County, but may not be appropriate for your area.</span>
-<span class="co"># Use the crsuggest package to identify an appropriate CRS for your area.</span>
-<span class="va">orange</span> <span class="op">%&gt;%</span>
-  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">geom_sf</span><span class="op">(</span>color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">coord_sf</span><span class="op">(</span>crs <span class="op">=</span> <span class="fl">26911</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">scale_fill_viridis_c</span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span> </code></pre></div>
+<code class="sourceCode R"><span class="va">orange</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span> </code></pre></div>
 <p><img src="spatial-data_files/figure-html/unnamed-chunk-2-1.png" width="768"></p>
-<p>Please note that the UTM Zone 11N coordinate system (<code>26911</code>) is appropriate for Southern California but may not be for your area of interest. For help identifying an appropriate projected coordinate system for your data, take a look at <a href="https://github.com/walkerke/crsuggest">the {crsuggest} R package</a>.</p>
-<div id="faceted-mapping" class="section level2">
-<h2 class="hasAnchor">
-<a href="#faceted-mapping" class="anchor"></a>Faceted mapping</h2>
-<p>One of the most powerful features of <strong>ggplot2</strong> is its support for small multiples, which works very well with the tidy data format returned by <strong>tidycensus</strong>. Many Census and ACS variables return <em>counts</em>, however, which are generally inappropriate for choropleth mapping. In turn, <code>get_decennial</code> and <code>get_acs</code> have an optional argument, <code>summary_var</code>, that can work as a multi-group denominator when appropriate. Let’s use the following example of the racial geography of Harris County, Texas. First, we’ll request data for non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and Hispanics by Census tract for the 2010 Census, and specify total population as the summary variable. <code>year</code> is not necessary here as the default is 2010.</p>
+<p>Please note that the UTM Zone 11N coordinate system
+(<code>26911</code>) is appropriate for Southern California but may not
+be for your area of interest. For help identifying an appropriate
+projected coordinate system for your data, take a look at <a href="https://github.com/walkerke/crsuggest" class="external-link">the {crsuggest} R
+package</a>.</p>
+<div class="section level2">
+<h2 id="faceted-mapping">Faceted mapping<a class="anchor" aria-label="anchor" href="#faceted-mapping"></a>
+</h2>
+<p>One of the most powerful features of <strong>ggplot2</strong> is its
+support for small multiples, which works very well with the tidy data
+format returned by <strong>tidycensus</strong>. Many Census and ACS
+variables return <em>counts</em>, however, which are generally
+inappropriate for choropleth mapping. In turn,
+<code>get_decennial</code> and <code>get_acs</code> have an optional
+argument, <code>summary_var</code>, that can work as a multi-group
+denominator when appropriate. Let’s use the following example of the
+racial geography of Harris County, Texas. First, we’ll request data for
+non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and
+Hispanics by Census tract for the 2010 Census, and specify total
+population as the summary variable. <code>year</code> is not necessary
+here as the default is 2010.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">racevars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>White <span class="op">=</span> <span class="st">"P005003"</span>, 
+<code class="sourceCode R"><span class="va">racevars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>White <span class="op">=</span> <span class="st">"P005003"</span>, 
               Black <span class="op">=</span> <span class="st">"P005004"</span>, 
               Asian <span class="op">=</span> <span class="st">"P005006"</span>, 
               Hispanic <span class="op">=</span> <span class="st">"P004003"</span><span class="op">)</span>
 
 <span class="va">harris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_decennial.html">get_decennial</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"tract"</span>, variables <span class="op">=</span> <span class="va">racevars</span>, 
                   state <span class="op">=</span> <span class="st">"TX"</span>, county <span class="op">=</span> <span class="st">"Harris County"</span>, geometry <span class="op">=</span> <span class="cn">TRUE</span>,
-                  summary_var <span class="op">=</span> <span class="st">"P001001"</span><span class="op">)</span> 
+                  summary_var <span class="op">=</span> <span class="st">"P001001"</span>, year <span class="op">=</span> <span class="fl">2010</span><span class="op">)</span> 
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">harris</span><span class="op">)</span></code></pre></div>
-<pre><code>## Simple feature collection with 6 features and 5 fields
-## Geometry type: MULTIPOLYGON
-## Dimension:     XY
-## Bounding box:  xmin: -95.37457 ymin: 29.74486 xmax: -95.32409 ymax: 29.80907
-## Geodetic CRS:  NAD83
-## # A tibble: 6 × 6
-##   GEOID       NAME     variable value summary_value                     geometry
-##   &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;         &lt;dbl&gt;           &lt;MULTIPOLYGON [°]&gt;
-## 1 48201100000 Census … White     2082          4690 (((-95.37348 29.751, -95.37…
-## 2 48201100000 Census … Black     1047          4690 (((-95.37348 29.751, -95.37…
-## 3 48201100000 Census … Asian      134          4690 (((-95.37348 29.751, -95.37…
-## 4 48201100000 Census … Hispanic  1070          4690 (((-95.37348 29.751, -95.37…
-## 5 48201210900 Census … White       35          1620 (((-95.32851 29.80846, -95.…
-## 6 48201210900 Census … Black     1195          1620 (((-95.32851 29.80846, -95.…</code></pre>
-<p>We notice that there are four entries for each Census tract, with each entry representing one of our requested variables. The <code>summary_value</code> column represents the value of the summary variable, which is total population in this instance. When a summary variable is specified in <code>get_acs</code>, both <code>summary_est</code> and <code>summary_moe</code> columns will be returned.</p>
-<p>With this information, we can set up an analysis pipeline in which we calculate a new percent-of-total column; recode the Census variable names into more intuitive labels; and visualize the result for each group in a faceted plot.</p>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">harris</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Simple feature collection with 6 features and 5 fields</span>
+<span class="co">## Geometry type: MULTIPOLYGON</span>
+<span class="co">## Dimension:     XY</span>
+<span class="co">## Bounding box:  xmin: -95.37457 ymin: 29.74486 xmax: -95.32409 ymax: 29.80907</span>
+<span class="co">## Geodetic CRS:  NAD83</span>
+<span class="co">## <span style="color: #949494;"># A tibble: 6 × 6</span></span>
+<span class="co">##   GEOID       NAME        variable value summary_value                  geometry</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [°]&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 48201100000 Census Tra… White     <span style="text-decoration: underline;">2</span>082          <span style="text-decoration: underline;">4</span>690 (((-95.37348 29.751, -95…</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 48201100000 Census Tra… Black     <span style="text-decoration: underline;">1</span>047          <span style="text-decoration: underline;">4</span>690 (((-95.37348 29.751, -95…</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 48201100000 Census Tra… Asian      134          <span style="text-decoration: underline;">4</span>690 (((-95.37348 29.751, -95…</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 48201100000 Census Tra… Hispanic  <span style="text-decoration: underline;">1</span>070          <span style="text-decoration: underline;">4</span>690 (((-95.37348 29.751, -95…</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 48201210900 Census Tra… White       35          <span style="text-decoration: underline;">1</span>620 (((-95.32851 29.80846, -…</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 48201210900 Census Tra… Black     <span style="text-decoration: underline;">1</span>195          <span style="text-decoration: underline;">1</span>620 (((-95.32851 29.80846, -…</span></code></pre>
+<p>We notice that there are four entries for each Census tract, with
+each entry representing one of our requested variables. The
+<code>summary_value</code> column represents the value of the summary
+variable, which is total population in this instance. When a summary
+variable is specified in <code>get_acs</code>, both
+<code>summary_est</code> and <code>summary_moe</code> columns will be
+returned.</p>
+<p>With this information, we can set up an analysis pipeline in which we
+calculate a new percent-of-total column; recode the Census variable
+names into more intuitive labels; and visualize the result for each
+group in a faceted plot.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">harris</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="op">(</span><span class="va">value</span> <span class="op">/</span> <span class="va">summary_value</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">pct</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">variable</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">geom_sf</span><span class="op">(</span>color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">coord_sf</span><span class="op">(</span>crs <span class="op">=</span> <span class="fl">26915</span><span class="op">)</span> <span class="op">+</span> <span class="co"># Appropriate CRS for Houston, but may not be for your data</span>
-  <span class="fu">scale_fill_viridis_c</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">harris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="op">(</span><span class="va">value</span> <span class="op">/</span> <span class="va">summary_value</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">pct</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">variable</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="spatial-data_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
 </div>
-<div id="detailed-shoreline-mapping-with-tidycensus" class="section level2">
-<h2 class="hasAnchor">
-<a href="#detailed-shoreline-mapping-with-tidycensus" class="anchor"></a>Detailed shoreline mapping with tidycensus</h2>
-<p>Geometries in tidycensus default to the Census Bureau’s <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html">cartographic boundary shapefiles</a>. Cartographic boundary shapefiles are preferred to the core <a href="https://www.census.gov/geo/maps-data/data/tiger-line.html">TIGER/Line shapefiles</a> in tidycensus as their smaller size speeds up processing and because they are pre-clipped to the US coastline.</p>
-<p>However, there may be circumstances in which your mapping requires more detail. A good example of this would be maps of New York City, in which even the cartographic boundary shapefiles include water area. For example, take this example of median household income by Census tract in Manhattan (New York County), NY:</p>
+<div class="section level2">
+<h2 id="detailed-shoreline-mapping-with-tidycensus-and-tigris">Detailed shoreline mapping with tidycensus and tigris<a class="anchor" aria-label="anchor" href="#detailed-shoreline-mapping-with-tidycensus-and-tigris"></a>
+</h2>
+<p>Geometries in tidycensus default to the Census Bureau’s <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html" class="external-link">cartographic
+boundary shapefiles</a>. Cartographic boundary shapefiles are preferred
+to the core <a href="https://www.census.gov/geo/maps-data/data/tiger-line.html" class="external-link">TIGER/Line
+shapefiles</a> in tidycensus as their smaller size speeds up processing
+and because they are pre-clipped to the US coastline.</p>
+<p>However, there may be circumstances in which your mapping requires
+more detail. A good example of this would be maps of New York City, in
+which even the cartographic boundary shapefiles include water area. For
+example, take this example of median household income by Census tract in
+Manhattan (New York County), NY:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="va">ny</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"tract"</span>, 
               variables <span class="op">=</span> <span class="st">"B19013_001"</span>, 
               state <span class="op">=</span> <span class="st">"NY"</span>, 
               county <span class="op">=</span> <span class="st">"New York"</span>, 
+              year <span class="op">=</span> <span class="fl">2020</span>, 
               geometry <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
-<span class="fu">ggplot</span><span class="op">(</span><span class="va">ny</span>, <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">geom_sf</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">scale_fill_viridis_c</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/label_dollar.html">dollar</a></span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ny</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/label_dollar.html" class="external-link">dollar</a></span><span class="op">)</span></code></pre></div>
 <p><img src="spatial-data_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
-<p>As illustrated in the graphic, the boundaries of Manhattan include water boundaries - stretching into the Hudson and East Rivers. In turn, a more accurate representation of Manhattan’s land area might be desired. To accomplish this, a tidycensus user can use the core TIGER/Line shapefiles instead, then erase water area from Manhattan’s geometry.</p>
-<p>tidycensus allows users to get TIGER/Line instead of cartographic boundary shapefiles with the keyword argument <code>cb = FALSE</code>. This argument will be familiar to users of the tigris package, as it is used by tigris to distinguish between cartographic boundary and TIGER/Line shapefiles in the package.</p>
+<p>As illustrated in the graphic, the boundaries of Manhattan include
+water boundaries - stretching into the Hudson and East Rivers. In turn,
+a more accurate representation of Manhattan’s land area might be
+desired. To accomplish this, a tidycensus user can use the core
+TIGER/Line shapefiles instead with the argument <code>cb = FALSE</code>,
+then erase water area from Manhattan’s geometry. The
+<code><a href="https://rdrr.io/pkg/tigris/man/erase_water.html" class="external-link">erase_water()</a></code> function in the <strong>tigris</strong> R
+package will automatically remove proximate water areas from Census
+polygons, improving cartographic display. The
+<code>area_threshold</code> argument determines the percentile ranking
+of the water areas by size in the data’s proximity to retain; the
+default, 0.75, will keep the largest 25 percent of areas. Data should be
+first transformed to a projected coordinate reference system to improve
+performance.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tigris" class="external-link">tigris</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
 
-<span class="va">ny2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"tract"</span>, 
-              variables <span class="op">=</span> <span class="st">"B19013_001"</span>, 
-              state <span class="op">=</span> <span class="st">"NY"</span>, 
-              county <span class="op">=</span> <span class="st">"New York"</span>, 
-              geometry <span class="op">=</span> <span class="cn">TRUE</span>, 
-              cb <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </code></pre></div>
-<p>Next, tools in the tigris and <a href="https://github.com/r-spatial/sf">sf</a> package can be used to remove the water area from Manhattan’s Census tracts. sf allows users to “erase” one geometry from another, <a href="http://pro.arcgis.com/en/pro-app/tool-reference/analysis/erase.htm">akin to tools available in desktop GIS software</a>. The <code>st_erase()</code> function defined below is not exported by the package, but is defined in the documentation for <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_difference()</a></code>.</p>
-<p>The geometry used to “erase” water area from the tract polygons is obtained by the <code><a href="https://rdrr.io/pkg/tigris/man/area_water.html">area_water()</a></code> function in tigris, making sure to choose the option <code>class = "sf"</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tigris">tigris</a></span><span class="op">)</span>
+<span class="va">ny_erase</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>
+  geography <span class="op">=</span> <span class="st">"tract"</span>,
+  variables <span class="op">=</span> <span class="st">"B19013_001"</span>,
+  state <span class="op">=</span> <span class="st">"NY"</span>,
+  county <span class="op">=</span> <span class="st">"New York"</span>,
+  year <span class="op">=</span> <span class="fl">2020</span>,
+  geometry <span class="op">=</span> <span class="cn">TRUE</span>,
+  cb <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="fl">26918</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/erase_water.html" class="external-link">erase_water</a></span><span class="op">(</span>area_threshold <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span>
 
-<span class="va">st_erase</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_difference</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html">st_union</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>
-<span class="op">}</span>
-
-<span class="va">ny_water</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/area_water.html">area_water</a></span><span class="op">(</span><span class="st">"NY"</span>, <span class="st">"New York"</span>, class <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span> 
-
-<span class="va">ny_erase</span> <span class="op">&lt;-</span> <span class="fu">st_erase</span><span class="op">(</span><span class="va">ny2</span>, <span class="va">ny_water</span><span class="op">)</span></code></pre></div>
-<p>After performing this operation, we can visualize the result:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">ny_erase</span>, <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">geom_sf</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">scale_fill_viridis_c</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/label_dollar.html">dollar</a></span><span class="op">)</span></code></pre></div>
-<p><img src="spatial-data_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
-<p>The map appears as before, but instead the polygons now hug the shoreline of Manhattan.</p>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ny_erase</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/label_dollar.html" class="external-link">dollar</a></span><span class="op">)</span></code></pre></div>
+<p><img src="spatial-data_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
+<p>The map appears as before, but instead the polygons now hug the
+shoreline of Manhattan.</p>
 </div>
-<div id="writing-to-shapefiles" class="section level2">
-<h2 class="hasAnchor">
-<a href="#writing-to-shapefiles" class="anchor"></a>Writing to shapefiles</h2>
-<p>Beyond this, you might be interested in writing your dataset to a shapefile or GeoJSON for use in external GIS or visualization applications. You can accomplish this with the <code>st_write</code> function in the <strong>sf</strong> package:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/">sf</a></span><span class="op">)</span>
-<span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_write.html">st_write</a></span><span class="op">(</span><span class="va">orange</span>, <span class="st">"orange.shp"</span><span class="op">)</span></code></pre></div>
-<p>Your <strong>tidycensus</strong>-obtained dataset can now be used in ArcGIS, QGIS, Tableau, or any other application that reads shapefiles.</p>
-<p>There is a lot more you can do with the spatial functionality in <strong>tidycensus</strong>, including more sophisticated visualization and spatial analysis; look for updates <a href="https://walkerke.github.io">on my blog</a> and in this space.</p>
+<div class="section level2">
+<h2 id="writing-to-shapefiles">Writing to shapefiles<a class="anchor" aria-label="anchor" href="#writing-to-shapefiles"></a>
+</h2>
+<p>Beyond this, you might be interested in writing your dataset to a
+shapefile or GeoJSON for use in external GIS or visualization
+applications. You can accomplish this with the <code>st_write</code>
+function in the <strong>sf</strong> package:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span>
+<span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_write.html" class="external-link">st_write</a></span><span class="op">(</span><span class="va">orange</span>, <span class="st">"orange.shp"</span><span class="op">)</span></code></pre></div>
+<p>Your <strong>tidycensus</strong>-obtained dataset can now be used in
+ArcGIS, QGIS, Tableau, or any other application that reads
+shapefiles.</p>
+<p>There is a lot more you can do with the spatial functionality in
+<strong>tidycensus</strong>, including more sophisticated visualization
+and spatial analysis; look for updates <a href="https://walkerke.github.io" class="external-link">on my blog</a> and in this space.</p>
 </div>
   </div>
 
@@ -270,11 +333,14 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Kyle Walker, Matt Herman.</p>
+  <p></p>
+<p>Developed by Kyle Walker, Matt Herman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.1.</p>
 </div>
 
       </footer>
@@ -282,6 +348,8 @@
 
   
 
+
+  
 
   </body>
 </html>

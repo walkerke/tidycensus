@@ -30,6 +30,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -42,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2.9000</span>
       </span>
     </div>
 
@@ -87,7 +89,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/walkerke/tidycensus">
+  <a href="https://github.com/walkerke/tidycensus" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -104,26 +106,41 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="tidycensus-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#tidycensus-" class="anchor"></a>tidycensus <img src="logo.png" width="250px" align="right">
+<div class="section level1">
+<div class="page-header"><h1 id="tidycensus-">tidycensus <img src="logo.png" width="250px" align="right"><a class="anchor" aria-label="anchor" href="#tidycensus-"></a>
 </h1></div>
 
-<p><strong>tidycensus</strong> is an R package that allows users to interface with a select number of the US Census Bureau’s data APIs and return tidyverse-ready data frames, optionally with simple feature geometry included. Install from CRAN with the following command:</p>
+<p><strong>tidycensus</strong> is an R package that allows users to
+interface with a select number of the US Census Bureau’s data APIs and
+return tidyverse-ready data frames, optionally with simple feature
+geometry included. Install from CRAN with the following command:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"tidycensus"</span><span class="op">)</span></code></pre></div>
-<p><strong>tidycensus</strong> is designed to help R users get Census data that is pre-prepared for exploration within the <strong>tidyverse</strong>, and optionally spatially with <strong>sf</strong>. To learn more about how the package works, plase read through the following articles:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"tidycensus"</span><span class="op">)</span></code></pre></div>
+<p><strong>tidycensus</strong> is designed to help R users get Census
+data that is pre-prepared for exploration within the
+<strong>tidyverse</strong>, and optionally spatially with
+<strong>sf</strong>. To learn more about how the package works, plase
+read through the following articles:</p>
 <ul>
-<li><a href="articles/basic-usage.html">Basic usage of <strong>tidycensus</strong></a></li>
-<li><a href="articles/spatial-data.html">Spatial data in <strong>tidycensus</strong></a></li>
-<li><a href="articles/margins-of-error.html">Margins of error in the ACS</a></li>
-<li><a href="articles/other-datasets.html">Other Census Bureau datasets</a></li>
-<li><a href="articles/pums-data.html">Working with Census microdata</a></li>
+<li><a href="articles/basic-usage.html">Basic usage of
+<strong>tidycensus</strong></a></li>
+<li><a href="articles/spatial-data.html">Spatial data in
+<strong>tidycensus</strong></a></li>
+<li><a href="articles/margins-of-error.html">Margins of error in the
+ACS</a></li>
+<li><a href="articles/other-datasets.html">Other Census Bureau
+datasets</a></li>
+<li><a href="articles/pums-data.html">Working with Census
+microdata</a></li>
 </ul>
-<div id="future-development" class="section level2">
-<h2 class="hasAnchor">
-<a href="#future-development" class="anchor"></a>Future development</h2>
-<p>To keep up with on-going development of <strong>tidycensus</strong> and get even more examples of how to use the package, subscribe to the Walker Data email list below. You’ll also get updates on the forthcoming CRC Press book <em>Analyzing the US Census with R</em>, currently available to read online at <a href="https://walker-data.com/census-r/" class="uri">https://walker-data.com/census-r/</a>.</p>
+<div class="section level2">
+<h2 id="future-development">Future development<a class="anchor" aria-label="anchor" href="#future-development"></a>
+</h2>
+<p>To keep up with on-going development of <strong>tidycensus</strong>
+and get even more examples of how to use the package, subscribe to the
+Walker Data email list below. You’ll also get updates on the forthcoming
+CRC Press book <em>Analyzing the US Census with R</em>, currently
+available to read online at <a href="https://walker-data.com/census-r/" class="external-link uri">https://walker-data.com/census-r/</a>.</p>
 <!-- Begin MailChimp Signup Form -->
 <link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">
 <style type="text/css">
@@ -144,64 +161,83 @@ We recommend moving this block and the preceding CSS link to the HEAD of your HT
 </form>
 </div>
 <!--End mc_embed_signup-->
-<p>While tidycensus focuses on a select number of US Census Bureau datasets, there are many others available via the Census Bureau API. For access to all of these APIs, please check out Hannah Recht’s excellent <a href="https://github.com/hrecht/censusapi">censusapi package</a>.</p>
-<p>If you find tidycensus useful in your work and would like to ensure continued development of the package, you can provide support in the following ways:</p>
+<p>While tidycensus focuses on a select number of US Census Bureau
+datasets, there are many others available via the Census Bureau API. For
+access to all of these APIs, please check out Hannah Recht’s excellent
+<a href="https://github.com/hrecht/censusapi" class="external-link">censusapi package</a>.</p>
+<p>If you find tidycensus useful in your work and would like to ensure
+continued development of the package, you can provide support in the
+following ways:</p>
 <ul>
 <li>
-<a href="https://paypal.me/walkerdata">Chip in some funds to support package development via PayPal</a>;</li>
-<li>Set up a consulting engagement or workshop though Walker Data to help you implement tidycensus in your project. Send a note to <a href="mailto:kyle@walker-data.com" class="email">kyle@walker-data.com</a> if you are interested;</li>
-<li>File an issue - or even better, a pull request - at <a href="https://github.com/walkerke/tidycensus/issues" class="uri">https://github.com/walkerke/tidycensus/issues</a>.</li>
+<a href="https://paypal.me/walkerdata" class="external-link">Chip in some funds to support
+package development via PayPal</a>;</li>
+<li>Set up a consulting engagement or workshop though Walker Data to
+help you implement tidycensus in your project. Send a note to <a href="mailto:kyle@walker-data.com" class="email">kyle@walker-data.com</a> if you are interested;</li>
+<li>File an issue - or even better, a pull request - at <a href="https://github.com/walkerke/tidycensus/issues" class="external-link uri">https://github.com/walkerke/tidycensus/issues</a>.</li>
 </ul>
-<p>Note: This product uses the Census Bureau Data API but is not endorsed or certified by the Census Bureau.</p>
+<p>Note: This product uses the Census Bureau Data API but is not
+endorsed or certified by the Census Bureau.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=tidycensus">https://​cloud.r-project.org/​package=tidycensus</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/walkerke/tidycensus/">https://​github.com/​walkerke/​tidycensus/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/walkerke/tidycensus/issues">https://​github.com/​walkerke/​tidycensus/​issues</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>Kyle Walker <br><small class="roles"> Author, maintainer </small>  </li>
-<li>Matt Herman <br><small class="roles"> Author </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="https://cloud.r-project.org/package=tidycensus" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/walkerke/tidycensus/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/walkerke/tidycensus/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/walkerke/tidycensus/actions"><img src="https://github.com/walkerke/tidycensus/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing tidycensus</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Kyle Walker <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Matt Herman <br><small class="roles"> Author </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/walkerke/tidycensus/actions" class="external-link"><img src="https://github.com/walkerke/tidycensus/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Kyle Walker, Matt Herman.</p>
+  <p></p>
+<p>Developed by Kyle Walker, Matt Herman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.1.</p>
 </div>
 
       </footer>
@@ -209,6 +245,8 @@ We recommend moving this block and the preceding CSS link to the HEAD of your HT
 
   
 
+
+  
 
   </body>
 </html>

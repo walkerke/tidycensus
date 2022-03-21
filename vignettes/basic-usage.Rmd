@@ -93,7 +93,7 @@ View(v17)
 
 <img src=img/view.png style="width: 100%">
 
-By filtering for "median age" variable IDs corresponding to that query can be browsed interactively.  
+By filtering for "median age" variable IDs corresponding to that query can be browsed interactively. For the 5-year ACS detailed tables (denoted by `"acs5"`), a `geography` column will also be returned that tells users the smallest geography at which a given variable is available.    
 
 ## Working with ACS data
 

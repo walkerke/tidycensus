@@ -26,6 +26,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -38,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2.9000</span>
       </span>
     </div>
 
@@ -83,7 +85,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/walkerke/tidycensus">
+  <a href="https://github.com/walkerke/tidycensus" class="external-link">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -98,167 +100,223 @@
 
       
 
-      </header><script src="other-datasets_files/header-attrs-2.10.5/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Other Census Bureau datasets</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/walkerke/tidycensus/blob/master/vignettes/other-datasets.Rmd"><code>vignettes/other-datasets.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/walkerke/tidycensus/blob/HEAD/vignettes/other-datasets.Rmd" class="external-link"><code>vignettes/other-datasets.Rmd</code></a></small>
       <div class="hidden name"><code>other-datasets.Rmd</code></div>
 
     </div>
 
     
     
-<p>The main intent of the tidycensus package is to return population characteristics of the United States in tidy format allowing for integration with simple feature geometries. Its intent is not, and has never been, to wrap the universe of APIs and datasets available from the US Census Bureau. For datasets not included in tidycensus, I recommend Hannah Recht’s <strong>censusapi</strong> package (<a href="https://github.com/hrecht/censusapi" class="uri">https://github.com/hrecht/censusapi</a>), which allows R users to access all Census APIs, and packages such as Jamaal Green’s <strong>lehdr</strong> package (<a href="https://github.com/jamgreen/lehdr" class="uri">https://github.com/jamgreen/lehdr</a>) which grants R users access to Census Bureau LODES data.</p>
-<p>However, tidycensus incorporates a select number of Census Bureau datasets outside the decennial Census and ACS that are aligned with the basic goals of the package. One such dataset is the <a href="https://www.census.gov/data/developers/data-sets/popest-popproj/popest.html"><strong>Population Estimates API</strong></a>, which includes information on a wide variety of population characteristics that is updated annually. Also available through tidycensus is the <a href="https://www.census.gov/data/developers/data-sets/acs-migration-flows.html"><strong>Migration Flows API</strong></a>, which estimates the number of people that have moved between pairs of places in a given year.</p>
-<div id="population-estimates" class="section level2">
-<h2 class="hasAnchor">
-<a href="#population-estimates" class="anchor"></a>Population estimates</h2>
-<p>Population estimates are available in tidycensus through the <code><a href="../reference/get_estimates.html">get_estimates()</a></code> function. Estimates are organized into <strong>products</strong>, which in tidycensus include <code>"population"</code>, <code>"components"</code>, <code>"housing"</code>, and <code>"characteristics"</code>. The population and housing products contain population/density and housing unit estimates, respectively. The components of change and characteristics products, in contrast, include a wider range of possible variables.</p>
-<div id="components-of-change-population-estimates" class="section level3">
-<h3 class="hasAnchor">
-<a href="#components-of-change-population-estimates" class="anchor"></a>Components of change population estimates</h3>
-<p>By default, specifying <code>"population"</code>, <code>"components"</code>, or <code>"housing"</code> as the <code>product</code> in <code><a href="../reference/get_estimates.html">get_estimates()</a></code> returns all variables associated with that component. For example, we can request all components of change variables for US states in 2019:</p>
+<p>The main intent of the tidycensus package is to return population
+characteristics of the United States in tidy format allowing for
+integration with simple feature geometries. Its intent is not, and has
+never been, to wrap the universe of APIs and datasets available from the
+US Census Bureau. For datasets not included in tidycensus, I recommend
+Hannah Recht’s <strong>censusapi</strong> package (<a href="https://github.com/hrecht/censusapi" class="external-link uri">https://github.com/hrecht/censusapi</a>), which allows R
+users to access all Census APIs, and packages such as Jamaal Green’s
+<strong>lehdr</strong> package (<a href="https://github.com/jamgreen/lehdr" class="external-link uri">https://github.com/jamgreen/lehdr</a>) which grants R users
+access to Census Bureau LODES data.</p>
+<p>However, tidycensus incorporates a select number of Census Bureau
+datasets outside the decennial Census and ACS that are aligned with the
+basic goals of the package. One such dataset is the <a href="https://www.census.gov/data/developers/data-sets/popest-popproj/popest.html" class="external-link"><strong>Population
+Estimates API</strong></a>, which includes information on a wide variety
+of population characteristics that is updated annually. Also available
+through tidycensus is the <a href="https://www.census.gov/data/developers/data-sets/acs-migration-flows.html" class="external-link"><strong>Migration
+Flows API</strong></a>, which estimates the number of people that have
+moved between pairs of places in a given year.</p>
+<div class="section level2">
+<h2 id="population-estimates">Population estimates<a class="anchor" aria-label="anchor" href="#population-estimates"></a>
+</h2>
+<p>Population estimates are available in tidycensus through the
+<code><a href="../reference/get_estimates.html">get_estimates()</a></code> function. Estimates are organized into
+<strong>products</strong>, which in tidycensus include
+<code>"population"</code>, <code>"components"</code>,
+<code>"housing"</code>, and <code>"characteristics"</code>. The
+population and housing products contain population/density and housing
+unit estimates, respectively. The components of change and
+characteristics products, in contrast, include a wider range of possible
+variables.</p>
+<div class="section level3">
+<h3 id="components-of-change-population-estimates">Components of change population estimates<a class="anchor" aria-label="anchor" href="#components-of-change-population-estimates"></a>
+</h3>
+<p>By default, specifying <code>"population"</code>,
+<code>"components"</code>, or <code>"housing"</code> as the
+<code>product</code> in <code><a href="../reference/get_estimates.html">get_estimates()</a></code> returns all
+variables associated with that component. For example, we can request
+all components of change variables for US states in 2019:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/">tidycensus</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tigris">tigris</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tigris" class="external-link">tigris</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="va">us_components</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_estimates.html">get_estimates</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"state"</span>, product <span class="op">=</span> <span class="st">"components"</span><span class="op">)</span>
 
 <span class="va">us_components</span></code></pre></div>
-<pre><code>## # A tibble: 624 × 4
-##    NAME           GEOID variable  value
-##    &lt;chr&gt;          &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;
-##  1 Mississippi    28    BIRTHS    35978
-##  2 Missouri       29    BIRTHS    71297
-##  3 Montana        30    BIRTHS    11618
-##  4 Nebraska       31    BIRTHS    25343
-##  5 Nevada         32    BIRTHS    35932
-##  6 New Hampshire  33    BIRTHS    12004
-##  7 New Jersey     34    BIRTHS    99501
-##  8 New Mexico     35    BIRTHS    23125
-##  9 New York       36    BIRTHS   222924
-## 10 North Carolina 37    BIRTHS   119203
-## # … with 614 more rows</code></pre>
-<p>The variables included in the components of change product consist of both estimates of <em>counts</em> and <em>rates</em>. Rates are preceded by an <code>R</code> in the variable name and are calculated per 1000 residents.</p>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 624 × 4</span></span>
+<span class="co">##    NAME           GEOID variable  value</span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> Mississippi    28    BIRTHS    <span style="text-decoration: underline;">35</span>978</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> Missouri       29    BIRTHS    <span style="text-decoration: underline;">71</span>297</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> Montana        30    BIRTHS    <span style="text-decoration: underline;">11</span>618</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> Nebraska       31    BIRTHS    <span style="text-decoration: underline;">25</span>343</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> Nevada         32    BIRTHS    <span style="text-decoration: underline;">35</span>932</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> New Hampshire  33    BIRTHS    <span style="text-decoration: underline;">12</span>004</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> New Jersey     34    BIRTHS    <span style="text-decoration: underline;">99</span>501</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> New Mexico     35    BIRTHS    <span style="text-decoration: underline;">23</span>125</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> New York       36    BIRTHS   <span style="text-decoration: underline;">222</span>924</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> North Carolina 37    BIRTHS   <span style="text-decoration: underline;">119</span>203</span>
+<span class="co">## <span style="color: #949494;"># … with 614 more rows</span></span></code></pre>
+<p>The variables included in the components of change product consist of
+both estimates of <em>counts</em> and <em>rates</em>. Rates are preceded
+by an <code>R</code> in the variable name and are calculated per 1000
+residents.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">us_components</span><span class="op">$</span><span class="va">variable</span><span class="op">)</span></code></pre></div>
-<pre><code>##  [1] "BIRTHS"            "DEATHS"            "DOMESTICMIG"      
-##  [4] "INTERNATIONALMIG"  "NATURALINC"        "NETMIG"           
-##  [7] "RBIRTH"            "RDEATH"            "RDOMESTICMIG"     
-## [10] "RINTERNATIONALMIG" "RNATURALINC"       "RNETMIG"</code></pre>
-<p>Available geographies include <code>"us"</code>, <code>"state"</code>, <code>"county"</code>, <code>"metropolitan statistical area/micropolitan statistical area"</code>, and <code>"combined statistical area"</code>.</p>
-<p>If desired, users can request a specific component or components by supplying a character vector to the <code>variables</code> parameter, as in other tidycensus functions. <code><a href="../reference/get_estimates.html">get_estimates()</a></code> also supports simple feature geometry integration to facilitate mapping. In the example below, we’ll acquire data on the net migration rate between 2018 and 2019 for all counties in the United States. We’ll also use the <code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html">shift_geometry()</a></code> function from the <strong>tigris</strong> package to shift and rescale counties outside the continental US for national mapping.</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">us_components</span><span class="op">$</span><span class="va">variable</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##  [1] "BIRTHS"            "DEATHS"            "DOMESTICMIG"      </span>
+<span class="co">##  [4] "INTERNATIONALMIG"  "NATURALINC"        "NETMIG"           </span>
+<span class="co">##  [7] "RBIRTH"            "RDEATH"            "RDOMESTICMIG"     </span>
+<span class="co">## [10] "RINTERNATIONALMIG" "RNATURALINC"       "RNETMIG"</span></code></pre>
+<p>Available geographies include <code>"us"</code>,
+<code>"state"</code>, <code>"county"</code>,
+<code>"metropolitan statistical area/micropolitan statistical area"</code>,
+and <code>"combined statistical area"</code>.</p>
+<p>If desired, users can request a specific component or components by
+supplying a character vector to the <code>variables</code> parameter, as
+in other tidycensus functions. <code><a href="../reference/get_estimates.html">get_estimates()</a></code> also
+supports simple feature geometry integration to facilitate mapping. In
+the example below, we’ll acquire data on the net migration rate between
+2018 and 2019 for all counties in the United States. We’ll also use the
+<code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html" class="external-link">shift_geometry()</a></code> function from the <strong>tigris</strong>
+package to shift and rescale counties outside the continental US for
+national mapping.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">net_migration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_estimates.html">get_estimates</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>,
                                variables <span class="op">=</span> <span class="st">"RNETMIG"</span>,
                                year <span class="op">=</span> <span class="fl">2019</span>,
                                geometry <span class="op">=</span> <span class="cn">TRUE</span>,
-                               resolution <span class="op">=</span> <span class="st">"20m"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html">shift_geometry</a></span><span class="op">(</span><span class="op">)</span>
+                               resolution <span class="op">=</span> <span class="st">"20m"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html" class="external-link">shift_geometry</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="va">net_migration</span></code></pre></div>
-<pre><code>## Simple feature collection with 3142 features and 4 fields
-## Geometry type: GEOMETRY
-## Dimension:     XY
-## Bounding box:  xmin: -3112200 ymin: -1697728 xmax: 2258154 ymax: 1558935
-## Projected CRS: USA_Contiguous_Albers_Equal_Area_Conic
-## # A tibble: 3,142 × 5
-##    GEOID NAME                         variable  value                   geometry
-##    &lt;chr&gt; &lt;chr&gt;                        &lt;chr&gt;     &lt;dbl&gt;         &lt;MULTIPOLYGON [m]&gt;
-##  1 29227 Worth County, Missouri       RNETMIG   -8.91 (((114835.6 345071.6, 123…
-##  2 31061 Franklin County, Nebraska    RNETMIG  -14.4  (((-267685.1 323958.5, -2…
-##  3 36013 Chautauqua County, New York  RNETMIG   -3.54 (((1324221 647717.4, 1334…
-##  4 37181 Vance County, North Carolina RNETMIG   -3.25 (((1544260 32202.52, 1547…
-##  5 47183 Weakley County, Tennessee    RNETMIG   -1.02 (((625934.5 -98887.34, 63…
-##  6 44003 Kent County, Rhode Island    RNETMIG    2.29 (((1977965 726702.3, 2004…
-##  7 08101 Pueblo County, Colorado      RNETMIG    6.15 (((-783174.5 122269, -773…
-##  8 17175 Stark County, Illinois       RNETMIG  -10.6  (((500559 424779.4, 51023…
-##  9 29169 Pulaski County, Missouri     RNETMIG    4.42 (((312851.7 46166.36, 312…
-## 10 19151 Pocahontas County, Iowa      RNETMIG  -12.2  (((88185.95 606331.9, 126…
-## # … with 3,132 more rows</code></pre>
-<p>We’ll next use tidyverse tools to generate a <code>groups</code> column that bins the net migration rates into comprehensible categories, and plot the result using <code>geom_sf()</code> and ggplot2.</p>
+<pre><code><span class="co">## Simple feature collection with 3142 features and 4 fields</span>
+<span class="co">## Geometry type: GEOMETRY</span>
+<span class="co">## Dimension:     XY</span>
+<span class="co">## Bounding box:  xmin: -3112200 ymin: -1697728 xmax: 2258154 ymax: 1558935</span>
+<span class="co">## Projected CRS: USA_Contiguous_Albers_Equal_Area_Conic</span>
+<span class="co">## <span style="color: #949494;"># A tibble: 3,142 × 5</span></span>
+<span class="co">##    GEOID NAME                         variable  value                   geometry</span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [m]&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> 29227 Worth County, Missouri       RNETMIG   -<span style="color: #BB0000;">8.91</span> (((114835.6 345071.6, 123…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> 31061 Franklin County, Nebraska    RNETMIG  -<span style="color: #BB0000;">14.4</span>  (((-267685.1 323958.5, -2…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> 36013 Chautauqua County, New York  RNETMIG   -<span style="color: #BB0000;">3.54</span> (((1324221 647717.4, 1334…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> 37181 Vance County, North Carolina RNETMIG   -<span style="color: #BB0000;">3.25</span> (((1544260 32202.52, 1547…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> 47183 Weakley County, Tennessee    RNETMIG   -<span style="color: #BB0000;">1.02</span> (((625934.5 -98887.34, 63…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> 44003 Kent County, Rhode Island    RNETMIG    2.29 (((1977965 726702.3, 2004…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> 08101 Pueblo County, Colorado      RNETMIG    6.15 (((-783174.5 122269, -773…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> 17175 Stark County, Illinois       RNETMIG  -<span style="color: #BB0000;">10.6</span>  (((500559 424779.4, 51023…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> 29169 Pulaski County, Missouri     RNETMIG    4.42 (((312851.7 46166.36, 312…</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> 19151 Pocahontas County, Iowa      RNETMIG  -<span style="color: #BB0000;">12.2</span>  (((88185.95 606331.9, 126…</span>
+<span class="co">## <span style="color: #949494;"># … with 3,132 more rows</span></span></code></pre>
+<p>We’ll next use tidyverse tools to generate a <code>groups</code>
+column that bins the net migration rates into comprehensible categories,
+and plot the result using <code><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf()</a></code> and ggplot2.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">order</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"-15 and below"</span>, <span class="st">"-15 to -5"</span>, <span class="st">"-5 to +5"</span>, <span class="st">"+5 to +15"</span>, <span class="st">"+15 and up"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">order</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-15 and below"</span>, <span class="st">"-15 to -5"</span>, <span class="st">"-5 to +5"</span>, <span class="st">"+5 to +15"</span>, <span class="st">"+15 and up"</span><span class="op">)</span>
 
-<span class="va">net_migration</span> <span class="op">&lt;-</span> <span class="va">net_migration</span> <span class="op">%&gt;%</span>
-  <span class="fu">mutate</span><span class="op">(</span>groups <span class="op">=</span> <span class="fu">case_when</span><span class="op">(</span>
+<span class="va">net_migration</span> <span class="op">&lt;-</span> <span class="va">net_migration</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>groups <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
     <span class="va">value</span> <span class="op">&gt;</span> <span class="fl">15</span> <span class="op">~</span> <span class="st">"+15 and up"</span>,
     <span class="va">value</span> <span class="op">&gt;</span> <span class="fl">5</span> <span class="op">~</span> <span class="st">"+5 to +15"</span>,
     <span class="va">value</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">5</span> <span class="op">~</span> <span class="st">"-5 to +5"</span>,
     <span class="va">value</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">15</span> <span class="op">~</span> <span class="st">"-15 to -5"</span>,
     <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"-15 and below"</span>
-  <span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">mutate</span><span class="op">(</span>groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">groups</span>, levels <span class="op">=</span> <span class="va">order</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">groups</span>, levels <span class="op">=</span> <span class="va">order</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">state_overlay</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/states.html">states</a></span><span class="op">(</span>
+<span class="va">state_overlay</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/states.html" class="external-link">states</a></span><span class="op">(</span>
   cb <span class="op">=</span> <span class="cn">TRUE</span>,
   resolution <span class="op">=</span> <span class="st">"20m"</span>
-<span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">GEOID</span> <span class="op">!=</span> <span class="st">"72"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html">shift_geometry</a></span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">GEOID</span> <span class="op">!=</span> <span class="st">"72"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html" class="external-link">shift_geometry</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">geom_sf</span><span class="op">(</span>data <span class="op">=</span> <span class="va">net_migration</span>, <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">groups</span>, color <span class="op">=</span> <span class="va">groups</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">geom_sf</span><span class="op">(</span>data <span class="op">=</span> <span class="va">state_overlay</span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"black"</span>, size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">scale_fill_brewer</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"PuOr"</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">scale_color_brewer</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"PuOr"</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, guide <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">coord_sf</span><span class="op">(</span>datum <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">theme_minimal</span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Roboto"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Net migration per 1000 residents by county"</span>,
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">net_migration</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">groups</span>, color <span class="op">=</span> <span class="va">groups</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">state_overlay</span>, fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"black"</span>, size <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_fill_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"PuOr"</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"PuOr"</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, guide <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>datum <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Roboto"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Net migration per 1000 residents by county"</span>,
        subtitle <span class="op">=</span> <span class="st">"US Census Bureau 2019 Population Estimates"</span>,
        fill <span class="op">=</span> <span class="st">"Rate"</span>,
        caption <span class="op">=</span> <span class="st">"Data acquired with the R tidycensus package | @kyle_e_walker"</span><span class="op">)</span></code></pre></div>
 <p><img src="other-datasets_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
 </div>
-<div id="estimates-of-population-characteristics" class="section level3">
-<h3 class="hasAnchor">
-<a href="#estimates-of-population-characteristics" class="anchor"></a>Estimates of population characteristics</h3>
-<p>The fourth population estimates product available in <code><a href="../reference/get_estimates.html">get_estimates()</a></code>, <code>"characteristics"</code>, is formatted differently than the other three. It returns population estimates broken down by categories of <code>AGEGROUP</code>, <code>SEX</code>, <code>RACE</code>, and <code>HISP</code>, for Hispanic origin. Requested breakdowns should be specified as a character vector supplied to the <code>breakdown</code> parameter when the <code>product</code> is set to <code>"characteristics"</code>.</p>
-<p>By default, the returned categories are formatted as integers that map onto the Census Bureau definitions explained here: <a href="https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html" class="uri">https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html</a>. However, by specifying <code>breakdown_labels = TRUE</code>, the function will return the appropriate labels instead. For example:</p>
+<div class="section level3">
+<h3 id="estimates-of-population-characteristics">Estimates of population characteristics<a class="anchor" aria-label="anchor" href="#estimates-of-population-characteristics"></a>
+</h3>
+<p>The fourth population estimates product available in
+<code><a href="../reference/get_estimates.html">get_estimates()</a></code>, <code>"characteristics"</code>, is
+formatted differently than the other three. It returns population
+estimates broken down by categories of <code>AGEGROUP</code>,
+<code>SEX</code>, <code>RACE</code>, and <code>HISP</code>, for Hispanic
+origin. Requested breakdowns should be specified as a character vector
+supplied to the <code>breakdown</code> parameter when the
+<code>product</code> is set to <code>"characteristics"</code>.</p>
+<p>By default, the returned categories are formatted as integers that
+map onto the Census Bureau definitions explained here: <a href="https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html" class="external-link uri">https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html</a>.
+However, by specifying <code>breakdown_labels = TRUE</code>, the
+function will return the appropriate labels instead. For example:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">la_age_hisp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_estimates.html">get_estimates</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, 
                              product <span class="op">=</span> <span class="st">"characteristics"</span>, 
-                             breakdown <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SEX"</span>, <span class="st">"AGEGROUP"</span>, <span class="st">"HISP"</span><span class="op">)</span>,  
+                             breakdown <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SEX"</span>, <span class="st">"AGEGROUP"</span>, <span class="st">"HISP"</span><span class="op">)</span>,  
                              breakdown_labels <span class="op">=</span> <span class="cn">TRUE</span>, 
                              state <span class="op">=</span> <span class="st">"CA"</span>, 
                              county <span class="op">=</span> <span class="st">"Los Angeles"</span><span class="op">)</span>
 
 <span class="va">la_age_hisp</span></code></pre></div>
-<pre><code>## # A tibble: 210 × 6
-##    GEOID NAME                              value SEX        AGEGROUP    HISP    
-##    &lt;chr&gt; &lt;chr&gt;                             &lt;dbl&gt; &lt;chr&gt;      &lt;fct&gt;       &lt;chr&gt;   
-##  1 06037 Los Angeles County, California 10039107 Both sexes All ages    Both Hi…
-##  2 06037 Los Angeles County, California  5157137 Both sexes All ages    Non-His…
-##  3 06037 Los Angeles County, California  4881970 Both sexes All ages    Hispanic
-##  4 06037 Los Angeles County, California   579856 Both sexes Age 0 to 4… Both Hi…
-##  5 06037 Los Angeles County, California   236459 Both sexes Age 0 to 4… Non-His…
-##  6 06037 Los Angeles County, California   343397 Both sexes Age 0 to 4… Hispanic
-##  7 06037 Los Angeles County, California   600191 Both sexes Age 5 to 9… Both Hi…
-##  8 06037 Los Angeles County, California   229438 Both sexes Age 5 to 9… Non-His…
-##  9 06037 Los Angeles County, California   370753 Both sexes Age 5 to 9… Hispanic
-## 10 06037 Los Angeles County, California   373670 Both sexes Age 15 to … Hispanic
-## # … with 200 more rows</code></pre>
-<p>With some additional data wrangling, the returned format facilitates analysis and visualization. For example, we can compare population pyramids for Hispanic and non-Hispanic populations in Los Angeles County:</p>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 210 × 6</span></span>
+<span class="co">##    GEOID NAME                              value SEX        AGEGROUP       HISP </span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> 06037 Los Angeles County, California 10<span style="text-decoration: underline;">039</span>107 Both sexes All ages       Both…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> 06037 Los Angeles County, California  5<span style="text-decoration: underline;">157</span>137 Both sexes All ages       Non-…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> 06037 Los Angeles County, California  4<span style="text-decoration: underline;">881</span>970 Both sexes All ages       Hisp…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">579</span>856 Both sexes Age 0 to 4 ye… Both…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">236</span>459 Both sexes Age 0 to 4 ye… Non-…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">343</span>397 Both sexes Age 0 to 4 ye… Hisp…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">600</span>191 Both sexes Age 5 to 9 ye… Both…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">229</span>438 Both sexes Age 5 to 9 ye… Non-…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">370</span>753 Both sexes Age 5 to 9 ye… Hisp…</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">373</span>670 Both sexes Age 15 to 19 … Hisp…</span>
+<span class="co">## <span style="color: #949494;"># … with 200 more rows</span></span></code></pre>
+<p>With some additional data wrangling, the returned format facilitates
+analysis and visualization. For example, we can compare population
+pyramids for Hispanic and non-Hispanic populations in Los Angeles
+County:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">compare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">la_age_hisp</span>, <span class="fu">str_detect</span><span class="op">(</span><span class="va">AGEGROUP</span>, <span class="st">"^Age"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="va">compare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">la_age_hisp</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">AGEGROUP</span>, <span class="st">"^Age"</span><span class="op">)</span>, 
                   <span class="va">HISP</span> <span class="op">!=</span> <span class="st">"Both Hispanic Origins"</span>, 
-                  <span class="va">SEX</span> <span class="op">!=</span> <span class="st">"Both sexes"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">mutate</span><span class="op">(</span>value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">SEX</span> <span class="op">==</span> <span class="st">"Male"</span>, <span class="op">-</span><span class="va">value</span>, <span class="va">value</span><span class="op">)</span><span class="op">)</span>
+                  <span class="va">SEX</span> <span class="op">!=</span> <span class="st">"Both sexes"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">SEX</span> <span class="op">==</span> <span class="st">"Male"</span>, <span class="op">-</span><span class="va">value</span>, <span class="va">value</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu">ggplot</span><span class="op">(</span><span class="va">compare</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">AGEGROUP</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">SEX</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">geom_bar</span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">theme_minimal</span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Roboto"</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">y</span> <span class="op">/</span> <span class="fl">1000</span><span class="op">)</span>, <span class="st">"k"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">scale_x_discrete</span><span class="op">(</span>labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"Age | years"</span>, <span class="st">""</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"darkred"</span>, <span class="st">"navy"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">HISP</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, 
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">compare</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">AGEGROUP</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">SEX</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span>, width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Roboto"</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">y</span> <span class="op">/</span> <span class="fl">1000</span><span class="op">)</span>, <span class="st">"k"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_discrete.html" class="external-link">scale_x_discrete</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">"Age | years"</span>, <span class="st">""</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"darkred"</span>, <span class="st">"navy"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html" class="external-link">coord_flip</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">HISP</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, 
        y <span class="op">=</span> <span class="st">"2019 Census Bureau population estimate"</span>, 
        title <span class="op">=</span> <span class="st">"Population structure by Hispanic origin"</span>, 
        subtitle <span class="op">=</span> <span class="st">"Los Angeles County, California"</span>, 
@@ -267,17 +325,41 @@
 <p><img src="other-datasets_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
 </div>
 </div>
-<div id="migration-flows" class="section level2">
-<h2 class="hasAnchor">
-<a href="#migration-flows" class="anchor"></a>Migration flows</h2>
-<p>The American Community Survey Migration Flows dataset estimates the number of people that have moved between pairs of places. The estimates are calculated based on where a person lived when surveyed and where they lived one year prior to being surveyed. The data is available at three geographic levels: county, county subdivision (minor civil division), and metropolitan statistical area (MSA). Because the number of movers may be small for some pairs of counties, the data is aggregated over a five-year period. The estimates for each five-year period represent the number of people that moved between places <em>each year</em> during that period.</p>
-<p>The data is set up such that for each county, you can find the number of people that <em>moved to</em> that county from each of the other counties in the US as well as the number of people that <em>moved from</em> that county to each of the other counties. The net migration for each pair of counties is also provided (although this is simply the moved to minus moved from).</p>
-<div id="using-get_flows" class="section level3">
-<h3 class="hasAnchor">
-<a href="#using-get_flows" class="anchor"></a>Using <code>get_flows()</code>
+<div class="section level2">
+<h2 id="migration-flows">Migration flows<a class="anchor" aria-label="anchor" href="#migration-flows"></a>
+</h2>
+<p>The American Community Survey Migration Flows dataset estimates the
+number of people that have moved between pairs of places. The estimates
+are calculated based on where a person lived when surveyed and where
+they lived one year prior to being surveyed. The data is available at
+three geographic levels: county, county subdivision (minor civil
+division), and metropolitan statistical area (MSA). Because the number
+of movers may be small for some pairs of counties, the data is
+aggregated over a five-year period. The estimates for each five-year
+period represent the number of people that moved between places <em>each
+year</em> during that period.</p>
+<p>The data is set up such that for each county, you can find the number
+of people that <em>moved to</em> that county from each of the other
+counties in the US as well as the number of people that <em>moved
+from</em> that county to each of the other counties. The net migration
+for each pair of counties is also provided (although this is simply the
+moved to minus moved from).</p>
+<div class="section level3">
+<h3 id="using-get_flows">Using <code>get_flows()</code><a class="anchor" aria-label="anchor" href="#using-get_flows"></a>
 </h3>
-<p>The <code><a href="../reference/get_flows.html">get_flows()</a></code> function from tidycensus provides access to these estimates. The only required argument for <code><a href="../reference/get_flows.html">get_flows()</a></code> is <code>geography</code>, which can be set to <code>"county"</code>, <code>"county subdivision"</code>, or <code>"metropolitan statistical area"</code>. If geography is set to <code>"county"</code> and no other arguments are set, data for all pairs of counties is pulled from the Census API. This is a large data request as it will get all combinations of counties that had movers. More commonly, you might be interested in knowing the flows in and out of one county, county subdivision, or MSA. In this case, you can specify the state and county or MSA.</p>
-<p>Here we get county-to-county flow data for Westchester County, NY:</p>
+<p>The <code><a href="../reference/get_flows.html">get_flows()</a></code> function from tidycensus provides access
+to these estimates. The only required argument for
+<code><a href="../reference/get_flows.html">get_flows()</a></code> is <code>geography</code>, which can be set to
+<code>"county"</code>, <code>"county subdivision"</code>, or
+<code>"metropolitan statistical area"</code>. If geography is set to
+<code>"county"</code> and no other arguments are set, data for all pairs
+of counties is pulled from the Census API. This is a large data request
+as it will get all combinations of counties that had movers. More
+commonly, you might be interested in knowing the flows in and out of one
+county, county subdivision, or MSA. In this case, you can specify the
+state and county or MSA.</p>
+<p>Here we get county-to-county flow data for Westchester County,
+NY:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">wch_flows</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_flows.html">get_flows</a></span><span class="op">(</span>
   geography <span class="op">=</span> <span class="st">"county"</span>,
@@ -286,68 +368,93 @@
   year <span class="op">=</span> <span class="fl">2018</span>
   <span class="op">)</span>
 
-<span class="va">wch_flows</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">GEOID2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 × 7
-##   GEOID1 GEOID2 FULL1_NAME            FULL2_NAME         variable estimate   moe
-##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;                 &lt;chr&gt;              &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
-## 1 36119  01089  Westchester County, … Madison County, A… MOVEDIN         0    28
-## 2 36119  01089  Westchester County, … Madison County, A… MOVEDOUT       26    41
-## 3 36119  01089  Westchester County, … Madison County, A… MOVEDNET      -26    41
-## 4 36119  01095  Westchester County, … Marshall County, … MOVEDIN         0    28
-## 5 36119  01095  Westchester County, … Marshall County, … MOVEDOUT       35    55
-## 6 36119  01095  Westchester County, … Marshall County, … MOVEDNET      -35    55</code></pre>
-<p>With the default setting of <code><a href="../reference/get_flows.html">get_flows()</a></code>, data is returned in a “tidy” or long format. Notice that for each pair of places, there are three rows returned with one row for each variable (<code>MOVEDIN</code>, <code>MOVEDOUT</code>, and <code>MOVEDNET</code>) and the the estimate and margin of error for these variables are in columns. <code>GEOID1</code> and <code>FULL1_NAME</code> are the FIPS code and name of the origin county. In this case, it will also be Westchester County since that is the only county we requested. <code>GEOID2</code> and <code>FULL2_NAME</code> are the FIPS code and name of the destination county.</p>
-<p>One simple question we can answer with this data is, to which county did the most people move from Westchester?</p>
+<span class="va">wch_flows</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">GEOID2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 7</span></span>
+<span class="co">##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME  variable estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 36119  01089  Westchester County, New York Madison Co… MOVEDIN         0    28</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 36119  01089  Westchester County, New York Madison Co… MOVEDOUT       26    41</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 36119  01089  Westchester County, New York Madison Co… MOVEDNET      -<span style="color: #BB0000;">26</span>    41</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 36119  01095  Westchester County, New York Marshall C… MOVEDIN         0    28</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 36119  01095  Westchester County, New York Marshall C… MOVEDOUT       35    55</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 36119  01095  Westchester County, New York Marshall C… MOVEDNET      -<span style="color: #BB0000;">35</span>    55</span></code></pre>
+<p>With the default setting of <code><a href="../reference/get_flows.html">get_flows()</a></code>, data is
+returned in a “tidy” or long format. Notice that for each pair of
+places, there are three rows returned with one row for each variable
+(<code>MOVEDIN</code>, <code>MOVEDOUT</code>, and <code>MOVEDNET</code>)
+and the the estimate and margin of error for these variables are in
+columns. <code>GEOID1</code> and <code>FULL1_NAME</code> are the FIPS
+code and name of the origin county. In this case, it will also be
+Westchester County since that is the only county we requested.
+<code>GEOID2</code> and <code>FULL2_NAME</code> are the FIPS code and
+name of the destination county.</p>
+<p>One simple question we can answer with this data is, to which county
+did the most people move from Westchester?</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">wch_flows</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDOUT"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 × 7
-##   GEOID1 GEOID2 FULL1_NAME           FULL2_NAME          variable estimate   moe
-##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;                &lt;chr&gt;               &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
-## 1 36119  09001  Westchester County,… Fairfield County, … MOVEDOUT     3916   778
-## 2 36119  36061  Westchester County,… New York County, N… MOVEDOUT     3328   596
-## 3 36119  36005  Westchester County,… Bronx County, New … MOVEDOUT     2063   418
-## 4 36119  36027  Westchester County,… Dutchess County, N… MOVEDOUT     1870   454
-## 5 36119  36079  Westchester County,… Putnam County, New… MOVEDOUT     1318   324
-## 6 36119  36081  Westchester County,… Queens County, New… MOVEDOUT     1082   240</code></pre>
-<p>The <code>MOVEDOUT</code> variable only estimates the number of people that moved out of Westchester County and doesn’t account for the number of people that moved in to Westchester from each county. If you are interested in net migration (moved in - moved out), you can use the <code>MOVEDNET</code> variable.</p>
+<code class="sourceCode R"><span class="va">wch_flows</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDOUT"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 7</span></span>
+<span class="co">##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME  variable estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 36119  09001  Westchester County, New York Fairfield … MOVEDOUT     <span style="text-decoration: underline;">3</span>916   778</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 36119  36061  Westchester County, New York New York C… MOVEDOUT     <span style="text-decoration: underline;">3</span>328   596</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 36119  36005  Westchester County, New York Bronx Coun… MOVEDOUT     <span style="text-decoration: underline;">2</span>063   418</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 36119  36027  Westchester County, New York Dutchess C… MOVEDOUT     <span style="text-decoration: underline;">1</span>870   454</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 36119  36079  Westchester County, New York Putnam Cou… MOVEDOUT     <span style="text-decoration: underline;">1</span>318   324</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 36119  36081  Westchester County, New York Queens Cou… MOVEDOUT     <span style="text-decoration: underline;">1</span>082   240</span></code></pre>
+<p>The <code>MOVEDOUT</code> variable only estimates the number of
+people that moved out of Westchester County and doesn’t account for the
+number of people that moved in to Westchester from each county. If you
+are interested in net migration (moved in - moved out), you can use the
+<code>MOVEDNET</code> variable.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">wch_flows</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDNET"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">arrange</span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 × 7
-##   GEOID1 GEOID2 FULL1_NAME          FULL2_NAME           variable estimate   moe
-##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;               &lt;chr&gt;                &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
-## 1 36119  09001  Westchester County… Fairfield County, C… MOVEDNET    -1768   958
-## 2 36119  36027  Westchester County… Dutchess County, Ne… MOVEDNET    -1119   497
-## 3 36119  06037  Westchester County… Los Angeles County,… MOVEDNET     -486   339
-## 4 36119  12099  Westchester County… Palm Beach County, … MOVEDNET     -450   182
-## 5 36119  25021  Westchester County… Norfolk County, Mas… MOVEDNET     -358   351
-## 6 36119  36079  Westchester County… Putnam County, New … MOVEDNET     -340   407</code></pre>
-<p>You may have noticed that there are some destination geographies that are not other counties. For people that moved into to Westchester from outside the United States, the Migration Flows data reports the region that they moved from, such as Africa or Asia. Since this dataset is based on the American Community Survey, there is no way of knowing how many people moved out of the United States, so for all pairs of US to non-US places, the value of <code>MOVEDOUT</code> and <code>MOVEDNET</code> is <code>NA</code>. The <code>GEOID</code> of non-US places is also <code>NA</code>.</p>
+<code class="sourceCode R"><span class="va">wch_flows</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDNET"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 7</span></span>
+<span class="co">##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME  variable estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 36119  09001  Westchester County, New York Fairfield … MOVEDNET    -<span style="color: #BB0000; text-decoration: underline;">1</span><span style="color: #BB0000;">768</span>   958</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 36119  36027  Westchester County, New York Dutchess C… MOVEDNET    -<span style="color: #BB0000; text-decoration: underline;">1</span><span style="color: #BB0000;">119</span>   497</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 36119  06037  Westchester County, New York Los Angele… MOVEDNET     -<span style="color: #BB0000;">486</span>   339</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 36119  12099  Westchester County, New York Palm Beach… MOVEDNET     -<span style="color: #BB0000;">450</span>   182</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 36119  25021  Westchester County, New York Norfolk Co… MOVEDNET     -<span style="color: #BB0000;">358</span>   351</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 36119  36079  Westchester County, New York Putnam Cou… MOVEDNET     -<span style="color: #BB0000;">340</span>   407</span></code></pre>
+<p>You may have noticed that there are some destination geographies that
+are not other counties. For people that moved into to Westchester from
+outside the United States, the Migration Flows data reports the region
+that they moved from, such as Africa or Asia. Since this dataset is
+based on the American Community Survey, there is no way of knowing how
+many people moved out of the United States, so for all pairs of US to
+non-US places, the value of <code>MOVEDOUT</code> and
+<code>MOVEDNET</code> is <code>NA</code>. The <code>GEOID</code> of
+non-US places is also <code>NA</code>.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">wch_flows</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">GEOID2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 6 × 7
-##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME variable estimate   moe
-##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;                        &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
-## 1 36119  &lt;NA&gt;   Westchester County, New York Africa     MOVEDIN       419   411
-## 2 36119  &lt;NA&gt;   Westchester County, New York Africa     MOVEDOUT       NA    NA
-## 3 36119  &lt;NA&gt;   Westchester County, New York Africa     MOVEDNET       NA    NA
-## 4 36119  &lt;NA&gt;   Westchester County, New York Asia       MOVEDIN      2267   436
-## 5 36119  &lt;NA&gt;   Westchester County, New York Asia       MOVEDOUT       NA    NA
-## 6 36119  &lt;NA&gt;   Westchester County, New York Asia       MOVEDNET       NA    NA</code></pre>
+<code class="sourceCode R"><span class="va">wch_flows</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">GEOID2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 7</span></span>
+<span class="co">##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME variable estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 36119  <span style="color: #BB0000;">NA</span>     Westchester County, New York Africa     MOVEDIN       419   411</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 36119  <span style="color: #BB0000;">NA</span>     Westchester County, New York Africa     MOVEDOUT       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 36119  <span style="color: #BB0000;">NA</span>     Westchester County, New York Africa     MOVEDNET       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 36119  <span style="color: #BB0000;">NA</span>     Westchester County, New York Asia       MOVEDIN      <span style="text-decoration: underline;">2</span>267   436</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 36119  <span style="color: #BB0000;">NA</span>     Westchester County, New York Asia       MOVEDOUT       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 36119  <span style="color: #BB0000;">NA</span>     Westchester County, New York Asia       MOVEDNET       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span></code></pre>
 </div>
-<div id="demographic-characteristics" class="section level3">
-<h3 class="hasAnchor">
-<a href="#demographic-characteristics" class="anchor"></a>Demographic characteristics</h3>
-<p>Datasets between 2006-2010 and 2011-2015 have the ability to cross flow data with selected demographic characteristics such as age, race, employment status. For instance, the following call will get the number of movers to and from the Los Angeles-Long Beach Metro Area by race.</p>
+<div class="section level3">
+<h3 id="demographic-characteristics">Demographic characteristics<a class="anchor" aria-label="anchor" href="#demographic-characteristics"></a>
+</h3>
+<p>Datasets between 2006-2010 and 2011-2015 have the ability to cross
+flow data with selected demographic characteristics such as age, race,
+employment status. For instance, the following call will get the number
+of movers to and from the Los Angeles-Long Beach Metro Area by race.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">la_flows</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_flows.html">get_flows</a></span><span class="op">(</span>
   geography <span class="op">=</span> <span class="st">"metropolitan statistical area"</span>,
@@ -358,22 +465,38 @@
   <span class="op">)</span>
 
 <span class="co"># net migration between la and san francisco</span>
-<span class="va">la_flows</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu">str_detect</span><span class="op">(</span><span class="va">FULL2_NAME</span>, <span class="st">"San Fran"</span><span class="op">)</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDNET"</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 5 × 9
-##   GEOID1 GEOID2 FULL1_NAME  FULL2_NAME  RACE  RACE_label variable estimate   moe
-##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
-## 1 31080  41860  Los Angele… San Franci… 00    All races  MOVEDNET    -2433  1585
-## 2 31080  41860  Los Angele… San Franci… 01    White alo… MOVEDNET    -1077  1096
-## 3 31080  41860  Los Angele… San Franci… 02    Black or … MOVEDNET       98   378
-## 4 31080  41860  Los Angele… San Franci… 03    Asian alo… MOVEDNET     -580   778
-## 5 31080  41860  Los Angele… San Franci… 04    Other rac… MOVEDNET     -874   549</code></pre>
-<p>Note that the demographic characteristics must be specified in the <code>breakdown</code> argument of <code><a href="../reference/get_flows.html">get_flows()</a></code> (not the <code>variable</code> argument). For each dataset there are three or four demographic characteristics to choose from. For more information and to see which characteristics are available in each year, visit the <a href="https://www.census.gov/data/developers/data-sets/acs-migration-flows.html">Census Migration Flows documentation</a>.</p>
+<span class="va">la_flows</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">FULL2_NAME</span>, <span class="st">"San Fran"</span><span class="op">)</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDNET"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 5 × 9</span></span>
+<span class="co">##   GEOID1 GEOID2 FULL1_NAME   FULL2_NAME RACE  RACE_label variable estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 31080  41860  Los Angeles… San Franc… 00    All races  MOVEDNET    -<span style="color: #BB0000; text-decoration: underline;">2</span><span style="color: #BB0000;">433</span>  <span style="text-decoration: underline;">1</span>585</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 31080  41860  Los Angeles… San Franc… 01    White alo… MOVEDNET    -<span style="color: #BB0000; text-decoration: underline;">1</span><span style="color: #BB0000;">077</span>  <span style="text-decoration: underline;">1</span>096</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 31080  41860  Los Angeles… San Franc… 02    Black or … MOVEDNET       98   378</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 31080  41860  Los Angeles… San Franc… 03    Asian alo… MOVEDNET     -<span style="color: #BB0000;">580</span>   778</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 31080  41860  Los Angeles… San Franc… 04    Other rac… MOVEDNET     -<span style="color: #BB0000;">874</span>   549</span></code></pre>
+<p>Note that the demographic characteristics must be specified in the
+<code>breakdown</code> argument of <code><a href="../reference/get_flows.html">get_flows()</a></code> (not the
+<code>variable</code> argument). For each dataset there are three or
+four demographic characteristics to choose from. For more information
+and to see which characteristics are available in each year, visit the
+<a href="https://www.census.gov/data/developers/data-sets/acs-migration-flows.html" class="external-link">Census
+Migration Flows documentation</a>.</p>
 </div>
-<div id="mapping-migration-flows" class="section level3">
-<h3 class="hasAnchor">
-<a href="#mapping-migration-flows" class="anchor"></a>Mapping migration flows</h3>
-<p>An additional feature of <code><a href="../reference/get_flows.html">get_flows()</a></code> is an option to return spatial data associated with each place. In contrast to other spatial data available through tidycensus, <code><a href="../reference/get_flows.html">get_flows()</a></code> returns point rather than polygon geometry. To get geometry with the flows data, set <code>geometry = TRUE</code>. The return of <code><a href="../reference/get_flows.html">get_flows()</a></code> will now be an <strong>sf</strong> object with the centroids of both origin and destination as <code>sfc_POINT</code> columns. The origin point feature is returned in a column named <code>centroid1</code> and is the active geometry column in the sf object. The destination point feature is returned in the <code>centroid2</code> column.</p>
+<div class="section level3">
+<h3 id="mapping-migration-flows">Mapping migration flows<a class="anchor" aria-label="anchor" href="#mapping-migration-flows"></a>
+</h3>
+<p>An additional feature of <code><a href="../reference/get_flows.html">get_flows()</a></code> is an option to
+return spatial data associated with each place. In contrast to other
+spatial data available through tidycensus, <code><a href="../reference/get_flows.html">get_flows()</a></code>
+returns point rather than polygon geometry. To get geometry with the
+flows data, set <code>geometry = TRUE</code>. The return of
+<code><a href="../reference/get_flows.html">get_flows()</a></code> will now be an <strong>sf</strong> object with
+the centroids of both origin and destination as <code>sfc_POINT</code>
+columns. The origin point feature is returned in a column named
+<code>centroid1</code> and is the active geometry column in the sf
+object. The destination point feature is returned in the
+<code>centroid2</code> column.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">phx_flows</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_flows.html">get_flows</a></span><span class="op">(</span>
   geography <span class="op">=</span> <span class="st">"metropolitan statistical area"</span>,
@@ -382,43 +505,48 @@
   geometry <span class="op">=</span> <span class="cn">TRUE</span>
   <span class="op">)</span>
 
-<span class="va">phx_flows</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## Simple feature collection with 6 features and 7 fields
-## Active geometry column: centroid1
-## Geometry type: POINT
-## Dimension:     XY
-## Bounding box:  xmin: -112.0705 ymin: 33.18571 xmax: -112.0705 ymax: 33.18571
-## Geodetic CRS:  NAD83
-## # A tibble: 6 × 9
-##   GEOID1 GEOID2 FULL1_NAME          FULL2_NAME           variable estimate   moe
-##   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;               &lt;chr&gt;                &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
-## 1 38060  &lt;NA&gt;   Phoenix-Mesa-Scott… Outside Metro Area … MOVEDIN     21602  1464
-## 2 38060  &lt;NA&gt;   Phoenix-Mesa-Scott… Outside Metro Area … MOVEDOUT    21192  1559
-## 3 38060  &lt;NA&gt;   Phoenix-Mesa-Scott… Outside Metro Area … MOVEDNET      410  2186
-## 4 38060  &lt;NA&gt;   Phoenix-Mesa-Scott… Africa               MOVEDIN      1078   385
-## 5 38060  &lt;NA&gt;   Phoenix-Mesa-Scott… Africa               MOVEDOUT       NA    NA
-## 6 38060  &lt;NA&gt;   Phoenix-Mesa-Scott… Africa               MOVEDNET       NA    NA
-## # … with 2 more variables: centroid1 &lt;POINT [°]&gt;, centroid2 &lt;POINT [°]&gt;</code></pre>
-<p>With the centroids attached to each pair of places, it is straightforward to map the migration flows. Here, we look at the most common origin MSAs for people moving to Phoenix-Mesa-Scottsdale, AZ. To make an interactive map of the flows, we’ll use the excellent <a href="https://symbolixau.github.io/mapdeck/articles/mapdeck.html"><strong>mapdeck</strong> package</a>. To use mapdeck, you’ll need a <a href="https://docs.mapbox.com/help/getting-started/access-tokens/">Mapbox account and access token</a>.</p>
+<span class="va">phx_flows</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Simple feature collection with 6 features and 7 fields</span>
+<span class="co">## Active geometry column: centroid1</span>
+<span class="co">## Geometry type: POINT</span>
+<span class="co">## Dimension:     XY</span>
+<span class="co">## Bounding box:  xmin: -112.0705 ymin: 33.18571 xmax: -112.0705 ymax: 33.18571</span>
+<span class="co">## Geodetic CRS:  NAD83</span>
+<span class="co">## <span style="color: #949494;"># A tibble: 6 × 9</span></span>
+<span class="co">##   GEOID1 GEOID2 FULL1_NAME                    FULL2_NAME variable estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Outside M… MOVEDIN     <span style="text-decoration: underline;">21</span>602  <span style="text-decoration: underline;">1</span>464</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Outside M… MOVEDOUT    <span style="text-decoration: underline;">21</span>192  <span style="text-decoration: underline;">1</span>559</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Outside M… MOVEDNET      410  <span style="text-decoration: underline;">2</span>186</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Africa     MOVEDIN      <span style="text-decoration: underline;">1</span>078   385</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Africa     MOVEDOUT       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Africa     MOVEDNET       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span>
+<span class="co">## <span style="color: #949494;"># … with 2 more variables: centroid1 &lt;POINT [°]&gt;, centroid2 &lt;POINT [°]&gt;</span></span></code></pre>
+<p>With the centroids attached to each pair of places, it is
+straightforward to map the migration flows. Here, we look at the most
+common origin MSAs for people moving to Phoenix-Mesa-Scottsdale, AZ. To
+make an interactive map of the flows, we’ll use the excellent <a href="https://symbolixau.github.io/mapdeck/articles/mapdeck.html" class="external-link"><strong>mapdeck</strong>
+package</a>. To use mapdeck, you’ll need a <a href="https://docs.mapbox.com/help/getting-started/access-tokens/" class="external-link">Mapbox
+account and access token</a>.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://symbolixau.github.io/mapdeck/articles/mapdeck.html">mapdeck</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://symbolixau.github.io/mapdeck/articles/mapdeck.html" class="external-link">mapdeck</a></span><span class="op">)</span>
 
-<span class="va">top_move_in</span> <span class="op">&lt;-</span> <span class="va">phx_flows</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">GEOID2</span><span class="op">)</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDIN"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">slice_max</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">25</span>, order_by <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">mutate</span><span class="op">(</span>
+<span class="va">top_move_in</span> <span class="op">&lt;-</span> <span class="va">phx_flows</span> <span class="op"><a href="https://rdrr.io/pkg/mapdeck/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">GEOID2</span><span class="op">)</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDIN"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/mapdeck/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_max</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">25</span>, order_by <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/mapdeck/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
     width <span class="op">=</span> <span class="va">estimate</span> <span class="op">/</span> <span class="fl">500</span>,
-    tooltip <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span>
-      <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html">comma</a></span><span class="op">(</span><span class="va">estimate</span> <span class="op">*</span> <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span>,
-      <span class="st">" people moved from "</span>, <span class="fu">str_remove</span><span class="op">(</span><span class="va">FULL2_NAME</span>, <span class="st">"Metro Area"</span><span class="op">)</span>,
-      <span class="st">" to "</span>, <span class="fu">str_remove</span><span class="op">(</span><span class="va">FULL1_NAME</span>, <span class="st">"Metro Area"</span><span class="op">)</span>, <span class="st">" between 2014 and 2018"</span>
+    tooltip <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span>
+      <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">comma</a></span><span class="op">(</span><span class="va">estimate</span> <span class="op">*</span> <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span>,
+      <span class="st">" people moved from "</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_remove.html" class="external-link">str_remove</a></span><span class="op">(</span><span class="va">FULL2_NAME</span>, <span class="st">"Metro Area"</span><span class="op">)</span>,
+      <span class="st">" to "</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_remove.html" class="external-link">str_remove</a></span><span class="op">(</span><span class="va">FULL1_NAME</span>, <span class="st">"Metro Area"</span><span class="op">)</span>, <span class="st">" between 2014 and 2018"</span>
       <span class="op">)</span>
     <span class="op">)</span>
 
-<span class="va">top_move_in</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/mapdeck/man/mapdeck.html">mapdeck</a></span><span class="op">(</span>style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/mapdeck/man/mapdeck_style.html">mapdeck_style</a></span><span class="op">(</span><span class="st">"dark"</span><span class="op">)</span>, pitch <span class="op">=</span> <span class="fl">45</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/mapdeck/man/add_arc.html">add_arc</a></span><span class="op">(</span>
+<span class="va">top_move_in</span> <span class="op"><a href="https://rdrr.io/pkg/mapdeck/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/mapdeck/man/mapdeck.html" class="external-link">mapdeck</a></span><span class="op">(</span>style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/mapdeck/man/mapdeck_style.html" class="external-link">mapdeck_style</a></span><span class="op">(</span><span class="st">"dark"</span><span class="op">)</span>, pitch <span class="op">=</span> <span class="fl">45</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/mapdeck/man/pipe.html" class="external-link">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/mapdeck/man/add_arc.html" class="external-link">add_arc</a></span><span class="op">(</span>
     origin <span class="op">=</span> <span class="st">"centroid1"</span>,
     destination <span class="op">=</span> <span class="st">"centroid2"</span>,
     stroke_width <span class="op">=</span> <span class="st">"width"</span>,
@@ -442,11 +570,14 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Kyle Walker, Matt Herman.</p>
+  <p></p>
+<p>Developed by Kyle Walker, Matt Herman.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.1.</p>
 </div>
 
       </footer>
@@ -454,6 +585,8 @@
 
   
 
+
+  
 
   </body>
 </html>

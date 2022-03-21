@@ -9,9 +9,9 @@ library(tidycensus)
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.width = 8)
 ```
 
-If requested, __tidycensus__ can return simple feature geometry for geographic units along with variables from the decennial US Census or American Community survey.  By setting `geometry = TRUE` in a __tidycensus__ function call, __tidycensus__ will use the __tigris__ package to retrieve the corresponding geographic dataset from the US Census Bureau and pre-merge it with the tabular data obtained from the Census API.  As of tidycensus version 0.9.9.2, `geometry = TRUE` is supported for all geographies currently available in the package.  
+If requested, __tidycensus__ can return simple feature geometry for geographic units along with variables from the decennial US Census or American Community survey.  By setting `geometry = TRUE` in a __tidycensus__ function call, __tidycensus__ will use the __tigris__ package to retrieve the corresponding geographic dataset from the US Census Bureau and pre-merge it with the tabular data obtained from the Census API.   
 
-The following example shows median household income from the 2015-2019 ACS for Census tracts in Orange County, California: 
+The following example shows median household income from the 2016-2020 ACS for Census tracts in Orange County, California: 
 
 ```{r}
 library(tidycensus)
@@ -19,7 +19,8 @@ library(tidyverse)
 options(tigris_use_cache = TRUE)
 
 orange <- get_acs(state = "CA", county = "Orange", geography = "tract", 
-                  variables = "B19013_001", geometry = TRUE)
+                  variables = "B19013_001", geometry = TRUE,
+                  year = 2020)
 
 head(orange)
 ```
@@ -29,12 +30,9 @@ Our object `orange` looks much like the basic __tidycensus__ output, but with a 
 As the dataset is in a tidy format, it can be quickly visualized with the `geom_sf` functionality currently in the development version of __ggplot2__: 
 
 ```{r}
-# crs = 26911 is appropriate for Orange County, but may not be appropriate for your area.
-# Use the crsuggest package to identify an appropriate CRS for your area.
 orange %>%
   ggplot(aes(fill = estimate)) + 
   geom_sf(color = NA) + 
-  coord_sf(crs = 26911) + 
   scale_fill_viridis_c(option = "magma") 
 ```
 
@@ -52,7 +50,7 @@ racevars <- c(White = "P005003",
 
 harris <- get_decennial(geography = "tract", variables = racevars, 
                   state = "TX", county = "Harris County", geometry = TRUE,
-                  summary_var = "P001001") 
+                  summary_var = "P001001", year = 2010) 
 
 head(harris)
 ```
@@ -67,11 +65,10 @@ harris %>%
   ggplot(aes(fill = pct)) +
   facet_wrap(~variable) +
   geom_sf(color = NA) +
-  coord_sf(crs = 26915) + # Appropriate CRS for Houston, but may not be for your data
   scale_fill_viridis_c()
 ```
 
-## Detailed shoreline mapping with tidycensus
+## Detailed shoreline mapping with tidycensus and tigris
 
 Geometries in tidycensus default to the Census Bureau's [cartographic boundary shapefiles](https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html).  Cartographic boundary shapefiles are preferred to the core [TIGER/Line shapefiles](https://www.census.gov/geo/maps-data/data/tiger-line.html) in tidycensus as their smaller size speeds up processing and because they are pre-clipped to the US coastline.
 
@@ -86,6 +83,7 @@ ny <- get_acs(geography = "tract",
               variables = "B19013_001", 
               state = "NY", 
               county = "New York", 
+              year = 2020, 
               geometry = TRUE)
 
 ggplot(ny, aes(fill = estimate)) + 
@@ -95,41 +93,25 @@ ggplot(ny, aes(fill = estimate)) +
 
 ```
 
-As illustrated in the graphic, the boundaries of Manhattan include water boundaries - stretching into the Hudson and East Rivers.  In turn, a more accurate representation of Manhattan's land area might be desired.  To accomplish this, a tidycensus user can use the core TIGER/Line shapefiles instead, then erase water area from Manhattan's geometry.  
+As illustrated in the graphic, the boundaries of Manhattan include water boundaries - stretching into the Hudson and East Rivers.  In turn, a more accurate representation of Manhattan's land area might be desired.  To accomplish this, a tidycensus user can use the core TIGER/Line shapefiles instead with the argument `cb = FALSE`, then erase water area from Manhattan's geometry.  The `erase_water()` function in the __tigris__ R package will automatically remove proximate water areas from Census polygons, improving cartographic display.  The `area_threshold` argument determines the percentile ranking of the water areas by size in the data's proximity to retain; the default, 0.75, will keep the largest 25 percent of areas.  Data should be first transformed to a projected coordinate reference system to improve performance.  
 
-tidycensus allows users to get TIGER/Line instead of cartographic boundary shapefiles with the keyword argument `cb = FALSE`.  This argument will be familiar to users of the tigris package, as it is used by tigris to distinguish between cartographic boundary and TIGER/Line shapefiles in the package.  
-
-```{r, message = FALSE, warning = FALSE}
-library(sf)
-
-ny2 <- get_acs(geography = "tract", 
-              variables = "B19013_001", 
-              state = "NY", 
-              county = "New York", 
-              geometry = TRUE, 
-              cb = FALSE) 
-```
-
-Next, tools in the tigris and [sf](https://github.com/r-spatial/sf) package can be used to remove the water area from Manhattan's Census tracts.  sf allows users to "erase" one geometry from another, [akin to tools available in desktop GIS software](http://pro.arcgis.com/en/pro-app/tool-reference/analysis/erase.htm).  The `st_erase()` function defined below is not exported by the package, but is defined in the documentation for `st_difference()`.  
-
-The geometry used to "erase" water area from the tract polygons is obtained by the `area_water()` function in tigris, making sure to choose the option `class = "sf"`.  
 
 ```{r, message = FALSE, warning = FALSE}
 library(tigris)
+library(sf)
 
-st_erase <- function(x, y) {
-  st_difference(x, st_union(y))
-}
+ny_erase <- get_acs(
+  geography = "tract",
+  variables = "B19013_001",
+  state = "NY",
+  county = "New York",
+  year = 2020,
+  geometry = TRUE,
+  cb = FALSE
+) %>%
+  st_transform(26918) %>%
+  erase_water(area_threshold = 0.75)
 
-ny_water <- area_water("NY", "New York", class = "sf") 
-
-ny_erase <- st_erase(ny2, ny_water)
-
-```
-
-After performing this operation, we can visualize the result: 
-
-```{r, message = FALSE, warning = FALSE}
 ggplot(ny_erase, aes(fill = estimate)) + 
   geom_sf() + 
   theme_void() + 

@@ -252,7 +252,7 @@ If you've used the spatial functionality in tidycensus before, you might also wa
 
 ```{r, results="hide"}
 ne_states <- c("VT", "NH", "ME", "MA", "CT", "RI")
-ne_pumas <- map(ne_states, tigris::pumas, class = "sf", cb = TRUE) %>% 
+ne_pumas <- map(ne_states, tigris::pumas, class = "sf", cb = TRUE, year = 2018) %>% 
   reduce(rbind)
 ```
 
