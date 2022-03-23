@@ -333,6 +333,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     }
 
+    if (any(grepl("^CP[0-9].", variables))) {
+      stop("Comparison profiles variables cannot be mixed with variables from other datasets in tidycensus; please request CP data separately.", call. = FALSE)
+    }
+
     message('Fetching data by table type ("B/C", "S", "DP") and combining the result.')
 
     # split variables by type into list, discard empty list elements
@@ -649,6 +653,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       survey2 <- paste0(survey, "/profile")
     } else if (grepl("^K[0-9].", table)) {
       survey2 <- "acsse"
+    } else if (grepl("^CP[0-9].", table)) {
+      survey2 <- paste0(survey, "/cprofile")
     } else {
       survey2 <- survey
     }

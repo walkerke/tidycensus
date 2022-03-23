@@ -104,18 +104,24 @@ format_variables_acs <- function(variables) {
   # Now, make unique
   variables2 <- unique(variables1)
 
-  # Next, separate into vars with and without MOEs
-  variables2a <- variables2[!variables2 %in% no_moes]
+  # The comparison profile doesn't have MOEs, so account for that
+  if (!any(grepl("^CP[0-9].", variables2))) {
 
-  variables2_nomoe <- variables2[variables2 %in% no_moes]
+    # Next, separate into vars with and without MOEs
+    variables2a <- variables2[!variables2 %in% no_moes]
 
-  # Now, expand with both E and M if MOE is applicable
-  variables3 <- map_chr(variables2a, function(y) paste0(y, c("E", "M"), collapse = ","))
+    variables2_nomoe <- variables2[variables2 %in% no_moes]
 
-  if (length(variables2_nomoe)) {
-    variables3_nomoe <- paste0(variables2_nomoe, "E")
+    # Now, expand with both E and M if MOE is applicable
+    variables3 <- map_chr(variables2a, function(y) paste0(y, c("E", "M"), collapse = ","))
 
-    variables3 <- c(variables3, variables3_nomoe)
+    if (length(variables2_nomoe)) {
+      variables3_nomoe <- paste0(variables2_nomoe, "E")
+
+      variables3 <- c(variables3, variables3_nomoe)
+    }
+  } else {
+    variables3 <- paste0(variables2, "E")
   }
 
   # Now, put together all these strings if need be
@@ -140,6 +146,11 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
   if (grepl("^S[0-9].", formatted_variables)) {
     message("Using the ACS Subject Tables")
     base <- paste0(base, "/subject")
+  }
+
+  if (grepl("^CP[0-9].", formatted_variables)) {
+    message("Using the ACS Comparison Profile")
+    base <- paste0(base, "/cprofile")
   }
 
   for_area <- paste0(geography, ":*")
