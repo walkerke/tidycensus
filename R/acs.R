@@ -810,7 +810,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   }
 
   # For ZCTAs, strip the state code from GEOID (issue #338 and #358)
-  if (geography == "zip code tabulation area" && year > 2012) {
+  if (geography == "zip code tabulation area" && (year > 2012 && year < 2020)) {
     dat2 <- dat2 %>%
       dplyr::mutate(
         GEOID = stringr::str_sub(GEOID, start = 3L)
