@@ -2,12 +2,12 @@ library(tidyverse)
 
 clean_data_dict <- function(path, survey, year) {
 
-  data_dict <- read_csv(
+  data_dict <- read.csv(
     path,
-    col_names = c("type", "var_code", "data_type", "length",
+    col.names = c("type", "var_code", "data_type", "length",
                   "var_label", "val_max", "val_label"),
-    col_types = cols(.default = "c")
-    ) %>%
+    colClasses = "character") %>%
+    as_tibble() %>%
     mutate(data_type = if_else(data_type == "C", "chr", "num")) %>%
     distinct()
 
