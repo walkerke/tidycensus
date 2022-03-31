@@ -85,7 +85,7 @@
 #' }
 #' @export
 get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FALSE,
-                    year = 2019, endyear = NULL, output = "tidy",
+                    year = 2020, endyear = NULL, output = "tidy",
                     state = NULL, county = NULL, zcta = NULL,
                     geometry = FALSE, keep_geo_vars = FALSE,
                     shift_geo = FALSE, summary_var = NULL, key = NULL,
@@ -93,7 +93,14 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   # Error message for 1-year 2020 ACS
   if (year == 2020 && survey == "acs1") {
-    stop("The regular 1-year ACS was not released in 2020 due to low response rates.\nThe Census Bureau released a set of experimental estimates for the 2020 1-year ACS\nthat are not available in tidycensus.\nThese estimates can be downloaded at https://www.census.gov/programs-surveys/acs/data/experimental-data/1-year.html.", call. = FALSE)
+
+    msg_acs <- c(x = crayon::red(stringr::str_wrap("The regular 1-year ACS for 2020 was not released and is not available in tidycensus.")),
+             i = crayon::blue("Due to low response rates, the Census Bureau instead released a set of experimental estimates for the 2020 1-year ACS."),
+             i = crayon::blue("These estimates can be downloaded at https://www.census.gov/programs-surveys/acs/data/experimental-data/1-year.html."),
+             i = crayon::green("1-year ACS data can still be accessed for other years by supplying an appropriate argument to the `year` parameter."))
+
+    rlang::abort(msg_acs, call = FALSE)
+
   }
 
   if (shift_geo) {
