@@ -8,7 +8,8 @@
 #'   to request data. To get data from PUMAs in more than one state, specify a
 #'   named vector of state/PUMA pairs and set \code{state = "multiple"}.
 #' @param year The data year of the 1-year ACS sample or the endyear of the
-#'   5-year sample. Defaults to 2019.
+#'   5-year sample. Defaults to 2020. Please note that 1-year data for 2020 is not available
+#'   in tidycensus, so users requesting 1-year data should supply a different year.
 #' @param survey The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 #'   (the default).
 #' @param variables_filter A named list of filters you'd like to return from the
@@ -22,7 +23,7 @@
 #'   errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.
 #' @param recode If TRUE, recodes variable values using Census data dictionary
 #'   and creates a new \code{*_label} column for each variable that is recoded.
-#'   Available for 2017 - 2019 data. Defaults to FALSE.
+#'   Available for 2017 - 2020 data. Defaults to FALSE.
 #' @param show_call If TRUE, display call made to Census API. This can be very
 #'   useful in debugging and determining if error messages returned are due to
 #'   tidycensus or the Census API. Copy to the API call into a browser and see
@@ -52,10 +53,6 @@ get_pums <- function(variables = NULL,
                      show_call = FALSE,
                      key = NULL) {
 
-  if (is.null(state)) {
-    stop("You must specify a state by name, postal code, or FIPS code. To request data for the entire United States, specify `state = 'all'`.", call. = FALSE)
-  }
-
   if (survey == "acs1") {
     message(sprintf("Getting data from the %s 1-year ACS Public Use Microdata Sample",
                     year))
@@ -64,6 +61,23 @@ get_pums <- function(variables = NULL,
     message(sprintf("Getting data from the %s-%s 5-year ACS Public Use Microdata Sample",
                     startyear, year))
   }
+
+  # Error message for 1-year 2020 ACS
+  if (year == 2020 && survey == "acs1") {
+
+    msg_acs <- c(crayon::red(stringr::str_wrap("The regular 1-year ACS for 2020 was not released and is not available in tidycensus.")),
+                 i = crayon::cyan(stringr::str_wrap("Due to low response rates, the Census Bureau instead released a set of experimental estimates for the 2020 1-year ACS.")),
+                 i = crayon::cyan(stringr::str_wrap("These estimates can be downloaded at https://www.census.gov/programs-surveys/acs/data/experimental-data/1-year.html.")),
+                 i = crayon::green(stringr::str_wrap("1-year ACS data can still be accessed for other years by supplying an appropriate year to the `year` parameter.")))
+
+    rlang::abort(msg_acs)
+
+  }
+
+  if (is.null(state)) {
+    stop("You must specify a state by name, postal code, or FIPS code. To request data for the entire United States, specify `state = 'all'`.", call. = FALSE)
+  }
+
 
   if (Sys.getenv('CENSUS_API_KEY') != '') {
 

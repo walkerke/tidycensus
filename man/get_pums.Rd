@@ -29,7 +29,8 @@ to request data. To get data from PUMAs in more than one state, specify a
 named vector of state/PUMA pairs and set \code{state = "multiple"}.}
 
 \item{year}{The data year of the 1-year ACS sample or the endyear of the
-5-year sample. Defaults to 2019.}
+5-year sample. Defaults to 2020. Please note that 1-year data for 2020 is not available
+in tidycensus, so users requesting 1-year data should supply a different year.}
 
 \item{survey}{The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 (the default).}
@@ -47,7 +48,7 @@ errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.}
 
 \item{recode}{If TRUE, recodes variable values using Census data dictionary
 and creates a new \code{*_label} column for each variable that is recoded.
-Available for 2017 - 2019 data. Defaults to FALSE.}
+Available for 2017 - 2020 data. Defaults to FALSE.}
 
 \item{show_call}{If TRUE, display call made to Census API. This can be very
 useful in debugging and determining if error messages returned are due to
