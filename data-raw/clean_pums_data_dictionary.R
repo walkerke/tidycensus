@@ -60,6 +60,13 @@ clean_data_dict <- function(path, survey, year) {
       ) %>%
     select(survey, year, everything())
 
+  # If the year is 2020, we need to pad the character values
+  if (year == 2020) {
+    pums_variables <- pums_variables %>%
+      mutate(val_min = if_else(data_type == "chr", str_pad(val_min, val_length, "left", "0"), val_min),
+             val_max = if_else(data_type == "chr", str_pad(val_max, val_length, "left", "0"), val_max))
+  }
+
   pums_variables
 
 }
