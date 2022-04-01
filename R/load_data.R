@@ -891,6 +891,8 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
       pull()
 
     # For all variables in which we know what the length should be, pad with 0s
+    nopad_vars <- c("SCHL", "NAICSP")
+
     dat_padded <- suppressWarnings(
       dat %>%
         select(.data$SERIALNO, .data$SPORDER, any_of(var_val_length$var_code)) %>%
@@ -902,7 +904,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
         left_join(var_val_length, by = "var_code") %>%
         mutate(
           val = ifelse(!is.na(.data$val_na) & .data$val_na == .data$val, strrep("b", .data$val_length), .data$val),
-          val = ifelse(.data$var_code != "NAICSP", str_pad(.data$val, .data$val_length, pad = "0"), .data$val),
+          val = ifelse(!.data$var_code != "NAICSP" %in% nopad_vars, str_pad(.data$val, .data$val_length, pad = "0"), .data$val),
           val = ifelse(.data$var_code == "NAICSP" & .data$val == "*", "bbbbbbbb", .data$val),  # special NULL value returned by API for this var
         ) %>%
         select(-.data$val_length, -.data$val_na) %>%
