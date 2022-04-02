@@ -84,13 +84,13 @@ get_pums <- function(variables = NULL,
     stop("You must specify a state by name, postal code, or FIPS code. To request data for the entire United States, specify `state = 'all'`.", call. = FALSE)
   }
 
+  if (return_vacant) {
+    variables <- c(variables, "VACS")
+  }
+
   if ("VACS" %in% variables) {
     message("You have requested information on vacant units; setting `return_vacant` to TRUE")
     return_vacant <- TRUE
-  }
-
-  if (return_vacant) {
-    variables <- c(variables, "VACS")
   }
 
 
