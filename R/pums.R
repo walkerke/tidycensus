@@ -322,13 +322,13 @@ get_pums <- function(variables = NULL,
           if (length(chr_names) > 0) {
             var_labels <- paste0(chr_names, "_label")
 
-            join_vars <- c(join_vars, var_names, var_labels)
+            vacant_join_vars <- c(vacant_join_vars, var_names, var_labels)
           } else {
-            join_vars <- c(join_vars, var_names)
+            vacant_join_vars <- c(vacant_join_vars, var_names)
           }
 
         } else {
-          join_vars <- c(join_vars, var_names)
+          vacant_join_vars <- c(vacant_join_vars, var_names)
         }
       }
 
