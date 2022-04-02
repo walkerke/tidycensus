@@ -347,9 +347,11 @@ get_pums <- function(variables = NULL,
 
     # Test out the row-bindings first and foremost
     output_data <- dplyr::bind_rows(pums_data, vacant_data)
+  } else {
+    output_data <- pums_data
   }
 
-  return(pums_data)
+  return(output_data)
 }
 
 
