@@ -84,8 +84,9 @@ get_pums <- function(variables = NULL,
     stop("You must specify a state by name, postal code, or FIPS code. To request data for the entire United States, specify `state = 'all'`.", call. = FALSE)
   }
 
-  if ("VACP" %in% variables) {
+  if ("VACS" %in% variables) {
     message("You have requested information on vacant units; setting `return_vacant` to TRUE")
+    return_vacant <- TRUE
   }
 
   if (return_vacant) {
@@ -257,12 +258,16 @@ get_pums <- function(variables = NULL,
     vacant_filter <- list(VACS = 1:7)
 
     vacant_variables <- variables
+    vacant_variables <- vacant_variables[vacant_variables != "VACS"]
 
     # Handle replicate weights appropriately
-    if (rep_weights == "both") {
-      # remove the person weight variables
-      vacant_variables <- vacant_variables[!vacant_variables %in% person_weight_variables]
+    if (!is.null(rep_weights)) {
+      if (rep_weights == "both") {
+        # remove the person weight variables
+        vacant_variables <- vacant_variables[!vacant_variables %in% person_weight_variables]
+      }
     }
+
 
     if (length(vacant_variables) > 45) {
       l <- split(vacant_variables, ceiling(seq_along(variables) / 45))
