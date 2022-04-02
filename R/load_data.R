@@ -986,6 +986,283 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
   return(dat)
 }
 
+load_data_pums_vacant <- function(variables, state, puma, key, year, survey,
+                           variables_filter, recode, show_call) {
+
+  # for which years is data dictionary available in pums_variables?
+  # we'll use this a couple times later on
+  recode_years <- 2017:2020
+
+  base <- sprintf("https://api.census.gov/data/%s/acs/%s/pums",
+                  year, survey)
+
+  # Parse the variables for housing vs. person variables
+  housing_catalog <- pums_variables %>%
+    dplyr::filter(level != "person" | is.na(level)) %>%
+    dplyr::pull(var_code) %>%
+    unique()
+
+  housing_variables <- variables[variables %in% housing_catalog]
+
+  if (!is.null(puma)) {
+
+    if (length(state) > 1) {
+      stop('When requesting PUMAs for more than one state, you must set state to "multiple" and set puma to a named vector of state/PUMA pairs.', call. = FALSE)
+    }
+
+    # pumas in multiple states can be requested with a named vector of
+    # state / puma pairs in the puma argument of get_pums()
+    if (state == "multiple") {
+
+      # print FIPS code of states used just once
+      purrr::walk(unique(names(puma)), validate_state)
+
+      geo <- purrr::map2_chr(names(puma), unname(puma), function(x, y) {
+        paste0("7950000US", suppressMessages(validate_state(x)), y)
+      })
+
+      geo <- paste0(geo, collapse = ",")
+
+    } else {
+      # if PUMAs requested are in one state only
+      state <- validate_state(state)
+      geo <- purrr::map_chr(puma, function(x) {
+        paste0("7950000US", state, x)
+      })
+
+      if (length(puma) > 1) {
+        geo <- paste0(geo, collapse = ",")
+      }
+    }
+  } else {
+    # if no PUMAs specified, get all PUMAs in each state requested
+    if (!is.null(state)) {
+      geo <- purrr::map_chr(state, function(x) {
+        paste0("0400000US", validate_state(x))
+      })
+
+    } else {
+      geo <- NULL
+    }
+
+    if (length(state) > 1) {
+      geo <- paste0(geo, collapse = ",")
+
+    }
+  }
+
+  # Handle variables & variable filter
+  # In this scenario, the "filter" is for vacant households
+  # This will be specified on the `get_pums()` side
+  if (!is.null(variables_filter)) {
+    filter_names <- names(variables_filter)
+
+    housing_variables <- housing_variables[!housing_variables %in% filter_names]
+
+    var <- paste0(housing_variables, collapse = ",")
+
+    vars_to_get <- paste0("SERIALNO,WGTP,", var)
+
+    # If geo is NULL, state should be added back in here
+    if (is.null(geo)) {
+      vars_to_get <- paste0(vars_to_get, ",ST")
+    }
+
+    # Combine the default query with the variables filter query
+    query_default <- list(get = vars_to_get,
+                          ucgid = geo,
+                          key = key)
+
+    # Collapse vectors if supplied
+    variables_filter_collapsed <- purrr::map(variables_filter,
+                                             ~{paste0(.x, collapse = ",")})
+
+    query <- c(
+      list(get = vars_to_get),
+      variables_filter_collapsed,
+      list(ucgid = geo, key = key)
+    )
+
+  } else {
+
+    # Not implemented here
+    # var <- paste0(variables, collapse = ",")
+    #
+    # vars_to_get <- paste0("SERIALNO,SPORDER,WGTP,PWGTP,", var)
+    #
+    # # If geo is NULL, state should be added back in here
+    # if (is.null(geo)) {
+    #   vars_to_get <- paste0(vars_to_get, ",ST")
+    # }
+    #
+    # query <- list(get = vars_to_get,
+    #               ucgid = geo,
+    #               key = key)
+
+  }
+
+  call <- httr::GET(base,
+                    query = query,
+                    httr::progress())
+
+  if (show_call) {
+    call_url <- gsub("&key.*", "", call$url)
+    message(paste("Census API call:", call_url))
+  }
+
+  # Make sure call status returns 200, else, print the error message for the user.
+  if (call$status_code != 200) {
+    msg <- content(call, as = "text")
+
+    if (grepl("The requested resource is not available", msg)) {
+      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
+    } else {
+      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
+    }
+
+  }
+
+
+  content <- httr::content(call, as = "text")
+
+  if (grepl("You included a key with this request", content)) {
+    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
+  }
+
+  dat <- jsonlite::fromJSON(content)
+
+  colnames(dat) <- dat[1,]
+
+  dat <- dplyr::as_tibble(dat, .name_repair = "minimal")
+
+  dat <- dat[-1,]
+
+  # Convert the weights columns to numeric
+  dat <- dat %>%
+    dplyr::mutate(
+      dplyr::across(
+        .cols = dplyr::contains("WGTP"),
+        as.numeric
+      )
+    )
+  # dat$WGTP <- as.numeric(dat$WGTP)
+  # dat$PWGTP <- as.numeric(dat$PWGTP)
+
+  # Filter the pums lookup table for the selected year and survey
+  pums_variables_filter <- tidycensus::pums_variables %>%
+    filter(year == !!year, survey == !!survey)
+
+  # Do some clean up of the API response: pad returned values with 0s when
+  # necessary to match data dictionary codes and
+  # convert variables to numeric according to data dictionary
+
+  # Only works for years included in pums_variables data dictionary
+  if (year %in% recode_years) {
+    var_val_length <- pums_variables_filter %>%
+      dplyr::filter(!is.na(.data$val_length)) %>%
+      dplyr::distinct(.data$var_code, .data$val_length, .data$val_na)
+
+    num_vars <- pums_variables_filter %>%
+      dplyr::filter(.data$data_type == "num") %>%
+      dplyr::distinct(.data$var_code) %>%
+      dplyr::pull()
+
+    # For all variables in which we know what the length should be, pad with 0s
+    dat_padded <- suppressWarnings(
+      dat %>%
+        dplyr::select(.data$SERIALNO, dplyr::any_of(var_val_length$var_code)) %>%
+        tidyr::pivot_longer(
+          cols = -c(.data$SERIALNO),
+          names_to = "var_code",
+          values_to = "val"
+        ) %>%
+        dplyr::left_join(var_val_length, by = "var_code") %>%
+        dplyr::mutate(
+          val = ifelse(!is.na(.data$val_na) & .data$val_na == .data$val, strrep("b", .data$val_length), .data$val),
+          val = ifelse(.data$var_code != "NAICSP", str_pad(.data$val, .data$val_length, pad = "0"), .data$val),
+          val = ifelse(.data$var_code == "NAICSP" & .data$val == "*", "bbbbbbbb", .data$val),  # special NULL value returned by API for this var
+        ) %>%
+        dplyr::select(-.data$val_length, -.data$val_na) %>%
+        tidyr::pivot_wider(
+          names_from = .data$var_code,
+          values_from = .data$val
+        )
+    )
+
+    # Rejoin padded variables to API return
+    dat <- dat %>%
+      dplyr::select(.data$SERIALNO, !dplyr::any_of(var_val_length$var_code)) %>%
+      dplyr::left_join(dat_padded, by = c("SERIALNO")) %>%
+      dplyr::mutate_at(vars(dplyr::any_of(num_vars)), as.double)
+  }
+
+  # Do you want to return value labels also?
+  if (recode) {
+
+    # Only works for years included in pums_variables data dictionary
+    if (year %in% recode_years) {
+      var_lookup <- pums_variables_filter %>%
+        dplyr::select(.data$var_code, val = .data$val_min, .data$val_label)
+
+      # Vector of variables that are possible to recode
+      vars_to_recode <- pums_variables_filter %>%
+        dplyr::filter(.data$recode) %>%
+        dplyr::distinct(.data$var_code) %>%
+        dplyr::pull()
+
+      # Pivot to long format and join variable codes to lookup table with labels
+      recoded_long <- suppressWarnings(
+        dat %>%
+          dplyr::select(.data$SERIALNO, dplyr::any_of(vars_to_recode)) %>%
+          tidyr::pivot_longer(
+            cols = -c(.data$SERIALNO),
+            names_to = "var_code",
+            values_to = "val"
+          ) %>%
+          dplyr::left_join(var_lookup, by = c("var_code", "val")) %>%
+          dplyr::select(-.data$val)
+      )
+
+      # Create a "pivot spec" with nicer names for the labeled columns
+      # https://tidyr.tidyverse.org/articles/pivot.html#wider-1
+      spec <- recoded_long %>%
+        tidyr::build_wider_spec(
+          names_from = .data$var_code,
+          values_from = .data$val_label
+        ) %>%
+        dplyr::mutate(.name = paste0(.data$var_code, "_label", ""))
+
+      recoded_wide <- recoded_long %>%
+        tidyr::pivot_wider_spec(spec)
+
+      recode_v <- recoded_long %>% dplyr::pull(var_code) %>% unique()
+
+      for (var in recode_v){
+
+        order_v <- var_lookup %>%
+          dplyr::filter(var_code==var) %>%
+          dplyr::pull(val_label)
+
+        var_label <- stringr::str_c(var, "_label")
+
+        recoded_wide[[var_label]] <-
+          readr::parse_factor(recoded_wide[[var_label]], ordered=TRUE, levels=order_v)
+
+      }
+
+
+      # Join recoded columns to API return
+      dat <- dat %>%
+        dplyr::left_join(recoded_wide, by = c("SERIALNO"))
+    } else {
+      message(paste("Recoding is currently supported for",
+                    min(recode_years), "-", max(recode_years),
+                    "data. Returning original data only."))
+    }
+  }
+  return(dat)
+}
+
 load_data_flows <- function(geography, variables, key, year, state = NULL,
                             county = NULL, msa = NULL, show_call = FALSE) {
 
