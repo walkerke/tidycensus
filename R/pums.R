@@ -270,7 +270,7 @@ get_pums <- function(variables = NULL,
 
 
     if (length(vacant_variables) > 45) {
-      l <- split(vacant_variables, ceiling(seq_along(variables) / 45))
+      l <- split(vacant_variables, ceiling(seq_along(vacant_variables) / 45))
       vacant_data <- map(l, function(x) {
 
         load_data_pums_vacant(variables = x,
@@ -291,44 +291,46 @@ get_pums <- function(variables = NULL,
 
       if (recode) {
         if (!is.null(puma)) {
-          vacant_join_vars <- c(join_vars, "ST_label", "PUMA")
+          vacant_join_vars <- c(vacant_join_vars, "ST_label", "PUMA")
         } else {
-          vacant_join_vars <- c(join_vars, "ST_label")
+          vacant_join_vars <- c(vacant_join_vars, "ST_label")
         }
       } else {
         if (!is.null(puma)) {
-          vacant_join_vars <- c(join_vars, "PUMA")
+          vacant_join_vars <- c(vacant_join_vars, "PUMA")
         }
       }
 
-      # Keep here for posterity but not needed for vacant units
-      # if (!is.null(variables_filter)) {
-      #   var_names <- names(variables_filter)
-      #   var_names <- var_names[!var_names == "SPORDER"]
-      #
-      #   if (recode) {
-      #     check_type <- pums_variables %>%
-      #       dplyr::filter(var_code %in% var_names,
-      #                     survey == survey,
-      #                     year == year,
-      #                     data_type == "chr") %>%
-      #       dplyr::distinct(var_code) %>%
-      #       dplyr::pull(var_code)
-      #
-      #     chr_names <- var_names[var_names %in% check_type]
-      #
-      #     if (length(chr_names) > 0) {
-      #       var_labels <- paste0(chr_names, "_label")
-      #
-      #       join_vars <- c(join_vars, var_names, var_labels)
-      #     } else {
-      #       join_vars <- c(join_vars, var_names)
-      #     }
-      #
-      #   } else {
-      #     join_vars <- c(join_vars, var_names)
-      #   }
-      # }
+      # We need the filter logic to correctly process vacancies
+      # because we are using filters
+      # Repurpose the old code here and refactor later after it works
+
+      if (!is.null(vacant_filter)) {
+        var_names <- names(vacant_filter)
+
+        if (recode) {
+          check_type <- pums_variables %>%
+            dplyr::filter(var_code %in% var_names,
+                          survey == survey,
+                          year == year,
+                          data_type == "chr") %>%
+            dplyr::distinct(var_code) %>%
+            dplyr::pull(var_code)
+
+          chr_names <- var_names[var_names %in% check_type]
+
+          if (length(chr_names) > 0) {
+            var_labels <- paste0(chr_names, "_label")
+
+            join_vars <- c(join_vars, var_names, var_labels)
+          } else {
+            join_vars <- c(join_vars, var_names)
+          }
+
+        } else {
+          join_vars <- c(join_vars, var_names)
+        }
+      }
 
       vacant_data <- reduce(vacant_data, left_join, by = vacant_join_vars)
 
