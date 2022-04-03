@@ -13,6 +13,7 @@ get_pums(
   variables_filter = NULL,
   rep_weights = NULL,
   recode = FALSE,
+  return_vacant = FALSE,
   show_call = FALSE,
   key = NULL
 )
@@ -49,6 +50,12 @@ errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.}
 \item{recode}{If TRUE, recodes variable values using Census data dictionary
 and creates a new \code{*_label} column for each variable that is recoded.
 Available for 2017 - 2020 data. Defaults to FALSE.}
+
+\item{return_vacant}{If TRUE, makes a separate request to the Census API to
+retrieve microdata for vacant housing units, which are handled differently
+in the API as they do not have person-level characteristics.  All person-level
+columns in the returned dataset will be populated with NA for vacant housing units.
+Defaults to FALSE.}
 
 \item{show_call}{If TRUE, display call made to Census API. This can be very
 useful in debugging and determining if error messages returned are due to

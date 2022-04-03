@@ -24,6 +24,11 @@
 #' @param recode If TRUE, recodes variable values using Census data dictionary
 #'   and creates a new \code{*_label} column for each variable that is recoded.
 #'   Available for 2017 - 2020 data. Defaults to FALSE.
+#' @param return_vacant If TRUE, makes a separate request to the Census API to
+#'   retrieve microdata for vacant housing units, which are handled differently
+#'   in the API as they do not have person-level characteristics.  All person-level
+#'   columns in the returned dataset will be populated with NA for vacant housing units.
+#'   Defaults to FALSE.
 #' @param show_call If TRUE, display call made to Census API. This can be very
 #'   useful in debugging and determining if error messages returned are due to
 #'   tidycensus or the Census API. Copy to the API call into a browser and see
@@ -50,6 +55,7 @@ get_pums <- function(variables = NULL,
                      variables_filter = NULL,
                      rep_weights = NULL,
                      recode = FALSE,
+                     return_vacant = FALSE,
                      show_call = FALSE,
                      key = NULL) {
 
@@ -76,6 +82,15 @@ get_pums <- function(variables = NULL,
 
   if (is.null(state)) {
     stop("You must specify a state by name, postal code, or FIPS code. To request data for the entire United States, specify `state = 'all'`.", call. = FALSE)
+  }
+
+  if (return_vacant) {
+    variables <- c(variables, "VACS")
+  }
+
+  if ("VACS" %in% variables) {
+    message("You have requested information on vacant units; setting `return_vacant` to TRUE")
+    return_vacant <- TRUE
   }
 
 
@@ -235,7 +250,115 @@ get_pums <- function(variables = NULL,
                                 key = key)
   }
 
-  return(pums_data)
+  # Handle vacant units if requested
+  # Basically, a separate request needs to be made to the API that removes any person-level
+  # variables, handled with the same logic as above
+  if (return_vacant) {
+
+    vacant_filter <- list(VACS = 1:7)
+
+    vacant_variables <- variables
+    vacant_variables <- vacant_variables[vacant_variables != "VACS"]
+
+    # Handle replicate weights appropriately
+    if (!is.null(rep_weights)) {
+      if (rep_weights == "both") {
+        # remove the person weight variables
+        vacant_variables <- vacant_variables[!vacant_variables %in% person_weight_variables]
+      }
+    }
+
+
+    if (length(vacant_variables) > 45) {
+      l <- split(vacant_variables, ceiling(seq_along(vacant_variables) / 45))
+      vacant_data <- map(l, function(x) {
+
+        load_data_pums_vacant(variables = x,
+                       state = state,
+                       year = year,
+                       puma = puma,
+                       survey = survey,
+                       variables_filter = vacant_filter,
+                       recode = recode,
+                       show_call = show_call,
+                       key = key)
+      })
+
+      # to combine the multiple API calls, we need to join using the repeated
+      # variables so they don't get duplicated in the final data frame
+      # the repeated variables will depend on how we requested data
+      vacant_join_vars <- c("SERIALNO", "WGTP", "ST")
+
+      if (recode) {
+        if (!is.null(puma)) {
+          vacant_join_vars <- c(vacant_join_vars, "ST_label", "PUMA")
+        } else {
+          vacant_join_vars <- c(vacant_join_vars, "ST_label")
+        }
+      } else {
+        if (!is.null(puma)) {
+          vacant_join_vars <- c(vacant_join_vars, "PUMA")
+        }
+      }
+
+      # We need the filter logic to correctly process vacancies
+      # because we are using filters
+      # Repurpose the old code here and refactor later after it works
+
+      if (!is.null(vacant_filter)) {
+        var_names <- names(vacant_filter)
+
+        if (recode) {
+          check_type <- pums_variables %>%
+            dplyr::filter(var_code %in% var_names,
+                          survey == survey,
+                          year == year,
+                          data_type == "chr") %>%
+            dplyr::distinct(var_code) %>%
+            dplyr::pull(var_code)
+
+          chr_names <- var_names[var_names %in% check_type]
+
+          if (length(chr_names) > 0) {
+            var_labels <- paste0(chr_names, "_label")
+
+            vacant_join_vars <- c(vacant_join_vars, var_names, var_labels)
+          } else {
+            vacant_join_vars <- c(vacant_join_vars, var_names)
+          }
+
+        } else {
+          vacant_join_vars <- c(vacant_join_vars, var_names)
+        }
+      }
+
+      vacant_data <- reduce(vacant_data, left_join, by = vacant_join_vars)
+
+
+      vacant_data <- select(vacant_data, -contains("WGTP"), everything(), contains("WGTP"))
+    } else {
+      vacant_data <- suppressMessages(load_data_pums_vacant(
+        variables = vacant_variables,
+        state = state,
+        puma = puma,
+        year = year,
+        survey = survey,
+        variables_filter = vacant_filter,
+        recode = recode,
+        show_call = show_call,
+        key = key
+      ))
+    }
+
+
+
+    # Test out the row-bindings first and foremost
+    output_data <- dplyr::bind_rows(pums_data, vacant_data)
+  } else {
+    output_data <- pums_data
+  }
+
+  return(output_data)
 }
 
 
