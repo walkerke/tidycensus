@@ -276,3 +276,196 @@ as_dot_density <- function(
 
 
 }
+
+
+#' Use population-weighted interpolation to transfer information from one set of shapes to another
+#'
+#' A common use-case when working with time-series small-area Census data is to transfer data from one set of shapes (e.g. 2010 Census tracts) to another set of shapes (e.g. 2020 Census tracts). Population-weighted interpolation is one such solution to this problem that takes into account the distribution of the population within a Census unit to intelligently transfer data between incongruent units.
+#'
+#' The approach implemented here is based on Esri's data apportionment algorithm, in which an "apportionment layer" of points (referred to here as the \code{weights}) is used to determine how to weight areas of overlap between origin and target zones.  Users must supply a "from" dataset as an sf object (the dataset from which numeric columns will be interpolated) and a "to" dataset, also of class sf, that contains the target zones. A third sf object, the "weights", may be an object of geometry type \code{POINT} or polygons from which their centroids will be calculated.
+#'
+#' An intersection is computed between \code{from} and \code{to}, and a spatial join is computed between the intersection layer and the weights layer, represented as points.  A specified \code{weight_column} in \code{weights} will be used to determine the relative influence of each point on the allocation of values between \code{from} and \code{to}; if no weight column is specified, all points will be weighted equally.
+#'
+#' The \code{extensive} parameter (logical) should reflect the values being interpolated correctly.  If \code{TRUE}, the function returns a weighted sum for each zone.  If \code{FALSE}, a weighted mean will be returned.  For Census data, \code{extensive = TRUE} should be used for transferring counts / estimated counts between zones.  Derived metrics (e.g. population density, percentages, etc.) should use \code{extensive = FALSE}.  Margins of error in the ACS will not be transferred correctly with this function, so please use with caution.
+#'
+#' @param from The spatial dataset from which numeric attributes will be interpolated to target zones. By default, all numeric columns in this dataset will be interpolated.
+#' @param to The target geometries (zones) to which numeric attributes will be interpolated.
+#' @param to_id (optional) An ID column in the target dataset to be retained in the output. For data obtained with tidycensus, this will be \code{"GEOID"} by convention.  If \code{NULL}, the output dataset will include a column \code{id} that uniquely identifies each row.
+#' @param extensive if \code{TRUE}, return weighted sums; if \code{FALSE}, return weighted means.
+#' @param weights An input spatial dataset to be used as weights. If the dataset is not of geometry type \code{POINT}, its centroids will be used.  For US-based applications, this will commonly be a Census block dataset obtained with the tigris or tidycensus packages.
+#' @param weight_column (optional) a column in \code{weights} used for weighting in the interpolation process.  Typically this will be a column representing the population (or other weighting metric, like housing units) of the input weights dataset.  If \code{NULL} (the default), each feature in \code{weights} is given an equal weight of 1.
+#' @param crs (optional) The EPSG code of the output projected coordinate reference system (CRS). Useful as all input layers (\code{from}, \code{to}, and \code{weights}) must share the same CRS for the function to run correctly.
+#'
+#' @return A dataset of class sf with the geometries and an ID column from \code{to} (the target shapes) but with numeric attributes of \code{from} interpolated to those shapes.
+#' @export
+#'
+#' @examples \dontrun{
+#' # Example: interpolating work-from-home from 2011-2015 ACS
+#' # to 2020 shapes
+#' library(tidycensus)
+#' library(tidyverse)
+#' library(tigris)
+#' options(tigris_use_cache = TRUE)
+#'
+#' wfh_15 <- get_acs(
+#'   geography = "tract",
+#'   variables = "B08006_017",
+#'   year = 2015,
+#'   state = "AZ",
+#'   county = "Maricopa",
+#'   geometry = TRUE
+#' ) %>%
+#' select(estimate)
+#'
+#' wfh_20 <- get_acs(
+#'   geography = "tract",
+#'   variables = "B08006_017",
+#'   year = 2020,
+#'   state = "AZ",
+#'   county = "Maricopa",
+#'   geometry = TRUE
+#'  )
+#'
+#' maricopa_blocks <- blocks(
+#'   "AZ",
+#'   "Maricopa",
+#'   year = 2020
+#' )
+#'
+#' wfh_15_to_20 <- interpolate_pw(
+#'   from = wfh_15,
+#'   to = wfh_20,
+#'   to_id = "GEOID",
+#'   weights = maricopa_blocks,
+#'   weight_column = "POP20",
+#'   crs = 26950,
+#'   extensive = TRUE
+#' )
+#'
+#' }
+interpolate_pw <- function(from,
+                           to,
+                           to_id = NULL,
+                           extensive,
+                           weights,
+                           weight_column = NULL,
+                           crs = NULL) {
+
+  # Check to make sure all inputs are valid
+  if (!inherits(from, "sf") || !inherits(to, "sf") || !inherits(weights, "sf")) {
+    stop("All inputs (from, to, and weights) must be sf objects.", call. = FALSE)
+  }
+
+  if (!unique(sf::st_geometry_type(from)) %in% c("POLYGON", "MULTIPOLYGON")) {
+    stop("Input datasets `from` and `to` must both be of geometry type POLYGON or MULTIPOLYGON.",
+         call. = FALSE)
+  }
+
+  if (!unique(sf::st_geometry_type(to)) %in% c("POLYGON", "MULTIPOLYGON")) {
+    stop("Input datasets `from` and `to` must both be of geometry type POLYGON or MULTIPOLYGON.",
+         call. = FALSE)
+  }
+
+  # If CRS is given, transform all the objects
+  if (!is.null(crs)) {
+    from <- sf::st_transform(from, crs)
+    to <- sf::st_transform(to, crs)
+    weights <- sf::st_transform(weights, crs)
+  }
+
+  # Make a from and a to ID
+  # Keep existing structure for logical purposes from original code
+  if (is.null(to_id)) {
+    to_id <- "id"
+    to$id <- as.character(1:nrow(to))
+  }
+
+  # If the weight column is NULL, give all input shapes the same weight
+  if (is.null(weight_column)) {
+
+    weight_column <- "weight"
+
+    weights$weight <- 1
+  }
+
+  from_id <- "from_id"
+  from$from_id <- as.character(1:nrow(from))
+
+  # Convert strings to symbols for tidy evaluation
+  weight_sym <- rlang::sym(weight_column)
+  from_id_sym <- rlang::sym(from_id)
+  to_id_sym <- rlang::sym(to_id)
+
+  # Convert the input weights to centroids if input weights are not POINT
+  is_point <- unique(sf::st_is(weights, "POINT"))
+
+  # Accommodate input points if users want to bring their own
+  if (is_point) {
+    weight_centroids <- weights
+  } else {
+    weight_centroids <- suppressWarnings(weights %>%
+                                           dplyr::select(!!weight_sym) %>%
+                                           sf::st_centroid())
+  }
+
+
+
+  # Determine the denominator for the weights
+  denominators <- from %>%
+    sf::st_join(weight_centroids, left = FALSE) %>%
+    sf::st_drop_geometry() %>%
+    dplyr::group_by(!!from_id_sym) %>%
+    dplyr::summarize(total = sum(!!weight_sym, na.rm = TRUE))
+
+  # Calculate the intersections and intersection proportions
+  intersections <- suppressWarnings(
+    from %>%
+      dplyr::left_join(denominators, by = from_id) %>%
+      sf::st_intersection(to) %>%
+      dplyr::filter(sf::st_is(., c("POLYGON", "MULTIPOLYGON", "GEOMETRYCOLLECTION"))) %>%
+      dplyr::mutate(intersection_id = dplyr::row_number()) %>%
+      sf::st_join(weight_centroids, left = FALSE) %>%
+      sf::st_drop_geometry() %>%
+      dplyr::group_by(intersection_id) %>%
+      dplyr::mutate(intersection_value = sum(!!weight_sym, na.rm = TRUE)) %>%
+      dplyr::ungroup() %>%
+      dplyr::distinct(intersection_id, .keep_all = TRUE) %>%
+      dplyr::mutate(weight_coef = intersection_value / total) %>%
+      dplyr::select(!!from_id_sym, !!to_id_sym, intersection_value, weight_coef)
+    )
+
+  # Merge the weights to the from data and interpolate any numeric columns in from to to
+  if (extensive) {
+    interpolated <- from %>%
+      sf::st_drop_geometry() %>%
+      dplyr::left_join(intersections, by = from_id) %>%
+      dplyr::mutate(dplyr::across(tidyselect::vars_select_helpers$where(is.numeric),
+                                  .fns = ~(.x * weight_coef))) %>%
+      dplyr::select(-weight_coef) %>%
+      dplyr::group_by(!!to_id_sym) %>%
+      dplyr::summarize(dplyr::across(tidyselect::vars_select_helpers$where(is.numeric),
+                                     .fns = ~sum(.x, na.rm = TRUE))) %>%
+      dplyr::select(-intersection_value)
+  } else {
+    interpolated <- from %>%
+      sf::st_drop_geometry() %>%
+      dplyr::left_join(intersections, by = from_id) %>%
+      dplyr::group_by(!!to_id_sym) %>%
+      dplyr::summarize(dplyr::across(tidyselect::vars_select_helpers$where(is.numeric),
+                                     .fns = ~weighted.mean(.x,
+                                                           w = intersection_value,
+                                                           na.rm = TRUE))) %>%
+      dplyr::select(-intersection_value, -weight_coef)
+  }
+
+  # Merge back to the original "to" shapes
+  output_shapes <- to %>%
+    dplyr::select(!!to_id_sym) %>%
+    dplyr::left_join(interpolated, by = to_id)  # %>%
+    # dplyr::rename_with(.cols = !!to_id_sym,
+    #                    .fn = ~stringr::str_remove(.x, "_to"))
+
+  return(output_shapes)
+
+
+}

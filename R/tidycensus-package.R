@@ -21,4 +21,5 @@
 #' @importFrom utils packageVersion installed.packages
 #' @importFrom rlang inform
 #' @importFrom crayon cyan silver
+#' @importFrom tidyselect vars_select_helpers
 NULL
