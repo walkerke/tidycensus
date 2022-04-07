@@ -1,3 +1,14 @@
+# tidycensus 1.2
+
+* `get_acs()` and `get_pums()` now default to `year = 2020` to retrieve data from the 2016-2020 5-year ACS.  2020 1-year data are not available in tidycensus and the package throws an error message; users should hard-code a different year to get 1-year ACS data.
+* A new `as_dot_density()` function allows users to quickly generate dots from data for dot-density mapping. This function requires the terra package to be installed. 
+* A new `interpolate_pw()` function supports population-weighted interpolation of data between incongruent geometries, based on Esri's weighted block centroid apportionment algorithm.  A common use-case will be interpolating pre-2020 data to 2020 geometries like Census tracts and block groups.  
+* `get_pums()` now correctly returns vacant housing units either when the `VACS` variable is requested or when `return_vacant = TRUE`.  
+* `get_acs()` now supports the ACS Comparison Profile data, helping users perform longitudinal demographic analyses correctly. 
+* `load_variables()` now returns a `geography` column for the 5-year ACS Detailed Tables that tells users the smallest geography at which any given variable is available.  
+* Numerous bug fixes and performance improvements. 
+
+
 # tidycensus 1.1
 
 * tidycensus now supports the 2020 decennial Census PL-94171 redistricting data.  Use `year = 2020` in a call to `get_decennial()` to access the data, and `load_variables(2020, "pl")` to look up variable IDs.

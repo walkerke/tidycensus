@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.9.9000</span>
       </span>
     </div>
 
@@ -75,6 +75,35 @@
       <small>Source: <a href="https://github.com/walkerke/tidycensus/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.2" id="tidycensus-12">tidycensus 1.2<a class="anchor" aria-label="anchor" href="#tidycensus-12"></a></h2>
+<ul><li>
+<code><a href="../reference/get_acs.html">get_acs()</a></code> and <code><a href="../reference/get_pums.html">get_pums()</a></code> now default to
+<code>year = 2020</code> to retrieve data from the 2016-2020 5-year ACS.
+2020 1-year data are not available in tidycensus and the package throws
+an error message; users should hard-code a different year to get 1-year
+ACS data.</li>
+<li>A new <code><a href="../reference/as_dot_density.html">as_dot_density()</a></code> function allows users to quickly
+generate dots from data for dot-density mapping. This function requires
+the terra package to be installed.</li>
+<li>A new <code><a href="../reference/interpolate_pw.html">interpolate_pw()</a></code> function supports
+population-weighted interpolation of data between incongruent
+geometries, based on Esri’s weighted block centroid apportionment
+algorithm. A common use-case will be interpolating pre-2020 data to 2020
+geometries like Census tracts and block groups.<br></li>
+<li>
+<code><a href="../reference/get_pums.html">get_pums()</a></code> now correctly returns vacant housing units
+either when the <code>VACS</code> variable is requested or when
+<code>return_vacant = TRUE</code>.<br></li>
+<li>
+<code><a href="../reference/get_acs.html">get_acs()</a></code> now supports the ACS Comparison Profile data,
+helping users perform longitudinal demographic analyses correctly.</li>
+<li>
+<code><a href="../reference/load_variables.html">load_variables()</a></code> now returns a <code>geography</code>
+column for the 5-year ACS Detailed Tables that tells users the smallest
+geography at which any given variable is available.<br></li>
+<li>Numerous bug fixes and performance improvements.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1" id="tidycensus-11">tidycensus 1.1<small>2021-09-23</small><a class="anchor" aria-label="anchor" href="#tidycensus-11"></a></h2>
 <ul><li>tidycensus now supports the 2020 decennial Census PL-94171

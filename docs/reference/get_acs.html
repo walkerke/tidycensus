@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.9.9000</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@
   variables <span class="op">=</span> <span class="cn">NULL</span>,
   table <span class="op">=</span> <span class="cn">NULL</span>,
   cache_table <span class="op">=</span> <span class="cn">FALSE</span>,
-  year <span class="op">=</span> <span class="fl">2019</span>,
+  year <span class="op">=</span> <span class="fl">2020</span>,
   endyear <span class="op">=</span> <span class="cn">NULL</span>,
   output <span class="op">=</span> <span class="st">"tidy"</span>,
   state <span class="op">=</span> <span class="cn">NULL</span>,
@@ -124,8 +124,9 @@ dataset.  If variables dataset is already cached via the
 <code>load_variables</code> function, this can be bypassed.</p></dd>
 <dt>year</dt>
 <dd><p>The year, or endyear, of the ACS sample. 5-year ACS data is
-available from 2009 through 2019. 1-year ACS data is available from 2005
-through 2019. Defaults to 2019.</p></dd>
+available from 2009 through 2020; 1-year ACS data is available from 2005
+through 2019. Defaults to 2020; 1-year ACS users should supply a different year
+directly.</p></dd>
 <dt>endyear</dt>
 <dd><p>Deprecated and will be removed in a future release.</p></dd>
 <dt>output</dt>
@@ -192,7 +193,7 @@ what is returned by the API directly. Defaults to FALSE.</p></dd>
 <span class="r-in"><span class="fu"><a href="census_api_key.html">census_api_key</a></span><span class="op">(</span><span class="st">"YOUR KEY GOES HERE"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">tarr</span> <span class="op">&lt;-</span> <span class="fu">get_acs</span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"tract"</span>, variables <span class="op">=</span> <span class="st">"B19013_001"</span>,</span>
-<span class="r-in">                state <span class="op">=</span> <span class="st">"TX"</span>, county <span class="op">=</span> <span class="st">"Tarrant"</span>, geometry <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in">                state <span class="op">=</span> <span class="st">"TX"</span>, county <span class="op">=</span> <span class="st">"Tarrant"</span>, geometry <span class="op">=</span> <span class="cn">TRUE</span>, year <span class="op">=</span> <span class="fl">2020</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">tarr</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span>, color <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -201,7 +202,7 @@ what is returned by the API directly. Defaults to FALSE.</p></dd>
 <span class="r-in">  <span class="fu"><a href="https://sjmgarnier.github.io/viridis/reference/scale_viridis.html" class="external-link">scale_color_viridis</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">vt</span> <span class="op">&lt;-</span> <span class="fu">get_acs</span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, variables <span class="op">=</span> <span class="st">"B19013_001"</span>, state <span class="op">=</span> <span class="st">"VT"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">vt</span> <span class="op">&lt;-</span> <span class="fu">get_acs</span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, variables <span class="op">=</span> <span class="st">"B19013_001"</span>, state <span class="op">=</span> <span class="st">"VT"</span>, year <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">vt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>NAME <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">" County, Vermont"</span>, <span class="st">""</span>, <span class="va">NAME</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>

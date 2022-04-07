@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.9.9000</span>
       </span>
     </div>
 
@@ -85,11 +85,12 @@
   variables <span class="op">=</span> <span class="cn">NULL</span>,
   state <span class="op">=</span> <span class="cn">NULL</span>,
   puma <span class="op">=</span> <span class="cn">NULL</span>,
-  year <span class="op">=</span> <span class="fl">2019</span>,
+  year <span class="op">=</span> <span class="fl">2020</span>,
   survey <span class="op">=</span> <span class="st">"acs5"</span>,
   variables_filter <span class="op">=</span> <span class="cn">NULL</span>,
   rep_weights <span class="op">=</span> <span class="cn">NULL</span>,
   recode <span class="op">=</span> <span class="cn">FALSE</span>,
+  return_vacant <span class="op">=</span> <span class="cn">FALSE</span>,
   show_call <span class="op">=</span> <span class="cn">FALSE</span>,
   key <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
@@ -109,7 +110,8 @@ to request data. To get data from PUMAs in more than one state, specify a
 named vector of state/PUMA pairs and set <code>state = "multiple"</code>.</p></dd>
 <dt>year</dt>
 <dd><p>The data year of the 1-year ACS sample or the endyear of the
-5-year sample. Defaults to 2019.</p></dd>
+5-year sample. Defaults to 2020. Please note that 1-year data for 2020 is not available
+in tidycensus, so users requesting 1-year data should supply a different year.</p></dd>
 <dt>survey</dt>
 <dd><p>The ACS survey; one of either <code>"acs1"</code> or <code>"acs5"</code>
 (the default).</p></dd>
@@ -127,7 +129,13 @@ errors; one of <code>"person"</code>, <code>"housing"</code>, or <code>"both"</c
 <dt>recode</dt>
 <dd><p>If TRUE, recodes variable values using Census data dictionary
 and creates a new <code>*_label</code> column for each variable that is recoded.
-Available for 2017 - 2019 data. Defaults to FALSE.</p></dd>
+Available for 2017 - 2020 data. Defaults to FALSE.</p></dd>
+<dt>return_vacant</dt>
+<dd><p>If TRUE, makes a separate request to the Census API to
+retrieve microdata for vacant housing units, which are handled differently
+in the API as they do not have person-level characteristics.  All person-level
+columns in the returned dataset will be populated with NA for vacant housing units.
+Defaults to FALSE.</p></dd>
 <dt>show_call</dt>
 <dd><p>If TRUE, display call made to Census API. This can be very
 useful in debugging and determining if error messages returned are due to
