@@ -338,7 +338,7 @@ as_dot_density <- function(
 #'   to_id = "GEOID",
 #'   weights = maricopa_blocks,
 #'   weight_column = "POP20",
-#'   crs = 26950,
+#'   crs = 26949,
 #'   extensive = TRUE
 #' )
 #'
