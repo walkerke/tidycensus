@@ -380,6 +380,13 @@ interpolate_pw <- function(from,
     to$id <- as.character(1:nrow(to))
   }
 
+  # If the to_id is in the column names of from, it'll cause downstream problems
+  # and this can happen with tidycensus data with GEOID
+  # remove the column in this instance
+  if (to_id %in% names(from)) {
+    from[[to_id]] <- NULL
+  }
+
   # If the weight column is NULL, give all input shapes the same weight
   if (is.null(weight_column)) {
 
