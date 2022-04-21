@@ -11,6 +11,7 @@ interpolate_pw(
   extensive,
   weights,
   weight_column = NULL,
+  weight_placement = c("surface", "centroid"),
   crs = NULL
 )
 }
@@ -26,6 +27,8 @@ interpolate_pw(
 \item{weights}{An input spatial dataset to be used as weights. If the dataset is not of geometry type \code{POINT}, it will be converted to points by the function with \code{sf::st_point_on_surface()}.  For US-based applications, this will commonly be a Census block dataset obtained with the tigris or tidycensus packages.}
 
 \item{weight_column}{(optional) a column in \code{weights} used for weighting in the interpolation process.  Typically this will be a column representing the population (or other weighting metric, like housing units) of the input weights dataset.  If \code{NULL} (the default), each feature in \code{weights} is given an equal weight of 1.}
+
+\item{weight_placement}{(optional) One of \code{"surface"}, where weight polygons are converted to points on polygon surfaces with \code{sf::st_point_on_surface()}, or \code{"centroid"}, where polygon centroids are used instead with \code{sf::st_centroid()}.  Defaults to \code{"surface"}.  This argument is not necessary if weights are already of geometry type \code{POINT}.}
 
 \item{crs}{(optional) The EPSG code of the output projected coordinate reference system (CRS). Useful as all input layers (\code{from}, \code{to}, and \code{weights}) must share the same CRS for the function to run correctly.}
 }

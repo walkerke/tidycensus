@@ -19,7 +19,7 @@
 #' @importFrom xml2 read_html
 #' @import units
 #' @importFrom utils packageVersion installed.packages
-#' @importFrom rlang inform
-#' @importFrom crayon cyan silver
+#' @importFrom rlang inform abort arg_match sym
+#' @importFrom crayon cyan silver red green
 #' @importFrom tidyselect vars_select_helpers
 NULL

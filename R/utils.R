@@ -294,6 +294,7 @@ as_dot_density <- function(
 #' @param extensive if \code{TRUE}, return weighted sums; if \code{FALSE}, return weighted means.
 #' @param weights An input spatial dataset to be used as weights. If the dataset is not of geometry type \code{POINT}, it will be converted to points by the function with \code{sf::st_point_on_surface()}.  For US-based applications, this will commonly be a Census block dataset obtained with the tigris or tidycensus packages.
 #' @param weight_column (optional) a column in \code{weights} used for weighting in the interpolation process.  Typically this will be a column representing the population (or other weighting metric, like housing units) of the input weights dataset.  If \code{NULL} (the default), each feature in \code{weights} is given an equal weight of 1.
+#' @param weight_placement (optional) One of \code{"surface"}, where weight polygons are converted to points on polygon surfaces with \code{sf::st_point_on_surface()}, or \code{"centroid"}, where polygon centroids are used instead with \code{sf::st_centroid()}.  Defaults to \code{"surface"}.  This argument is not necessary if weights are already of geometry type \code{POINT}.
 #' @param crs (optional) The EPSG code of the output projected coordinate reference system (CRS). Useful as all input layers (\code{from}, \code{to}, and \code{weights}) must share the same CRS for the function to run correctly.
 #'
 #' @return A dataset of class sf with the geometries and an ID column from \code{to} (the target shapes) but with numeric attributes of \code{from} interpolated to those shapes.
@@ -349,6 +350,7 @@ interpolate_pw <- function(from,
                            extensive,
                            weights,
                            weight_column = NULL,
+                           weight_placement = c("surface", "centroid"),
                            crs = NULL) {
 
   # Check to make sure all inputs are valid
@@ -356,12 +358,12 @@ interpolate_pw <- function(from,
     stop("All inputs (from, to, and weights) must be sf objects.", call. = FALSE)
   }
 
-  if (!unique(sf::st_geometry_type(from)) %in% c("POLYGON", "MULTIPOLYGON")) {
+  if (!all(unique(sf::st_geometry_type(from)) %in% c("POLYGON", "MULTIPOLYGON"))) {
     stop("Input datasets `from` and `to` must both be of geometry type POLYGON or MULTIPOLYGON.",
          call. = FALSE)
   }
 
-  if (!unique(sf::st_geometry_type(to)) %in% c("POLYGON", "MULTIPOLYGON")) {
+  if (!all(unique(sf::st_geometry_type(to)) %in% c("POLYGON", "MULTIPOLYGON"))) {
     stop("Input datasets `from` and `to` must both be of geometry type POLYGON or MULTIPOLYGON.",
          call. = FALSE)
   }
@@ -410,9 +412,24 @@ interpolate_pw <- function(from,
   if (is_point) {
     weight_points <- weights
   } else {
-    weight_points <- suppressWarnings(weights %>%
-                                           dplyr::select(!!weight_sym) %>%
-                                           sf::st_point_on_surface())
+
+    # Use surface points or centroids for weight placement
+    weight_loc <- rlang::arg_match(weight_placement)
+
+    if (weight_loc == "surface") {
+
+      weight_points <- suppressWarnings(weights %>%
+                                          dplyr::select(!!weight_sym) %>%
+                                          sf::st_point_on_surface())
+
+    } else if (weight_loc == "centroid") {
+
+      weight_points <- suppressWarnings(weights %>%
+                                          dplyr::select(!!weight_sym) %>%
+                                          sf::st_centroid())
+
+    }
+
   }
 
 
