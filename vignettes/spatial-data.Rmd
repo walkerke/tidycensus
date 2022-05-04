@@ -18,9 +18,14 @@ library(tidycensus)
 library(tidyverse)
 options(tigris_use_cache = TRUE)
 
-orange <- get_acs(state = "CA", county = "Orange", geography = "tract", 
-                  variables = "B19013_001", geometry = TRUE,
-                  year = 2020)
+orange <- get_acs(
+  state = "CA",
+  county = "Orange",
+  geography = "tract",
+  variables = "B19013_001",
+  geometry = TRUE,
+  year = 2020
+)
 
 head(orange)
 ```
@@ -40,32 +45,40 @@ Please note that the UTM Zone 11N coordinate system (`26911`) is appropriate for
 
 ## Faceted mapping
 
-One of the most powerful features of __ggplot2__ is its support for small multiples, which works very well with the tidy data format returned by __tidycensus__.  Many Census and ACS variables return _counts_, however, which are generally inappropriate for choropleth mapping.  In turn, `get_decennial` and `get_acs` have an optional argument, `summary_var`, that can work as a multi-group denominator when appropriate.  Let's use the following example of the racial geography of Harris County, Texas.  First, we'll request data for non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and Hispanics by Census tract for the 2010 Census, and specify total population as the summary variable.  `year` is not necessary here as the default is 2010.   
+One of the most powerful features of __ggplot2__ is its support for small multiples, which works very well with the tidy data format returned by __tidycensus__.  Many Census and ACS variables return _counts_, however, which are generally inappropriate for choropleth mapping.  In turn, `get_decennial` and `get_acs` have an optional argument, `summary_var`, that can work as a multi-group denominator when appropriate.  Let's use the following example of the racial geography of Harris County, Texas.  First, we'll request data for non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and Hispanics by Census tract for the 2020 Census.
 
 ```{r}
-racevars <- c(White = "P005003", 
-              Black = "P005004", 
-              Asian = "P005006", 
-              Hispanic = "P004003")
+racevars <- c(White = "P2_005N", 
+              Black = "P2_006N", 
+              Asian = "P2_008N", 
+              Hispanic = "P2_002N")
 
-harris <- get_decennial(geography = "tract", variables = racevars, 
-                  state = "TX", county = "Harris County", geometry = TRUE,
-                  summary_var = "P001001", year = 2010) 
+harris <- get_decennial(
+  geography = "tract",
+  variables = racevars,
+  state = "TX",
+  county = "Harris County",
+  geometry = TRUE,
+  summary_var = "P2_001N",
+  year = 2020
+) 
 
 head(harris)
 ```
 
 We notice that there are four entries for each Census tract, with each entry representing one of our requested variables. The `summary_value` column represents the value of the summary variable, which is total population in this instance.  When a summary variable is specified in `get_acs`, both `summary_est` and `summary_moe` columns will be returned.  
 
-With this information, we can set up an analysis pipeline in which we calculate a new percent-of-total column; recode the Census variable names into more intuitive labels; and visualize the result for each group in a faceted plot.  
+With this information, we can set up an analysis pipeline in which we calculate a new percent-of-total column and visualize the result for each group in a faceted plot.  
 
 ```{r}
 harris %>%
-  mutate(pct = 100 * (value / summary_value)) %>%
-  ggplot(aes(fill = pct)) +
+  mutate(percent = 100 * (value / summary_value)) %>%
+  ggplot(aes(fill = percent)) +
   facet_wrap(~variable) +
   geom_sf(color = NA) +
-  scale_fill_viridis_c()
+  theme_void() + 
+  scale_fill_viridis_c() + 
+  labs(fill = "% of population\n(2020 Census)")
 ```
 
 ## Detailed shoreline mapping with tidycensus and tigris

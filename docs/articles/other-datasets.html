@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.9.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.1.9000</span>
       </span>
     </div>
 
@@ -538,7 +538,7 @@ account and access token</a>.</p>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>
     width <span class="op">=</span> <span class="va">estimate</span> <span class="op">/</span> <span class="fl">500</span>,
     tooltip <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span>
-      <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">comma</a></span><span class="op">(</span><span class="va">estimate</span> <span class="op">*</span> <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span>,
+      <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">(</span><span class="va">estimate</span> <span class="op">*</span> <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span>,
       <span class="st">" people moved from "</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_remove.html" class="external-link">str_remove</a></span><span class="op">(</span><span class="va">FULL2_NAME</span>, <span class="st">"Metro Area"</span><span class="op">)</span>,
       <span class="st">" to "</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_remove.html" class="external-link">str_remove</a></span><span class="op">(</span><span class="va">FULL1_NAME</span>, <span class="st">"Metro Area"</span><span class="op">)</span>, <span class="st">" between 2014 and 2018"</span>
       <span class="op">)</span>
@@ -576,8 +576,7 @@ account and access token</a>.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

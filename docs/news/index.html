@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.9.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.1.9000</span>
       </span>
     </div>
 
@@ -76,135 +76,76 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.2" id="tidycensus-12">tidycensus 1.2<a class="anchor" aria-label="anchor" href="#tidycensus-12"></a></h2>
+<h2 class="page-header" data-toc-text="1.2" id="tidycensus-12">tidycensus 1.2<small>2022-04-12</small><a class="anchor" aria-label="anchor" href="#tidycensus-12"></a></h2>
 <ul><li>
-<code><a href="../reference/get_acs.html">get_acs()</a></code> and <code><a href="../reference/get_pums.html">get_pums()</a></code> now default to
-<code>year = 2020</code> to retrieve data from the 2016-2020 5-year ACS.
-2020 1-year data are not available in tidycensus and the package throws
-an error message; users should hard-code a different year to get 1-year
-ACS data.</li>
-<li>A new <code><a href="../reference/as_dot_density.html">as_dot_density()</a></code> function allows users to quickly
-generate dots from data for dot-density mapping. This function requires
-the terra package to be installed.</li>
-<li>A new <code><a href="../reference/interpolate_pw.html">interpolate_pw()</a></code> function supports
-population-weighted interpolation of data between incongruent
-geometries, based on Esri’s weighted block centroid apportionment
-algorithm. A common use-case will be interpolating pre-2020 data to 2020
-geometries like Census tracts and block groups.<br></li>
+<code><a href="../reference/get_acs.html">get_acs()</a></code> and <code><a href="../reference/get_pums.html">get_pums()</a></code> now default to <code>year = 2020</code> to retrieve data from the 2016-2020 5-year ACS. 2020 1-year data are not available in tidycensus and the package throws an error message; users should hard-code a different year to get 1-year ACS data.</li>
+<li>A new <code><a href="../reference/as_dot_density.html">as_dot_density()</a></code> function allows users to quickly generate dots from data for dot-density mapping. This function requires the terra package to be installed.</li>
+<li>A new <code><a href="../reference/interpolate_pw.html">interpolate_pw()</a></code> function supports population-weighted interpolation of data between incongruent geometries, based on Esri’s weighted block centroid apportionment algorithm. A common use-case will be interpolating pre-2020 data to 2020 geometries like Census tracts and block groups.<br></li>
 <li>
-<code><a href="../reference/get_pums.html">get_pums()</a></code> now correctly returns vacant housing units
-either when the <code>VACS</code> variable is requested or when
-<code>return_vacant = TRUE</code>.<br></li>
+<code><a href="../reference/get_pums.html">get_pums()</a></code> now correctly returns vacant housing units either when the <code>VACS</code> variable is requested or when <code>return_vacant = TRUE</code>.<br></li>
 <li>
-<code><a href="../reference/get_acs.html">get_acs()</a></code> now supports the ACS Comparison Profile data,
-helping users perform longitudinal demographic analyses correctly.</li>
+<code><a href="../reference/get_acs.html">get_acs()</a></code> now supports the ACS Comparison Profile data, helping users perform longitudinal demographic analyses correctly.</li>
 <li>
-<code><a href="../reference/load_variables.html">load_variables()</a></code> now returns a <code>geography</code>
-column for the 5-year ACS Detailed Tables that tells users the smallest
-geography at which any given variable is available.<br></li>
+<code><a href="../reference/load_variables.html">load_variables()</a></code> now returns a <code>geography</code> column for the 5-year ACS Detailed Tables that tells users the smallest geography at which any given variable is available.<br></li>
 <li>Numerous bug fixes and performance improvements.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.1" id="tidycensus-11">tidycensus 1.1<small>2021-09-23</small><a class="anchor" aria-label="anchor" href="#tidycensus-11"></a></h2>
-<ul><li>tidycensus now supports the 2020 decennial Census PL-94171
-redistricting data. Use <code>year = 2020</code> in a call to
-<code><a href="../reference/get_decennial.html">get_decennial()</a></code> to access the data, and
-<code>load_variables(2020, "pl")</code> to look up variable IDs.</li>
-<li>A new geography, <code>"voting district"</code> is now available for
-2020 to assist with redistricting analyses.</li>
+<ul><li>tidycensus now supports the 2020 decennial Census PL-94171 redistricting data. Use <code>year = 2020</code> in a call to <code><a href="../reference/get_decennial.html">get_decennial()</a></code> to access the data, and <code>load_variables(2020, "pl")</code> to look up variable IDs.</li>
+<li>A new geography, <code>"voting district"</code> is now available for 2020 to assist with redistricting analyses.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0" id="tidycensus-10">tidycensus 1.0<small>2021-05-19</small><a class="anchor" aria-label="anchor" href="#tidycensus-10"></a></h2>
-<ul><li>Support for the ACS Migration Flows API is available in a new
-function, <code><a href="../reference/get_flows.html">get_flows()</a></code>. <a href="https://walker-data.com/tidycensus/articles/other-datasets.html#migration-flows-1" class="external-link">Browse
-the supporting documentation</a> for information on how to analyze and
-map migration flows data in tidycensus.</li>
-<li>The <code>shift_geo</code> argument is deprecated in favor of using
-the new <code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html" class="external-link">tigris::shift_geometry()</a></code> function. This allows for
-shifting of geometries for any geography in national mapping
-projects.</li>
-<li>Various bug fixes and performance improvements; browse <a href="https://github.com/walkerke/tidycensus/issues" class="external-link">the GitHub
-issues</a> for a complete listing.</li>
+<ul><li>Support for the ACS Migration Flows API is available in a new function, <code><a href="../reference/get_flows.html">get_flows()</a></code>. <a href="https://walker-data.com/tidycensus/articles/other-datasets.html#migration-flows-1" class="external-link">Browse the supporting documentation</a> for information on how to analyze and map migration flows data in tidycensus.</li>
+<li>The <code>shift_geo</code> argument is deprecated in favor of using the new <code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html" class="external-link">tigris::shift_geometry()</a></code> function. This allows for shifting of geometries for any geography in national mapping projects.</li>
+<li>Various bug fixes and performance improvements; browse <a href="https://github.com/walkerke/tidycensus/issues" class="external-link">the GitHub issues</a> for a complete listing.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.11.4" id="tidycensus-0114">tidycensus 0.11.4<small>2021-01-20</small><a class="anchor" aria-label="anchor" href="#tidycensus-0114"></a></h2>
-<ul><li>Added support for the 2015-2019 5-year ACS PUMS data in
-<code><a href="../reference/get_pums.html">get_pums()</a></code>. Updated variable definitions are found in the
-data object <code>pums_variables</code>.</li>
+<ul><li>Added support for the 2015-2019 5-year ACS PUMS data in <code><a href="../reference/get_pums.html">get_pums()</a></code>. Updated variable definitions are found in the data object <code>pums_variables</code>.</li>
 <li>The default year in <code><a href="../reference/get_pums.html">get_pums()</a></code> is updated to 2019.</li>
-<li>For 2015-2019 ACS aggregate data, <code><a href="../reference/get_acs.html">get_acs()</a></code> now
-supports the <code>state</code> parameter for zip code tabulation areas
-(ZCTAs) to allow subsetting by state.</li>
-<li>Various bug fixes and internal improvements; browse <a href="https://github.com/walkerke/tidycensus/issues" class="external-link">the GitHub
-issues</a> for a complete listing.</li>
-<li>Added a <code>NEWS.md</code> file to track changes to the
-package.</li>
+<li>For 2015-2019 ACS aggregate data, <code><a href="../reference/get_acs.html">get_acs()</a></code> now supports the <code>state</code> parameter for zip code tabulation areas (ZCTAs) to allow subsetting by state.</li>
+<li>Various bug fixes and internal improvements; browse <a href="https://github.com/walkerke/tidycensus/issues" class="external-link">the GitHub issues</a> for a complete listing.</li>
+<li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.11" id="tidycensus-011">tidycensus 0.11<small>2020-12-14</small><a class="anchor" aria-label="anchor" href="#tidycensus-011"></a></h2>
 <ul><li>
-<code><a href="../reference/get_acs.html">get_acs()</a></code> now defaults to <code>year = 2019</code>,
-meaning that 2015-2019 5-year estimates and 2019 1-year estimates are
-retrieved if no year is specified.</li>
+<code><a href="../reference/get_acs.html">get_acs()</a></code> now defaults to <code>year = 2019</code>, meaning that 2015-2019 5-year estimates and 2019 1-year estimates are retrieved if no year is specified.</li>
 <li>
-<code><a href="../reference/get_estimates.html">get_estimates()</a></code> now also defaults to
-<code>year = 2019</code>.</li>
-<li>tidycensus can once again access the 2000 Summary File 3 in
-<code><a href="../reference/get_decennial.html">get_decennial()</a></code> as the Census Bureau has restored its API
-endpoint.</li>
-<li>Various bug fixes and internal improvements; browse <a href="https://github.com/walkerke/tidycensus/issues" class="external-link">the GitHub
-issues</a> for a complete listing.</li>
+<code><a href="../reference/get_estimates.html">get_estimates()</a></code> now also defaults to <code>year = 2019</code>.</li>
+<li>tidycensus can once again access the 2000 Summary File 3 in <code><a href="../reference/get_decennial.html">get_decennial()</a></code> as the Census Bureau has restored its API endpoint.</li>
+<li>Various bug fixes and internal improvements; browse <a href="https://github.com/walkerke/tidycensus/issues" class="external-link">the GitHub issues</a> for a complete listing.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.10.2" id="tidycensus-0102">tidycensus 0.10.2<small>2020-09-28</small><a class="anchor" aria-label="anchor" href="#tidycensus-0102"></a></h2>
-<ul><li>tidycensus now includes functionality to download and analyze data
-from the <a href="https://www.census.gov/programs-surveys/acs/microdata.html" class="external-link">American
-Community Survey Public Use Microdata Series (PUMS) datasets</a>. <a href="https://walker-data.com/tidycensus/articles/pums-data.html" class="external-link">Read
-through the corresponding documentation to learn how to use these
-features.</a>
+<ul><li>tidycensus now includes functionality to download and analyze data from the <a href="https://www.census.gov/programs-surveys/acs/microdata.html" class="external-link">American Community Survey Public Use Microdata Series (PUMS) datasets</a>. <a href="https://walker-data.com/tidycensus/articles/pums-data.html" class="external-link">Read through the corresponding documentation to learn how to use these features.</a>
 </li>
-<li>tidycensus cannot access 1990 data or 2000 Summary File 3 data due
-to the removal of these API endpoints by the Census Bureau. When new
-endpoints for these years are added, tidycensus will support them again
-in a future release.</li>
+<li>tidycensus cannot access 1990 data or 2000 Summary File 3 data due to the removal of these API endpoints by the Census Bureau. When new endpoints for these years are added, tidycensus will support them again in a future release.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.9.2" id="tidycensus-0992">tidycensus 0.9.9.2<small>2020-04-03</small><a class="anchor" aria-label="anchor" href="#tidycensus-0992"></a></h2>
 <ul><li>
-<code>geometry = TRUE</code> now works for all geographies currently
-available in tidycensus.<br></li>
+<code>geometry = TRUE</code> now works for all geographies currently available in tidycensus.<br></li>
 <li>
-<code><a href="../reference/get_acs.html">get_acs()</a></code> can now support the ACS Supplemental
-Estimates API.</li>
+<code><a href="../reference/get_acs.html">get_acs()</a></code> can now support the ACS Supplemental Estimates API.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.5" id="tidycensus-095">tidycensus 0.9.5<small>2020-01-20</small><a class="anchor" aria-label="anchor" href="#tidycensus-095"></a></h2>
 <ul><li>
-<code><a href="../reference/get_acs.html">get_acs()</a></code> now defaults to the 2014-2018 five-year
-American Community Survey estimates, or the 2018 1-year estimates if
-users set <code>survey = "acs1"</code>.</li>
-<li>Various improvements and bug fixes (largely thanks to Matt Herman’s
-contributions).</li>
+<code><a href="../reference/get_acs.html">get_acs()</a></code> now defaults to the 2014-2018 five-year American Community Survey estimates, or the 2018 1-year estimates if users set <code>survey = "acs1"</code>.</li>
+<li>Various improvements and bug fixes (largely thanks to Matt Herman’s contributions).</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.1" id="tidycensus-081">tidycensus 0.8.1<small>2018-08-27</small><a class="anchor" aria-label="anchor" href="#tidycensus-081"></a></h2>
-<ul><li><p>tidycensus now includes support for the Census Bureau Population
-Estimates API. Please see <a href="https://walkerke.github.io/tidycensus/articles/other-datasets.html" class="external-link uri">https://walkerke.github.io/tidycensus/articles/other-datasets.html</a>
-for examples of how to use these new features.</p></li>
-<li><p>Important internal changes to ensure that tidycensus continues to
-work with upcoming changes to Census API endpoints.</p></li>
-<li><p>Several internal improvements and bug fixes. Please see the
-closed issues at <a href="https://github.com/walkerke/tidycensus/issues" class="external-link uri">https://github.com/walkerke/tidycensus/issues</a> for a
-list.</p></li>
+<ul><li><p>tidycensus now includes support for the Census Bureau Population Estimates API. Please see <a href="https://walkerke.github.io/tidycensus/articles/other-datasets.html" class="external-link uri">https://walkerke.github.io/tidycensus/articles/other-datasets.html</a> for examples of how to use these new features.</p></li>
+<li><p>Important internal changes to ensure that tidycensus continues to work with upcoming changes to Census API endpoints.</p></li>
+<li><p>Several internal improvements and bug fixes. Please see the closed issues at <a href="https://github.com/walkerke/tidycensus/issues" class="external-link uri">https://github.com/walkerke/tidycensus/issues</a> for a list.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.4.6" id="tidycensus-046">tidycensus 0.4.6<small>2018-04-15</small><a class="anchor" aria-label="anchor" href="#tidycensus-046"></a></h2>
-<ul><li><p>Bug fixed that was causing GEOIDs for some states to be converted
-to NA on certain Linux platforms</p></li>
-<li><p>A new parameter, <code>shift_geo</code>, allows tidycensus users
-to get US state and county geometry originally obtained with the
-<strong>albersusa</strong> R package with Alaska and Hawaii shifted and
-re-scaled for better cartographic display of the entire US.</p></li>
+<ul><li><p>Bug fixed that was causing GEOIDs for some states to be converted to NA on certain Linux platforms</p></li>
+<li><p>A new parameter, <code>shift_geo</code>, allows tidycensus users to get US state and county geometry originally obtained with the <strong>albersusa</strong> R package with Alaska and Hawaii shifted and re-scaled for better cartographic display of the entire US.</p></li>
 </ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span>
@@ -234,8 +175,7 @@ re-scaled for better cartographic display of the entire US.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

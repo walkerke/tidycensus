@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.9.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.1.9000</span>
       </span>
     </div>
 
@@ -128,9 +128,14 @@ Census API.</p>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
-<span class="va">orange</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>state <span class="op">=</span> <span class="st">"CA"</span>, county <span class="op">=</span> <span class="st">"Orange"</span>, geography <span class="op">=</span> <span class="st">"tract"</span>, 
-                  variables <span class="op">=</span> <span class="st">"B19013_001"</span>, geometry <span class="op">=</span> <span class="cn">TRUE</span>,
-                  year <span class="op">=</span> <span class="fl">2020</span><span class="op">)</span>
+<span class="va">orange</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>
+  state <span class="op">=</span> <span class="st">"CA"</span>,
+  county <span class="op">=</span> <span class="st">"Orange"</span>,
+  geography <span class="op">=</span> <span class="st">"tract"</span>,
+  variables <span class="op">=</span> <span class="st">"B19013_001"</span>,
+  geometry <span class="op">=</span> <span class="cn">TRUE</span>,
+  year <span class="op">=</span> <span class="fl">2020</span>
+<span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">orange</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Simple feature collection with 6 features and 5 fields</span>
@@ -187,34 +192,38 @@ argument, <code>summary_var</code>, that can work as a multi-group
 denominator when appropriate. Let’s use the following example of the
 racial geography of Harris County, Texas. First, we’ll request data for
 non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and
-Hispanics by Census tract for the 2010 Census, and specify total
-population as the summary variable. <code>year</code> is not necessary
-here as the default is 2010.</p>
+Hispanics by Census tract for the 2020 Census.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">racevars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>White <span class="op">=</span> <span class="st">"P005003"</span>, 
-              Black <span class="op">=</span> <span class="st">"P005004"</span>, 
-              Asian <span class="op">=</span> <span class="st">"P005006"</span>, 
-              Hispanic <span class="op">=</span> <span class="st">"P004003"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">racevars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>White <span class="op">=</span> <span class="st">"P2_005N"</span>, 
+              Black <span class="op">=</span> <span class="st">"P2_006N"</span>, 
+              Asian <span class="op">=</span> <span class="st">"P2_008N"</span>, 
+              Hispanic <span class="op">=</span> <span class="st">"P2_002N"</span><span class="op">)</span>
 
-<span class="va">harris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_decennial.html">get_decennial</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"tract"</span>, variables <span class="op">=</span> <span class="va">racevars</span>, 
-                  state <span class="op">=</span> <span class="st">"TX"</span>, county <span class="op">=</span> <span class="st">"Harris County"</span>, geometry <span class="op">=</span> <span class="cn">TRUE</span>,
-                  summary_var <span class="op">=</span> <span class="st">"P001001"</span>, year <span class="op">=</span> <span class="fl">2010</span><span class="op">)</span> 
+<span class="va">harris</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_decennial.html">get_decennial</a></span><span class="op">(</span>
+  geography <span class="op">=</span> <span class="st">"tract"</span>,
+  variables <span class="op">=</span> <span class="va">racevars</span>,
+  state <span class="op">=</span> <span class="st">"TX"</span>,
+  county <span class="op">=</span> <span class="st">"Harris County"</span>,
+  geometry <span class="op">=</span> <span class="cn">TRUE</span>,
+  summary_var <span class="op">=</span> <span class="st">"P2_001N"</span>,
+  year <span class="op">=</span> <span class="fl">2020</span>
+<span class="op">)</span> 
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">harris</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Simple feature collection with 6 features and 5 fields</span>
 <span class="co">## Geometry type: MULTIPOLYGON</span>
 <span class="co">## Dimension:     XY</span>
-<span class="co">## Bounding box:  xmin: -95.37457 ymin: 29.74486 xmax: -95.32409 ymax: 29.80907</span>
+<span class="co">## Bounding box:  xmin: -95.46502 ymin: 29.53424 xmax: -95.09005 ymax: 29.96492</span>
 <span class="co">## Geodetic CRS:  NAD83</span>
 <span class="co">## <span style="color: #949494;"># A tibble: 6 × 6</span></span>
 <span class="co">##   GEOID       NAME        variable value summary_value                  geometry</span>
 <span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [°]&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 48201100000 Census Tra… White     <span style="text-decoration: underline;">2</span>082          <span style="text-decoration: underline;">4</span>690 (((-95.37348 29.751, -95…</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 48201100000 Census Tra… Black     <span style="text-decoration: underline;">1</span>047          <span style="text-decoration: underline;">4</span>690 (((-95.37348 29.751, -95…</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 48201100000 Census Tra… Asian      134          <span style="text-decoration: underline;">4</span>690 (((-95.37348 29.751, -95…</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 48201100000 Census Tra… Hispanic  <span style="text-decoration: underline;">1</span>070          <span style="text-decoration: underline;">4</span>690 (((-95.37348 29.751, -95…</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 48201210900 Census Tra… White       35          <span style="text-decoration: underline;">1</span>620 (((-95.32851 29.80846, -…</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 48201210900 Census Tra… Black     <span style="text-decoration: underline;">1</span>195          <span style="text-decoration: underline;">1</span>620 (((-95.32851 29.80846, -…</span></code></pre>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 48201341203 Census Tra… White     <span style="text-decoration: underline;">1</span>503          <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 48201341203 Census Tra… Black      177          <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 48201341203 Census Tra… Asian       54          <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 48201341203 Census Tra… Hispanic   492          <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 48201550601 Census Tra… White      265          <span style="text-decoration: underline;">6</span>673 (((-95.46502 29.96456, -…</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 48201550601 Census Tra… Black     <span style="text-decoration: underline;">2</span>156          <span style="text-decoration: underline;">6</span>673 (((-95.46502 29.96456, -…</span></code></pre>
 <p>We notice that there are four entries for each Census tract, with
 each entry representing one of our requested variables. The
 <code>summary_value</code> column represents the value of the summary
@@ -223,16 +232,17 @@ variable is specified in <code>get_acs</code>, both
 <code>summary_est</code> and <code>summary_moe</code> columns will be
 returned.</p>
 <p>With this information, we can set up an analysis pipeline in which we
-calculate a new percent-of-total column; recode the Census variable
-names into more intuitive labels; and visualize the result for each
-group in a faceted plot.</p>
+calculate a new percent-of-total column and visualize the result for
+each group in a faceted plot.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">harris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="op">(</span><span class="va">value</span> <span class="op">/</span> <span class="va">summary_value</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">pct</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>percent <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="op">(</span><span class="va">value</span> <span class="op">/</span> <span class="va">summary_value</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">percent</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">variable</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"% of population\n(2020 Census)"</span><span class="op">)</span></code></pre></div>
 <p><img src="spatial-data_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
 </div>
 <div class="section level2">
@@ -263,7 +273,7 @@ Manhattan (New York County), NY:</p>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ny</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/label_dollar.html" class="external-link">dollar</a></span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/dollar_format.html" class="external-link">dollar</a></span><span class="op">)</span></code></pre></div>
 <p><img src="spatial-data_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 <p>As illustrated in the graphic, the boundaries of Manhattan include
 water boundaries - stretching into the Hudson and East Rivers. In turn,
@@ -298,7 +308,7 @@ performance.</p>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ny_erase</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/label_dollar.html" class="external-link">dollar</a></span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/dollar_format.html" class="external-link">dollar</a></span><span class="op">)</span></code></pre></div>
 <p><img src="spatial-data_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
 <p>The map appears as before, but instead the polygons now hug the
 shoreline of Manhattan.</p>
@@ -339,8 +349,7 @@ and spatial analysis; look for updates <a href="https://walkerke.github.io" clas
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>
