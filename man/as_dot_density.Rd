@@ -10,7 +10,8 @@ as_dot_density(
   values_per_dot,
   group = NULL,
   erase_water = FALSE,
-  area_threshold = NULL
+  area_threshold = NULL,
+  water_year = 2020
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ as_dot_density(
 \item{erase_water}{If \code{TRUE}, calls \code{tigris::erase_water()} to remove water areas from the polygons prior to generating dots, allowing for dasymetric dot placement. This option is recommended if your location includes significant water area. If using this option, it is recommended that you first transform your data to a projected coordinate reference system using \code{sf::st_transform()} to improve performance. This argument only works for data in the United States.}
 
 \item{area_threshold}{The area percentile threshold to be used when erasing water; ranges from 0 (all water area included) to 1 (no water area included)}
+
+\item{water_year}{The year of the TIGER/Line water area shapefiles to use if erasing water. Defaults to 2020; ignore if not using the \code{erase_water} feature.}
 }
 \value{
 The original dataset but of geometry type \code{POINT}, with the number of point features corresponding to the given value:dot ratio for a given group.
