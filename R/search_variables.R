@@ -18,19 +18,19 @@
 #' }
 #' @export
 #'
-load_variables <- function(year, dataset, cache = FALSE) {
+load_variables <- function(
+  year,
+  dataset = c("sf1", "sf2", "sf3", "sf4", "pl",
+              "as", "gu", "mp", "vi", "acs1", "acs3", "acs5", "acs1/profile",
+              "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject",
+              "acs5/subject"),
+  cache = FALSE) {
 
   if (length(year) != 1 || !grepl('[0-9]{4}', year)){
     stop("Argument \"year\" must be a single year in format YYYY.")
   }
 
-  allowed_datasets <- c("sf1", "sf2", "sf3", "sf4", "pl",
-                        "as", "gu", "mp", "vi", "acs1", "acs3", "acs5", "acs1/profile",
-                        "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject",
-                        "acs5/subject")
-  if (length(dataset) != 1 || !(dataset %in% allowed_datasets)) {
-    stop("Argument \"dataset\" must be one (and only one) of: \n", paste0(allowed_datasets, collapse = ", "))
-  }
+  dataset <- match.arg(dataset)
 
   if (year == 2020 && stringr::str_detect(dataset, "acs1")) {
     stop("The 2020 1-year ACS was released as a set of experimental estimates that was not published to the Census API and is in turn not available in tidycensus.", call. = FALSE)
