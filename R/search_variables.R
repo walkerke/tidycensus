@@ -6,8 +6,8 @@
 #'   through 2019.
 #' @param dataset One of "sf1", "sf2", "sf3", "sf4", "pl",
 #'   "as", "gu", "mp", "vi", "acs1", "acs3", "acs5", "acs1/profile",
-#'   "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject", or
-#'   "acs5/subject".
+#'   "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject", "acs5/subject",
+#'   "acs1/cprofile", or "acs5/cprofile".
 #' @param cache Whether you would like to cache the dataset for future access,
 #'   or load the dataset from an existing cache. Defaults to FALSE.
 #'
@@ -23,14 +23,14 @@ load_variables <- function(
   dataset = c("sf1", "sf2", "sf3", "sf4", "pl",
               "as", "gu", "mp", "vi", "acs1", "acs3", "acs5", "acs1/profile",
               "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject",
-              "acs5/subject"),
+              "acs5/subject", "acs1/cprofile", "acs5/cprofile"),
   cache = FALSE) {
 
   if (length(year) != 1 || !grepl('[0-9]{4}', year)){
     stop("Argument \"year\" must be a single year in format YYYY.")
   }
 
-  dataset <- match.arg(dataset)
+  dataset <- rlang::arg_match(dataset)
 
   if (year == 2020 && stringr::str_detect(dataset, "acs1")) {
     stop("The 2020 1-year ACS was released as a set of experimental estimates that was not published to the Census API and is in turn not available in tidycensus.", call. = FALSE)
