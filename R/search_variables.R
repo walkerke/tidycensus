@@ -6,7 +6,7 @@
 #'   through 2019.
 #' @param dataset One of "sf1", "sf2", "sf3", "sf4", "pl",
 #'   "as", "gu", "mp", "vi", "acs1", "acs3", "acs5", "acs1/profile",
-#'   "acs3/profile, "acs5/profile", "acs1/subject", "acs3/subject", or
+#'   "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject", or
 #'   "acs5/subject".
 #' @param cache Whether you would like to cache the dataset for future access,
 #'   or load the dataset from an existing cache. Defaults to FALSE.
@@ -18,7 +18,19 @@
 #' }
 #' @export
 #'
-load_variables <- function(year, dataset, cache = FALSE) {
+load_variables <- function(
+  year,
+  dataset = c("sf1", "sf2", "sf3", "sf4", "pl",
+              "as", "gu", "mp", "vi", "acs1", "acs3", "acs5", "acs1/profile",
+              "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject",
+              "acs5/subject"),
+  cache = FALSE) {
+
+  if (length(year) != 1 || !grepl('[0-9]{4}', year)){
+    stop("Argument \"year\" must be a single year in format YYYY.")
+  }
+
+  dataset <- match.arg(dataset)
 
   if (year == 2020 && stringr::str_detect(dataset, "acs1")) {
     stop("The 2020 1-year ACS was released as a set of experimental estimates that was not published to the Census API and is in turn not available in tidycensus.", call. = FALSE)
@@ -78,8 +90,13 @@ load_variables <- function(year, dataset, cache = FALSE) {
     url <- paste("https://api.census.gov/data",
                  set,
                  "variables.json", sep = "/")
-
-    dat <- httr::GET(url) %>%
+    resp <- httr::GET(url)
+    if(httr::status_code(resp) == 404L){
+      stop("API endpoint not found. Does this data set exist for the specified year? See https://api.census.gov/data.html for data availability.")
+    }else if(httr::http_status(resp)$category != "Success"){
+      stop(paste("API request failed. Reason:", httr::http_status(resp)$message))
+    }
+    dat <- resp %>%
       httr::content(as = "text") %>%
       jsonlite::fromJSON() %>%
       purrr::modify_depth(2, function(x) {
