@@ -13,8 +13,7 @@
 #'                    \code{load_variables} function, this can be bypassed.
 #' @param year The year for which you are requesting data. Defaults to 2010; 2000,
 #'             2010, and 2020 are available.
-#' @param sumfile The Census summary file.  Defaults to sf1; the function will look in sf3 if it
-#'                cannot find a variable in sf1.
+#' @param sumfile The Census summary file; defaults to \code{"sf1"} but will switch to \code{"pl"} if the year supplied is 2020.  Not all summary files are available for each decennial Census year.
 #' @param state The state for which you are requesting data. State
 #'              names, postal codes, and FIPS codes are accepted.
 #'              Defaults to NULL.
@@ -66,21 +65,39 @@
 #'
 #' }
 #' @export
-get_decennial <- function(geography, variables = NULL, table = NULL, cache_table = FALSE, year = 2010,
-                          sumfile = "sf1", state = NULL, county = NULL, geometry = FALSE, output = "tidy",
-                          keep_geo_vars = FALSE, shift_geo = FALSE, summary_var = NULL, key = NULL,
-                          show_call = FALSE, ...) {
+get_decennial <- function(geography,
+                          variables = NULL,
+                          table = NULL,
+                          cache_table = FALSE,
+                          year = 2010,
+                          sumfile = c("sf1", "sf2", "sf3", "sf4",
+                                      "pl", "as", "gu", "vi", "mp",
+                                      "responserate"),
+                          state = NULL,
+                          county = NULL,
+                          geometry = FALSE,
+                          output = "tidy",
+                          keep_geo_vars = FALSE,
+                          shift_geo = FALSE,
+                          summary_var = NULL,
+                          key = NULL,
+                          show_call = FALSE,
+                          ...
+                          ) {
 
   if (shift_geo) {
     warning("The `shift_geo` argument is deprecated and will be removed in a future release. We recommend using `tigris::shift_geometry()` instead.", call. = FALSE)
   }
 
-
   if (geography == "cbg") geography <- "block group"
 
   message(sprintf("Getting data from the %s decennial Census", year))
 
-  if (year == 2020) {
+  sumfile <- rlang::arg_match(sumfile)
+
+  # If the summary file is not supplied for 2020, switch to the PL file (until new data
+  # are released in 2023)
+  if (year == 2020 && sumfile == "sf1") {
     sumfile <- "pl"
   }
 
@@ -407,7 +424,8 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
     # Give users a heads-up about differential privacy in the 2020 decennial data
     # This should print as the final message before data are returned
-    if (year == 2020) {
+    # For right now, this pertains to the PL file; adjust when new data come out in 2023
+    if (year == 2020 && sumfile == "pl") {
 
       msg <- c(crayon::cyan(stringr::str_wrap("Note: 2020 decennial Census data use differential privacy, a technique that introduces errors into data to preserve respondent confidentiality.")),
                i = crayon::magenta("Small counts should be interpreted with caution."),
@@ -424,7 +442,8 @@ get_decennial <- function(geography, variables = NULL, table = NULL, cache_table
 
     # Give users a heads-up about differential privacy in the 2020 decennial data
     # This should print as the final message before data are returned
-    if (year == 2020) {
+    # For right now, this pertains to the PL file; adjust when new data come out in 2023
+    if (year == 2020 && sumfile == "pl") {
 
       msg <- c(crayon::cyan(stringr::str_wrap("Note: 2020 decennial Census data use differential privacy, a technique that introduces errors into data to preserve respondent confidentiality.")),
                i = crayon::magenta("Small counts should be interpreted with caution."),

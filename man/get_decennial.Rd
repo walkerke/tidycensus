@@ -10,7 +10,7 @@ get_decennial(
   table = NULL,
   cache_table = FALSE,
   year = 2010,
-  sumfile = "sf1",
+  sumfile = c("sf1", "sf2", "sf3", "sf4", "pl", "as", "gu", "vi", "mp", "responserate"),
   state = NULL,
   county = NULL,
   geometry = FALSE,
@@ -42,8 +42,7 @@ dataset.  If variables dataset is already cached via the
 \item{year}{The year for which you are requesting data. Defaults to 2010; 2000,
 2010, and 2020 are available.}
 
-\item{sumfile}{The Census summary file.  Defaults to sf1; the function will look in sf3 if it
-cannot find a variable in sf1.}
+\item{sumfile}{The Census summary file; defaults to \code{"sf1"} but will switch to \code{"pl"} if the year supplied is 2020.  Not all summary files are available for each decennial Census year.}
 
 \item{state}{The state for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.

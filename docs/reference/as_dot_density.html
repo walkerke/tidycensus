@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2.9000</span>
       </span>
     </div>
 
@@ -87,7 +87,8 @@
   <span class="va">values_per_dot</span>,
   group <span class="op">=</span> <span class="cn">NULL</span>,
   erase_water <span class="op">=</span> <span class="cn">FALSE</span>,
-  area_threshold <span class="op">=</span> <span class="cn">NULL</span>
+  area_threshold <span class="op">=</span> <span class="cn">NULL</span>,
+  water_year <span class="op">=</span> <span class="fl">2020</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -105,6 +106,8 @@
 <dd><p>If <code>TRUE</code>, calls <code><a href="https://rdrr.io/pkg/tigris/man/erase_water.html" class="external-link">tigris::erase_water()</a></code> to remove water areas from the polygons prior to generating dots, allowing for dasymetric dot placement. This option is recommended if your location includes significant water area. If using this option, it is recommended that you first transform your data to a projected coordinate reference system using <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">sf::st_transform()</a></code> to improve performance. This argument only works for data in the United States.</p></dd>
 <dt>area_threshold</dt>
 <dd><p>The area percentile threshold to be used when erasing water; ranges from 0 (all water area included) to 1 (no water area included)</p></dd>
+<dt>water_year</dt>
+<dd><p>The year of the TIGER/Line water area shapefiles to use if erasing water. Defaults to 2020; ignore if not using the <code>erase_water</code> feature.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>

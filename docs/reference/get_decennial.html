@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2.9000</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
   table <span class="op">=</span> <span class="cn">NULL</span>,
   cache_table <span class="op">=</span> <span class="cn">FALSE</span>,
   year <span class="op">=</span> <span class="fl">2010</span>,
-  sumfile <span class="op">=</span> <span class="st">"sf1"</span>,
+  sumfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sf1"</span>, <span class="st">"sf2"</span>, <span class="st">"sf3"</span>, <span class="st">"sf4"</span>, <span class="st">"pl"</span>, <span class="st">"as"</span>, <span class="st">"gu"</span>, <span class="st">"vi"</span>, <span class="st">"mp"</span>, <span class="st">"responserate"</span><span class="op">)</span>,
   state <span class="op">=</span> <span class="cn">NULL</span>,
   county <span class="op">=</span> <span class="cn">NULL</span>,
   geometry <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -122,8 +122,7 @@ dataset.  If variables dataset is already cached via the
 <dd><p>The year for which you are requesting data. Defaults to 2010; 2000,
 2010, and 2020 are available.</p></dd>
 <dt>sumfile</dt>
-<dd><p>The Census summary file.  Defaults to sf1; the function will look in sf3 if it
-cannot find a variable in sf1.</p></dd>
+<dd><p>The Census summary file; defaults to <code>"sf1"</code> but will switch to <code>"pl"</code> if the year supplied is 2020.  Not all summary files are available for each decennial Census year.</p></dd>
 <dt>state</dt>
 <dd><p>The state for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.
