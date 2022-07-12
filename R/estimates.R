@@ -1,6 +1,8 @@
 #' Get data from the US Census Bureau Population Estimates APIs
 #'
-#' @param geography The geography of your data.
+#' @param geography The geography of your data. Available geographies for the most recent data vintage are listed
+#'                  \href{https://api.census.gov/data/2019/pep/population/geography.html}{here}. \code{"cbsa"} may
+#'                  be used an alias for \code{"metropolitan statistical area/micropolitan statistical area"}.
 #' @param product The data product (optional). \code{"population"}, \code{"components"}
 #'                \code{"housing"}, and \code{"characteristics"} are supported.
 #' @param variables A character string or vector of character strings of requested variables
@@ -12,7 +14,9 @@
 #'                  combinations of these breakdowns.
 #' @param breakdown_labels Whether or not to label breakdown elements returned when
 #'                         \code{product = "characteristics"}. Defaults to FALSE.
-#' @param year The data year (defaults to 2019)
+#' @param year The data vintage (defaults to 2019). It is recommended to use the most recent vintage
+#'             available for a given decennial series (so, year = 2019 for the 2010s) and
+#'             use \code{time_series = TRUE} to access estimates for prior years.
 #' @param state The state for which you are requesting data. State
 #'              names, postal codes, and FIPS codes are accepted.
 #'              Defaults to NULL.
@@ -47,12 +51,18 @@
 #'
 #' @return A tibble, or sf tibble, of population estimates data
 #' @export
-get_estimates <- function(geography, product = NULL, variables = NULL,
+get_estimates <- function(geography = c("us", "region", "division", "state", "county", "county subdivision",
+                                        "place/balance (or part)", "place", "consolidated city", "place (or part)",
+                                        "metropolitan statistical area/micropolitan statistical area", "cbsa",
+                                        "metropolitan division", "combined statistical area"),
+                          product = NULL, variables = NULL,
                           breakdown = NULL, breakdown_labels = FALSE,
                           year = 2019, state = NULL, county = NULL,
                           time_series = FALSE,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, show_call = FALSE, ...) {
+
+  geography <- rlang::arg_match(geography)
 
   if (shift_geo) {
     warning("The `shift_geo` argument is deprecated and will be removed in a future release. We recommend using `tigris::shift_geometry()` instead.", call. = FALSE)

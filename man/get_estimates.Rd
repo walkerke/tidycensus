@@ -5,7 +5,10 @@
 \title{Get data from the US Census Bureau Population Estimates APIs}
 \usage{
 get_estimates(
-  geography,
+  geography = c("us", "region", "division", "state", "county", "county subdivision",
+    "place/balance (or part)", "place", "consolidated city", "place (or part)",
+    "metropolitan statistical area/micropolitan statistical area", "cbsa",
+    "metropolitan division", "combined statistical area"),
   product = NULL,
   variables = NULL,
   breakdown = NULL,
@@ -24,7 +27,9 @@ get_estimates(
 )
 }
 \arguments{
-\item{geography}{The geography of your data.}
+\item{geography}{The geography of your data. Available geographies for the most recent data vintage are listed
+\href{https://api.census.gov/data/2019/pep/population/geography.html}{here}. \code{"cbsa"} may
+be used an alias for \code{"metropolitan statistical area/micropolitan statistical area"}.}
 
 \item{product}{The data product (optional). \code{"population"}, \code{"components"}
 \code{"housing"}, and \code{"characteristics"} are supported.}
@@ -41,7 +46,9 @@ combinations of these breakdowns.}
 \item{breakdown_labels}{Whether or not to label breakdown elements returned when
 \code{product = "characteristics"}. Defaults to FALSE.}
 
-\item{year}{The data year (defaults to 2019)}
+\item{year}{The data vintage (defaults to 2019). It is recommended to use the most recent vintage
+available for a given decennial series (so, year = 2019 for the 2010s) and
+use \code{time_series = TRUE} to access estimates for prior years.}
 
 \item{state}{The state for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.
