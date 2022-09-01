@@ -393,12 +393,25 @@ interpolate_pw <- function(from,
   }
 
   # If the weight column is NULL, give all input shapes the same weight
+  # Also, if the weight column name is also in `from`, this will cause an error
+  # (see issue #476).  Rename the weight column to something unlikely to be
+  # in the input dataset.
   if (is.null(weight_column)) {
 
-    weight_column <- "weight"
+    weight_column <- "tidycensus_interpolation_weight"
 
-    weights$weight <- 1
+    weights$tidycensus_interpolation_weight <- 1
+  } else {
+
+    # Generate the new weight column from the old weight column
+    weights$tidycensus_interpolation_weight <- weights[[weight_column]]
+
+    # Update the weight_column
+    weight_column <- "tidycensus_interpolation_weight"
+
   }
+
+
 
   from_id <- "from_id"
   from$from_id <- as.character(1:nrow(from))
