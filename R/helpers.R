@@ -205,7 +205,14 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
   } else if (geography == "public use microdata area") {
 
     # Right now, PUMAs are not defined for 2020 and are not in the CB file
-    if (year == 2020) cb <- FALSE
+    # Use the 2019 CB pumas for 2020 and 2021 as they align with the boundaries
+    # used; 2022 should switch to the new 2020 PUMA boundaries (which aren't
+    # yet available)
+    if (year %in% 2020:2021) {
+      if (cb) {
+        year <- 2019
+      }
+    }
 
     state_ids <- c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
                    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA",
