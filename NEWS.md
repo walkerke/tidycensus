@@ -1,3 +1,7 @@
+# tidycensus 1.2.3
+
+* Minor release with bug fixes and performance improvements.  Fixes include support for the 2000 SF3 Data Profile; improvements to the `interpolate_pw()` function; and correct geometry usage for PUMA geography in the 2021 ACS.  
+
 # tidycensus 1.2
 
 * `get_acs()` and `get_pums()` now default to `year = 2020` to retrieve data from the 2016-2020 5-year ACS.  2020 1-year data are not available in tidycensus and the package throws an error message; users should hard-code a different year to get 1-year ACS data.
