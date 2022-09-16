@@ -20,7 +20,7 @@ Flows"><meta property="og:image" content="/logo.png"><!-- mathjax --><script src
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
       </span>
     </div>
 
@@ -109,6 +109,8 @@ Flows</p>
 <dd><p>The geography of your requested data. Possible values are
 <code>"county"</code>, <code>"county subdivision"</code>, and <code>"metropolitan statistical area"</code>.
 MSA data is only available beginning with the 2009-2013 5-year ACS.</p></dd>
+
+
 <dt>variables</dt>
 <dd><p>Character string or vector of character strings of variable
 names. By default, <code>get_flows()</code> returns the GEOID and names of the
@@ -118,6 +120,8 @@ variables are specified, they are pulled in addition to the default
 variables. The names of additional variables can be found in the Census
 Migration Flows API
 documentation at <a href="https://api.census.gov/data/2018/acs/flows/variables.html" class="external-link">https://api.census.gov/data/2018/acs/flows/variables.html</a>.</p></dd>
+
+
 <dt>breakdown</dt>
 <dd><p>A character vector of the population breakdown
 characteristics to be crossed with migration flows data. For datasets
@@ -130,29 +134,43 @@ characteristics are available in each year, visit the Census Migration
 Flows
 documentation at <a href="https://www.census.gov/data/developers/data-sets/acs-migration-flows.html" class="external-link">https://www.census.gov/data/developers/data-sets/acs-migration-flows.html</a>.
  Note: not all characteristics are available in all years.</p></dd>
+
+
 <dt>breakdown_labels</dt>
 <dd><p>Whether or not to add columns with labels for the
 breakdown characteristic codes. Defaults to <code>FALSE</code>.</p></dd>
+
+
 <dt>year</dt>
 <dd><p>The year, or endyear, of the ACS sample. The Migration Flows API
 is available for 5-year ACS samples from 2010 to 2018. Defaults to 2018.</p></dd>
+
+
 <dt>output</dt>
 <dd><p>One of "tidy" (the default) in which each row represents an
 enumeration unit-variable combination, or "wide" in which each row
 represents an enumeration unit and the variables are in the columns.</p></dd>
+
+
 <dt>state</dt>
 <dd><p>An optional vector of states for which you are requesting data.
 State names, postal codes, and FIPS codes are accepted. When requesting
 county subdivision data, you must specify at least one state.</p></dd>
+
+
 <dt>county</dt>
 <dd><p>The county for which you are requesting data. County names and
 FIPS codes are accepted. Must be combined with a value supplied to `state`.</p></dd>
+
+
 <dt>msa</dt>
 <dd><p>The metropolitan statistical area for which you are requesting
 data. Specify a single value or a vector of values to get data for more
 than one MSA. Numeric or character MSA GEOIDs are accepted. When specifying
 MSAs, geography must be set to <code>"metropolitan statistical area"</code> and
 <code>state</code> and <code>county</code> must be <code>NULL</code>.</p></dd>
+
+
 <dt>geometry</dt>
 <dd><p>if FALSE (the default), return a tibble of ACS Migration
 Flows data. If TRUE, return an sf object with the centroids of both origin
@@ -160,21 +178,30 @@ and destination as <code>sfc_POINT</code> columns. The origin point feature is
 returned in a column named <code>centroid1</code> and is the active geometry column in
 the sf object. The destination point feature is returned in the <code>centroid2</code>
 column.</p></dd>
+
+
 <dt>key</dt>
 <dd><p>Your Census API key. Obtain one at
 <a href="https://api.census.gov/data/key_signup.html" class="external-link">https://api.census.gov/data/key_signup.html</a></p></dd>
+
+
 <dt>moe_level</dt>
 <dd><p>The confidence level of the returned margin of error.  One
 of 90 (the default), 95, or 99.</p></dd>
+
+
 <dt>show_call</dt>
 <dd><p>if TRUE, display call made to Census API. This can be very
 useful in debugging and determining if error messages returned are due to
 tidycensus or the Census API. Copy to the API call into a browser and see
 what is returned by the API directly. Defaults to FALSE.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A tibble or sf tibble of ACS Migration Flows data</p>
+    
+
+<p>A tibble or sf tibble of ACS Migration Flows data</p>
     </div>
 
     <div id="ref-examples">
@@ -218,7 +245,7 @@ what is returned by the API directly. Defaults to FALSE.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

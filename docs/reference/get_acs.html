@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
       </span>
     </div>
 
@@ -108,80 +108,119 @@
     <h2>Arguments</h2>
     <dl><dt>geography</dt>
 <dd><p>The geography of your data.</p></dd>
+
+
 <dt>variables</dt>
 <dd><p>Character string or vector of character strings of variable
 IDs. tidycensus automatically returns the estimate and the margin of error
 associated with the variable.</p></dd>
+
+
 <dt>table</dt>
 <dd><p>The ACS table for which you would like to request all
 variables. Uses lookup tables to identify the variables; performs faster
 when variable table already exists through <code>load_variables(cache =
 TRUE)</code>. Only one table may be requested per call.</p></dd>
+
+
 <dt>cache_table</dt>
 <dd><p>Whether or not to cache table names for faster future
 access. Defaults to FALSE; if TRUE, only needs to be called once per
 dataset.  If variables dataset is already cached via the
 <code>load_variables</code> function, this can be bypassed.</p></dd>
+
+
 <dt>year</dt>
 <dd><p>The year, or endyear, of the ACS sample. 5-year ACS data is
 available from 2009 through 2020; 1-year ACS data is available from 2005
 through 2019. Defaults to 2020; 1-year ACS users should supply a different year
 directly.</p></dd>
+
+
 <dt>endyear</dt>
 <dd><p>Deprecated and will be removed in a future release.</p></dd>
+
+
 <dt>output</dt>
 <dd><p>One of "tidy" (the default) in which each row represents an
 enumeration unit-variable combination, or "wide" in which each row
 represents an enumeration unit and the variables are in the columns.</p></dd>
+
+
 <dt>state</dt>
 <dd><p>An optional vector of states for which you are requesting data.
 State names, postal codes, and FIPS codes are accepted. Defaults to NULL.</p></dd>
+
+
 <dt>county</dt>
 <dd><p>The county for which you are requesting data. County names and
 FIPS codes are accepted. Must be combined with a value supplied to `state`.
 Defaults to NULL.</p></dd>
+
+
 <dt>zcta</dt>
 <dd><p>The zip code tabulation area(s) for which you are requesting
 data. Specify a single value or a vector of values to get data for more
 than one ZCTA. Numeric or character ZCTA GEOIDs are accepted. When
 specifying ZCTAs, geography must be set to `"zcta"` and `state` must be specified with
 `county` left as `NULL`. Defaults to NULL.</p></dd>
+
+
 <dt>geometry</dt>
 <dd><p>if FALSE (the default), return a regular tibble of ACS data.
 if TRUE, uses the tigris package to return an sf tibble with simple feature
 geometry in the `geometry` column.</p></dd>
+
+
 <dt>keep_geo_vars</dt>
 <dd><p>if TRUE, keeps all the variables from the Census
 shapefile obtained by tigris.  Defaults to FALSE.</p></dd>
+
+
 <dt>shift_geo</dt>
 <dd><p>(deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for
 thematic mapping of the entire US. Geometry was originally obtained from
 the albersusa R package. As of May 2021, we recommend using <code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html" class="external-link">tigris::shift_geometry()</a></code>
 instead.</p></dd>
+
+
 <dt>summary_var</dt>
 <dd><p>Character string of a "summary variable" from the ACS to
 be included in your output. Usually a variable (e.g. total population) that
 you'll want to use as a denominator or comparison.</p></dd>
+
+
 <dt>key</dt>
 <dd><p>Your Census API key. Obtain one at
 <a href="https://api.census.gov/data/key_signup.html" class="external-link">https://api.census.gov/data/key_signup.html</a></p></dd>
+
+
 <dt>moe_level</dt>
 <dd><p>The confidence level of the returned margin of error.  One
 of 90 (the default), 95, or 99.</p></dd>
+
+
 <dt>survey</dt>
 <dd><p>The ACS contains one-year, three-year, and five-year surveys
 expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."</p></dd>
+
+
 <dt>show_call</dt>
 <dd><p>if TRUE, display call made to Census API. This can be very
 useful in debugging and determining if error messages returned are due to
 tidycensus or the Census API. Copy to the API call into a browser and see
 what is returned by the API directly. Defaults to FALSE.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Other keyword arguments</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A tibble or sf tibble of ACS data</p>
+    
+
+<p>A tibble or sf tibble of ACS data</p>
     </div>
 
     <div id="ref-examples">
@@ -229,7 +268,7 @@ what is returned by the API directly. Defaults to FALSE.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

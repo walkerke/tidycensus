@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
       </span>
     </div>
 
@@ -82,7 +82,10 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_estimates</span><span class="op">(</span>
-  <span class="va">geography</span>,
+  geography <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"us"</span>, <span class="st">"region"</span>, <span class="st">"division"</span>, <span class="st">"state"</span>, <span class="st">"county"</span>, <span class="st">"county subdivision"</span>,
+    <span class="st">"place/balance (or part)"</span>, <span class="st">"place"</span>, <span class="st">"consolidated city"</span>, <span class="st">"place (or part)"</span>,
+    <span class="st">"metropolitan statistical area/micropolitan statistical area"</span>, <span class="st">"cbsa"</span>,
+    <span class="st">"metropolitan division"</span>, <span class="st">"combined statistical area"</span><span class="op">)</span>,
   product <span class="op">=</span> <span class="cn">NULL</span>,
   variables <span class="op">=</span> <span class="cn">NULL</span>,
   breakdown <span class="op">=</span> <span class="cn">NULL</span>,
@@ -104,69 +107,106 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>geography</dt>
-<dd><p>The geography of your data.</p></dd>
+<dd><p>The geography of your data. Available geographies for the most recent data vintage are listed
+<a href="https://api.census.gov/data/2019/pep/population/geography.html" class="external-link">here</a>. <code>"cbsa"</code> may
+be used an alias for <code>"metropolitan statistical area/micropolitan statistical area"</code>.</p></dd>
+
+
 <dt>product</dt>
 <dd><p>The data product (optional). <code>"population"</code>, <code>"components"</code>
 <code>"housing"</code>, and <code>"characteristics"</code> are supported.</p></dd>
+
+
 <dt>variables</dt>
 <dd><p>A character string or vector of character strings of requested variables
 to get from either the population, components, or housing API.</p></dd>
+
+
 <dt>breakdown</dt>
 <dd><p>The population breakdown used when <code>product = "characteristics"</code>.
 Acceptable values are <code>"AGEGROUP"</code>, <code>"RACE"</code>, <code>"SEX"</code>, and
 <code>"HISP"</code>, for Hispanic/Not Hispanic.  These values can be combined in
 a vector, returning population estimates in the <code>value</code> column for all
 combinations of these breakdowns.</p></dd>
+
+
 <dt>breakdown_labels</dt>
 <dd><p>Whether or not to label breakdown elements returned when
 <code>product = "characteristics"</code>. Defaults to FALSE.</p></dd>
+
+
 <dt>year</dt>
-<dd><p>The data year (defaults to 2019)</p></dd>
+<dd><p>The data vintage (defaults to 2019). It is recommended to use the most recent vintage
+available for a given decennial series (so, year = 2019 for the 2010s) and
+use <code>time_series = TRUE</code> to access estimates for prior years.</p></dd>
+
+
 <dt>state</dt>
 <dd><p>The state for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.
 Defaults to NULL.</p></dd>
+
+
 <dt>county</dt>
 <dd><p>The county for which you are requesting data. County names and
 FIPS codes are accepted. Must be combined with a value supplied
 to `state`.  Defaults to NULL.</p></dd>
+
+
 <dt>time_series</dt>
 <dd><p>If <code>TRUE</code>, the function will return a time series of observations back to the decennial Census
 of 2010. The returned column is either "DATE", representing a particular estimate date, or "PERIOD",
 representing a time period (e.g. births between 2016 and 2017), and contains integers representing
 those values.  Integer to date or period mapping is available at
 <a href="https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2019.html" class="external-link">https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2019.html</a>.</p></dd>
+
+
 <dt>output</dt>
 <dd><p>One of "tidy" (the default) in which each row represents an
 enumeration unit-variable combination, or "wide" in which each
 row represents an enumeration unit and the variables are in the
 columns.</p></dd>
+
+
 <dt>geometry</dt>
 <dd><p>if FALSE (the default), return a regular tibble of ACS data.
 if TRUE, uses the tigris package to return an sf tibble
 with simple feature geometry in the `geometry` column.</p></dd>
+
+
 <dt>keep_geo_vars</dt>
 <dd><p>if TRUE, keeps all the variables from the Census
 shapefile obtained by tigris.  Defaults to FALSE.</p></dd>
+
+
 <dt>shift_geo</dt>
 <dd><p>(deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
 mapping of the entire US.  As of May 2021, we recommend using <code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html" class="external-link">tigris::shift_geometry()</a></code>
 instead.</p></dd>
+
+
 <dt>key</dt>
 <dd><p>Your Census API key.
 Obtain one at <a href="https://api.census.gov/data/key_signup.html" class="external-link">https://api.census.gov/data/key_signup.html</a>.  Can be stored
 in your .Renviron with <code>census_api_key("YOUR KEY", install = TRUE)</code></p></dd>
+
+
 <dt>show_call</dt>
 <dd><p>if TRUE, display call made to Census API. This can be very useful
 in debugging and determining if error messages returned are
 due to tidycensus or the Census API. Copy to the API call into
 a browser and see what is returned by the API directly. Defaults to FALSE.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>other keyword arguments</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A tibble, or sf tibble, of population estimates data</p>
+    
+
+<p>A tibble, or sf tibble, of population estimates data</p>
     </div>
 
   </div>
@@ -181,7 +221,7 @@ a browser and see what is returned by the API directly. Defaults to FALSE.</p></
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

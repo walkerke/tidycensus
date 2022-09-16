@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
       </span>
     </div>
 
@@ -96,22 +96,37 @@
     <h2>Arguments</h2>
     <dl><dt>input_data</dt>
 <dd><p>An input sf object of geometry type <code>POLYGON</code> or <code>MULTIPOLYGON</code> that includes some information that can be converted to dots.  While the function is designed for use with data acquired with the tidycensus package, it will work for arbitrary polygon datasets.</p></dd>
+
+
 <dt>value</dt>
 <dd><p>The value column to be used to determine the number of dots to generate. For tidycensus users, this will typically be the <code>"value"</code> column for decennial Census data or the <code>"estimate"</code> column for American Community Survey estimates.</p></dd>
+
+
 <dt>values_per_dot</dt>
 <dd><p>The number of values per dot; used to determine the output data:dots ratio. A value of 100 means that each dot will represent approximately 100 values in the value column.</p></dd>
+
+
 <dt>group</dt>
 <dd><p>A column in the dataset that identifies salient groups within which dots should be generated.  For a long-form tidycensus dataset, this will typically be the <code>"variable"</code> column or some derivative of it. The output dataset will be randomly shuffled to prevent "stacking" of groups in downstream dot-density maps.</p></dd>
+
+
 <dt>erase_water</dt>
 <dd><p>If <code>TRUE</code>, calls <code><a href="https://rdrr.io/pkg/tigris/man/erase_water.html" class="external-link">tigris::erase_water()</a></code> to remove water areas from the polygons prior to generating dots, allowing for dasymetric dot placement. This option is recommended if your location includes significant water area. If using this option, it is recommended that you first transform your data to a projected coordinate reference system using <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">sf::st_transform()</a></code> to improve performance. This argument only works for data in the United States.</p></dd>
+
+
 <dt>area_threshold</dt>
 <dd><p>The area percentile threshold to be used when erasing water; ranges from 0 (all water area included) to 1 (no water area included)</p></dd>
+
+
 <dt>water_year</dt>
 <dd><p>The year of the TIGER/Line water area shapefiles to use if erasing water. Defaults to 2020; ignore if not using the <code>erase_water</code> feature.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The original dataset but of geometry type <code>POINT</code>, with the number of point features corresponding to the given value:dot ratio for a given group.</p>
+    
+
+<p>The original dataset but of geometry type <code>POINT</code>, with the number of point features corresponding to the given value:dot ratio for a given group.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -180,7 +195,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

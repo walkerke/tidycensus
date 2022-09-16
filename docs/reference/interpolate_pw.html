@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
       </span>
     </div>
 
@@ -97,24 +97,41 @@
     <h2>Arguments</h2>
     <dl><dt>from</dt>
 <dd><p>The spatial dataset from which numeric attributes will be interpolated to target zones. By default, all numeric columns in this dataset will be interpolated.</p></dd>
+
+
 <dt>to</dt>
 <dd><p>The target geometries (zones) to which numeric attributes will be interpolated.</p></dd>
+
+
 <dt>to_id</dt>
 <dd><p>(optional) An ID column in the target dataset to be retained in the output. For data obtained with tidycensus, this will be <code>"GEOID"</code> by convention.  If <code>NULL</code>, the output dataset will include a column <code>id</code> that uniquely identifies each row.</p></dd>
+
+
 <dt>extensive</dt>
 <dd><p>if <code>TRUE</code>, return weighted sums; if <code>FALSE</code>, return weighted means.</p></dd>
+
+
 <dt>weights</dt>
 <dd><p>An input spatial dataset to be used as weights. If the dataset is not of geometry type <code>POINT</code>, it will be converted to points by the function with <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">sf::st_point_on_surface()</a></code>.  For US-based applications, this will commonly be a Census block dataset obtained with the tigris or tidycensus packages.</p></dd>
+
+
 <dt>weight_column</dt>
 <dd><p>(optional) a column in <code>weights</code> used for weighting in the interpolation process.  Typically this will be a column representing the population (or other weighting metric, like housing units) of the input weights dataset.  If <code>NULL</code> (the default), each feature in <code>weights</code> is given an equal weight of 1.</p></dd>
+
+
 <dt>weight_placement</dt>
 <dd><p>(optional) One of <code>"surface"</code>, where weight polygons are converted to points on polygon surfaces with <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">sf::st_point_on_surface()</a></code>, or <code>"centroid"</code>, where polygon centroids are used instead with <code><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">sf::st_centroid()</a></code>.  Defaults to <code>"surface"</code>.  This argument is not necessary if weights are already of geometry type <code>POINT</code>.</p></dd>
+
+
 <dt>crs</dt>
 <dd><p>(optional) The EPSG code of the output projected coordinate reference system (CRS). Useful as all input layers (<code>from</code>, <code>to</code>, and <code>weights</code>) must share the same CRS for the function to run correctly.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A dataset of class sf with the geometries and an ID column from <code>to</code> (the target shapes) but with numeric attributes of <code>from</code> interpolated to those shapes.</p>
+    
+
+<p>A dataset of class sf with the geometries and an ID column from <code>to</code> (the target shapes) but with numeric attributes of <code>from</code> interpolated to those shapes.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -183,7 +200,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

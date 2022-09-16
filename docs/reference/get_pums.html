@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
       </span>
     </div>
 
@@ -101,20 +101,30 @@
     <dl><dt>variables</dt>
 <dd><p>A vector of variables from the PUMS API.
 Use <code>View(pums_variables)</code> to browse variable options.</p></dd>
+
+
 <dt>state</dt>
 <dd><p>A state, or vector of states, for which you would like to
 request data.  The entire US can be requested with <code>state = "all"</code> - though be patient with the data download!</p></dd>
+
+
 <dt>puma</dt>
 <dd><p>A vector of PUMAs from a single state, for which you would like
 to request data. To get data from PUMAs in more than one state, specify a
 named vector of state/PUMA pairs and set <code>state = "multiple"</code>.</p></dd>
+
+
 <dt>year</dt>
 <dd><p>The data year of the 1-year ACS sample or the endyear of the
 5-year sample. Defaults to 2020. Please note that 1-year data for 2020 is not available
 in tidycensus, so users requesting 1-year data should supply a different year.</p></dd>
+
+
 <dt>survey</dt>
 <dd><p>The ACS survey; one of either <code>"acs1"</code> or <code>"acs5"</code>
 (the default).</p></dd>
+
+
 <dt>variables_filter</dt>
 <dd><p>A named list of filters you'd like to return from the
 PUMS API.  For example, passing <code>list(AGE = 25:50, SEX = 1)</code> will return
@@ -122,32 +132,45 @@ only males aged 25 to 50 in your output dataset.  Defaults to <code>NULL</code>,
 which returns all records. If a housing-only dataset is required,
 use <code>list(SPORDER = 1)</code> to only return householder records (taking care
 in your analysis to use the household weight <code>WGTP</code>).</p></dd>
+
+
 <dt>rep_weights</dt>
 <dd><p>Whether or not to return housing unit, person, or both
 housing and person-level replicate weights for calculation of standard
 errors; one of <code>"person"</code>, <code>"housing"</code>, or <code>"both"</code>.</p></dd>
+
+
 <dt>recode</dt>
 <dd><p>If TRUE, recodes variable values using Census data dictionary
 and creates a new <code>*_label</code> column for each variable that is recoded.
 Available for 2017 - 2020 data. Defaults to FALSE.</p></dd>
+
+
 <dt>return_vacant</dt>
 <dd><p>If TRUE, makes a separate request to the Census API to
 retrieve microdata for vacant housing units, which are handled differently
 in the API as they do not have person-level characteristics.  All person-level
 columns in the returned dataset will be populated with NA for vacant housing units.
 Defaults to FALSE.</p></dd>
+
+
 <dt>show_call</dt>
 <dd><p>If TRUE, display call made to Census API. This can be very
 useful in debugging and determining if error messages returned are due to
 tidycensus or the Census API. Copy to the API call into a browser and see
 what is returned by the API directly. Defaults to FALSE.</p></dd>
+
+
 <dt>key</dt>
 <dd><p>Your Census API key. Obtain one at
 <a href="https://api.census.gov/data/key_signup.html" class="external-link">https://api.census.gov/data/key_signup.html</a></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A tibble of microdata from the ACS PUMS API.</p>
+    
+
+<p>A tibble of microdata from the ACS PUMS API.</p>
     </div>
 
     <div id="ref-examples">
@@ -173,7 +196,7 @@ what is returned by the API directly. Defaults to FALSE.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
