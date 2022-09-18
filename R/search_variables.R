@@ -2,8 +2,8 @@
 #'
 #' @param year The year for which you are requesting variables. Either the year
 #'   or endyear of the decennial Census or ACS sample. 5-year ACS data is
-#'   available from 2009 through 2018. 1-year ACS data is available from 2005
-#'   through 2019.
+#'   available from 2009 through 2020. 1-year ACS data is available from 2005
+#'   through 2021, with the exception of 2020.
 #' @param dataset One of "sf1", "sf2", "sf3", "sf4", "pl",
 #'   "as", "gu", "mp", "vi", "acs1", "acs3", "acs5", "acs1/profile",
 #'   "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject", "acs5/subject",
