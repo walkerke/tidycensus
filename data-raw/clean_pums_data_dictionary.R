@@ -67,6 +67,7 @@ clean_data_dict <- function(path, survey, year) {
              val_max = if_else(data_type == "chr", str_pad(val_max, val_length, "left", "0"), val_max))
   }
 
+  print(glue::glue("{survey}{year}"))
   pums_variables
 
 }

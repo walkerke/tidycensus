@@ -49,7 +49,7 @@ errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.}
 
 \item{recode}{If TRUE, recodes variable values using Census data dictionary
 and creates a new \code{*_label} column for each variable that is recoded.
-Available for 2017 - 2020 data. Defaults to FALSE.}
+Available for 2017 - 2021 data. Defaults to FALSE.}
 
 \item{return_vacant}{If TRUE, makes a separate request to the Census API to
 retrieve microdata for vacant housing units, which are handled differently
