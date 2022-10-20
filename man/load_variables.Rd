@@ -6,9 +6,9 @@
 \usage{
 load_variables(
   year,
-  dataset = c("sf1", "sf2", "sf3", "sf4", "pl", "as", "gu", "mp", "vi", "acs1", "acs3",
-    "acs5", "acs1/profile", "acs3/profile", "acs5/profile", "acs1/subject",
-    "acs3/subject", "acs5/subject", "acs1/cprofile", "acs5/cprofile"),
+  dataset = c("sf1", "sf2", "sf3", "sf4", "pl", "as", "gu", "mp", "vi", "acsse",
+    "acs1", "acs3", "acs5", "acs1/profile", "acs3/profile", "acs5/profile",
+    "acs1/subject", "acs3/subject", "acs5/subject", "acs1/cprofile", "acs5/cprofile"),
   cache = FALSE
 )
 }
@@ -19,7 +19,7 @@ available from 2009 through 2020. 1-year ACS data is available from 2005
 through 2021, with the exception of 2020.}
 
 \item{dataset}{One of "sf1", "sf2", "sf3", "sf4", "pl",
-"as", "gu", "mp", "vi", "acs1", "acs3", "acs5", "acs1/profile",
+"as", "gu", "mp", "vi", "acsse", "acs1", "acs3", "acs5", "acs1/profile",
 "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject", "acs5/subject",
 "acs1/cprofile", or "acs5/cprofile".}
 
