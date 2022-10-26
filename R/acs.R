@@ -886,7 +886,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     }
 
-    if (shift_geo || geography == "zip code tabulation area") {
+    call <- match.call()
+    filter_check <- "filter_by" %in% names(call)
+
+    if (shift_geo || geography == "zip code tabulation area" || filter_check) {
       out <- inner_join(geom, dat2, by = "GEOID") %>%
         st_as_sf()
     } else {
