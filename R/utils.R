@@ -455,7 +455,7 @@ interpolate_pw <- function(from,
     sf::st_join(weight_points, left = FALSE) %>%
     sf::st_drop_geometry() %>%
     dplyr::group_by(!!from_id_sym) %>%
-    dplyr::summarize(total = sum(!!weight_sym, na.rm = TRUE))
+    dplyr::summarize(tidycensus_weight_total = sum(!!weight_sym, na.rm = TRUE))
 
   # Calculate the intersections and intersection proportions
   intersections <- suppressWarnings(
@@ -470,7 +470,7 @@ interpolate_pw <- function(from,
       dplyr::mutate(intersection_value = sum(!!weight_sym, na.rm = TRUE)) %>%
       dplyr::ungroup() %>%
       dplyr::distinct(intersection_id, .keep_all = TRUE) %>%
-      dplyr::mutate(weight_coef = intersection_value / total) %>%
+      dplyr::mutate(weight_coef = intersection_value / tidycensus_weight_total) %>%
       dplyr::select(!!from_id_sym, !!to_id_sym, intersection_value, weight_coef)
     )
 
