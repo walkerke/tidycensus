@@ -304,7 +304,7 @@ performance.</p>
   cb <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="fl">26918</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/erase_water.html" class="external-link">erase_water</a></span><span class="op">(</span>area_threshold <span class="op">=</span> <span class="fl">0.75</span>, year <span class="op">=</span> <span class="fl">2020</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/erase_water.html" class="external-link">erase_water</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fl">2020</span><span class="op">)</span>
 
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ny_erase</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
@@ -312,7 +312,10 @@ performance.</p>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/dollar_format.html" class="external-link">dollar</a></span><span class="op">)</span></code></pre></div>
 <p><img src="spatial-data_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
 <p>The map appears as before, but instead the polygons now hug the
-shoreline of Manhattan.</p>
+shoreline of Manhattan. Setting the same <code>year</code> in
+<code><a href="https://rdrr.io/pkg/tigris/man/erase_water.html" class="external-link">erase_water()</a></code> as your input data is recommended to avoid
+<em>sliver polygons</em>, which are small polygons that can appear as a
+result of misaligned overlay operations.</p>
 </div>
 <div class="section level2">
 <h2 id="writing-to-shapefiles">Writing to shapefiles<a class="anchor" aria-label="anchor" href="#writing-to-shapefiles"></a>
