@@ -162,15 +162,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     }
   }
 
-  if (Sys.getenv('CENSUS_API_KEY') != '') {
-
-    key <- Sys.getenv('CENSUS_API_KEY')
-
-  } else if (is.null(key)) {
-
-    stop('A Census API key is required.  Obtain one at http://api.census.gov/data/key_signup.html, and then supply the key to the `census_api_key()` function to use it throughout your tidycensus session.')
-
-  }
+  # Check for a Census API key and warn if missing
+  key <- get_census_api_key(key)
 
   if (geography == "block") {
     stop("Block data are not available in the ACS. Use `get_decennial()` to access block data from the 2010 Census.", call. = FALSE)

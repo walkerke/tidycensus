@@ -570,4 +570,28 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
 }
 
 
+#' Check to see if a Census API key is installed
+#' @keywords internal
+get_census_api_key <- function(key) {
+
+  # If a key is supplied, return it
+  if (!is.null(key)) {
+    return(key)
+
+  } else if (Sys.getenv("CENSUS_API_KEY") == "") {
+    rlang::warn(message = c('*' = stringr::str_wrap("You have not set a Census API key. Users without a key are limited to 500 queries per day and may experience performance limitations."),
+                            'i' = stringr::str_wrap("For best results, get a Census API key at http://api.census.gov/data/key_signup.html and then supply the key to the `census_api_key()` function to use it throughout your tidycensus session.")),
+                .frequency = "once",
+                .frequency_id = "api_key_warning")
+
+    return(NULL)
+
+  } else {
+
+    return(Sys.getenv('CENSUS_API_KEY'))
+
+  }
+}
+
+
 

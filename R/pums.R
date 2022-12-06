@@ -93,16 +93,8 @@ get_pums <- function(variables = NULL,
     return_vacant <- TRUE
   }
 
-
-  if (Sys.getenv('CENSUS_API_KEY') != '') {
-
-    key <- Sys.getenv('CENSUS_API_KEY')
-
-  } else if (is.null(key)) {
-
-    stop('A Census API key is required.  Obtain one at http://api.census.gov/data/key_signup.html, and then supply the key to the `census_api_key()` function to use it throughout your tidycensus session.')
-
-  }
+  # Check for a Census API key and warn if missing
+  key <- get_census_api_key(key)
 
   # Account for missing PUMAs in 2008-2012 through 2011-2015 ACS samples
   if (year %in% 2012:2015 && survey == "acs5" && (!is.null(puma) || "PUMA" %in% variables)) {
