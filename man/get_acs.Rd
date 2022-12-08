@@ -9,8 +9,7 @@ get_acs(
   variables = NULL,
   table = NULL,
   cache_table = FALSE,
-  year = 2020,
-  endyear = NULL,
+  year = 2021,
   output = "tidy",
   state = NULL,
   county = NULL,
@@ -44,11 +43,8 @@ dataset.  If variables dataset is already cached via the
 \code{load_variables} function, this can be bypassed.}
 
 \item{year}{The year, or endyear, of the ACS sample. 5-year ACS data is
-available from 2009 through 2020; 1-year ACS data is available from 2005
-through 2019. Defaults to 2020; 1-year ACS users should supply a different year
-directly.}
-
-\item{endyear}{Deprecated and will be removed in a future release.}
+available from 2009 through 2021; 1-year ACS data is available from 2005
+through 2021, with the exception of 2020.  Defaults to 2021.}
 
 \item{output}{One of "tidy" (the default) in which each row represents an
 enumeration unit-variable combination, or "wide" in which each row
