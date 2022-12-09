@@ -1,3 +1,9 @@
+# tidycensus 1.3
+
+* Given that the Census API allows for 500 queries per day without an API key, the API key requirement in the package has been removed to support reproducibility. Users without a key are now warned of potential performance limitations.  
+* PUMS variables for 2021 have been added to the `pums_variables` data dictionary object.
+* Various bug fixes and performance improvements; browse [the GitHub issues](https://github.com/walkerke/tidycensus/issues) for a complete listing.
+
 # tidycensus 1.2.3
 
 * Minor release with bug fixes and performance improvements.  Fixes include support for the 2000 SF3 Data Profile; improvements to the `interpolate_pw()` function; and correct geometry usage for PUMA geography in the 2021 ACS.  

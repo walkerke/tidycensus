@@ -13,10 +13,8 @@
 #'   dataset.  If variables dataset is already cached via the
 #'   \code{load_variables} function, this can be bypassed.
 #' @param year The year, or endyear, of the ACS sample. 5-year ACS data is
-#'   available from 2009 through 2020; 1-year ACS data is available from 2005
-#'   through 2019. Defaults to 2020; 1-year ACS users should supply a different year
-#'   directly.
-#' @param endyear Deprecated and will be removed in a future release.
+#'   available from 2009 through 2021; 1-year ACS data is available from 2005
+#'   through 2021, with the exception of 2020.  Defaults to 2021.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'   enumeration unit-variable combination, or "wide" in which each row
 #'   represents an enumeration unit and the variables are in the columns.
@@ -86,7 +84,7 @@
 #' }
 #' @export
 get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FALSE,
-                    year = 2020, endyear = NULL, output = "tidy",
+                    year = 2021, output = "tidy",
                     state = NULL, county = NULL, zcta = NULL,
                     geometry = FALSE, keep_geo_vars = FALSE,
                     shift_geo = FALSE, summary_var = NULL, key = NULL,
@@ -137,11 +135,6 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     }
   }
 
-  if (!is.null(endyear)) {
-    year <- endyear
-    message("The `endyear` parameter is deprecated and will be removed in a future release.  Please use `year` instead.")
-  }
-
   if (length(table) > 1) {
     stop("Only one table may be requested per call.", call. = FALSE)
   }
@@ -162,15 +155,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     }
   }
 
-  if (Sys.getenv('CENSUS_API_KEY') != '') {
-
-    key <- Sys.getenv('CENSUS_API_KEY')
-
-  } else if (is.null(key)) {
-
-    stop('A Census API key is required.  Obtain one at http://api.census.gov/data/key_signup.html, and then supply the key to the `census_api_key()` function to use it throughout your tidycensus session.')
-
-  }
+  # Check for a Census API key and warn if missing
+  key <- get_census_api_key(key)
 
   if (geography == "block") {
     stop("Block data are not available in the ACS. Use `get_decennial()` to access block data from the 2010 Census.", call. = FALSE)
@@ -202,7 +188,13 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
          call. = FALSE)
   }
 
-  if (geography == "cbsa") geography <- "metropolitan statistical area/micropolitan statistical area"
+  if (geography == "cbsa") {
+    if (year > 2020) {
+      geography <- "metropolitan/micropolitan statistical area"
+    } else {
+      geography <- "metropolitan statistical area/micropolitan statistical area"
+    }
+  }
 
   if (geography == "cbg") geography <- "block group"
 

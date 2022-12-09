@@ -123,7 +123,7 @@ ny_erase <- get_acs(
   cb = FALSE
 ) %>%
   st_transform(26918) %>%
-  erase_water(area_threshold = 0.75)
+  erase_water(year = 2020)
 
 ggplot(ny_erase, aes(fill = estimate)) + 
   geom_sf() + 
@@ -131,7 +131,7 @@ ggplot(ny_erase, aes(fill = estimate)) +
   scale_fill_viridis_c(labels = scales::dollar)
 ```
 
-The map appears as before, but instead the polygons now hug the shoreline of Manhattan.  
+The map appears as before, but instead the polygons now hug the shoreline of Manhattan.  Setting the same `year` in `erase_water()` as your input data is recommended to avoid _sliver polygons_, which are small polygons that can appear as a result of misaligned overlay operations.
 
 
 ## Writing to shapefiles
