@@ -570,8 +570,7 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
 }
 
 
-#' Check to see if a Census API key is installed
-#' @keywords internal
+# Check to see if a Census API key is installed
 get_census_api_key <- function(key) {
 
   # If a key is supplied, return it
