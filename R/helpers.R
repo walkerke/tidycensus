@@ -157,6 +157,11 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     # No ZCTA geometry for 2011, so use 2010 instead
     if (year == 2011) year <- 2010
 
+    # Similarly, we don't have cb ZCTAs for 2021 yet, so use 2020 instead
+    if (year == 2021 && cb) {
+      year <- 2020
+    }
+
     z <- zctas(cb = cb, starts_with = starts_with, year = year,
                class = "sf", state = state, ...)
 
