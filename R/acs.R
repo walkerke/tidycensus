@@ -188,14 +188,20 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
          call. = FALSE)
   }
 
+  # Handle new definition of MSAs for 2021 and later (5-year ACS only)
   if (geography == "cbsa") {
-    if (year > 2020) {
+    if (year > 2020 && survey == "acs5") {
       geography <- "metropolitan/micropolitan statistical area"
     } else {
       geography <- "metropolitan statistical area/micropolitan statistical area"
     }
   }
 
+  if (geography == "metropolitan statistical area/micropolitan statistical area" && year >= 2021 && survey == "acs5") {
+    geography <- "metropolitan/micropolitan statistical area"
+  }
+
+  # Other aliases
   if (geography == "cbg") geography <- "block group"
 
   if (geography == "zcta") geography <- "zip code tabulation area"

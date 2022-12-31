@@ -58,14 +58,14 @@ If __state__ or __county__ is in bold face in "Available by", you are required t
 |`"county"`|County or equivalent|state, county|`get_acs()`, `get_decennial()`| 
 |`"county subdivision"`|County subdivision|__state__, county|`get_acs()`, `get_decennial()`| 
 |`"tract"`|Census tract|__state__, county|`get_acs()`, `get_decennial()`|  
-|`"block group"`|Census block group|__state__, county|`get_acs()`, `get_decennial()`|  
+|`"block group"` OR `"cbg"`|Census block group|__state__, county|`get_acs()`, `get_decennial()`|  
 |`"block"`|Census block|__state__, __county__|`get_decennial()`| 
 |`"place"`|Census-designated place|state|`get_acs()`, `get_decennial()`|  
 |`"alaska native regional corporation"`|Alaska native regional corporation|state|`get_acs()`, `get_decennial()`|  
 |`"american indian area/alaska native area/hawaiian home land"`|Federal and state-recognized American Indian reservations and Hawaiian home lands|state|`get_acs()`, `get_decennial()`|  
 |`"american indian area/alaska native area (reservation or statistical entity only)"`|Only reservations and statistical entities|state|`get_acs()`, `get_decennial()`| 
 |`"american indian area (off-reservation trust land only)/hawaiian home land"`|Only off-reservation trust lands and Hawaiian home lands|state|`get_acs()`| 
-|`"metropolitan statistical area/micropolitan statistical area"`|Core-based statistical area|state|`get_acs()`, `get_decennial()`|
+|`"metropolitan/micropolitan statistical area"` (2021 5-year ACS and later) OR `"metropolitan statistical area/micropolitan statistical area"` OR `"cbsa"` |Core-based statistical area||`get_acs()`, `get_decennial()`|
 |`"combined statistical area"`|Combined statistical area|state|`get_acs()`, `get_decennial()`| 
 |`"new england city and town area"`|New England city/town area|state|`get_acs()`, `get_decennial()`| 
 |`"combined new england city and town area"`|Combined New England area|state|`get_acs()`, `get_decennial()`| 

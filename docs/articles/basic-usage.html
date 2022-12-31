@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.0.9000</span>
       </span>
     </div>
 
@@ -246,7 +246,9 @@ the given geography.</p>
 </td>
 </tr>
 <tr class="even">
-<td><code>"block group"</code></td>
+<td>
+<code>"block group"</code> OR <code>"cbg"</code>
+</td>
 <td>Census block group</td>
 <td>
 <strong>state</strong>, county</td>
@@ -302,9 +304,14 @@ Hawaiian home lands</td>
 <td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
 </tr>
 <tr class="odd">
-<td><code>"metropolitan statistical area/micropolitan statistical area"</code></td>
+<td>
+<code>"metropolitan/micropolitan statistical area"</code> (2021
+5-year ACS and later) OR
+<code>"metropolitan statistical area/micropolitan statistical area"</code>
+OR <code>"cbsa"</code>
+</td>
 <td>Core-based statistical area</td>
-<td>state</td>
+<td></td>
 <td>
 <code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
 </td>
