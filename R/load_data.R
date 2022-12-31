@@ -157,22 +157,27 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
   if (!is.null(zcta))  {
 
-    if (is.null(state)) {
-      stop("The `zcta` argument requires specifying a state.", call. = FALSE)
-    }
+    # if (is.null(state)) {
+    #   stop("The `zcta` argument requires specifying a state.", call. = FALSE)
+    # }
 
     if (!is.null(county)) {
       stop("ZCTAs do not nest within counties, so `county` should not be specified.",
            call. = FALSE)
     }
 
-    state <- map_chr(state, function(x) {
-      validate_state(x)
-    })
+    if (!is.null(state)) {
+      state <- map_chr(state, function(x) {
+        validate_state(x)
+      })
+
+      in_area <- paste0("state:", state)
+
+    } else {
+      in_area <- NULL
+    }
 
     for_area <- paste0(zcta, collapse = ",")
-
-    in_area <- paste0("state:", state)
 
     vars_to_get <- paste0(formatted_variables, ",NAME")
 
