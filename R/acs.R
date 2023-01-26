@@ -707,13 +707,6 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         spread(type, value)
     }
 
-
-
-    if ("moe" %in% names(dat2)) {
-      dat2 <- mutate(dat2, moe = moe * moe_factor)
-    }
-
-
     # Convert missing values to NA
     dat2[dat2 == -111111111] <- NA
     dat2[dat2 == -222222222] <- NA
@@ -724,6 +717,11 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     dat2[dat2 == -777777777] <- NA
     dat2[dat2 == -888888888] <- NA
     dat2[dat2 == -999999999] <- NA
+
+    if ("moe" %in% names(dat2)) {
+      dat2 <- mutate(dat2, moe = moe * moe_factor)
+    }
+
 
     # Change names if supplied
     if (!is.null(names(variables))) {
