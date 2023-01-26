@@ -50,7 +50,7 @@
 get_pums <- function(variables = NULL,
                      state = NULL,
                      puma = NULL,
-                     year = 2020,
+                     year = 2021,
                      survey = "acs5",
                      variables_filter = NULL,
                      rep_weights = NULL,
