@@ -646,7 +646,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   } else if (moe_level == 95) {
     moe_factor <- (1.96 / 1.645)
   } else if (moe_level == 99) {
-    moe_factor <- (2.56 / 1.645)
+    moe_factor <- (2.576 / 1.645)
   } else {
     stop("`moe_level` must be one of 90, 95, or 99.", call. = FALSE)
   }
