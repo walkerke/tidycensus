@@ -412,9 +412,16 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
           ) %>%
           reduce(left_join, by = c("GEOID", "NAME"))
 
+        # NAME.x and NAME.y columns exist when keep_geo_vars = TRUE
+        if(keep_geo_vars) {
+            join_cols <- c("GEOID", "NAME.y" = "NAME")
+        } else {
+          join_cols <- c("GEOID", "NAME")
+        }
+
         # join non geo result to first result sf object
         result <- result_geo %>%
-          left_join(result_no_geo, by = c("GEOID", "NAME")) %>%
+          left_join(result_no_geo, by = join_cols) %>%
           select(-geometry, geometry)  # move geometry to last column
 
 
