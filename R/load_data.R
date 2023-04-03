@@ -707,8 +707,6 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
   return(dat)
 }
 
-
-
 load_data_pums <- function(variables, state, puma, key, year, survey,
                            variables_filter, recode, show_call) {
 

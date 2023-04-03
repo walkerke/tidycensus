@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimates.R
 \name{get_estimates}
 \alias{get_estimates}
-\title{Get data from the US Census Bureau Population Estimates APIs}
+\title{Get data from the US Census Bureau Population Estimates Program}
 \usage{
 get_estimates(
   geography = c("us", "region", "division", "state", "county", "county subdivision",
@@ -32,23 +32,28 @@ get_estimates(
 be used an alias for \code{"metropolitan statistical area/micropolitan statistical area"}.}
 
 \item{product}{The data product (optional). \code{"population"}, \code{"components"}
-\code{"housing"}, and \code{"characteristics"} are supported.}
+               \code{"housing"}, and \code{"characteristics"} are supported.
 
-\item{variables}{A character string or vector of character strings of requested variables
-to get from either the population, components, or housing API.}
+               Not yet supported for 2020 and later.}
+
+\item{variables}{A character string or vector of character strings of requested variables.  For years 2020 and later, use \code{variables = "all"} to request all available variables.}
 
 \item{breakdown}{The population breakdown used when \code{product = "characteristics"}.
-Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
-\code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
-a vector, returning population estimates in the \code{value} column for all
-combinations of these breakdowns.}
+                 Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
+                 \code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
+                 a vector, returning population estimates in the \code{value} column for all
+                 combinations of these breakdowns.
+
+                 Not yet supported for 2020 and later.}
 
 \item{breakdown_labels}{Whether or not to label breakdown elements returned when
-\code{product = "characteristics"}. Defaults to FALSE.}
+                        \code{product = "characteristics"}. Defaults to FALSE.
+
+                        Not yet supported for 2020 and later.}
 
 \item{year}{The data vintage (defaults to 2019). It is recommended to use the most recent vintage
-available for a given decennial series (so, year = 2019 for the 2010s) and
-use \code{time_series = TRUE} to access estimates for prior years.}
+available for a given decennial series (so, year = 2019 for the 2010s, and year = 2022 for the 2020s)
+and use \code{time_series = TRUE} to access estimates for prior years.}
 
 \item{state}{The state for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.
@@ -95,5 +100,8 @@ a browser and see what is returned by the API directly. Defaults to FALSE.}
 A tibble, or sf tibble, of population estimates data
 }
 \description{
-Get data from the US Census Bureau Population Estimates APIs
+\code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Popuplation Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
+}
+\details{
+As of April 2022, variables available for 2020 and later datasets are as follows: ESTIMATESBASE, POPESTIMATE, NPOPCHG, BIRTHS, DEATHS, NATURALCHG, INTERNATIONALMIG, DOMESTICMIG, NETMIG, RESIDUAL, GQESTIMATESBASE, GQESTIMATES, RBIRTH, RDEATH, RNATURALCHG, RINTERNATIONALMIG, RDOMESTICMIG, and RNETMIG.
 }

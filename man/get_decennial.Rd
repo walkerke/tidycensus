@@ -12,7 +12,7 @@ get_decennial(
   year = 2010,
   sumfile = c("sf1", "sf2", "sf3", "sf4", "sf2profile", "sf3profile", "sf4profile", "pl",
     "plnat", "aian", "aianprofile", "as", "gu", "vi", "mp", "responserate", "pes",
-    "dpvi", "dpgu", "dpas", "dpmp"),
+    "dpvi", "dpgu", "dpas", "dpmp", "sldh"),
   state = NULL,
   county = NULL,
   geometry = FALSE,
