@@ -32,23 +32,28 @@ get_estimates(
 be used an alias for \code{"metropolitan statistical area/micropolitan statistical area"}.}
 
 \item{product}{The data product (optional). \code{"population"}, \code{"components"}
-\code{"housing"}, and \code{"characteristics"} are supported.}
+               \code{"housing"}, and \code{"characteristics"} are supported.
 
-\item{variables}{A character string or vector of character strings of requested variables
-to get from either the population, components, or housing API.}
+               Not yet supported for 2020 and later.}
+
+\item{variables}{A character string or vector of character strings of requested variables.}
 
 \item{breakdown}{The population breakdown used when \code{product = "characteristics"}.
-Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
-\code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
-a vector, returning population estimates in the \code{value} column for all
-combinations of these breakdowns.}
+                 Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
+                 \code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
+                 a vector, returning population estimates in the \code{value} column for all
+                 combinations of these breakdowns.
+
+                 Not yet supported for 2020 and later.}
 
 \item{breakdown_labels}{Whether or not to label breakdown elements returned when
-\code{product = "characteristics"}. Defaults to FALSE.}
+                        \code{product = "characteristics"}. Defaults to FALSE.
+
+                        Not yet supported for 2020 and later.}
 
 \item{year}{The data vintage (defaults to 2019). It is recommended to use the most recent vintage
-available for a given decennial series (so, year = 2019 for the 2010s) and
-use \code{time_series = TRUE} to access estimates for prior years.}
+available for a given decennial series (so, year = 2019 for the 2010s, and year = 2022 for the 2020s)
+and use \code{time_series = TRUE} to access estimates for prior years.}
 
 \item{state}{The state for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.
