@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimates.R
 \name{get_estimates}
 \alias{get_estimates}
-\title{Get data from the US Census Bureau Population Estimates APIs}
+\title{Get data from the US Census Bureau Population Estimates Program}
 \usage{
 get_estimates(
   geography = c("us", "region", "division", "state", "county", "county subdivision",
@@ -36,7 +36,7 @@ be used an alias for \code{"metropolitan statistical area/micropolitan statistic
 
                Not yet supported for 2020 and later.}
 
-\item{variables}{A character string or vector of character strings of requested variables.}
+\item{variables}{A character string or vector of character strings of requested variables.  For years 2020 and later, use \code{variables = "all"} to request all available variables.}
 
 \item{breakdown}{The population breakdown used when \code{product = "characteristics"}.
                  Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
@@ -100,5 +100,8 @@ a browser and see what is returned by the API directly. Defaults to FALSE.}
 A tibble, or sf tibble, of population estimates data
 }
 \description{
-Get data from the US Census Bureau Population Estimates APIs
+\code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Popuplation Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
+}
+\details{
+As of April 2022, variables available for 2020 and later datasets are as follows: ESTIMATESBASE, POPESTIMATE, NPOPCHG, BIRTHS, DEATHS, NATURALCHG, INTERNATIONALMIG, DOMESTICMIG, NETMIG, RESIDUAL, GQESTIMATESBASE, GQESTIMATES, RBIRTH, RDEATH, RNATURALCHG, RINTERNATIONALMIG, RDOMESTICMIG, and RNETMIG.
 }

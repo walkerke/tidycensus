@@ -1,4 +1,8 @@
-#' Get data from the US Census Bureau Population Estimates APIs
+#' Get data from the US Census Bureau Population Estimates Program
+#'
+#' \code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Popuplation Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
+#'
+#' As of April 2022, variables available for 2020 and later datasets are as follows: ESTIMATESBASE, POPESTIMATE, NPOPCHG, BIRTHS, DEATHS, NATURALCHG, INTERNATIONALMIG, DOMESTICMIG, NETMIG, RESIDUAL, GQESTIMATESBASE, GQESTIMATES, RBIRTH, RDEATH, RNATURALCHG, RINTERNATIONALMIG, RDOMESTICMIG, and RNETMIG.
 #'
 #' @param geography The geography of your data. Available geographies for the most recent data vintage are listed
 #'                  \href{https://api.census.gov/data/2019/pep/population/geography.html}{here}. \code{"cbsa"} may
@@ -7,7 +11,7 @@
 #'                \code{"housing"}, and \code{"characteristics"} are supported.
 #'
 #'                Not yet supported for 2020 and later.
-#' @param variables A character string or vector of character strings of requested variables.
+#' @param variables A character string or vector of character strings of requested variables.  For years 2020 and later, use \code{variables = "all"} to request all available variables.
 #' @param breakdown The population breakdown used when \code{product = "characteristics"}.
 #'                  Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
 #'                  \code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
