@@ -200,6 +200,37 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
                       year == year_to_keep)
     }
 
+    # Handle state / county filters
+    if (!is.null(state)) {
+      if (geography %in% c("us", "region", "division")) {
+        rlang::abort("The `state` argument is not available for your chosen geography.")
+      }
+
+      if (is.null(county)) {
+        state <- purrr::map_chr(state, function(x) {
+          validate_state(x)
+        })
+
+        pep_sub <- pep_sub %>%
+          dplyr::filter(stringr::str_sub(GEOID, 1, 2) %in% state)
+
+      } else {
+        state <- purrr::map_chr(state, function(x) {
+          validate_state(x)
+        })
+
+        county <- map_chr(county, function(x) {
+          validate_county(state, x)
+        })
+
+        pep_sub <- pep_sub %>%
+          dplyr::filter(stringr::str_sub(GEOID, 1, 2) %in% state,
+                        stringr::str_sub(GEOID, 3, 5) %in% county)
+
+      }
+
+    }
+
     if (output == "wide") {
       dat2 <- pep_sub %>%
         tidyr::pivot_wider(id_cols = c(GEOID, NAME),
