@@ -151,6 +151,24 @@ print_api_call <- function(url) {
 }
 
 
+# Internal function to clean up Connecticut (temporary until 2022 CB files are released)
+clean_connecticut <- function() {
+  ct_2022 <- suppressMessages(tigris::counties("CT", year = 2022))
+
+  ct_cb_2021 <- suppressMessages(tigris::states(cb = TRUE, year = 2021) %>%
+                                   dplyr::filter(GEOID == "09") %>%
+                                   dplyr::select(geometry))
+
+  ct_clean <- suppressWarnings(sf::st_intersection(ct_2022, ct_cb_2021))
+
+  ct_clean %>%
+    dplyr::select(STATEFP, COUNTYFP, COUNTYNS, GEOID, NAME, NAMELSAD,
+                  LSAD, ALAND, AWATER) %>%
+    dplyr::mutate(STUSPS = "CT", STATE_NAME = "Connecticut")
+
+}
+
+
 #' Convert polygon geometry to dots for dot-density mapping
 #'
 #' Dot-density maps are a compelling alternative to choropleth maps for cartographic visualization of demographic data as they allow for representation of the internal heterogeneity of geographic units.  This function helps users generate dots from an input polygon dataset intended for dot-density mapping.  Dots are placed randomly within polygons according to a given data:dots ratio; for example, a ratio of 100:1 for an input population value column will place approximately 1 dot in the polygon for every 100 people in the geographic unit.  Users can then map the dots using tools like \code{ggplot2::geom_sf()} or \code{tmap::tm_dots()}.
