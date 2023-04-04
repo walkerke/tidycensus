@@ -187,7 +187,7 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
     }
 
     # Use `variables = 'all'`
-    if (variables == "all") {
+    if (all(variables == "all")) {
       variables <- unique(base$variable)
     }
 
@@ -236,11 +236,22 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
     }
 
     if (output == "wide") {
-      dat2 <- pep_sub %>%
-        tidyr::pivot_wider(id_cols = c(GEOID, NAME),
-                           names_from = c(variable, year),
-                           names_sep = "",
-                           values_from = "value")
+
+      if (time_series) {
+        dat2 <- pep_sub %>%
+          tidyr::pivot_wider(id_cols = c("GEOID", "NAME"),
+                             names_from = c("variable", "year"),
+                             names_sep = "",
+                             values_from = "value")
+      } else {
+        dat2 <- pep_sub %>%
+          tidyr::pivot_wider(id_cols = c(GEOID, NAME),
+                             names_from = "variable",
+                             names_sep = "",
+                             values_from = "value")
+      }
+
+
     } else {
       dat2 <- pep_sub
     }
