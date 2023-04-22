@@ -558,22 +558,25 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
 
     } else {
 
-      if (year > 2021) {
-        geom <- try(suppressMessages(use_tigris(geography = geography, year = 2021,
-                                                state = state, county = county, ...)))
+      geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
+                                              state = state, county = county, ...)))
 
-        if (geography == "county" && "09" %in% stringr::str_sub(geom$GEOID, 1, 2)) {
-          ct_2022 <- clean_connecticut()
-
-          geom <- geom %>%
-            dplyr::filter(!stringr::str_sub(GEOID, 1, 2) == "09") %>%
-            dplyr::bind_rows(ct_2022)
-        }
-
-      } else {
-        geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
-                                                state = state, county = county, ...)))
-      }
+      # if (year > 2021) {
+      #   geom <- try(suppressMessages(use_tigris(geography = geography, year = 2021,
+      #                                           state = state, county = county, ...)))
+      #
+      #   if (geography == "county" && "09" %in% stringr::str_sub(geom$GEOID, 1, 2)) {
+      #     ct_2022 <- clean_connecticut()
+      #
+      #     geom <- geom %>%
+      #       dplyr::filter(!stringr::str_sub(GEOID, 1, 2) == "09") %>%
+      #       dplyr::bind_rows(ct_2022)
+      #   }
+      #
+      # } else {
+      #   geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
+      #                                           state = state, county = county, ...)))
+      # }
 
 
 

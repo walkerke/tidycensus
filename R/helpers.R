@@ -4,9 +4,9 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
                        state = NULL, county = NULL, starts_with = NULL, ...) {
 
   # Handle missing 2022 CB files for now
-  if (year == 2022) {
-    year <- 2021
-  }
+  # if (year == 2022) {
+  #   year <- 2021
+  # }
 
   if (year %in% 2011:2012) {
     cb <- FALSE
