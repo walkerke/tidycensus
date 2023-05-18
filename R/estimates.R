@@ -86,9 +86,10 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
   # previous years that are on the API
   if (year >= 2020) {
 
-    if (!geography %in% c("us", "region", "division", "state", "county")) {
-      stop("The only geographies currently available for 2020 and later are 'us', 'region', 'division', 'state', and 'county'.", call. = FALSE)
-    }
+    # Comment this out for now, add back in error handling if this becomes a problem
+    # if (!geography %in% c("us", "region", "division", "state", "county")) {
+    #   stop("The only geographies currently available for 2020 and later are 'us', 'region', 'division', 'state', and 'county'.", call. = FALSE)
+    # }
 
     if (!is.null(product)) {
       rlang::abort(stringr::str_wrap("Getting data by product is not yet supported for years 2020 and later, but will be in a future release.\nTo get all available variables for 2020 and later, use the argument `variables = 'all'", 50))
@@ -174,6 +175,53 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
                             values_to = "value") %>%
         dplyr::mutate(variable = stringr::str_remove(variable, "_"))
 
+    } else if (geography == "cbsa" || geography == "metropolitan statistical area/micropolitan statistical area") {
+
+      raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/metro/totals/cbsa-est2022.csv")) %>%
+        dplyr::filter(LSAD %in% c("Micropolitan Statistical Area", "Metropolitan Statistical Area")) %>%
+        dplyr::mutate(GEOID = CBSA)
+
+      raw <- raw[,!(names(raw) %in% c("MDIV", "STCOU", "LSAD", "CBSA"))]
+
+      base <- raw %>%
+        dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+        tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
+                            names_pattern = "(\\D+)(\\d+)",
+                            values_to = "value") %>%
+        dplyr::mutate(variable = stringr::str_remove(variable, "_"))
+
+    } else if (geography == "combined statistical area") {
+      raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/metro/totals/csa-est2022.csv")) %>%
+        dplyr::filter(LSAD == "Combined Statistical Area") %>%
+        dplyr::mutate(GEOID = CSA)
+
+      raw <- raw[,!(names(raw) %in% c("MDIV", "STCOU", "LSAD", "CBSA", "CSA"))]
+
+      base <- raw %>%
+        dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+        tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
+                            names_pattern = "(\\D+)(\\d+)",
+                            values_to = "value") %>%
+        dplyr::mutate(variable = stringr::str_remove(variable, "_"))
+
+    } else if (geography == "place") {
+      raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/cities/totals/sub-est2022.csv")) %>%
+        dplyr::filter(SUMLEV == "162") %>%
+        dplyr::mutate(GEOID = paste0(STATE, PLACE),
+                      NAME = paste0(NAME, ", ", STNAME))
+
+      raw <- raw[,!(names(raw) %in% c("SUMLEV", "PLACE", "COUSUB", "STATE",
+                                      "COUNTY", "CONCIT", "PRIMGEO_FLAG", "STNAME",
+                                      "FUNCSTAT"))]
+
+      base <- raw %>%
+        dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+        tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
+                            names_pattern = "(\\D+)(\\d+)",
+                            values_to = "value") %>%
+        dplyr::mutate(variable = stringr::str_remove(variable, "_"))
+    } else {
+      rlang::abort("Your requested geography is not currently available for this Population Estimates Program dataset. Please modify your request.")
     }
 
     base$year <- as.integer(base$year)
@@ -183,7 +231,7 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
     if (!all(variables %in% unique(base$variable))) {
       vars <- unique(base$variable)
 
-      rlang::abort(stringr::str_wrap(paste0("You have requested one or more variables not currently available in the PEP datasets.\nAvailable variables are as follows:\n", paste(vars, collapse = ", ")), 50))
+      rlang::abort(stringr::str_wrap(paste0("You have requested one or more variables not currently available in this PEP dataset.\nAvailable variables are as follows:\n", paste(vars, collapse = ", ")), 50))
     }
 
     # Use `variables = 'all'`
@@ -206,7 +254,7 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
 
     # Handle state / county filters
     if (!is.null(state)) {
-      if (geography %in% c("us", "region", "division")) {
+      if (geography %in% c("us", "region", "division", "cbsa", "metropolitan statistical area/micropolitan statistical area", "combined statistical area")) {
         rlang::abort("The `state` argument is not available for your chosen geography.")
       }
 

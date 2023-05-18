@@ -171,7 +171,11 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
                class = "sf", state = state, ...)
 
     if (year == 2000) {
-      z <- rename(z, GEOID = GEOID00)
+      if (cb) {
+        z <- rename(z, GEOID = ZCTA)
+      } else {
+        z <- rename(z, GEOID = ZCTA5CE00)
+      }
     } else if (year >= 2020) {
       z <- rename(z, GEOID = GEOID20)
     } else {
