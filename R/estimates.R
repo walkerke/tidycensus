@@ -226,6 +226,7 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
 
     base$year <- as.integer(base$year)
     year_to_keep <- as.integer(year)
+    base$GEOID <- as.character(base$GEOID)
 
     # Explain available variables
     if (!all(variables %in% unique(base$variable))) {
