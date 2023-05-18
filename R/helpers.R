@@ -204,7 +204,12 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(pl)
 
-  } else if (geography == "metropolitan statistical area/micropolitan statistical area") {
+  } else if (geography == "metropolitan statistical area/micropolitan statistical area" || geography == "cbsa") {
+
+    # 2022 CBSA files for CB not yet available
+    if (cb && year == 2022) {
+      year <- 2021
+    }
 
     cbsa <- core_based_statistical_areas(cb = cb, year = year, class = "sf", ...)
 
