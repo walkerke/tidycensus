@@ -134,6 +134,11 @@ get_pums <- function(variables = NULL,
     variables <- c()
   }
 
+  # If puma is not NULL, remove PUMA from variables
+  if (!is.null(puma)) {
+    variables <- variables[variables != "PUMA"]
+  }
+
   # Avoid double-requesting variables
   # However, if all states are requested, we should still return the state by default
   # as this is expected behavior when requesting data by state
