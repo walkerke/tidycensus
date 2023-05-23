@@ -11,9 +11,9 @@
 #'                    Defaults to FALSE; if TRUE, only needs to be called once per
 #'                    dataset.  If variables dataset is already cached via the
 #'                    \code{load_variables} function, this can be bypassed.
-#' @param year The year for which you are requesting data. Defaults to 2010; 2000,
+#' @param year The year for which you are requesting data. Defaults to 2020; 2000,
 #'             2010, and 2020 are available.
-#' @param sumfile The Census summary file; defaults to \code{"sf1"} but will switch to \code{"pl"} if the year supplied is 2020.  Not all summary files are available for each decennial Census year.
+#' @param sumfile The Census summary file; defaults to \code{"dhc"}.  Not all summary files are available for each decennial Census year.
 #' @param state The state for which you are requesting data. State
 #'              names, postal codes, and FIPS codes are accepted.
 #'              Defaults to NULL.
@@ -22,8 +22,7 @@
 #'               to `state`.  Defaults to NULL.
 #' @param geometry if FALSE (the default), return a regular tibble of ACS data.
 #'                 if TRUE, uses the tigris package to return an sf tibble
-#'                 with simple feature geometry in the `geometry` column.  state, county, tract, and block group are
-#'                 supported for 2000 through 2020; block and ZCTA geometry are supported for 2000 and 2010.
+#'                 with simple feature geometry in the `geometry` column.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'               enumeration unit-variable combination, or "wide" in which each
 #'               row represents an enumeration unit and the variables are in the
@@ -69,8 +68,8 @@ get_decennial <- function(geography,
                           variables = NULL,
                           table = NULL,
                           cache_table = FALSE,
-                          year = 2010,
-                          sumfile = c("sf1", "sf2", "sf3", "sf4",
+                          year = 2020,
+                          sumfile = c("dhc", "sf1", "sf2", "sf3", "sf4",
                                       "sf2profile", "sf3profile",
                                       "sf4profile",
                                       "pl", "plnat", "aian",
@@ -108,7 +107,7 @@ get_decennial <- function(geography,
   }
 
   if (year == 2020 && sumfile == "pl" && geography == "public use microdata area") {
-    stop("PUMAs are not defined yet for the 2020 decennial Census.", call. = FALSE)
+    stop("PUMAs are not available in the 2020 PL file.", call. = FALSE)
   }
 
   if (geography == "voting district" && year != 2020) {
@@ -157,7 +156,7 @@ get_decennial <- function(geography,
   }
 
   if (year == 2020 && sumfile == "pl" && geography == "zip code tabulation area") {
-    stop("ZCTAs are not currently available for the 2020 decennial Census.", call. = FALSE)
+    stop("ZCTAs are not available in the 2020 PL file.", call. = FALSE)
   }
 
   # if (geography == "zip code tabulation area" && is.null(state)) {
@@ -424,7 +423,7 @@ get_decennial <- function(geography,
     # Give users a heads-up about differential privacy in the 2020 decennial data
     # This should print as the final message before data are returned
     # For right now, this pertains to the PL file; adjust when new data come out in 2023
-    if (year == 2020 && sumfile == "pl") {
+    if (year == 2020) {
 
       msg <- c(crayon::cyan(stringr::str_wrap("Note: 2020 decennial Census data use differential privacy, a technique that introduces errors into data to preserve respondent confidentiality.")),
                i = crayon::magenta("Small counts should be interpreted with caution."),
@@ -442,7 +441,7 @@ get_decennial <- function(geography,
     # Give users a heads-up about differential privacy in the 2020 decennial data
     # This should print as the final message before data are returned
     # For right now, this pertains to the PL file; adjust when new data come out in 2023
-    if (year == 2020 && sumfile == "pl") {
+    if (year == 2020) {
 
       msg <- c(crayon::cyan(stringr::str_wrap("Note: 2020 decennial Census data use differential privacy, a technique that introduces errors into data to preserve respondent confidentiality.")),
                i = crayon::magenta("Small counts should be interpreted with caution."),

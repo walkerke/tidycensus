@@ -20,7 +20,7 @@
 #'
 load_variables <- function(
   year,
-  dataset = c("sf1", "sf2", "sf3", "sf4", "pl",
+  dataset = c("sf1", "sf2", "sf3", "sf4", "pl", "dhc",
               "as", "gu", "mp", "vi", "acsse",
               "dpas", "dpgu", "dpmp", "dpvi",
               "acs1", "acs3", "acs5", "acs1/profile",
@@ -73,7 +73,7 @@ load_variables <- function(
   }
 
   if (dataset %in% c("sf1", "sf2", "sf3", "sf4", "pl",
-                     "as", "gu", "mp", "vi",
+                     "as", "gu", "mp", "vi", "dhc",
                      "dpas", "dpgu", "dpmp", "dpvi")) {
     dataset <- paste0("dec/", dataset)
   }
