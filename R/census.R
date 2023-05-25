@@ -13,7 +13,7 @@
 #'                    \code{load_variables} function, this can be bypassed.
 #' @param year The year for which you are requesting data. Defaults to 2020; 2000,
 #'             2010, and 2020 are available.
-#' @param sumfile The Census summary file; defaults to \code{"dhc"}.  Not all summary files are available for each decennial Census year.
+#' @param sumfile The Census summary file; defaults to \code{"pl"}.  Not all summary files are available for each decennial Census year.  Make sure you are using the correct summary file for your requested variables, as variable IDs may be repeated across summary files and represent different topics.
 #' @param state The state for which you are requesting data. State
 #'              names, postal codes, and FIPS codes are accepted.
 #'              Defaults to NULL.
@@ -338,6 +338,17 @@ get_decennial <- function(geography,
       }
     }
 
+    # Convert missing values to NA
+    dat2[dat2 == -111111111] <- NA
+    dat2[dat2 == -222222222] <- NA
+    dat2[dat2 == -333333333] <- NA
+    dat2[dat2 == -444444444] <- NA
+    dat2[dat2 == -555555555] <- NA
+    dat2[dat2 == -666666666] <- NA
+    dat2[dat2 == -777777777] <- NA
+    dat2[dat2 == -888888888] <- NA
+    dat2[dat2 == -999999999] <- NA
+
   } else if (output == "wide") {
 
     dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
@@ -349,6 +360,17 @@ get_decennial <- function(geography,
         names(dat2) <- str_replace(names(dat2), variables[i], names(variables)[i])
       }
     }
+
+    # Convert missing values to NA
+    dat2[dat2 == -111111111] <- NA
+    dat2[dat2 == -222222222] <- NA
+    dat2[dat2 == -333333333] <- NA
+    dat2[dat2 == -444444444] <- NA
+    dat2[dat2 == -555555555] <- NA
+    dat2[dat2 == -666666666] <- NA
+    dat2[dat2 == -777777777] <- NA
+    dat2[dat2 == -888888888] <- NA
+    dat2[dat2 == -999999999] <- NA
 
     dat2 <- dat2 %>%
       select(GEOID, NAME, everything())

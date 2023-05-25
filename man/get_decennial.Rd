@@ -44,7 +44,7 @@ dataset.  If variables dataset is already cached via the
 \item{year}{The year for which you are requesting data. Defaults to 2020; 2000,
 2010, and 2020 are available.}
 
-\item{sumfile}{The Census summary file; defaults to \code{"dhc"}.  Not all summary files are available for each decennial Census year.}
+\item{sumfile}{The Census summary file; defaults to \code{"pl"}.  Not all summary files are available for each decennial Census year.  Make sure you are using the correct summary file for your requested variables, as variable IDs may be repeated across summary files and represent different topics.}
 
 \item{state}{The state for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.
