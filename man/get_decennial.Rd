@@ -9,10 +9,10 @@ get_decennial(
   variables = NULL,
   table = NULL,
   cache_table = FALSE,
-  year = 2010,
-  sumfile = c("sf1", "sf2", "sf3", "sf4", "sf2profile", "sf3profile", "sf4profile", "pl",
-    "plnat", "aian", "aianprofile", "as", "gu", "vi", "mp", "responserate", "pes",
-    "dpvi", "dpgu", "dpas", "dpmp", "sldh"),
+  year = 2020,
+  sumfile = c("pl", "dhc", "dp", "sf1", "sf2", "sf3", "sf4", "sf2profile", "sf3profile",
+    "sf4profile", "pl", "plnat", "aian", "aianprofile", "as", "gu", "vi", "mp",
+    "responserate", "pes", "dpvi", "dpgu", "dpas", "dpmp", "sldh"),
   state = NULL,
   county = NULL,
   geometry = FALSE,
@@ -41,10 +41,10 @@ Defaults to FALSE; if TRUE, only needs to be called once per
 dataset.  If variables dataset is already cached via the
 \code{load_variables} function, this can be bypassed.}
 
-\item{year}{The year for which you are requesting data. Defaults to 2010; 2000,
+\item{year}{The year for which you are requesting data. Defaults to 2020; 2000,
 2010, and 2020 are available.}
 
-\item{sumfile}{The Census summary file; defaults to \code{"sf1"} but will switch to \code{"pl"} if the year supplied is 2020.  Not all summary files are available for each decennial Census year.}
+\item{sumfile}{The Census summary file; defaults to \code{"dhc"}.  Not all summary files are available for each decennial Census year.}
 
 \item{state}{The state for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.
@@ -56,8 +56,7 @@ to `state`.  Defaults to NULL.}
 
 \item{geometry}{if FALSE (the default), return a regular tibble of ACS data.
 if TRUE, uses the tigris package to return an sf tibble
-with simple feature geometry in the `geometry` column.  state, county, tract, and block group are
-supported for 2000 through 2020; block and ZCTA geometry are supported for 2000 and 2010.}
+with simple feature geometry in the `geometry` column.}
 
 \item{output}{One of "tidy" (the default) in which each row represents an
 enumeration unit-variable combination, or "wide" in which each
