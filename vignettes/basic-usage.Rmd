@@ -23,14 +23,15 @@ census_api_key("YOUR API KEY GOES HERE")
 
 There are two major functions implemented in __tidycensus__: `get_decennial()`, which grants access to the 2000, 2010, and 2020 decennial US Census APIs, and `get_acs()`, which grants access to the 1-year and 5-year American Community Survey APIs.  
 
-In this basic example, let's look at median age by state in 2010: 
+In this basic example, let's look at median age by state in 2020, with data drawn from the Demographic and Housing Characteristics summary file: 
 
 ```{r}
-age10 <- get_decennial(geography = "state", 
-                       variables = "P013001", 
-                       year = 2010)
+age20 <- get_decennial(geography = "state", 
+                       variables = "P13_001N", 
+                       year = 2020,
+                       sumfile = "dhc")
 
-head(age10)
+head(age20)
 ```
 
 The function returns a tibble with four columns by default: `GEOID`, which is an identifier for the geographical unit associated with the row; `NAME`, which is a descriptive name of the geographical unit; `variable`, which is the Census variable represented in the row; and `value`, which is the value of the variable for that unit.  By default, __tidycensus__ functions return tidy data frames in which rows represent unit-variable combinations; for a wide data frame with Census variable names in the columns, set `output = "wide"` in the function call.  
@@ -38,7 +39,7 @@ The function returns a tibble with four columns by default: `GEOID`, which is an
 As the function has returned a tidy object, we can visualize it quickly with __ggplot2__: 
 
 ```{r, fig.height = 8}
-age10 %>%
+age20 %>%
   ggplot(aes(x = value, y = reorder(NAME, value))) + 
   geom_point()
 ```
@@ -83,7 +84,9 @@ If __state__ or __county__ is in bold face in "Available by", you are required t
 
 ## Searching for variables
 
-Getting variables from the Census or ACS requires knowing the variable ID - and there are thousands of these IDs across the different Census files.  To rapidly search for variables, use the `load_variables()` function.  The function takes two required arguments: the year of the Census or endyear of the ACS sample, and the dataset name, which varies in availability by year.  For the decennial Census, possible dataset choices include `"pl"` for the redistricting files (currently the only choice for 2020), `"sf1"` or `"sf2"` (2000 and 2010)  and `"sf3"` or `"sf4"` (2000 only) for the various summary files.  Special island area summary files are available with `"as"`, `"mp"`, `"gu"`, or `"vi"`.  For the ACS, use either `"acs1"` or `"acs5"` for the ACS detailed tables, and append `/profile` for the Data Profile and `/subject` for the Subject Tables.  To browse these variables, assign the result of this function to a variable and use the `View` function in RStudio.  An optional argument `cache = TRUE` will cache the dataset on your computer for future use. 
+Getting variables from the Census or ACS requires knowing the variable ID - and there are thousands of these IDs across the different Census files.  To rapidly search for variables, use the `load_variables()` function.  The function takes two required arguments: the year of the Census or endyear of the ACS sample, and the dataset name, which varies in availability by year.  For the decennial Census, possible dataset choices include `"pl"` for the redistricting files; `"dhc"` for the Demographic and Housing Characteristics file and `"dp"` for the Demographic Profile (2020 only), and `"sf1"` or `"sf2"` (2000 and 2010)  and `"sf3"` or `"sf4"` (2000 only) for the various summary files.  Special island area summary files are available with `"as"`, `"mp"`, `"gu"`, or `"vi"`.  
+
+For the ACS, use either `"acs1"` or `"acs5"` for the ACS detailed tables, and append `/profile` for the Data Profile and `/subject` for the Subject Tables.  To browse these variables, assign the result of this function to a variable and use the `View` function in RStudio.  An optional argument `cache = TRUE` will cache the dataset on your computer for future use. 
 
 ```{r, eval = FALSE}
 v17 <- load_variables(2017, "acs5", cache = TRUE)
@@ -99,13 +102,13 @@ By filtering for "median age" variable IDs corresponding to that query can be br
 
 American Community Survey (ACS) data are available from the 1-year ACS since 2005 for geographies of population 65,000 and greater, and from the 5-year ACS for all geographies down to the block group level starting with the 2005-2009 dataset.  `get_acs()` defaults to the 5-year ACS with the argument `survey = "acs5"`, but 1-year ACS data are available using `survey = "acs1"`. 
 
-ACS data differ from decennial Census data as they are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population.  In turn, ACS data points are __estimates__ characterized by a __margin of error__.  __tidycensus__ will always return the estimate and margin of error together for any requested variables when using `get_acs()`.  In turn, when requesting ACS data with __tidycensus__, it is not necessary to specify the `"E"` or `"M"` suffix for a variable name.  Let's fetch median household income data from the 2014-2018 ACS for counties in Vermont. 
+ACS data differ from decennial Census data as they are based on an annual sample of approximately 3 million households, rather than a more complete enumeration of the US population.  In turn, ACS data points are __estimates__ characterized by a __margin of error__.  __tidycensus__ will always return the estimate and margin of error together for any requested variables when using `get_acs()`.  In turn, when requesting ACS data with __tidycensus__, it is not necessary to specify the `"E"` or `"M"` suffix for a variable name.  Let's fetch median household income data from the 2017-2021 ACS for counties in Vermont. 
 
 ```{r}
 vt <- get_acs(geography = "county", 
               variables = c(medincome = "B19013_001"), 
               state = "VT", 
-              year = 2018)
+              year = 2021)
 
 vt
 ```
@@ -121,7 +124,7 @@ vt %>%
   geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
   geom_point(color = "red", size = 3) +
   labs(title = "Household income by county in Vermont",
-       subtitle = "2014-2018 American Community Survey",
+       subtitle = "2017-2021 American Community Survey",
        y = "",
        x = "ACS estimate (bars represent margin of error)")
 ```

@@ -45,7 +45,7 @@ Please note that the UTM Zone 11N coordinate system (`26911`) is appropriate for
 
 ## Faceted mapping
 
-One of the most powerful features of __ggplot2__ is its support for small multiples, which works very well with the tidy data format returned by __tidycensus__.  Many Census and ACS variables return _counts_, however, which are generally inappropriate for choropleth mapping.  In turn, `get_decennial` and `get_acs` have an optional argument, `summary_var`, that can work as a multi-group denominator when appropriate.  Let's use the following example of the racial geography of Harris County, Texas.  First, we'll request data for non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and Hispanics by Census tract for the 2020 Census.
+One of the most powerful features of __ggplot2__ is its support for small multiples, which works very well with the tidy data format returned by __tidycensus__.  Many Census and ACS variables return _counts_, however, which are generally inappropriate for choropleth mapping.  In turn, `get_decennial` and `get_acs` have an optional argument, `summary_var`, that can work as a multi-group denominator when appropriate.  Let's use the following example of the racial geography of Harris County, Texas.  First, we'll request data for non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and Hispanics by Census tract for the 2020 Census, using the PL-94171 summary file.
 
 ```{r}
 racevars <- c(White = "P2_005N", 
@@ -60,7 +60,8 @@ harris <- get_decennial(
   county = "Harris County",
   geometry = TRUE,
   summary_var = "P2_001N",
-  year = 2020
+  year = 2020,
+  sumfile = "pl"
 ) 
 
 head(harris)

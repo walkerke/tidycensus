@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4</span>
       </span>
     </div>
 
@@ -126,22 +126,25 @@ set their Census API key. A key can be obtained from <a href="http://api.census.
 access to the 2000, 2010, and 2020 decennial US Census APIs, and
 <code><a href="../reference/get_acs.html">get_acs()</a></code>, which grants access to the 1-year and 5-year
 American Community Survey APIs.</p>
-<p>In this basic example, let’s look at median age by state in 2010:</p>
+<p>In this basic example, let’s look at median age by state in 2020,
+with data drawn from the Demographic and Housing Characteristics summary
+file:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">age10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_decennial.html">get_decennial</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"state"</span>, 
-                       variables <span class="op">=</span> <span class="st">"P013001"</span>, 
-                       year <span class="op">=</span> <span class="fl">2010</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">age20</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_decennial.html">get_decennial</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"state"</span>, 
+                       variables <span class="op">=</span> <span class="st">"P13_001N"</span>, 
+                       year <span class="op">=</span> <span class="fl">2020</span>,
+                       sumfile <span class="op">=</span> <span class="st">"dhc"</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">age10</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">age20</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span>
-<span class="co">##   GEOID NAME       variable value</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 01    Alabama    P013001   37.9</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 02    Alaska     P013001   33.8</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 04    Arizona    P013001   35.9</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 05    Arkansas   P013001   37.4</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 06    California P013001   35.2</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 22    Louisiana  P013001   35.8</span></code></pre>
+<span class="co">##   GEOID NAME                 variable value</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 09    Connecticut          P13_001N  41.1</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 10    Delaware             P13_001N  41.1</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 11    District of Columbia P13_001N  33.9</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 12    Florida              P13_001N  43  </span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 13    Georgia              P13_001N  37.5</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 15    Hawaii               P13_001N  40.8</span></code></pre>
 <p>The function returns a tibble with four columns by default:
 <code>GEOID</code>, which is an identifier for the geographical unit
 associated with the row; <code>NAME</code>, which is a descriptive name
@@ -155,7 +158,7 @@ in the function call.</p>
 <p>As the function has returned a tidy object, we can visualize it
 quickly with <strong>ggplot2</strong>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">age10</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+<code class="sourceCode R"><span class="va">age20</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">NAME</span>, <span class="va">value</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="basic-usage_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
@@ -431,18 +434,20 @@ Census files. To rapidly search for variables, use the
 arguments: the year of the Census or endyear of the ACS sample, and the
 dataset name, which varies in availability by year. For the decennial
 Census, possible dataset choices include <code>"pl"</code> for the
-redistricting files (currently the only choice for 2020),
-<code>"sf1"</code> or <code>"sf2"</code> (2000 and 2010) and
-<code>"sf3"</code> or <code>"sf4"</code> (2000 only) for the various
-summary files. Special island area summary files are available with
-<code>"as"</code>, <code>"mp"</code>, <code>"gu"</code>, or
-<code>"vi"</code>. For the ACS, use either <code>"acs1"</code> or
-<code>"acs5"</code> for the ACS detailed tables, and append
-<code>/profile</code> for the Data Profile and <code>/subject</code> for
-the Subject Tables. To browse these variables, assign the result of this
-function to a variable and use the <code>View</code> function in
-RStudio. An optional argument <code>cache = TRUE</code> will cache the
-dataset on your computer for future use.</p>
+redistricting files; <code>"dhc"</code> for the Demographic and Housing
+Characteristics file and <code>"dp"</code> for the Demographic Profile
+(2020 only), and <code>"sf1"</code> or <code>"sf2"</code> (2000 and
+2010) and <code>"sf3"</code> or <code>"sf4"</code> (2000 only) for the
+various summary files. Special island area summary files are available
+with <code>"as"</code>, <code>"mp"</code>, <code>"gu"</code>, or
+<code>"vi"</code>.</p>
+<p>For the ACS, use either <code>"acs1"</code> or <code>"acs5"</code>
+for the ACS detailed tables, and append <code>/profile</code> for the
+Data Profile and <code>/subject</code> for the Subject Tables. To browse
+these variables, assign the result of this function to a variable and
+use the <code>View</code> function in RStudio. An optional argument
+<code>cache = TRUE</code> will cache the dataset on your computer for
+future use.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">v17</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_variables.html">load_variables</a></span><span class="op">(</span><span class="fl">2017</span>, <span class="st">"acs5"</span>, cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
@@ -472,32 +477,32 @@ estimate and margin of error together for any requested variables when
 using <code><a href="../reference/get_acs.html">get_acs()</a></code>. In turn, when requesting ACS data with
 <strong>tidycensus</strong>, it is not necessary to specify the
 <code>"E"</code> or <code>"M"</code> suffix for a variable name. Let’s
-fetch median household income data from the 2014-2018 ACS for counties
+fetch median household income data from the 2017-2021 ACS for counties
 in Vermont.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, 
               variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>medincome <span class="op">=</span> <span class="st">"B19013_001"</span><span class="op">)</span>, 
               state <span class="op">=</span> <span class="st">"VT"</span>, 
-              year <span class="op">=</span> <span class="fl">2018</span><span class="op">)</span>
+              year <span class="op">=</span> <span class="fl">2021</span><span class="op">)</span>
 
 <span class="va">vt</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 14 × 5</span></span>
 <span class="co">##    GEOID NAME                       variable  estimate   moe</span>
 <span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> 50001 Addison County, Vermont    medincome    <span style="text-decoration: underline;">65</span>093  <span style="text-decoration: underline;">2</span>424</span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> 50003 Bennington County, Vermont medincome    <span style="text-decoration: underline;">53</span>040  <span style="text-decoration: underline;">2</span>307</span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> 50005 Caledonia County, Vermont  medincome    <span style="text-decoration: underline;">49</span>348  <span style="text-decoration: underline;">1</span>842</span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> 50007 Chittenden County, Vermont medincome    <span style="text-decoration: underline;">69</span>896  <span style="text-decoration: underline;">2</span>132</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> 50009 Essex County, Vermont      medincome    <span style="text-decoration: underline;">41</span>045  <span style="text-decoration: underline;">2</span>661</span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> 50011 Franklin County, Vermont   medincome    <span style="text-decoration: underline;">64</span>258  <span style="text-decoration: underline;">1</span>568</span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> 50013 Grand Isle County, Vermont medincome    <span style="text-decoration: underline;">69</span>583  <span style="text-decoration: underline;">5</span>812</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> 50015 Lamoille County, Vermont   medincome    <span style="text-decoration: underline;">60</span>365  <span style="text-decoration: underline;">3</span>915</span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> 50017 Orange County, Vermont     medincome    <span style="text-decoration: underline;">60</span>159  <span style="text-decoration: underline;">2</span>361</span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> 50019 Orleans County, Vermont    medincome    <span style="text-decoration: underline;">47</span>915  <span style="text-decoration: underline;">2</span>193</span>
-<span class="co">## <span style="color: #BCBCBC;">11</span> 50021 Rutland County, Vermont    medincome    <span style="text-decoration: underline;">54</span>973  <span style="text-decoration: underline;">1</span>754</span>
-<span class="co">## <span style="color: #BCBCBC;">12</span> 50023 Washington County, Vermont medincome    <span style="text-decoration: underline;">62</span>108  <span style="text-decoration: underline;">2</span>065</span>
-<span class="co">## <span style="color: #BCBCBC;">13</span> 50025 Windham County, Vermont    medincome    <span style="text-decoration: underline;">52</span>659  <span style="text-decoration: underline;">1</span>706</span>
-<span class="co">## <span style="color: #BCBCBC;">14</span> 50027 Windsor County, Vermont    medincome    <span style="text-decoration: underline;">58</span>303  <span style="text-decoration: underline;">1</span>576</span></code></pre>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> 50001 Addison County, Vermont    medincome    <span style="text-decoration: underline;">77</span>978  <span style="text-decoration: underline;">3</span>393</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> 50003 Bennington County, Vermont medincome    <span style="text-decoration: underline;">63</span>448  <span style="text-decoration: underline;">3</span>413</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> 50005 Caledonia County, Vermont  medincome    <span style="text-decoration: underline;">55</span>159  <span style="text-decoration: underline;">3</span>974</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> 50007 Chittenden County, Vermont medincome    <span style="text-decoration: underline;">81</span>957  <span style="text-decoration: underline;">2</span>521</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> 50009 Essex County, Vermont      medincome    <span style="text-decoration: underline;">48</span>194  <span style="text-decoration: underline;">3</span>577</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> 50011 Franklin County, Vermont   medincome    <span style="text-decoration: underline;">68</span>476  <span style="text-decoration: underline;">3</span>297</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> 50013 Grand Isle County, Vermont medincome    <span style="text-decoration: underline;">85</span>154  <span style="text-decoration: underline;">7</span>894</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> 50015 Lamoille County, Vermont   medincome    <span style="text-decoration: underline;">66</span>016  <span style="text-decoration: underline;">4</span>777</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> 50017 Orange County, Vermont     medincome    <span style="text-decoration: underline;">67</span>906  <span style="text-decoration: underline;">2</span>710</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> 50019 Orleans County, Vermont    medincome    <span style="text-decoration: underline;">58</span>037  <span style="text-decoration: underline;">3</span>153</span>
+<span class="co">## <span style="color: #BCBCBC;">11</span> 50021 Rutland County, Vermont    medincome    <span style="text-decoration: underline;">59</span>751  <span style="text-decoration: underline;">2</span>133</span>
+<span class="co">## <span style="color: #BCBCBC;">12</span> 50023 Washington County, Vermont medincome    <span style="text-decoration: underline;">70</span>128  <span style="text-decoration: underline;">3</span>014</span>
+<span class="co">## <span style="color: #BCBCBC;">13</span> 50025 Windham County, Vermont    medincome    <span style="text-decoration: underline;">59</span>195  <span style="text-decoration: underline;">2</span>060</span>
+<span class="co">## <span style="color: #BCBCBC;">14</span> 50027 Windsor County, Vermont    medincome    <span style="text-decoration: underline;">63</span>787  <span style="text-decoration: underline;">2</span>209</span></code></pre>
 <p>The output is similar to a call to <code><a href="../reference/get_decennial.html">get_decennial()</a></code>, but
 instead of a <code>value</code> column, <code>get_acs</code> returns
 <code>estimate</code> and <code>moe</code> columns for the ACS estimate
@@ -514,7 +519,7 @@ around the estimate:</p>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_errorbarh.html" class="external-link">geom_errorbarh</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">estimate</span> <span class="op">-</span> <span class="va">moe</span>, xmax <span class="op">=</span> <span class="va">estimate</span> <span class="op">+</span> <span class="va">moe</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Household income by county in Vermont"</span>,
-       subtitle <span class="op">=</span> <span class="st">"2014-2018 American Community Survey"</span>,
+       subtitle <span class="op">=</span> <span class="st">"2017-2021 American Community Survey"</span>,
        y <span class="op">=</span> <span class="st">""</span>,
        x <span class="op">=</span> <span class="st">"ACS estimate (bars represent margin of error)"</span><span class="op">)</span></code></pre></div>
 <p><img src="basic-usage_files/figure-html/unnamed-chunk-7-1.png" width="768"></p>

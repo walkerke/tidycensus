@@ -1,3 +1,9 @@
+# tidycensus 1.4
+
+* `get_decennial()` has been updated to accommodate the new Demographic and Housing Characteristics and Demographic Profile summary files.  Use `sumfile = "dhc"` for the DHC file, and `sumfile = "dp"` for the DP file.  
+* The default year in `get_decennial()` is now 2020.  This may be a breaking change for some legacy code that omits the year, so be sure to update scripts to hard-code the year for years earlier than 2020. 
+* `sumfile = "pl"` is the default for `get_decennial()` and will remain so to avoid existing code breakages.  Please note that variable IDs are replicated across the PL and DHC files, but may represent different topics.  
+
 # tidycensus 1.3
 
 * Given that the Census API allows for 500 queries per day without an API key, the API key requirement in the package has been removed to support reproducibility. Users without a key are now warned of potential performance limitations.  

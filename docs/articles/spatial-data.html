@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4</span>
       </span>
     </div>
 
@@ -192,7 +192,8 @@ argument, <code>summary_var</code>, that can work as a multi-group
 denominator when appropriate. Let’s use the following example of the
 racial geography of Harris County, Texas. First, we’ll request data for
 non-Hispanic whites, non-Hispanic blacks, non-Hispanic Asians, and
-Hispanics by Census tract for the 2020 Census.</p>
+Hispanics by Census tract for the 2020 Census, using the PL-94171
+summary file.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">racevars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>White <span class="op">=</span> <span class="st">"P2_005N"</span>, 
               Black <span class="op">=</span> <span class="st">"P2_006N"</span>, 
@@ -206,7 +207,8 @@ Hispanics by Census tract for the 2020 Census.</p>
   county <span class="op">=</span> <span class="st">"Harris County"</span>,
   geometry <span class="op">=</span> <span class="cn">TRUE</span>,
   summary_var <span class="op">=</span> <span class="st">"P2_001N"</span>,
-  year <span class="op">=</span> <span class="fl">2020</span>
+  year <span class="op">=</span> <span class="fl">2020</span>,
+  sumfile <span class="op">=</span> <span class="st">"pl"</span>
 <span class="op">)</span> 
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">harris</span><span class="op">)</span></code></pre></div>
@@ -216,15 +218,14 @@ Hispanics by Census tract for the 2020 Census.</p>
 <span class="co">## Bounding box:  xmin: -95.46502 ymin: 29.53424 xmax: -95.09005 ymax: 29.96492</span>
 <span class="co">## Geodetic CRS:  NAD83</span>
 <span class="co">## <span style="color: #949494;"># A tibble: 6 × 6</span></span>
-<span class="co">##   GEOID       NAME               varia…¹ value summa…²                  geometry</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [°]&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 48201341203 Census Tract 3412… White    <span style="text-decoration: underline;">1</span>503    <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 48201341203 Census Tract 3412… Black     177    <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 48201341203 Census Tract 3412… Asian      54    <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 48201341203 Census Tract 3412… Hispan…   492    <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 48201550601 Census Tract 5506… White     265    <span style="text-decoration: underline;">6</span>673 (((-95.46502 29.96456, -…</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 48201550601 Census Tract 5506… Black    <span style="text-decoration: underline;">2</span>156    <span style="text-decoration: underline;">6</span>673 (((-95.46502 29.96456, -…</span>
-<span class="co">## <span style="color: #949494;"># … with abbreviated variable names ¹​variable, ²​summary_value</span></span></code></pre>
+<span class="co">##   GEOID       NAME        variable value summary_value                  geometry</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [°]&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 48201341203 Census Tra… White     <span style="text-decoration: underline;">1</span>503          <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 48201341203 Census Tra… Black      177          <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 48201341203 Census Tra… Asian       54          <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 48201341203 Census Tra… Hispanic   492          <span style="text-decoration: underline;">2</span>355 (((-95.10641 29.54594, -…</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 48201550601 Census Tra… White      265          <span style="text-decoration: underline;">6</span>673 (((-95.46502 29.96456, -…</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 48201550601 Census Tra… Black     <span style="text-decoration: underline;">2</span>156          <span style="text-decoration: underline;">6</span>673 (((-95.46502 29.96456, -…</span></code></pre>
 <p>We notice that there are four entries for each Census tract, with
 each entry representing one of our requested variables. The
 <code>summary_value</code> column represents the value of the summary

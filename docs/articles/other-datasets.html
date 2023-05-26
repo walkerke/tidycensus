@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4</span>
       </span>
     </div>
 
@@ -172,7 +172,7 @@ all components of change variables for US states in 2019:</p>
 <span class="co">## <span style="color: #BCBCBC;"> 8</span> New Mexico     35    BIRTHS    <span style="text-decoration: underline;">23</span>125</span>
 <span class="co">## <span style="color: #BCBCBC;"> 9</span> New York       36    BIRTHS   <span style="text-decoration: underline;">222</span>924</span>
 <span class="co">## <span style="color: #BCBCBC;">10</span> North Carolina 37    BIRTHS   <span style="text-decoration: underline;">119</span>203</span>
-<span class="co">## <span style="color: #949494;"># … with 614 more rows</span></span></code></pre>
+<span class="co">## <span style="color: #949494;"># ℹ 614 more rows</span></span></code></pre>
 <p>The variables included in the components of change product consist of
 both estimates of <em>counts</em> and <em>rates</em>. Rates are preceded
 by an <code>R</code> in the variable name and are calculated per 1000
@@ -223,7 +223,7 @@ national mapping.</p>
 <span class="co">## <span style="color: #BCBCBC;"> 8</span> 17175 Stark County, Illinois       RNETMIG  -<span style="color: #BB0000;">10.6</span>  (((500559 424779.4, 51023…</span>
 <span class="co">## <span style="color: #BCBCBC;"> 9</span> 29169 Pulaski County, Missouri     RNETMIG    4.42 (((312851.7 46166.36, 312…</span>
 <span class="co">## <span style="color: #BCBCBC;">10</span> 19151 Pocahontas County, Iowa      RNETMIG  -<span style="color: #BB0000;">12.2</span>  (((88185.95 606331.9, 126…</span>
-<span class="co">## <span style="color: #949494;"># … with 3,132 more rows</span></span></code></pre>
+<span class="co">## <span style="color: #949494;"># ℹ 3,132 more rows</span></span></code></pre>
 <p>We’ll next use tidyverse tools to generate a <code>groups</code>
 column that bins the net migration rates into comprehensible categories,
 and plot the result using <code><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf()</a></code> and ggplot2.</p>
@@ -293,11 +293,11 @@ function will return the appropriate labels instead. For example:</p>
 <span class="co">## <span style="color: #BCBCBC;"> 4</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">579</span>856 Both sexes Age 0 to 4 ye… Both…</span>
 <span class="co">## <span style="color: #BCBCBC;"> 5</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">236</span>459 Both sexes Age 0 to 4 ye… Non-…</span>
 <span class="co">## <span style="color: #BCBCBC;"> 6</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">343</span>397 Both sexes Age 0 to 4 ye… Hisp…</span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">600</span>191 Both sexes Age 5 to 9 ye… Both…</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">229</span>438 Both sexes Age 5 to 9 ye… Non-…</span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">370</span>753 Both sexes Age 5 to 9 ye… Hisp…</span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">373</span>670 Both sexes Age 15 to 19 … Hisp…</span>
-<span class="co">## <span style="color: #949494;"># … with 200 more rows</span></span></code></pre>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">378</span>447 Both sexes Age 10 to 14 … Hisp…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">600</span>191 Both sexes Age 5 to 9 ye… Both…</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">229</span>438 Both sexes Age 5 to 9 ye… Non-…</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> 06037 Los Angeles County, California   <span style="text-decoration: underline;">370</span>753 Both sexes Age 5 to 9 ye… Hisp…</span>
+<span class="co">## <span style="color: #949494;"># ℹ 200 more rows</span></span></code></pre>
 <p>With some additional data wrangling, the returned format facilitates
 analysis and visualization. For example, we can compare population
 pyramids for Hispanic and non-Hispanic populations in Los Angeles
@@ -372,15 +372,14 @@ NY:</p>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">GEOID2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 7</span></span>
-<span class="co">##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME    varia…¹ estim…²   moe</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 36119  01089  Westchester County, New York Madison Coun… MOVEDIN       0    28</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 36119  01089  Westchester County, New York Madison Coun… MOVEDO…      26    41</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 36119  01089  Westchester County, New York Madison Coun… MOVEDN…     -<span style="color: #BB0000;">26</span>    41</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 36119  01095  Westchester County, New York Marshall Cou… MOVEDIN       0    28</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 36119  01095  Westchester County, New York Marshall Cou… MOVEDO…      35    55</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 36119  01095  Westchester County, New York Marshall Cou… MOVEDN…     -<span style="color: #BB0000;">35</span>    55</span>
-<span class="co">## <span style="color: #949494;"># … with abbreviated variable names ¹​variable, ²​estimate</span></span></code></pre>
+<span class="co">##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME  variable estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 36119  01089  Westchester County, New York Madison Co… MOVEDIN         0    28</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 36119  01089  Westchester County, New York Madison Co… MOVEDOUT       26    41</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 36119  01089  Westchester County, New York Madison Co… MOVEDNET      -<span style="color: #BB0000;">26</span>    41</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 36119  01095  Westchester County, New York Marshall C… MOVEDIN         0    28</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 36119  01095  Westchester County, New York Marshall C… MOVEDOUT       35    55</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 36119  01095  Westchester County, New York Marshall C… MOVEDNET      -<span style="color: #BB0000;">35</span>    55</span></code></pre>
 <p>With the default setting of <code><a href="../reference/get_flows.html">get_flows()</a></code>, data is
 returned in a “tidy” or long format. Notice that for each pair of
 places, there are three rows returned with one row for each variable
@@ -399,15 +398,14 @@ did the most people move from Westchester?</p>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 7</span></span>
-<span class="co">##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME    varia…¹ estim…²   moe</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 36119  09001  Westchester County, New York Fairfield Co… MOVEDO…    <span style="text-decoration: underline;">3</span>916   778</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 36119  36061  Westchester County, New York New York Cou… MOVEDO…    <span style="text-decoration: underline;">3</span>328   596</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 36119  36005  Westchester County, New York Bronx County… MOVEDO…    <span style="text-decoration: underline;">2</span>063   418</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 36119  36027  Westchester County, New York Dutchess Cou… MOVEDO…    <span style="text-decoration: underline;">1</span>870   454</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 36119  36079  Westchester County, New York Putnam Count… MOVEDO…    <span style="text-decoration: underline;">1</span>318   324</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 36119  36081  Westchester County, New York Queens Count… MOVEDO…    <span style="text-decoration: underline;">1</span>082   240</span>
-<span class="co">## <span style="color: #949494;"># … with abbreviated variable names ¹​variable, ²​estimate</span></span></code></pre>
+<span class="co">##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME  variable estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 36119  09001  Westchester County, New York Fairfield … MOVEDOUT     <span style="text-decoration: underline;">3</span>916   778</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 36119  36061  Westchester County, New York New York C… MOVEDOUT     <span style="text-decoration: underline;">3</span>328   596</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 36119  36005  Westchester County, New York Bronx Coun… MOVEDOUT     <span style="text-decoration: underline;">2</span>063   418</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 36119  36027  Westchester County, New York Dutchess C… MOVEDOUT     <span style="text-decoration: underline;">1</span>870   454</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 36119  36079  Westchester County, New York Putnam Cou… MOVEDOUT     <span style="text-decoration: underline;">1</span>318   324</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 36119  36081  Westchester County, New York Queens Cou… MOVEDOUT     <span style="text-decoration: underline;">1</span>082   240</span></code></pre>
 <p>The <code>MOVEDOUT</code> variable only estimates the number of
 people that moved out of Westchester County and doesn’t account for the
 number of people that moved in to Westchester from each county. If you
@@ -419,15 +417,14 @@ are interested in net migration (moved in - moved out), you can use the
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 7</span></span>
-<span class="co">##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME    varia…¹ estim…²   moe</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 36119  09001  Westchester County, New York Fairfield Co… MOVEDN…   -<span style="color: #BB0000; text-decoration: underline;">1</span><span style="color: #BB0000;">768</span>   958</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 36119  36027  Westchester County, New York Dutchess Cou… MOVEDN…   -<span style="color: #BB0000; text-decoration: underline;">1</span><span style="color: #BB0000;">119</span>   497</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 36119  06037  Westchester County, New York Los Angeles … MOVEDN…    -<span style="color: #BB0000;">486</span>   339</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 36119  12099  Westchester County, New York Palm Beach C… MOVEDN…    -<span style="color: #BB0000;">450</span>   182</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 36119  25021  Westchester County, New York Norfolk Coun… MOVEDN…    -<span style="color: #BB0000;">358</span>   351</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 36119  36079  Westchester County, New York Putnam Count… MOVEDN…    -<span style="color: #BB0000;">340</span>   407</span>
-<span class="co">## <span style="color: #949494;"># … with abbreviated variable names ¹​variable, ²​estimate</span></span></code></pre>
+<span class="co">##   GEOID1 GEOID2 FULL1_NAME                   FULL2_NAME  variable estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 36119  09001  Westchester County, New York Fairfield … MOVEDNET    -<span style="color: #BB0000; text-decoration: underline;">1</span><span style="color: #BB0000;">768</span>   958</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 36119  36027  Westchester County, New York Dutchess C… MOVEDNET    -<span style="color: #BB0000; text-decoration: underline;">1</span><span style="color: #BB0000;">119</span>   497</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 36119  06037  Westchester County, New York Los Angele… MOVEDNET     -<span style="color: #BB0000;">486</span>   339</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 36119  12099  Westchester County, New York Palm Beach… MOVEDNET     -<span style="color: #BB0000;">450</span>   182</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 36119  25021  Westchester County, New York Norfolk Co… MOVEDNET     -<span style="color: #BB0000;">358</span>   351</span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 36119  36079  Westchester County, New York Putnam Cou… MOVEDNET     -<span style="color: #BB0000;">340</span>   407</span></code></pre>
 <p>You may have noticed that there are some destination geographies that
 are not other counties. For people that moved into to Westchester from
 outside the United States, the Migration Flows data reports the region
@@ -471,15 +468,13 @@ of movers to and from the Los Angeles-Long Beach Metro Area by race.</p>
 <span class="va">la_flows</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">FULL2_NAME</span>, <span class="st">"San Fran"</span><span class="op">)</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDNET"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 5 × 9</span></span>
-<span class="co">##   GEOID1 GEOID2 FULL1_NAME           FULL2…¹ RACE  RACE_…² varia…³ estim…⁴   moe</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 31080  41860  Los Angeles-Long Be… San Fr… 00    All ra… MOVEDN…   -<span style="color: #BB0000; text-decoration: underline;">2</span><span style="color: #BB0000;">433</span>  <span style="text-decoration: underline;">1</span>585</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 31080  41860  Los Angeles-Long Be… San Fr… 01    White … MOVEDN…   -<span style="color: #BB0000; text-decoration: underline;">1</span><span style="color: #BB0000;">077</span>  <span style="text-decoration: underline;">1</span>096</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 31080  41860  Los Angeles-Long Be… San Fr… 02    Black … MOVEDN…      98   378</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 31080  41860  Los Angeles-Long Be… San Fr… 03    Asian … MOVEDN…    -<span style="color: #BB0000;">580</span>   778</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 31080  41860  Los Angeles-Long Be… San Fr… 04    Other … MOVEDN…    -<span style="color: #BB0000;">874</span>   549</span>
-<span class="co">## <span style="color: #949494;"># … with abbreviated variable names ¹​FULL2_NAME, ²​RACE_label, ³​variable,</span></span>
-<span class="co">## <span style="color: #949494;">#   ⁴​estimate</span></span></code></pre>
+<span class="co">##   GEOID1 GEOID2 FULL1_NAME   FULL2_NAME RACE  RACE_label variable estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 31080  41860  Los Angeles… San Franc… 00    All races  MOVEDNET    -<span style="color: #BB0000; text-decoration: underline;">2</span><span style="color: #BB0000;">433</span>  <span style="text-decoration: underline;">1</span>585</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 31080  41860  Los Angeles… San Franc… 01    White alo… MOVEDNET    -<span style="color: #BB0000; text-decoration: underline;">1</span><span style="color: #BB0000;">077</span>  <span style="text-decoration: underline;">1</span>096</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 31080  41860  Los Angeles… San Franc… 02    Black or … MOVEDNET       98   378</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 31080  41860  Los Angeles… San Franc… 03    Asian alo… MOVEDNET     -<span style="color: #BB0000;">580</span>   778</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 31080  41860  Los Angeles… San Franc… 04    Other rac… MOVEDNET     -<span style="color: #BB0000;">874</span>   549</span></code></pre>
 <p>Note that the demographic characteristics must be specified in the
 <code>breakdown</code> argument of <code><a href="../reference/get_flows.html">get_flows()</a></code> (not the
 <code>variable</code> argument). For each dataset there are three or
@@ -519,16 +514,15 @@ object. The destination point feature is returned in the
 <span class="co">## Bounding box:  xmin: -112.0705 ymin: 33.18571 xmax: -112.0705 ymax: 33.18571</span>
 <span class="co">## Geodetic CRS:  NAD83</span>
 <span class="co">## <span style="color: #949494;"># A tibble: 6 × 9</span></span>
-<span class="co">##   GEOID1 GEOID2 FULL1_…¹ FULL2…² varia…³ estim…⁴   moe            centroid1</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;POINT [°]&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix… Outsid… MOVEDIN   <span style="text-decoration: underline;">21</span>602  <span style="text-decoration: underline;">1</span>464 (-112.0705 33.18571)</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix… Outsid… MOVEDO…   <span style="text-decoration: underline;">21</span>192  <span style="text-decoration: underline;">1</span>559 (-112.0705 33.18571)</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix… Outsid… MOVEDN…     410  <span style="text-decoration: underline;">2</span>186 (-112.0705 33.18571)</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix… Africa  MOVEDIN    <span style="text-decoration: underline;">1</span>078   385 (-112.0705 33.18571)</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix… Africa  MOVEDO…      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> (-112.0705 33.18571)</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix… Africa  MOVEDN…      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span> (-112.0705 33.18571)</span>
-<span class="co">## <span style="color: #949494;"># … with 1 more variable: centroid2 &lt;POINT [°]&gt;, and abbreviated variable names</span></span>
-<span class="co">## <span style="color: #949494;">#   ¹​FULL1_NAME, ²​FULL2_NAME, ³​variable, ⁴​estimate</span></span></code></pre>
+<span class="co">##   GEOID1 GEOID2 FULL1_NAME                    FULL2_NAME variable estimate   moe</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Outside M… MOVEDIN     <span style="text-decoration: underline;">21</span>602  <span style="text-decoration: underline;">1</span>464</span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Outside M… MOVEDOUT    <span style="text-decoration: underline;">21</span>192  <span style="text-decoration: underline;">1</span>559</span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Outside M… MOVEDNET      410  <span style="text-decoration: underline;">2</span>186</span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Africa     MOVEDIN      <span style="text-decoration: underline;">1</span>078   385</span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Africa     MOVEDOUT       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span>
+<span class="co">## <span style="color: #BCBCBC;">6</span> 38060  <span style="color: #BB0000;">NA</span>     Phoenix-Mesa-Scottsdale, AZ … Africa     MOVEDNET       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span></span>
+<span class="co">## <span style="color: #949494;"># ℹ 2 more variables: centroid1 &lt;POINT [°]&gt;, centroid2 &lt;POINT [°]&gt;</span></span></code></pre>
 <p>With the centroids attached to each pair of places, it is
 straightforward to map the migration flows. Here, we look at the most
 common origin MSAs for people moving to Phoenix-Mesa-Scottsdale, AZ. To

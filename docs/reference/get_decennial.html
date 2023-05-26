@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4</span>
       </span>
     </div>
 
@@ -86,10 +86,10 @@
   variables <span class="op">=</span> <span class="cn">NULL</span>,
   table <span class="op">=</span> <span class="cn">NULL</span>,
   cache_table <span class="op">=</span> <span class="cn">FALSE</span>,
-  year <span class="op">=</span> <span class="fl">2010</span>,
-  sumfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sf1"</span>, <span class="st">"sf2"</span>, <span class="st">"sf3"</span>, <span class="st">"sf4"</span>, <span class="st">"sf2profile"</span>, <span class="st">"sf3profile"</span>, <span class="st">"sf4profile"</span>, <span class="st">"pl"</span>,
-    <span class="st">"plnat"</span>, <span class="st">"aian"</span>, <span class="st">"aianprofile"</span>, <span class="st">"as"</span>, <span class="st">"gu"</span>, <span class="st">"vi"</span>, <span class="st">"mp"</span>, <span class="st">"responserate"</span>, <span class="st">"pes"</span>,
-    <span class="st">"dpvi"</span>, <span class="st">"dpgu"</span>, <span class="st">"dpas"</span>, <span class="st">"dpmp"</span>, <span class="st">"sldh"</span><span class="op">)</span>,
+  year <span class="op">=</span> <span class="fl">2020</span>,
+  sumfile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pl"</span>, <span class="st">"dhc"</span>, <span class="st">"dp"</span>, <span class="st">"sf1"</span>, <span class="st">"sf2"</span>, <span class="st">"sf3"</span>, <span class="st">"sf4"</span>, <span class="st">"sf2profile"</span>, <span class="st">"sf3profile"</span>,
+    <span class="st">"sf4profile"</span>, <span class="st">"pl"</span>, <span class="st">"plnat"</span>, <span class="st">"aian"</span>, <span class="st">"aianprofile"</span>, <span class="st">"as"</span>, <span class="st">"gu"</span>, <span class="st">"vi"</span>, <span class="st">"mp"</span>,
+    <span class="st">"responserate"</span>, <span class="st">"pes"</span>, <span class="st">"dpvi"</span>, <span class="st">"dpgu"</span>, <span class="st">"dpas"</span>, <span class="st">"dpmp"</span>, <span class="st">"sldh"</span><span class="op">)</span>,
   state <span class="op">=</span> <span class="cn">NULL</span>,
   county <span class="op">=</span> <span class="cn">NULL</span>,
   geometry <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -129,12 +129,12 @@ dataset.  If variables dataset is already cached via the
 
 
 <dt>year</dt>
-<dd><p>The year for which you are requesting data. Defaults to 2010; 2000,
+<dd><p>The year for which you are requesting data. Defaults to 2020; 2000,
 2010, and 2020 are available.</p></dd>
 
 
 <dt>sumfile</dt>
-<dd><p>The Census summary file; defaults to <code>"sf1"</code> but will switch to <code>"pl"</code> if the year supplied is 2020.  Not all summary files are available for each decennial Census year.</p></dd>
+<dd><p>The Census summary file; defaults to <code>"pl"</code>.  Not all summary files are available for each decennial Census year.  Make sure you are using the correct summary file for your requested variables, as variable IDs may be repeated across summary files and represent different topics.</p></dd>
 
 
 <dt>state</dt>
@@ -152,8 +152,7 @@ to `state`.  Defaults to NULL.</p></dd>
 <dt>geometry</dt>
 <dd><p>if FALSE (the default), return a regular tibble of ACS data.
 if TRUE, uses the tigris package to return an sf tibble
-with simple feature geometry in the `geometry` column.  state, county, tract, and block group are
-supported for 2000 through 2020; block and ZCTA geometry are supported for 2000 and 2010.</p></dd>
+with simple feature geometry in the `geometry` column.</p></dd>
 
 
 <dt>output</dt>
