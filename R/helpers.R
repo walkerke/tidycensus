@@ -573,7 +573,7 @@ variables_from_table_decennial <- function(table, year, sumfile, cache_table) {
 
   # Find all variables that match the table
 
-  if (year == 2020 && sumfile == "pl") {
+  if (year == 2020 && sumfile %in% c("pl", "dhc", "dp")) {
     vars <- df %>%
       filter(grepl(paste0(table, "_[0-9]+"), name)) %>%
       pull(name)
