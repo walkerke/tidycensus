@@ -309,9 +309,18 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     # Right now, urban areas are not defined for 2020 and are not in the CB file
     if (year == 2020) cb <- FALSE
 
+    # The 2020 decennial Census uses the 2020 urban areas, but the 2020 ACS
+    # does not, so we will need to figure that out in the get_decennial side
+    # Pass that through as a keyword argument
+
     ua <- urban_areas(cb = cb, year = year, class = "sf", ...)
 
-    ua <- rename(ua, GEOID = GEOID10)
+    if ("GEOID20" %in% names(ua)) {
+      ua <- rename(ua, GEOID = GEOID20)
+    } else {
+      ua <- rename(ua, GEOID = GEOID10)
+    }
+
 
     return(ua)
 

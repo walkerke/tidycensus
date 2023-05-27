@@ -435,8 +435,13 @@ get_decennial <- function(geography,
 
     } else {
 
-      geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
-                                              state = state, county = county, ...)))
+      if (geography == "urban area" && year == 2020) {
+        geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
+                                                state = state, county = county, criteria = "2020", ...)))
+      } else {
+        geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
+                                                state = state, county = county, ...)))
+      }
 
       if ("try-error" %in% class(geom)) {
         stop("Your geometry data download failed. Please try again later or check the status of the Census Bureau website at https://www2.census.gov/geo/tiger/", call. = FALSE)
