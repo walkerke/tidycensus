@@ -152,12 +152,12 @@ get_decennial <- function(geography,
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
-  if (geography == "zip code tabulation area" && !is.null(state)) {
-    geography <- "zip code tabulation area (or part)"
-  }
-
   if (year == 2020 && sumfile == "pl" && geography == "zip code tabulation area") {
     stop("ZCTAs are not available in the 2020 PL file.", call. = FALSE)
+  }
+
+  if (geography == "zip code tabulation area" && !is.null(state)) {
+    geography <- "zip code tabulation area (or part)"
   }
 
   # if (geography == "zip code tabulation area" && is.null(state)) {
@@ -377,6 +377,15 @@ get_decennial <- function(geography,
 
   }
 
+  # For ZCTAs, strip the state code from GEOID (issue #338 and #358)
+  # Should only happen if the GEOID is 7 characters
+  if (geography == "zip code tabulation area (or part)" && year == 2020 && unique(nchar(dat2$GEOID)) == 7) {
+    dat2 <- dat2 %>%
+      dplyr::mutate(
+        GEOID = stringr::str_sub(GEOID, start = 3L)
+      )
+  }
+
   if (!is.null(summary_var)) {
 
     sumdat <- suppressMessages(try(load_data_decennial(geography, summary_var, key, year,
@@ -385,6 +394,13 @@ get_decennial <- function(geography,
     if (inherits(sumdat, "try-error")) {
       sumdat <- suppressMessages(try(load_data_decennial(geography, summary_var, key, year,
                                                          sumfile = "sf3", state, county, show_call = show_call)))
+    }
+
+    if (geography == "zip code tabulation area (or part)" && year == 2020 && unique(nchar(dat2$GEOID)) == 7) {
+      dat2 <- dat2 %>%
+        dplyr::mutate(
+          GEOID = stringr::str_sub(GEOID, start = 3L)
+        )
     }
 
     dat2 <- dat2 %>%

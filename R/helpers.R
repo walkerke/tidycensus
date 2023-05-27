@@ -167,6 +167,12 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
       year <- 2020
     }
 
+    # We can't pull ZCTA shapes by state for 2020 but this is
+    # an available hierarchy in the DHC.  So set state to NULL.
+    if (year == 2020) {
+      state <- NULL
+    }
+
     z <- zctas(cb = cb, starts_with = starts_with, year = year,
                class = "sf", state = state, ...)
 
