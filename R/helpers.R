@@ -627,4 +627,33 @@ get_census_api_key <- function(key) {
 }
 
 
+#' Identify summary files for a given decennial Census year
+#'
+#' @param year The year of the decennial Census
+#'
+#' @return A vector of available summary files for a given decennial Census year. To access data for a given summary file, supply the desired value to the \code{sumfile} parameter in \code{get_decennial()}.
+#' @export
+summary_files <- function(year) {
+  if (year == 2000) {
+    sumfiles <- c("sf1", "sf2", "sf3", "sf4", "pl",
+                  "sf2profile", "sf3profile", "sf4profile",
+                  "aian", "aianprofile", "as", "mp",
+                  "gu", "vi", "cd110h", "cd110s", "cd110hprofile",
+                  "cd110sprofile", "sldh", "slds", "sldhprofile",
+                  "sldsprofile", "cqr")
+  } else if (year == 2010) {
+    sumfiles <- c("sf1", "sf2", "pl", "plnat",
+                  "aian", "as", "mp",
+                  "gu", "vi", "cd113", "cd113profile",
+                  "cd115", "cd115profile", "cd116")
+  } else if (year == 2020) {
+    sumfiles <- c("pl", "dhc", "dp", "pes", "dpas",
+                  "dpmp", "dpgu", "dpvi")
+  } else {
+    stop("Invalid year for `get_decennial()`; valid years are 2000, 2010, and 2020.", call. = FALSE)
+  }
+
+  sumfiles
+}
+
 

@@ -13,7 +13,7 @@
 #'                    \code{load_variables} function, this can be bypassed.
 #' @param year The year for which you are requesting data. Defaults to 2020; 2000,
 #'             2010, and 2020 are available.
-#' @param sumfile The Census summary file; defaults to \code{"pl"}.  Not all summary files are available for each decennial Census year.  Make sure you are using the correct summary file for your requested variables, as variable IDs may be repeated across summary files and represent different topics.
+#' @param sumfile The Census summary file; defaults to \code{"pl"} when the year is 2020 and \code{"sf1"} for 2000 and 2010.  Not all summary files are available for each decennial Census year.  Make sure you are using the correct summary file for your requested variables, as variable IDs may be repeated across summary files and represent different topics.
 #' @param state The state for which you are requesting data. State
 #'              names, postal codes, and FIPS codes are accepted.
 #'              Defaults to NULL.
@@ -69,16 +69,7 @@ get_decennial <- function(geography,
                           table = NULL,
                           cache_table = FALSE,
                           year = 2020,
-                          sumfile = c("pl", "dhc", "dp", "sf1", "sf2",
-                                      "sf3", "sf4",
-                                      "sf2profile", "sf3profile",
-                                      "sf4profile",
-                                      "pl", "plnat", "aian",
-                                      "aianprofile",
-                                      "as", "gu", "vi", "mp",
-                                      "responserate", "pes",
-                                      "dpvi", "dpgu", "dpas",
-                                      "dpmp", "sldh"),
+                          sumfile = NULL,
                           state = NULL,
                           county = NULL,
                           geometry = FALSE,
@@ -99,7 +90,14 @@ get_decennial <- function(geography,
 
   message(sprintf("Getting data from the %s decennial Census", year))
 
-  sumfile <- rlang::arg_match(sumfile)
+  # Use the default summary file for a given year
+  if (is.null(sumfile)) {
+    sumfile <- summary_files(year = year)[1]
+  } else {
+
+  }
+
+  sumfile <- rlang::arg_match(sumfile, values = summary_files(year))
 
   # If the summary file is not supplied for 2020, switch to the PL file (until new data
   # are released in 2023)
@@ -295,7 +293,11 @@ get_decennial <- function(geography,
         } else if (sumfile == "sf1") {
           message("Using Census Summary File 1")
         } else if (sumfile == "pl") {
-          message("Using the PL 94-171 Redistricting Data summary file")
+          message("Using the PL 94-171 Redistricting Data Summary File")
+        } else if (sumfile == "dhc") {
+          message("Using the Demographic and Housing Characteristics File")
+        } else if (sumfile == "dp") {
+          message("Using the Demographic Profile")
         }
       }
       d
@@ -319,7 +321,11 @@ get_decennial <- function(geography,
       } else if (sumfile == "sf1") {
         message("Using Census Summary File 1")
       } else if (sumfile == "pl") {
-        message("Using the PL 94-171 Redistricting Data summary file")
+        message("Using the PL 94-171 Redistricting Data Summary File")
+      } else if (sumfile == "dhc") {
+        message("Using the Demographic and Housing Characteristics File")
+      } else if (sumfile == "dp") {
+        message("Using the Demographic Profile")
       }
     }
 
@@ -501,3 +507,4 @@ get_decennial <- function(geography,
   }
 
 }
+
