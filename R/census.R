@@ -460,7 +460,9 @@ get_decennial <- function(geography,
 
     }
 
-    if (shift_geo) {
+    args <- list(...)
+
+    if (shift_geo || "filter_by" %in% names(args)) {
       out <- inner_join(geom, dat2, by = "GEOID") %>%
         as_tibble() %>%
         st_as_sf()
