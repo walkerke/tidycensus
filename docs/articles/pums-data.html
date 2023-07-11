@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.3</span>
       </span>
     </div>
 
@@ -249,11 +249,11 @@ get <code>PUMA</code>, <code>SEX</code>, <code>AGEP</code>, and
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6,436 × 9</span></span>
 <span class="co">##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX  </span>
 <span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 2018GQ0002083       1     0    59    20 00100 50    19    2    </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 2018GQ0002131       1     0     2    51 00400 50    16    1    </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 2018GQ0002587       1     0    52    18 00400 50    16    1    </span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 2018GQ0003751       1     0    34    19 00100 50    19    2    </span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 2018GQ0003853       1     0   129    20 00400 50    19    1    </span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 2018GQ0001230       1     0     3    26 00300 50    20    1    </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 2018GQ0002135       1     0    64    18 00100 50    19    2    </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 2018GQ0002999       1     0    62    20 00400 50    19    2    </span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 2018GQ0004077       1     0    16    94 00200 50    21    2    </span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 2018GQ0006486       1     0    26    20 00400 50    19    1    </span>
 <span class="co">## <span style="color: #949494;"># ℹ 6,431 more rows</span></span></code></pre>
 <p>We get 6436 rows and 9 columns. In addition to the variables we
 specified, <code><a href="../reference/get_pums.html">get_pums()</a></code> also always returns
@@ -281,11 +281,11 @@ additional columns with the values of these variables recoded.</p>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6,436 × 12</span></span>
 <span class="co">##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX   ST_label   SCHL_label         SEX_label</span>
 <span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>    </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 2018GQ0002083       1     0    59    20 00100 50    19    2     Vermont/VT 1 or more years o… Female   </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 2018GQ0002131       1     0     2    51 00400 50    16    1     Vermont/VT Regular high scho… Male     </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 2018GQ0002587       1     0    52    18 00400 50    16    1     Vermont/VT Regular high scho… Male     </span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 2018GQ0003751       1     0    34    19 00100 50    19    2     Vermont/VT 1 or more years o… Female   </span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 2018GQ0003853       1     0   129    20 00400 50    19    1     Vermont/VT 1 or more years o… Male     </span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> 2018GQ0001230       1     0     3    26 00300 50    20    1     Vermont/VT Associate's degree Male     </span>
+<span class="co">## <span style="color: #BCBCBC;">2</span> 2018GQ0002135       1     0    64    18 00100 50    19    2     Vermont/VT 1 or more years o… Female   </span>
+<span class="co">## <span style="color: #BCBCBC;">3</span> 2018GQ0002999       1     0    62    20 00400 50    19    2     Vermont/VT 1 or more years o… Female   </span>
+<span class="co">## <span style="color: #BCBCBC;">4</span> 2018GQ0004077       1     0    16    94 00200 50    21    2     Vermont/VT Bachelor's degree  Female   </span>
+<span class="co">## <span style="color: #BCBCBC;">5</span> 2018GQ0006486       1     0    26    20 00400 50    19    1     Vermont/VT 1 or more years o… Male     </span>
 <span class="co">## <span style="color: #949494;"># ℹ 6,431 more rows</span></span></code></pre>
 </div>
 <div class="section level2">

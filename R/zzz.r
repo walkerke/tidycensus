@@ -32,6 +32,8 @@ fips_state_table <- structure(list(abb = c("ak", "al", "ar", "as", "az", "ca", "
 population_estimates_variables <- c("POP", "DENSITY")
 components_estimates_variables <- c("BIRTHS", "DEATHS","DOMESTICMIG","INTERNATIONALMIG","NATURALINC","NETMIG","RBIRTH","RDEATH","RDOMESTICMIG","RINTERNATIONALMIG","RNATURALINC","RNETMIG")
 housing_estimates_variables <- "HUEST"
+population_estimates_variables22 <- c("POPESTIMATE", "NPOPCHG")
+components_estimates_variables22 <- c("BIRTHS", "DEATHS", "NATURALCHG", "DOMESTICMIG","INTERNATIONALMIG","NETMIG","RBIRTH","RDEATH","RDOMESTICMIG","RINTERNATIONALMIG","RNATURALCHG","RNETMIG","RESIDUAL")
 
 
 .onLoad <- function(libname, pkgname) {
