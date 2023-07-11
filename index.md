@@ -16,9 +16,13 @@ __tidycensus__ is designed to help R users get Census data that is pre-prepared 
 * [Other Census Bureau datasets](articles/other-datasets.html)
 * [Working with Census microdata](articles/pums-data.html)
 
-## Future development
+## Recommended training and how to learn more
 
-To keep up with on-going development of __tidycensus__ and get even more examples of how to use the package, subscribe to the Walker Data email list below.  You'll also get updates on the forthcoming CRC Press book _Analyzing the US Census with R_, currently available to read online at https://walker-data.com/census-r/.  
+If you'd like to go further with __tidycensus__, be sure to check out the following resources:
+
+* [Check out live and recorded workshops from Walker Data which include custom, step-by-step tidycensus tutorials](https://walker-data.com/workshops.html);
+* [Read the book _Analyzing US Census Data: Methods, Maps, and Models in R_](https://walker-data.com/census-r), published in February 2023;
+* Subscribe to the Walker Data email list below:  
 
 <!-- Begin MailChimp Signup Form -->
 <link href="//cdn-images.mailchimp.com/embedcode/slim-10_7.css" rel="stylesheet" type="text/css">

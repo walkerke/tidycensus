@@ -13,7 +13,7 @@ get_estimates(
   variables = NULL,
   breakdown = NULL,
   breakdown_labels = FALSE,
-  year = 2019,
+  year = 2022,
   state = NULL,
   county = NULL,
   time_series = FALSE,
@@ -34,26 +34,24 @@ be used an alias for \code{"metropolitan statistical area/micropolitan statistic
 \item{product}{The data product (optional). \code{"population"}, \code{"components"}
                \code{"housing"}, and \code{"characteristics"} are supported.
 
-               Not yet supported for 2020 and later.}
+               For 2020 and later, the only supported product is \code{"characteristics"}.}
 
 \item{variables}{A character string or vector of character strings of requested variables.  For years 2020 and later, use \code{variables = "all"} to request all available variables.}
 
 \item{breakdown}{The population breakdown used when \code{product = "characteristics"}.
-                 Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
-                 \code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
-                 a vector, returning population estimates in the \code{value} column for all
-                 combinations of these breakdowns.
-
-                 Not yet supported for 2020 and later.}
+Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
+\code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
+a vector, returning population estimates in the \code{value} column for all
+combinations of these breakdowns.  For years 2020 and later, \code{"AGE"} is also available for single-year age when using \code{geography = "state"}.}
 
 \item{breakdown_labels}{Whether or not to label breakdown elements returned when
                         \code{product = "characteristics"}. Defaults to FALSE.
 
                         Not yet supported for 2020 and later.}
 
-\item{year}{The data vintage (defaults to 2019). It is recommended to use the most recent vintage
+\item{year}{The data year (defaults to 2022). It is recommended to use the most recent vintage
 available for a given decennial series (so, year = 2019 for the 2010s, and year = 2022 for the 2020s)
-and use \code{time_series = TRUE} to access estimates for prior years.}
+and use \code{time_series = TRUE} to access time-series estimates.}
 
 \item{state}{The state for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.
@@ -100,7 +98,7 @@ a browser and see what is returned by the API directly. Defaults to FALSE.}
 A tibble, or sf tibble, of population estimates data
 }
 \description{
-\code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Popuplation Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
+\code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Population Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
 }
 \details{
 As of April 2022, variables available for 2020 and later datasets are as follows: ESTIMATESBASE, POPESTIMATE, NPOPCHG, BIRTHS, DEATHS, NATURALCHG, INTERNATIONALMIG, DOMESTICMIG, NETMIG, RESIDUAL, GQESTIMATESBASE, GQESTIMATES, RBIRTH, RDEATH, RNATURALCHG, RINTERNATIONALMIG, RDOMESTICMIG, and RNETMIG.

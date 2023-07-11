@@ -1,6 +1,6 @@
 #' Get data from the US Census Bureau Population Estimates Program
 #'
-#' \code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Popuplation Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
+#' \code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Population Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
 #'
 #' As of April 2022, variables available for 2020 and later datasets are as follows: ESTIMATESBASE, POPESTIMATE, NPOPCHG, BIRTHS, DEATHS, NATURALCHG, INTERNATIONALMIG, DOMESTICMIG, NETMIG, RESIDUAL, GQESTIMATESBASE, GQESTIMATES, RBIRTH, RDEATH, RNATURALCHG, RINTERNATIONALMIG, RDOMESTICMIG, and RNETMIG.
 #'
@@ -10,22 +10,21 @@
 #' @param product The data product (optional). \code{"population"}, \code{"components"}
 #'                \code{"housing"}, and \code{"characteristics"} are supported.
 #'
-#'                Not yet supported for 2020 and later.
+#'                For 2020 and later, the only supported product is \code{"characteristics"}.
 #' @param variables A character string or vector of character strings of requested variables.  For years 2020 and later, use \code{variables = "all"} to request all available variables.
 #' @param breakdown The population breakdown used when \code{product = "characteristics"}.
 #'                  Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
 #'                  \code{"HISP"}, for Hispanic/Not Hispanic.  These values can be combined in
 #'                  a vector, returning population estimates in the \code{value} column for all
-#'                  combinations of these breakdowns.
+#'                  combinations of these breakdowns.  For years 2020 and later, \code{"AGE"} is also available for single-year age when using \code{geography = "state"}.
 #'
-#'                  Not yet supported for 2020 and later.
 #' @param breakdown_labels Whether or not to label breakdown elements returned when
 #'                         \code{product = "characteristics"}. Defaults to FALSE.
 #'
 #'                         Not yet supported for 2020 and later.
-#' @param year The data vintage (defaults to 2019). It is recommended to use the most recent vintage
+#' @param year The data year (defaults to 2022). It is recommended to use the most recent vintage
 #'             available for a given decennial series (so, year = 2019 for the 2010s, and year = 2022 for the 2020s)
-#'             and use \code{time_series = TRUE} to access estimates for prior years.
+#'             and use \code{time_series = TRUE} to access time-series estimates.
 #' @param state The state for which you are requesting data. State
 #'              names, postal codes, and FIPS codes are accepted.
 #'              Defaults to NULL.
@@ -66,7 +65,7 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
                                         "metropolitan division", "combined statistical area"),
                           product = NULL, variables = NULL,
                           breakdown = NULL, breakdown_labels = FALSE,
-                          year = 2019, state = NULL, county = NULL,
+                          year = 2022, state = NULL, county = NULL,
                           time_series = FALSE,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, show_call = FALSE, ...) {
@@ -86,225 +85,442 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
   # previous years that are on the API
   if (year >= 2020) {
 
-    # Comment this out for now, add back in error handling if this becomes a problem
-    # if (!geography %in% c("us", "region", "division", "state", "county")) {
-    #   stop("The only geographies currently available for 2020 and later are 'us', 'region', 'division', 'state', and 'county'.", call. = FALSE)
-    # }
+      if (!is.null(product) && product == "characteristics") {
 
-    if (!is.null(product)) {
-      rlang::abort(stringr::str_wrap("Getting data by product is not yet supported for years 2020 and later, but will be in a future release.\nTo get all available variables for 2020 and later, use the argument `variables = 'all'", 50))
-    }
+        if (!geography %in% c("state", "county")) {
+          rlang::abort("The only supported geographies at this time for population characteristics 2020 and later are 'state' and 'county'.")
+        }
 
-    # Get the data into a reasonable first format that is consistent for downstream use
-    if (geography == "us") {
+        if (geography == "state") {
 
-      raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
-        dplyr::filter(SUMLEV == "010")
+          state_raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/asrh/sc-est2022-alldata6.csv"))
 
-      raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
+          if (!is.null(state)) {
+            state <- validate_state(state)
 
-      base <- raw %>%
-        dplyr::mutate(GEOID = "1") %>%
-        dplyr::select(GEOID, NAME, dplyr::everything()) %>%
-        tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
-                            names_pattern = "(\\D+)(\\d+)",
-                            values_to = "value") %>%
-        dplyr::mutate(variable = stringr::str_remove(variable, "_"))
+            state_raw2 <- state_raw %>%
+              dplyr::filter(STATE == state)
+          } else {
+            state_raw2 <- state_raw
+          }
+
+          parsed <- state_raw2 %>%
+            dplyr::select(GEOID = STATE,
+                          NAME:SEX,
+                          HISP = ORIGIN,
+                          RACE:AGE,
+                          POPESTIMATE2020:POPESTIMATE2022) %>%
+            dplyr::mutate(AGEGROUP = dplyr::case_when(
+              AGE %in% 0:4 ~ 1,
+              AGE %in% 5:9 ~ 2,
+              AGE %in% 10:14 ~ 3,
+              AGE %in% 15:19 ~ 4,
+              AGE %in% 20:24 ~ 5,
+              AGE %in% 25:29 ~ 6,
+              AGE %in% 30:34 ~ 7,
+              AGE %in% 35:39 ~ 8,
+              AGE %in% 40:44 ~ 9,
+              AGE %in% 45:49 ~ 10,
+              AGE %in% 50:54 ~ 11,
+              AGE %in% 55:59 ~ 12,
+              AGE %in% 60:64 ~ 13,
+              AGE %in% 65:69 ~ 14,
+              AGE %in% 70:74 ~ 15,
+              AGE %in% 75:79 ~ 16,
+              AGE %in% 80:84 ~ 17,
+              AGE == 85 ~ 18
+            )) %>%
+            tidyr::pivot_longer(
+              POPESTIMATE2020:POPESTIMATE2022,
+              names_to = "year",
+              values_to = "value",
+              names_prefix = "POPESTIMATE"
+            ) %>%
+            dplyr::mutate(year = as.integer(year))
+
+        } else if (geography == "county") {
+
+          if (!is.null(state)) {
+            state <- validate_state(state)
+          }
+
+          county_raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/counties/asrh/cc-est2022-alldata-%s.csv", state)))
+
+          if (!is.null(county)) {
+            county <- purrr::map_chr(county, function(x) {
+              validate_county(state, x)
+            })
+            county_raw <- dplyr::filter(county_raw, COUNTY %in% county)
+          }
+
+
+          total_vals <- c("TOT", "WA", "BA", "IA", "AA", "NA", "TOM", "WAC", "BAC", "IAC", "AAC", "NAC")
+
+          parsed <- county_raw %>%
+            tidyr::pivot_longer(
+              TOT_POP:HNAC_FEMALE,
+              names_to = c("category", "SEX"),
+              values_to = "value",
+              names_sep = "_"
+            ) %>%
+            dplyr::mutate(
+              category = ifelse(
+                category %in% total_vals,
+                paste0("BH", category),
+                category
+              ),
+              category = stringr::str_replace(category, "H", "H_")
+            ) %>%
+            tidyr::separate_wider_delim(category, delim = "_",
+                                        names = c("HISP", "RACE")) %>%
+            dplyr::filter(SEX != "POP") %>%
+            dplyr::mutate(RACE = ifelse(RACE == "", "TOT", RACE)) %>%
+            dplyr::mutate(HISP = dplyr::case_when(
+              HISP == "BH" ~ 0L,
+              HISP == "H" ~ 2L,
+              HISP == "NH" ~ 1L
+            ),
+            RACE = dplyr::case_when(
+              RACE == "TOT" ~ 0L,
+              RACE == "WA" ~ 1L,
+              RACE == "BA" ~ 2L,
+              RACE == "IA" ~ 3L,
+              RACE == "AA" ~ 4L,
+              RACE == "NA" ~ 5L,
+              RACE == "TOM" ~ 6L,
+              RACE == "WAC" ~ 7L,
+              RACE == "BAC" ~ 8L,
+              RACE == "IAC" ~ 9L,
+              RACE == "AAC" ~ 10L,
+              RACE == "NAC" ~ 11L,
+            ),
+            SEX = dplyr::case_when(
+              SEX == "MALE" ~ 1L,
+              SEX == "FEMALE" ~ 2L
+            ),
+            GEOID = paste0(STATE, COUNTY)
+            ) %>%
+            dplyr::rename(AGEGROUP = AGEGRP) %>%
+            dplyr::select(GEOID, NAME = CTYNAME,
+                          YEAR:value) %>%
+            dplyr::rename(year = YEAR) %>%
+            dplyr::filter(year != 1) %>%
+            dplyr::mutate(year = dplyr::case_when(
+              year == 2 ~ 2020L,
+              year == 3 ~ 2021L,
+              year == 4 ~ 2022L
+            ))
+
+        } else {
+          rlang::abort("The only available geographies for population characteristics years 2020 and later are 'state' and 'county'.")
+        }
+
+        # Handle timeseries
+        if (!time_series) {
+          in_year <- year
+
+          parsed <- dplyr::filter(parsed, year == in_year)
+        }
+
+        if (!is.null(breakdown)) {
+          parsed <- dplyr::filter(parsed, RACE < 7)
+
+          grouping_vars <- c("GEOID", "NAME", "year", breakdown)
+
+          # Avoid double-counting
+          if (!"SEX" %in% grouping_vars) {
+            parsed <- dplyr::filter(parsed, SEX != 0)
+          }
+
+          if (!"HISP" %in% grouping_vars) {
+            parsed <- dplyr::filter(parsed, HISP != 0)
+          }
+
+          if (!"RACE" %in% grouping_vars) {
+            parsed <- dplyr::filter(parsed, RACE != 0)
+          }
+
+          if (!"AGEGROUP" %in% grouping_vars) {
+            parsed <- dplyr::filter(parsed, AGEGROUP != 0)
+          }
+
+          output <- suppressMessages(parsed %>%
+                                       dplyr::group_by(dplyr::across(dplyr::all_of(grouping_vars))) %>%
+                                       dplyr::summarize(value = sum(value, na.rm = TRUE)) %>%
+                                       dplyr::ungroup()
+          )
+
+          if (breakdown_labels) {
+            if ("AGEGROUP" %in% names(output)) {
+              output$AGEGROUP <- factor(output$AGEGROUP)
+              output$AGEGROUP <- dplyr::recode(output$AGEGROUP,
+                                               `0` = "All ages",
+                                               `1` = "Age 0 to 4 years",
+                                               `2` = "Age 5 to 9 years",
+                                               `3` = "Age 10 to 14 years",
+                                               `4` = "Age 15 to 19 years", `5` = "Age 20 to 24 years",
+                                               `6` = "Age 25 to 29 years",
+                                               `7` = "Age 30 to 34 years", `8` = "Age 35 to 39 years",
+                                               `9` = "Age 40 to 44 years",
+                                               `10` = "Age 45 to 49 years", `11` = "Age 50 to 54 years",
+                                               `12` = "Age 55 to 59 years",
+                                               `13` = "Age 60 to 64 years", `14` = "Age 65 to 69 years",
+                                               `15` = "Age 70 to 74 years",
+                                               `16` = "Age 75 to 79 years", `17` = "Age 80 to 84 years",
+                                               `18` = "Age 85 years and older")
+            }
+
+            if ("SEX" %in% names(output)) {
+              output$SEX <- dplyr::recode(output$SEX, `0` = "Both sexes", `1` = "Male", `2` = "Female")
+            }
+
+            if ("RACE" %in% names(output)) {
+              output$RACE <- dplyr::recode(output$RACE, `0` = "All races",
+                                           `1` = "White alone",
+                                           `2` = "Black alone",
+                                           `3` = "American Indian and Alaska Native alone",
+                                           `4` = "Asian alone",
+                                           `5` = "Native Hawaiian and Other Pacific Islander alone",
+                                           `6` = "Two or more races",
+              )
+            }
+
+            if ("HISP" %in% names(output)) {
+              output$HISP <- dplyr::recode(output$HISP, `0` = "Both Hispanic Origins",
+                                           `1` = "Non-Hispanic",
+                                           `2` = "Hispanic")
+            }
+          }
+
+          return(output)
+        } else {
+          return(parsed)
+        }
 
 
 
-    } else if (geography == "region") {
+      } else if (product == "population" || product == "components" || is.null(product)) {
 
-      raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
-        dplyr::filter(SUMLEV == "020") %>%
-        dplyr::mutate(GEOID = REGION)
+        if (!is.null(product)) {
+          if (product == "population") {
+            variables <- population_estimates_variables22
+          } else if (product == "components") {
+            variables <- components_estimates_variables22
+          }
+        }
 
-      raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
+        # Get the data into a reasonable first format that is consistent for downstream use
+        if (geography == "us") {
 
-      base <- raw %>%
-        dplyr::select(GEOID, NAME, dplyr::everything()) %>%
-        tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
-                            names_pattern = "(\\D+)(\\d+)",
-                            values_to = "value") %>%
-        dplyr::mutate(variable = stringr::str_remove(variable, "_"))
+          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
+            dplyr::filter(SUMLEV == "010")
 
-    } else if (geography == "division") {
+          raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
 
-      raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
-        dplyr::filter(SUMLEV == "030") %>%
-        dplyr::mutate(GEOID = DIVISION)
+          base <- raw %>%
+            dplyr::mutate(GEOID = "1") %>%
+            dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+            tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
+                                names_pattern = "(\\D+)(\\d+)",
+                                values_to = "value") %>%
+            dplyr::mutate(variable = stringr::str_remove(variable, "_"))
 
-      raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
 
-      base <- raw %>%
-        dplyr::select(GEOID, NAME, dplyr::everything()) %>%
-        tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
-                            names_pattern = "(\\D+)(\\d+)",
-                            values_to = "value") %>%
-        dplyr::mutate(variable = stringr::str_remove(variable, "_"))
 
-    } else if (geography == "state") {
+        } else if (geography == "region") {
 
-      raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
-        dplyr::filter(SUMLEV == "040") %>%
-        dplyr::mutate(GEOID = STATE)
+          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
+            dplyr::filter(SUMLEV == "020") %>%
+            dplyr::mutate(GEOID = REGION)
 
-      raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
+          raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
 
-      base <- raw %>%
-        dplyr::select(GEOID, NAME, dplyr::everything()) %>%
-        tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
-                            names_pattern = "(\\D+)(\\d+)",
-                            values_to = "value") %>%
-        dplyr::mutate(variable = stringr::str_remove(variable, "_"))
+          base <- raw %>%
+            dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+            tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
+                                names_pattern = "(\\D+)(\\d+)",
+                                values_to = "value") %>%
+            dplyr::mutate(variable = stringr::str_remove(variable, "_"))
 
-    } else if (geography == "county") {
+        } else if (geography == "division") {
 
-      raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/counties/totals/co-est2022-alldata.csv")) %>%
-        dplyr::filter(SUMLEV == "050") %>%
-        dplyr::mutate(GEOID = paste0(STATE, COUNTY),
-                      NAME = paste0(CTYNAME, ", ", STNAME))
+          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
+            dplyr::filter(SUMLEV == "030") %>%
+            dplyr::mutate(GEOID = DIVISION)
 
-      raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE",
-                                      "COUNTY", "STNAME", "CTYNAME"))]
+          raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
 
-      base <- raw %>%
-        dplyr::select(GEOID, NAME, dplyr::everything()) %>%
-        tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
-                            names_pattern = "(\\D+)(\\d+)",
-                            values_to = "value") %>%
-        dplyr::mutate(variable = stringr::str_remove(variable, "_"))
+          base <- raw %>%
+            dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+            tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
+                                names_pattern = "(\\D+)(\\d+)",
+                                values_to = "value") %>%
+            dplyr::mutate(variable = stringr::str_remove(variable, "_"))
 
-    } else if (geography == "cbsa" || geography == "metropolitan statistical area/micropolitan statistical area") {
+        } else if (geography == "state") {
 
-      raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/metro/totals/cbsa-est2022.csv")) %>%
-        dplyr::filter(LSAD %in% c("Micropolitan Statistical Area", "Metropolitan Statistical Area")) %>%
-        dplyr::mutate(GEOID = CBSA)
+          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
+            dplyr::filter(SUMLEV == "040") %>%
+            dplyr::mutate(GEOID = STATE)
 
-      raw <- raw[,!(names(raw) %in% c("MDIV", "STCOU", "LSAD", "CBSA"))]
+          raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
 
-      base <- raw %>%
-        dplyr::select(GEOID, NAME, dplyr::everything()) %>%
-        tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
-                            names_pattern = "(\\D+)(\\d+)",
-                            values_to = "value") %>%
-        dplyr::mutate(variable = stringr::str_remove(variable, "_"))
+          base <- raw %>%
+            dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+            tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
+                                names_pattern = "(\\D+)(\\d+)",
+                                values_to = "value") %>%
+            dplyr::mutate(variable = stringr::str_remove(variable, "_"))
 
-    } else if (geography == "combined statistical area") {
-      raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/metro/totals/csa-est2022.csv")) %>%
-        dplyr::filter(LSAD == "Combined Statistical Area") %>%
-        dplyr::mutate(GEOID = CSA)
+        } else if (geography == "county") {
 
-      raw <- raw[,!(names(raw) %in% c("MDIV", "STCOU", "LSAD", "CBSA", "CSA"))]
+          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/counties/totals/co-est2022-alldata.csv")) %>%
+            dplyr::filter(SUMLEV == "050") %>%
+            dplyr::mutate(GEOID = paste0(STATE, COUNTY),
+                          NAME = paste0(CTYNAME, ", ", STNAME))
 
-      base <- raw %>%
-        dplyr::select(GEOID, NAME, dplyr::everything()) %>%
-        tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
-                            names_pattern = "(\\D+)(\\d+)",
-                            values_to = "value") %>%
-        dplyr::mutate(variable = stringr::str_remove(variable, "_"))
+          raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE",
+                                          "COUNTY", "STNAME", "CTYNAME"))]
 
-    } else if (geography == "place") {
-      raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/cities/totals/sub-est2022.csv")) %>%
-        dplyr::filter(SUMLEV == "162") %>%
-        dplyr::mutate(GEOID = paste0(STATE, PLACE),
-                      NAME = paste0(NAME, ", ", STNAME))
+          base <- raw %>%
+            dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+            tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
+                                names_pattern = "(\\D+)(\\d+)",
+                                values_to = "value") %>%
+            dplyr::mutate(variable = stringr::str_remove(variable, "_"))
 
-      raw <- raw[,!(names(raw) %in% c("SUMLEV", "PLACE", "COUSUB", "STATE",
-                                      "COUNTY", "CONCIT", "PRIMGEO_FLAG", "STNAME",
-                                      "FUNCSTAT"))]
+        } else if (geography == "cbsa" || geography == "metropolitan statistical area/micropolitan statistical area") {
 
-      base <- raw %>%
-        dplyr::select(GEOID, NAME, dplyr::everything()) %>%
-        tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
-                            names_pattern = "(\\D+)(\\d+)",
-                            values_to = "value") %>%
-        dplyr::mutate(variable = stringr::str_remove(variable, "_"))
-    } else {
-      rlang::abort("Your requested geography is not currently available for this Population Estimates Program dataset. Please modify your request.")
-    }
+          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/metro/totals/cbsa-est2022.csv")) %>%
+            dplyr::filter(LSAD %in% c("Micropolitan Statistical Area", "Metropolitan Statistical Area")) %>%
+            dplyr::mutate(GEOID = CBSA)
 
-    base$year <- as.integer(base$year)
-    year_to_keep <- as.integer(year)
-    base$GEOID <- as.character(base$GEOID)
+          raw <- raw[,!(names(raw) %in% c("MDIV", "STCOU", "LSAD", "CBSA"))]
 
-    # Explain available variables
-    if (!all(variables %in% unique(base$variable))) {
-      vars <- unique(base$variable)
+          base <- raw %>%
+            dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+            tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
+                                names_pattern = "(\\D+)(\\d+)",
+                                values_to = "value") %>%
+            dplyr::mutate(variable = stringr::str_remove(variable, "_"))
 
-      rlang::abort(stringr::str_wrap(paste0("You have requested one or more variables not currently available in this PEP dataset.\nAvailable variables are as follows:\n", paste(vars, collapse = ", ")), 50))
-    }
+        } else if (geography == "combined statistical area") {
+          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/metro/totals/csa-est2022.csv")) %>%
+            dplyr::filter(LSAD == "Combined Statistical Area") %>%
+            dplyr::mutate(GEOID = CSA)
 
-    # Use `variables = 'all'`
-    if (all(variables == "all")) {
-      variables <- unique(base$variable)
-    }
+          raw <- raw[,!(names(raw) %in% c("MDIV", "STCOU", "LSAD", "CBSA", "CSA"))]
 
-    # Get the requested variables and handle time series if so
-    if (time_series) {
-      pep_sub <- base %>%
-        dplyr::mutate(year = as.integer(year)) %>%
-        dplyr::filter(variable %in% variables,
-                      year <= year_to_keep)
-    } else {
-      pep_sub <- base %>%
-        dplyr::mutate(year = as.integer(year)) %>%
-        dplyr::filter(variable %in% variables,
-                      year == year_to_keep)
-    }
+          base <- raw %>%
+            dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+            tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
+                                names_pattern = "(\\D+)(\\d+)",
+                                values_to = "value") %>%
+            dplyr::mutate(variable = stringr::str_remove(variable, "_"))
 
-    # Handle state / county filters
-    if (!is.null(state)) {
-      if (geography %in% c("us", "region", "division", "cbsa", "metropolitan statistical area/micropolitan statistical area", "combined statistical area")) {
-        rlang::abort("The `state` argument is not available for your chosen geography.")
-      }
+        } else if (geography == "place") {
+          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/cities/totals/sub-est2022.csv")) %>%
+            dplyr::filter(SUMLEV == "162") %>%
+            dplyr::mutate(GEOID = paste0(STATE, PLACE),
+                          NAME = paste0(NAME, ", ", STNAME))
 
-      if (is.null(county)) {
-        state <- purrr::map_chr(state, function(x) {
-          validate_state(x)
-        })
+          raw <- raw[,!(names(raw) %in% c("SUMLEV", "PLACE", "COUSUB", "STATE",
+                                          "COUNTY", "CONCIT", "PRIMGEO_FLAG", "STNAME",
+                                          "FUNCSTAT"))]
 
-        pep_sub <- pep_sub %>%
-          dplyr::filter(stringr::str_sub(GEOID, 1, 2) %in% state)
+          base <- raw %>%
+            dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+            tidyr::pivot_longer(-c(GEOID, NAME), names_to = c("variable", "year"),
+                                names_pattern = "(\\D+)(\\d+)",
+                                values_to = "value") %>%
+            dplyr::mutate(variable = stringr::str_remove(variable, "_"))
+        } else {
+          rlang::abort("Your requested geography is not currently available for this Population Estimates Program dataset. Please modify your request.")
+        }
 
+        base$year <- as.integer(base$year)
+        year_to_keep <- as.integer(year)
+        base$GEOID <- as.character(base$GEOID)
+
+        # Explain available variables
+        if (!all(variables %in% unique(base$variable))) {
+          vars <- unique(base$variable)
+
+          rlang::abort(stringr::str_wrap(paste0("You have requested one or more variables not currently available in this PEP dataset.\nAvailable variables are as follows:\n", paste(vars, collapse = ", ")), 50))
+        }
+
+        # Use `variables = 'all'`
+        if (all(variables == "all")) {
+          variables <- unique(base$variable)
+        }
+
+        # Get the requested variables and handle time series if so
+        if (time_series) {
+          pep_sub <- base %>%
+            dplyr::mutate(year = as.integer(year)) %>%
+            dplyr::filter(variable %in% variables,
+                          year <= year_to_keep)
+        } else {
+          pep_sub <- base %>%
+            dplyr::mutate(year = as.integer(year)) %>%
+            dplyr::filter(variable %in% variables,
+                          year == year_to_keep)
+        }
+
+        # Handle state / county filters
+        if (!is.null(state)) {
+          if (geography %in% c("us", "region", "division", "cbsa", "metropolitan statistical area/micropolitan statistical area", "combined statistical area")) {
+            rlang::abort("The `state` argument is not available for your chosen geography.")
+          }
+
+          if (is.null(county)) {
+            state <- purrr::map_chr(state, function(x) {
+              validate_state(x)
+            })
+
+            pep_sub <- pep_sub %>%
+              dplyr::filter(stringr::str_sub(GEOID, 1, 2) %in% state)
+
+          } else {
+            state <- purrr::map_chr(state, function(x) {
+              validate_state(x)
+            })
+
+            county <- map_chr(county, function(x) {
+              validate_county(state, x)
+            })
+
+            pep_sub <- pep_sub %>%
+              dplyr::filter(stringr::str_sub(GEOID, 1, 2) %in% state,
+                            stringr::str_sub(GEOID, 3, 5) %in% county)
+
+          }
+
+        }
+
+        if (output == "wide") {
+
+          if (time_series) {
+            dat2 <- pep_sub %>%
+              tidyr::pivot_wider(id_cols = c("GEOID", "NAME"),
+                                 names_from = c("variable", "year"),
+                                 names_sep = "",
+                                 values_from = "value")
+          } else {
+            dat2 <- pep_sub %>%
+              tidyr::pivot_wider(id_cols = c(GEOID, NAME),
+                                 names_from = "variable",
+                                 names_sep = "",
+                                 values_from = "value")
+          }
+
+
+        } else {
+          dat2 <- pep_sub
+        }
       } else {
-        state <- purrr::map_chr(state, function(x) {
-          validate_state(x)
-        })
-
-        county <- map_chr(county, function(x) {
-          validate_county(state, x)
-        })
-
-        pep_sub <- pep_sub %>%
-          dplyr::filter(stringr::str_sub(GEOID, 1, 2) %in% state,
-                        stringr::str_sub(GEOID, 3, 5) %in% county)
-
-      }
-
+      rlang::abort("Invalid product; use 'population', 'components', or 'characteristics', or leave NULL.")
     }
-
-    if (output == "wide") {
-
-      if (time_series) {
-        dat2 <- pep_sub %>%
-          tidyr::pivot_wider(id_cols = c("GEOID", "NAME"),
-                             names_from = c("variable", "year"),
-                             names_sep = "",
-                             values_from = "value")
-      } else {
-        dat2 <- pep_sub %>%
-          tidyr::pivot_wider(id_cols = c(GEOID, NAME),
-                             names_from = "variable",
-                             names_sep = "",
-                             values_from = "value")
-      }
-
-
-    } else {
-      dat2 <- pep_sub
-    }
-
 
   } else {
     # Check for a Census API key and warn if missing
