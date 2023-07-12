@@ -190,14 +190,15 @@ residents.</p>
 <span class="co">## [13] "RNETMIG"</span></code></pre>
 <p>Available geographies include <code>"us"</code>,
 <code>"state"</code>, <code>"county"</code>,
-<code>"metropolitan statistical area/micropolitan statistical area"</code>,
-and <code>"combined statistical area"</code>.</p>
+<code>"metropolitan statistical area/micropolitan statistical area"</code>
+or <code>"cbsa"</code>, <code>"combined statistical area"</code>, and
+<code>"place"</code>.</p>
 <p>If desired, users can request a specific component or components by
 supplying a character vector to the <code>variables</code> parameter, as
 in other tidycensus functions. <code><a href="../reference/get_estimates.html">get_estimates()</a></code> also
 supports simple feature geometry integration to facilitate mapping. In
 the example below, we’ll acquire data on the net migration rate between
-2018 and 2019 for all counties in the United States. We’ll also use the
+2021 and 2022 for all counties in the United States. We’ll also use the
 <code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html" class="external-link">shift_geometry()</a></code> function from the <strong>tigris</strong>
 package to shift and rescale counties outside the continental US for
 national mapping.</p>

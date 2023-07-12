@@ -38,9 +38,9 @@ The variables included in the components of change product consist of both estim
 unique(us_components$variable)
 ```
 
-Available geographies include `"us"`, `"state"`, `"county"`, `"metropolitan statistical area/micropolitan statistical area"`, and `"combined statistical area"`.   
+Available geographies include `"us"`, `"state"`, `"county"`, `"metropolitan statistical area/micropolitan statistical area"` or `"cbsa"`, `"combined statistical area"`, and `"place"`.   
 
-If desired, users can request a specific component or components by supplying a character vector to the `variables` parameter, as in other tidycensus functions.   `get_estimates()` also supports simple feature geometry integration to facilitate mapping.   In the example below, we'll acquire data on the net migration rate between 2018 and 2019 for all counties in the United States. We'll also use the `shift_geometry()` function from the __tigris__ package to shift and rescale counties outside the continental US for national mapping.   
+If desired, users can request a specific component or components by supplying a character vector to the `variables` parameter, as in other tidycensus functions.   `get_estimates()` also supports simple feature geometry integration to facilitate mapping.   In the example below, we'll acquire data on the net migration rate between 2021 and 2022 for all counties in the United States. We'll also use the `shift_geometry()` function from the __tigris__ package to shift and rescale counties outside the continental US for national mapping.   
 
 ```{r}
 
