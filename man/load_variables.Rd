@@ -7,9 +7,9 @@
 load_variables(
   year,
   dataset = c("sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp", "as", "gu", "mp", "vi",
-    "acsse", "dpas", "dpgu", "dpmp", "dpvi", "acs1", "acs3", "acs5", "acs1/profile",
-    "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject", "acs5/subject",
-    "acs1/cprofile", "acs5/cprofile"),
+    "acsse", "dpas", "dpgu", "dpmp", "dpvi", "dhcvi", "dhcgu", "dhcvi", "dhcas", "acs1",
+    "acs3", "acs5", "acs1/profile", "acs3/profile", "acs5/profile", "acs1/subject",
+    "acs3/subject", "acs5/subject", "acs1/cprofile", "acs5/cprofile"),
   cache = FALSE
 )
 }

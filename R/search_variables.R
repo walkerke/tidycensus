@@ -23,6 +23,7 @@ load_variables <- function(
   dataset = c("sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp",
               "as", "gu", "mp", "vi", "acsse",
               "dpas", "dpgu", "dpmp", "dpvi",
+              "dhcvi", "dhcgu", "dhcvi", "dhcas",
               "acs1", "acs3", "acs5", "acs1/profile",
               "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject",
               "acs5/subject", "acs1/cprofile", "acs5/cprofile"),
@@ -74,7 +75,8 @@ load_variables <- function(
 
   if (dataset %in% c("sf1", "sf2", "sf3", "sf4", "pl",
                      "as", "gu", "mp", "vi", "dhc", "dp",
-                     "dpas", "dpgu", "dpmp", "dpvi")) {
+                     "dpas", "dpgu", "dpmp", "dpvi",
+                     "dhcvi", "dhcgu", "dhcvi", "dhcas")) {
     dataset <- paste0("dec/", dataset)
   }
 

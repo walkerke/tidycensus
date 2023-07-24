@@ -142,9 +142,14 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
 
           if (!is.null(state)) {
             state <- validate_state(state)
+
+            county_raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/counties/asrh/cc-est2022-alldata-%s.csv", state)))
+
+          } else {
+            county_raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/counties/asrh/cc-est2022-all.csv"))
           }
 
-          county_raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/counties/asrh/cc-est2022-alldata-%s.csv", state)))
+
 
           if (!is.null(county)) {
             county <- purrr::map_chr(county, function(x) {
@@ -198,10 +203,11 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
               SEX == "MALE" ~ 1L,
               SEX == "FEMALE" ~ 2L
             ),
-            GEOID = paste0(STATE, COUNTY)
+            GEOID = paste0(STATE, COUNTY),
+            NAME = paste0(CTYNAME, ", ", STNAME)
             ) %>%
             dplyr::rename(AGEGROUP = AGEGRP) %>%
-            dplyr::select(GEOID, NAME = CTYNAME,
+            dplyr::select(GEOID, NAME,
                           YEAR:value) %>%
             dplyr::rename(year = YEAR) %>%
             dplyr::filter(year != 1) %>%

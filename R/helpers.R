@@ -648,7 +648,8 @@ summary_files <- function(year) {
                   "cd115", "cd115profile", "cd116")
   } else if (year == 2020) {
     sumfiles <- c("pl", "dhc", "dp", "pes", "dpas",
-                  "dpmp", "dpgu", "dpvi")
+                  "dpmp", "dpgu", "dpvi",
+                  "dhcvi", "dhcgu", "dhcvi", "dhcas")
   } else {
     stop("Invalid year for `get_decennial()`; valid years are 2000, 2010, and 2020.", call. = FALSE)
   }

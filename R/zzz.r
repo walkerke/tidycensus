@@ -52,7 +52,9 @@ utils::globalVariables(c("variable", "value", "GEOID", "NAME", "type", "moe",
                          "level", "tidycensus_weight_total", "weight_coef", "SUMLEV",
                          "REGION", "DIVISION", "CTYNAME", "STNAME", "ALAND", "AWATER",
                          "COUNTYFP", "COUNTYNS", "LSAD", "NAMELSAD", "STATEFP", "geometry",
-                         "CBSA", "CSA", "PLACE", "ZCTA", "ZCTA5CE00"))
+                         "CBSA", "CSA", "PLACE", "ZCTA", "ZCTA5CE00", "AGE", "AGEGROUP", "AGEGRP",
+                         "HISP", "HNAC_FEMALE", "ORIGIN", "POPESTIMATE2020",
+                         "POPESTIMATE2022", "RACE", "SEX", "TOT_POP", "YEAR", "category"))
 
 #' @importFrom rlang .data
 NULL
