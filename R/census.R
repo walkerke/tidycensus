@@ -444,6 +444,10 @@ get_decennial <- function(geography,
       if (geography == "urban area" && year == 2020) {
         geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
                                                 state = state, county = county, criteria = "2020", ...)))
+      } else if (sumfile == "cd118") {
+        stop("Geometry is not yet available for this sumfile, but will be in mid-September 2023.")
+        # try(suppressMessages(use_tigris(geography = geography, year = 2022,
+        #                                 state = state, county = county, ...)))
       } else {
         geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
                                                 state = state, county = county, ...)))
