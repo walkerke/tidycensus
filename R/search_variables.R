@@ -1,13 +1,28 @@
 #' Load variables from a decennial Census or American Community Survey dataset to search in R
 #'
+#' Finding the right variables to use with \code{get_decennial()} or \code{get_acs()} can be challenging; \code{load_variables()} attempts to make this easier for you.  Choose a year and a dataset to search for variables; those variables will be loaded from the Census website as an R data frame.  It is recommended that RStudio users use the \code{View()} function to interactively browse and filter these variables to find the right variables to use.
+#'
+#' \code{load_variables()} returns three columns by default: \code{name}, which is the Census ID code to be supplied to the \code{variables} parameter in \code{get_decennial()} or \code{get_acs()}; \code{label}, which is a detailed description of the variable; and \code{concept}, which provides information about the table that a given variable belongs to.  For 5-year ACS detailed tables datasets, a fourth column, \code{geography}, tells you the smallest geography at which a given variable is available.
+#'
+#' Datasets available are as follows: "sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp",
+#' "as", "gu", "mp", "vi", "acsse",
+#' "dpas", "dpgu", "dpmp", "dpvi",
+#' "dhcvi", "dhcgu", "dhcvi", "dhcas",
+#' "acs1", "acs3", "acs5", "acs1/profile",
+#' "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject",
+#' "acs5/subject", "acs1/cprofile", "acs5/cprofile",
+#' "sf2profile", "sf3profile",
+#' "sf4profile", "aian", "aianprofile",
+#' "cd110h", "cd110s", "cd110hprofile", "cd110sprofile", "sldh",
+#' "slds", "sldhprofile", "sldsprofile", "cqr",
+#' "cd113", "cd113profile", "cd115", "cd115profile", "cd116", "cd118", and
+#' "plnat".
+#'
 #' @param year The year for which you are requesting variables. Either the year
 #'   or endyear of the decennial Census or ACS sample. 5-year ACS data is
 #'   available from 2009 through 2020. 1-year ACS data is available from 2005
 #'   through 2021, with the exception of 2020.
-#' @param dataset One of "sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp",
-#'   "as", "gu", "mp", "vi", "acsse", "acs1", "acs3", "acs5", "acs1/profile",
-#'   "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject", "acs5/subject",
-#'   "acs1/cprofile", or "acs5/cprofile".
+#' @param dataset The dataset name as used on the Census website.  See the Details in this documentation for a full list of dataset names.
 #' @param cache Whether you would like to cache the dataset for future access,
 #'   or load the dataset from an existing cache. Defaults to FALSE.
 #'
@@ -26,7 +41,13 @@ load_variables <- function(
               "dhcvi", "dhcgu", "dhcvi", "dhcas",
               "acs1", "acs3", "acs5", "acs1/profile",
               "acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject",
-              "acs5/subject", "acs1/cprofile", "acs5/cprofile"),
+              "acs5/subject", "acs1/cprofile", "acs5/cprofile",
+              "sf2profile", "sf3profile",
+              "sf4profile", "aian", "aianprofile",
+              "cd110h", "cd110s", "cd110hprofile", "cd110sprofile", "sldh",
+              "slds", "sldhprofile", "sldsprofile", "cqr",
+              "cd113", "cd113profile", "cd115", "cd115profile", "cd116",
+              "plnat", "cd118"),
   cache = FALSE) {
 
   if (length(year) != 1 || !grepl('[0-9]{4}', year)){
@@ -76,7 +97,13 @@ load_variables <- function(
   if (dataset %in% c("sf1", "sf2", "sf3", "sf4", "pl",
                      "as", "gu", "mp", "vi", "dhc", "dp",
                      "dpas", "dpgu", "dpmp", "dpvi",
-                     "dhcvi", "dhcgu", "dhcvi", "dhcas")) {
+                     "dhcvi", "dhcgu", "dhcvi", "dhcas",
+                     "sf2profile", "sf3profile",
+                     "sf4profile", "aian", "aianprofile",
+                     "cd110h", "cd110s", "cd110hprofile", "cd110sprofile", "sldh",
+                     "slds", "sldhprofile", "sldsprofile", "cqr",
+                     "cd113", "cd113profile", "cd115", "cd115profile", "cd116",
+                     "plnat", "cd118")) {
     dataset <- paste0("dec/", dataset)
   }
 

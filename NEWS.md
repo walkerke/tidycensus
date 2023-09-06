@@ -1,3 +1,8 @@
+# tidycensus 1.4.4
+
+* `get_estimates()` now supports the newer Population Estimates Program (PEP) datasets not found on the Census API. Please review the package documentation at https://walker-data.com/tidycensus/articles/other-datasets.html for examples of how to use the new datasets, which differ slightly from older versions.
+* Decennial Census data for island areas and some historical decennial Census files (for 2000) are now available.  To see a full list of decennial Census datasets available in tidycensus, use the `summary_files()` function.
+
 # tidycensus 1.4
 
 * `get_decennial()` has been updated to accommodate the new Demographic and Housing Characteristics and Demographic Profile summary files.  Use `sumfile = "dhc"` for the DHC file, and `sumfile = "dp"` for the DP file.  

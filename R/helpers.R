@@ -649,7 +649,7 @@ summary_files <- function(year) {
   } else if (year == 2020) {
     sumfiles <- c("pl", "dhc", "dp", "pes", "dpas",
                   "dpmp", "dpgu", "dpvi",
-                  "dhcvi", "dhcgu", "dhcvi", "dhcas")
+                  "dhcvi", "dhcgu", "dhcvi", "dhcas", "cd118")
   } else {
     stop("Invalid year for `get_decennial()`; valid years are 2000, 2010, and 2020.", call. = FALSE)
   }
