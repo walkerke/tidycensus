@@ -259,7 +259,13 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
       pm <- pumas(state = state, cb = cb, year = year, class = "sf", ...)
     }
 
-    pm <- rename(pm, GEOID = GEOID10)
+    if (year > 2021) {
+      pm <- rename(pm, GEOID = GEOID20)
+    } else {
+      pm <- rename(pm, GEOID = GEOID10)
+    }
+
+
 
     return(pm)
 
