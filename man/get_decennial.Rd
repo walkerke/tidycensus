@@ -71,7 +71,7 @@ we recommend using \code{tigris::shift_geometry()} instead.}
 
 \item{summary_var}{Character string of a "summary variable" from the decennial Census
 to be included in your output. Usually a variable (e.g. total population)
-that you'll want to use as a denominator or comparison.}
+that you'll want to use as a denominator or comparison.z}
 
 \item{key}{Your Census API key.
 Obtain one at \url{https://api.census.gov/data/key_signup.html}}

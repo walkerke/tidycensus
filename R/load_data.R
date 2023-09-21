@@ -319,7 +319,8 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 }
 
 
-load_data_decennial <- function(geography, variables, key, year, sumfile,
+load_data_decennial <- function(geography, variables, key, year, sumfile, pop_group,
+                                other_args,
                                 state = NULL, county = NULL, show_call = FALSE) {
 
 
@@ -405,13 +406,15 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
 
       call <- GET(base, query = list(get = vars_to_get,
                                      "for" = for_area,
-                                     key = key))
+                                     key = key,
+                                     "POPGROUP" = pop_group))
     } else {
 
       call <- GET(base, query = list(get = vars_to_get,
                                      "for" = for_area,
                                      "in" = in_area,
-                                     key = key))
+                                     key = key,
+                                     "POPGROUP" = pop_group))
     }
   }
 
@@ -419,7 +422,8 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
 
     call <- GET(base, query = list(get = vars_to_get,
                                    "for" = paste0(geography, ":*"),
-                                   key = key))
+                                   key = key,
+                                   "POPGROUP" = pop_group))
   }
 
   if (show_call) {

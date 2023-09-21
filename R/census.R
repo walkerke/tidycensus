@@ -36,6 +36,8 @@
 #' @param summary_var Character string of a "summary variable" from the decennial Census
 #'                    to be included in your output. Usually a variable (e.g. total population)
 #'                    that you'll want to use as a denominator or comparison.
+#' @param pop_group The population group code for which you'd like to request data.  Applies to summary files for which population group breakdowns are available like the Detailed DHC-A file.
+#' @param other_args A named list of other keyword arguments to pass to the Census API, if applicable.
 #' @param key Your Census API key.
 #'            Obtain one at \url{https://api.census.gov/data/key_signup.html}
 #' @param show_call if TRUE, display call made to Census API. This can be very useful
@@ -77,6 +79,8 @@ get_decennial <- function(geography,
                           keep_geo_vars = FALSE,
                           shift_geo = FALSE,
                           summary_var = NULL,
+                          pop_group = NULL,
+                          other_args = NULL,
                           key = NULL,
                           show_call = FALSE,
                           ...
@@ -231,6 +235,8 @@ get_decennial <- function(geography,
                                keep_geo_vars = keep_geo_vars,
                                shift_geo = FALSE,
                                summary_var = summary_var,
+                               pop_group = pop_group,
+                               other_args = other_args,
                                key = key,
                                show_call = show_call,
                                ...)
@@ -260,6 +266,8 @@ get_decennial <- function(geography,
                                keep_geo_vars = keep_geo_vars,
                                shift_geo = FALSE,
                                summary_var = summary_var,
+                               pop_group = pop_group,
+                               other_args = other_args,
                                key = key,
                                show_call = show_call))
       })
@@ -298,6 +306,8 @@ get_decennial <- function(geography,
           message("Using the Demographic and Housing Characteristics File")
         } else if (sumfile == "dp") {
           message("Using the Demographic Profile")
+        } else if (sumfile == "ddhca") {
+          message("Using the Detailed DHC-A File")
         }
       }
       d
@@ -326,6 +336,8 @@ get_decennial <- function(geography,
         message("Using the Demographic and Housing Characteristics File")
       } else if (sumfile == "dp") {
         message("Using the Demographic Profile")
+      } else if (sumfile == "ddhca") {
+        message("Using the Detailed DHC-A File")
       }
     }
 
@@ -445,7 +457,7 @@ get_decennial <- function(geography,
         geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
                                                 state = state, county = county, criteria = "2020", ...)))
       } else if (sumfile == "cd118") {
-        stop("Geometry is not yet available for this sumfile, but will be in mid-September 2023.")
+        stop("Geometry is not yet available for this sumfile in tidycensus.")
         # try(suppressMessages(use_tigris(geography = geography, year = 2022,
         #                                 state = state, county = county, ...)))
       } else {

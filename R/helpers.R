@@ -653,7 +653,7 @@ summary_files <- function(year) {
                   "gu", "vi", "cd113", "cd113profile",
                   "cd115", "cd115profile", "cd116")
   } else if (year == 2020) {
-    sumfiles <- c("pl", "dhc", "dp", "pes", "dpas",
+    sumfiles <- c("pl", "dhc", "dp", "pes", "dpas", "ddhca",
                   "dpmp", "dpgu", "dpvi",
                   "dhcvi", "dhcgu", "dhcvi", "dhcas", "cd118")
   } else {
