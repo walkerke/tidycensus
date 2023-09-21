@@ -8,7 +8,7 @@
 #' @import httr
 #' @import sf
 #' @import dplyr
-#' @importFrom purrr map_dbl map_chr map reduce map_df flatten_df modify_depth map_dfc
+#' @importFrom purrr map_dbl map_chr map reduce map_df flatten_df modify_depth map_dfc map_lgl
 #' @import tidyr
 #' @importFrom jsonlite fromJSON
 #' @import tigris

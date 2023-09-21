@@ -84,6 +84,10 @@ get_decennial <- function(geography,
                           ...
                           ) {
 
+  if (sumfile == "ddhca" && is.null(pop_group)) {
+    rlang::abort("You must specify a population group to use the DDHC-A file. Look up codes with `get_pop_groups()` or specify `pop_group = 'all' to get all available population groups for a given geography / variable combination.")
+  }
+
   if (shift_geo) {
     warning("The `shift_geo` argument is deprecated and will be removed in a future release. We recommend using `tigris::shift_geometry()` instead.", call. = FALSE)
   }
@@ -281,9 +285,16 @@ get_decennial <- function(geography,
   if (length(variables) > 48) {
     l <- split(variables, ceiling(seq_along(variables) / 48))
 
+    if (!is.null(pop_group)) {
+      join_vars <- c("GEOID", "NAME", "POPGROUP")
+    } else {
+      join_vars <- c("GEOID", "NAME")
+    }
+
     dat <- map(l, function(x) {
       d <- try(load_data_decennial(geography, x, key, year, sumfile, pop_group, state, county, show_call = show_call),
                silent = silent)
+
       # If sf1 fails, try to get it from sf3
       if (inherits(d, "try-error") && year < 2010) {
 
@@ -292,6 +303,7 @@ get_decennial <- function(geography,
         d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", pop_group, state, county, show_call = show_call)))
         message("Variables not found in Summary File 1. Trying Summary File 3...")
       } else {
+
         if (sumfile == "sf3") {
           message("Using Census Summary File 3")
         } else if (sumfile == "sf1") {
@@ -305,10 +317,11 @@ get_decennial <- function(geography,
         } else if (sumfile == "ddhca") {
           message("Using the Detailed DHC-A File")
         }
+
       }
       d
     }) %>%
-      reduce(left_join, by = c("GEOID", "NAME"))
+      reduce(left_join, by = join_vars)
   } else {
     dat <- try(load_data_decennial(geography, variables, key, year, sumfile, pop_group, state, county, show_call = show_call),
                silent = silent)
@@ -335,8 +348,13 @@ get_decennial <- function(geography,
       } else if (sumfile == "ddhca") {
         message("Using the Detailed DHC-A File")
       }
+
     }
 
+  }
+
+  if (inherits(dat, "try-error")) {
+    rlang::abort(message = dat)
   }
 
   if (output == "tidy") {
@@ -393,8 +411,15 @@ get_decennial <- function(geography,
     dat2[dat2 == -888888888] <- NA
     dat2[dat2 == -999999999] <- NA
 
-    dat2 <- dat2 %>%
-      select(GEOID, NAME, everything())
+    if ("POPGROUP" %in% names(dat2)) {
+      dat2 <- dat2 %>%
+        select(GEOID, NAME, POPGROUP, everything())
+    } else {
+      dat2 <- dat2 %>%
+        select(GEOID, NAME, everything())
+    }
+
+
 
   }
 
