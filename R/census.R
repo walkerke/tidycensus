@@ -37,7 +37,6 @@
 #'                    to be included in your output. Usually a variable (e.g. total population)
 #'                    that you'll want to use as a denominator or comparison.
 #' @param pop_group The population group code for which you'd like to request data.  Applies to summary files for which population group breakdowns are available like the Detailed DHC-A file.
-#' @param other_args A named list of other keyword arguments to pass to the Census API, if applicable.
 #' @param key Your Census API key.
 #'            Obtain one at \url{https://api.census.gov/data/key_signup.html}
 #' @param show_call if TRUE, display call made to Census API. This can be very useful
@@ -80,7 +79,6 @@ get_decennial <- function(geography,
                           shift_geo = FALSE,
                           summary_var = NULL,
                           pop_group = NULL,
-                          other_args = NULL,
                           key = NULL,
                           show_call = FALSE,
                           ...
@@ -236,7 +234,6 @@ get_decennial <- function(geography,
                                shift_geo = FALSE,
                                summary_var = summary_var,
                                pop_group = pop_group,
-                               other_args = other_args,
                                key = key,
                                show_call = show_call,
                                ...)
@@ -267,7 +264,6 @@ get_decennial <- function(geography,
                                shift_geo = FALSE,
                                summary_var = summary_var,
                                pop_group = pop_group,
-                               other_args = other_args,
                                key = key,
                                show_call = show_call))
       })
@@ -286,14 +282,14 @@ get_decennial <- function(geography,
     l <- split(variables, ceiling(seq_along(variables) / 48))
 
     dat <- map(l, function(x) {
-      d <- try(load_data_decennial(geography, x, key, year, sumfile, state, county, show_call = show_call),
+      d <- try(load_data_decennial(geography, x, key, year, sumfile, pop_group, state, county, show_call = show_call),
                silent = silent)
       # If sf1 fails, try to get it from sf3
       if (inherits(d, "try-error") && year < 2010) {
 
         # stop("The 2000 decennial Census SF3 endpoint has been removed by the Census Bureau. We will support this data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.", call. = FALSE)
 
-        d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", state, county, show_call = show_call)))
+        d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", pop_group, state, county, show_call = show_call)))
         message("Variables not found in Summary File 1. Trying Summary File 3...")
       } else {
         if (sumfile == "sf3") {
@@ -314,7 +310,7 @@ get_decennial <- function(geography,
     }) %>%
       reduce(left_join, by = c("GEOID", "NAME"))
   } else {
-    dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county, show_call = show_call),
+    dat <- try(load_data_decennial(geography, variables, key, year, sumfile, pop_group, state, county, show_call = show_call),
                silent = silent)
 
     # If sf1 fails, try to get it from sf3
@@ -323,7 +319,7 @@ get_decennial <- function(geography,
 
       # stop("The 2000 decennial Census SF3 endpoint has been removed by the Census Bureau. We will support this data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.", call. = FALSE)
 
-      dat <- try(suppressMessages(load_data_decennial(geography, variables, key, year, sumfile = "sf3", state, county, show_call = show_call)))
+      dat <- try(suppressMessages(load_data_decennial(geography, variables, key, year, sumfile = "sf3", pop_group, state, county, show_call = show_call)))
       message("Variables not found in Summary File 1. Trying Summary File 3...")
     } else {
       if (sumfile == "sf3") {
@@ -345,10 +341,17 @@ get_decennial <- function(geography,
 
   if (output == "tidy") {
 
-    sub <- dat[c("GEOID", "NAME", variables)]
+    if (is.null(pop_group)) {
+      sub <- dat[c("GEOID", "NAME", variables)]
 
-    dat2 <- sub %>%
-      gather(key = variable, value = value, -GEOID, -NAME)
+      dat2 <- sub %>%
+        gather(key = variable, value = value, -GEOID, -NAME)
+    } else {
+      sub <- dat[c("GEOID", "NAME", "POPGROUP", variables)]
+
+      dat2 <- sub %>%
+        gather(key = variable, value = value, -GEOID, -NAME, -POPGROUP)
+    }
 
     if (!is.null(names(variables))) {
       for (i in 1:length(variables)) {

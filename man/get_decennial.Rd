@@ -18,6 +18,7 @@ get_decennial(
   keep_geo_vars = FALSE,
   shift_geo = FALSE,
   summary_var = NULL,
+  pop_group = NULL,
   key = NULL,
   show_call = FALSE,
   ...
@@ -71,7 +72,9 @@ we recommend using \code{tigris::shift_geometry()} instead.}
 
 \item{summary_var}{Character string of a "summary variable" from the decennial Census
 to be included in your output. Usually a variable (e.g. total population)
-that you'll want to use as a denominator or comparison.z}
+that you'll want to use as a denominator or comparison.}
+
+\item{pop_group}{The population group code for which you'd like to request data.  Applies to summary files for which population group breakdowns are available like the Detailed DHC-A file.}
 
 \item{key}{Your Census API key.
 Obtain one at \url{https://api.census.gov/data/key_signup.html}}

@@ -320,7 +320,6 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
 
 load_data_decennial <- function(geography, variables, key, year, sumfile, pop_group,
-                                other_args,
                                 state = NULL, county = NULL, show_call = FALSE) {
 
 
@@ -486,7 +485,7 @@ load_data_decennial <- function(geography, variables, key, year, sumfile, pop_gr
 
   dat[variables] <- lapply(dat[variables], as.numeric)
 
-  v2 <- c(variables, "NAME")
+  v2 <- c(variables, "NAME", "POPGROUP")
 
   # Get the geography ID variables
   id_vars <- names(dat)[! names(dat) %in% v2]
