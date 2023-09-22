@@ -231,11 +231,14 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     # Right now, PUMAs are not defined for 2020 and are not in the CB file
     # Use the 2019 CB pumas for 2020 and 2021 as they align with the boundaries
-    # used; 2022 should switch to the new 2020 PUMA boundaries (which aren't
-    # yet available)
+    # used; 2022 should switch to the new 2020 PUMA boundaries which are available       in the 2020 CB file
     if (year %in% 2020:2021) {
       if (cb) {
         year <- 2019
+      }
+    } else if (year >= 2022) {
+      if (cb) {
+        year <- 2020
       }
     }
 
@@ -251,15 +254,20 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
       }) %>%
         rbind_tigris()
     } else if (is.null(state)) {
-      pm <- purrr::map(state_ids, function(x) {
-        pumas(state = x, cb = cb, year = year, class = "sf", ...)
-      }) %>%
-        rbind_tigris()
+
+      if (!year %in% 2019:2020 && !cb) {
+        pm <- purrr::map(state_ids, function(x) {
+          pumas(state = x, cb = cb, year = year, class = "sf", ...)
+        }) %>%
+          rbind_tigris()
+      } else {
+        pm <- pumas(state = state, cb = cb, year = year, class = "sf", ...)
+      }
     } else {
       pm <- pumas(state = state, cb = cb, year = year, class = "sf", ...)
     }
 
-    if (year > 2021) {
+    if ("GEOID20" %in% names(pm)) {
       pm <- rename(pm, GEOID = GEOID20)
     } else {
       pm <- rename(pm, GEOID = GEOID10)
