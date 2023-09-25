@@ -1,3 +1,9 @@
+# tidycensus 1.5
+
+* Support added for the new Detailed DHC-A file, which includes the ability to query for detailed population groups. This functionality is now enabled for Summary Files 2 and 4 in past years as well with the `pop_group` argument. 
+* Full geometry support enabled for the 2022 1-year American Community Survey.
+* Various bug fixes and performance improvements, including the pesky 'Error in UseMethod("gather") no applicable method for 'gather' applied to an object of class "character"' problem.  
+
 # tidycensus 1.4.4
 
 * `get_estimates()` now supports the newer Population Estimates Program (PEP) datasets not found on the Census API. Please review the package documentation at https://walker-data.com/tidycensus/articles/other-datasets.html for examples of how to use the new datasets, which differ slightly from older versions.

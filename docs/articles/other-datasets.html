@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5</span>
       </span>
     </div>
 
@@ -292,18 +292,18 @@ function will return the appropriate labels instead. For example:</p>
 
 <span class="va">la_age_hisp</span></code></pre></div>
 <pre><code><span class="co">## <span style="color: #949494;"># A tibble: 114 × 7</span></span>
-<span class="co">##    GEOID NAME                year SEX   AGEGROUP           HISP            value</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> 06037 Los Angeles County  <span style="text-decoration: underline;">2</span>022 Male  All ages           Both Hispanic… 4.83<span style="color: #949494;">e</span>6</span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> 06037 Los Angeles County  <span style="text-decoration: underline;">2</span>022 Male  All ages           Non-Hispanic   2.44<span style="color: #949494;">e</span>6</span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> 06037 Los Angeles County  <span style="text-decoration: underline;">2</span>022 Male  All ages           Hispanic       2.39<span style="color: #949494;">e</span>6</span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> 06037 Los Angeles County  <span style="text-decoration: underline;">2</span>022 Male  Age 0 to 4 years   Both Hispanic… 2.49<span style="color: #949494;">e</span>5</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> 06037 Los Angeles County  <span style="text-decoration: underline;">2</span>022 Male  Age 0 to 4 years   Non-Hispanic   1.06<span style="color: #949494;">e</span>5</span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> 06037 Los Angeles County  <span style="text-decoration: underline;">2</span>022 Male  Age 0 to 4 years   Hispanic       1.43<span style="color: #949494;">e</span>5</span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> 06037 Los Angeles County  <span style="text-decoration: underline;">2</span>022 Male  Age 5 to 9 years   Both Hispanic… 2.84<span style="color: #949494;">e</span>5</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> 06037 Los Angeles County  <span style="text-decoration: underline;">2</span>022 Male  Age 5 to 9 years   Non-Hispanic   1.20<span style="color: #949494;">e</span>5</span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> 06037 Los Angeles County  <span style="text-decoration: underline;">2</span>022 Male  Age 5 to 9 years   Hispanic       1.63<span style="color: #949494;">e</span>5</span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> 06037 Los Angeles County  <span style="text-decoration: underline;">2</span>022 Male  Age 10 to 14 years Both Hispanic… 2.98<span style="color: #949494;">e</span>5</span>
+<span class="co">##    GEOID NAME                            year SEX   AGEGROUP        HISP   value</span>
+<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">## <span style="color: #BCBCBC;"> 1</span> 06037 Los Angeles County, California  <span style="text-decoration: underline;">2</span>022 Male  All ages        Both… 4.83<span style="color: #949494;">e</span>6</span>
+<span class="co">## <span style="color: #BCBCBC;"> 2</span> 06037 Los Angeles County, California  <span style="text-decoration: underline;">2</span>022 Male  All ages        Non-… 2.44<span style="color: #949494;">e</span>6</span>
+<span class="co">## <span style="color: #BCBCBC;"> 3</span> 06037 Los Angeles County, California  <span style="text-decoration: underline;">2</span>022 Male  All ages        Hisp… 2.39<span style="color: #949494;">e</span>6</span>
+<span class="co">## <span style="color: #BCBCBC;"> 4</span> 06037 Los Angeles County, California  <span style="text-decoration: underline;">2</span>022 Male  Age 0 to 4 yea… Both… 2.49<span style="color: #949494;">e</span>5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 5</span> 06037 Los Angeles County, California  <span style="text-decoration: underline;">2</span>022 Male  Age 0 to 4 yea… Non-… 1.06<span style="color: #949494;">e</span>5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 6</span> 06037 Los Angeles County, California  <span style="text-decoration: underline;">2</span>022 Male  Age 0 to 4 yea… Hisp… 1.43<span style="color: #949494;">e</span>5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 7</span> 06037 Los Angeles County, California  <span style="text-decoration: underline;">2</span>022 Male  Age 5 to 9 yea… Both… 2.84<span style="color: #949494;">e</span>5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 8</span> 06037 Los Angeles County, California  <span style="text-decoration: underline;">2</span>022 Male  Age 5 to 9 yea… Non-… 1.20<span style="color: #949494;">e</span>5</span>
+<span class="co">## <span style="color: #BCBCBC;"> 9</span> 06037 Los Angeles County, California  <span style="text-decoration: underline;">2</span>022 Male  Age 5 to 9 yea… Hisp… 1.63<span style="color: #949494;">e</span>5</span>
+<span class="co">## <span style="color: #BCBCBC;">10</span> 06037 Los Angeles County, California  <span style="text-decoration: underline;">2</span>022 Male  Age 10 to 14 y… Both… 2.98<span style="color: #949494;">e</span>5</span>
 <span class="co">## <span style="color: #949494;"># ℹ 104 more rows</span></span></code></pre>
 <p>With some additional data wrangling, the returned format facilitates
 analysis and visualization. For example, we can compare population

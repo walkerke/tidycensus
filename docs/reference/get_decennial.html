@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5</span>
       </span>
     </div>
 
@@ -95,6 +95,8 @@
   keep_geo_vars <span class="op">=</span> <span class="cn">FALSE</span>,
   shift_geo <span class="op">=</span> <span class="cn">FALSE</span>,
   summary_var <span class="op">=</span> <span class="cn">NULL</span>,
+  pop_group <span class="op">=</span> <span class="cn">NULL</span>,
+  pop_group_label <span class="op">=</span> <span class="cn">FALSE</span>,
   key <span class="op">=</span> <span class="cn">NULL</span>,
   show_call <span class="op">=</span> <span class="cn">FALSE</span>,
   <span class="va">...</span>
@@ -176,6 +178,14 @@ we recommend using <code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.
 <dd><p>Character string of a "summary variable" from the decennial Census
 to be included in your output. Usually a variable (e.g. total population)
 that you'll want to use as a denominator or comparison.</p></dd>
+
+
+<dt>pop_group</dt>
+<dd><p>The population group code for which you'd like to request data.  Applies to summary files for which population group breakdowns are available like the Detailed DHC-A file.</p></dd>
+
+
+<dt>pop_group_label</dt>
+<dd><p>If <code>TRUE</code>, return a <code>"pop_group_label"</code> column that contains the label for the population group.  Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt>key</dt>

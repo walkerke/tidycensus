@@ -452,11 +452,11 @@ get_decennial <- function(geography,
   if (!is.null(summary_var)) {
 
     sumdat <- suppressMessages(try(load_data_decennial(geography, summary_var, key, year,
-                                                       sumfile, state, county, show_call = show_call)))
+                                                       sumfile, pop_group, state, county, show_call = show_call)))
 
     if (inherits(sumdat, "try-error")) {
       sumdat <- suppressMessages(try(load_data_decennial(geography, summary_var, key, year,
-                                                         sumfile = "sf3", state, county, show_call = show_call)))
+                                                         sumfile = "sf3", pop_group, state, county, show_call = show_call)))
     }
 
     if (geography == "zip code tabulation area (or part)" && year == 2020 && unique(nchar(dat2$GEOID)) == 7) {

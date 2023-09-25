@@ -43,6 +43,9 @@
     <loc>/reference/census_api_key.html</loc>
   </url>
   <url>
+    <loc>/reference/check_ddhca_groups.html</loc>
+  </url>
+  <url>
     <loc>/reference/county_laea.html</loc>
   </url>
   <url>
@@ -65,6 +68,9 @@
   </url>
   <url>
     <loc>/reference/get_flows.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_pop_groups.html</loc>
   </url>
   <url>
     <loc>/reference/get_pums.html</loc>

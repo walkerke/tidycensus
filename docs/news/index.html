@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5</span>
       </span>
     </div>
 
@@ -75,6 +75,18 @@
       <small>Source: <a href="https://github.com/walkerke/tidycensus/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.5" id="tidycensus-15">tidycensus 1.5<a class="anchor" aria-label="anchor" href="#tidycensus-15"></a></h2>
+<ul><li>Support added for the new Detailed DHC-A file, which includes the ability to query for detailed population groups. This functionality is now enabled for Summary Files 2 and 4 in past years as well with the <code>pop_group</code> argument.</li>
+<li>Full geometry support enabled for the 2022 1-year American Community Survey.</li>
+<li>Various bug fixes and performance improvements, including the pesky ‘Error in UseMethod(“gather”) no applicable method for ’gather’ applied to an object of class “character”’ problem.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.4.4" id="tidycensus-144">tidycensus 1.4.4<small>2023-08-07</small><a class="anchor" aria-label="anchor" href="#tidycensus-144"></a></h2>
+<ul><li>
+<code><a href="../reference/get_estimates.html">get_estimates()</a></code> now supports the newer Population Estimates Program (PEP) datasets not found on the Census API. Please review the package documentation at <a href="https://walker-data.com/tidycensus/articles/other-datasets.html" class="external-link uri">https://walker-data.com/tidycensus/articles/other-datasets.html</a> for examples of how to use the new datasets, which differ slightly from older versions.</li>
+<li>Decennial Census data for island areas and some historical decennial Census files (for 2000) are now available. To see a full list of decennial Census datasets available in tidycensus, use the <code><a href="../reference/summary_files.html">summary_files()</a></code> function.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.4" id="tidycensus-14">tidycensus 1.4<small>2023-05-27</small><a class="anchor" aria-label="anchor" href="#tidycensus-14"></a></h2>
 <ul><li>

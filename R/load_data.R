@@ -331,11 +331,13 @@ load_data_decennial <- function(geography, variables, key, year, sumfile, pop_gr
     vars_to_get <- paste0(var, ",NAME")
   }
 
-  if (pop_group == "all") {
-    vars_to_get <- paste0(vars_to_get, ",POPGROUP")
-    pop_group <- NULL
-  }
+  if (!is.null(pop_group)) {
+    if (pop_group == "all") {
+      vars_to_get <- paste0(vars_to_get, ",POPGROUP")
+      pop_group <- NULL
+    }
 
+  }
 
   base <- paste0("https://api.census.gov/data/",
                                   year,
