@@ -15,7 +15,7 @@ get_pop_groups <- function(year, sumfile) {
   item_data <- j$variables$POPGROUP$values$item
 
   # Convert to a data frame
-  df <- tibble::tibble(pop_group = names(item_data), pop_group_label = unlist(item_data))
+  df <- dplyr::tibble(pop_group = names(item_data), pop_group_label = unlist(item_data))
 
   # If the year is 2020, you need to get rid of anything that isn't 4 digits
   # as they left all the old codes in there
