@@ -319,7 +319,7 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 }
 
 
-load_data_decennial <- function(geography, variables, key, year, sumfile,
+load_data_decennial <- function(geography, variables, key, year, sumfile, pop_group,
                                 state = NULL, county = NULL, show_call = FALSE) {
 
 
@@ -329,6 +329,11 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
     vars_to_get <- paste0(var, ",ANPSADPI")
   } else {
     vars_to_get <- paste0(var, ",NAME")
+  }
+
+  if (pop_group == "all") {
+    vars_to_get <- paste0(vars_to_get, ",POPGROUP")
+    pop_group <- NULL
   }
 
 
@@ -405,13 +410,15 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
 
       call <- GET(base, query = list(get = vars_to_get,
                                      "for" = for_area,
-                                     key = key))
+                                     key = key,
+                                     "POPGROUP" = pop_group))
     } else {
 
       call <- GET(base, query = list(get = vars_to_get,
                                      "for" = for_area,
                                      "in" = in_area,
-                                     key = key))
+                                     key = key,
+                                     "POPGROUP" = pop_group))
     }
   }
 
@@ -419,7 +426,8 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
 
     call <- GET(base, query = list(get = vars_to_get,
                                    "for" = paste0(geography, ":*"),
-                                   key = key))
+                                   key = key,
+                                   "POPGROUP" = pop_group))
   }
 
   if (show_call) {
@@ -428,6 +436,22 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
   }
 
   # Make sure call status returns 200, else, print the error message for the user.
+  # Try to handle 204's here
+  if (call$status_code == 204) {
+
+    if (sumfile == "ddhca") {
+      rlang::abort(c("Your DDHC-A request returned No Content from the API.",
+                     "i" = "The DDHC-A file uses an 'adaptive design' where data availability varies by geography and by population group.",
+                     "i" = "Read Section 3-1 at https://www2.census.gov/programs-surveys/decennial/2020/technical-documentation/complete-tech-docs/detailed-demographic-and-housing-characteristics-file-a/2020census-detailed-dhc-a-techdoc.pdf for more information.",
+                     "i" = "In tidycensus, use the function `check_ddhca_groups()` to see if your data is available."))
+
+    } else {
+      rlang::abort("No content was returned from the API.  Please refine your selection.")
+
+    }
+
+  }
+
   if (call$status_code != 200) {
     msg <- content(call, as = "text")
 
@@ -480,9 +504,11 @@ load_data_decennial <- function(geography, variables, key, year, sumfile,
     dat <- rename(dat, NAME = ANPSADPI)
   }
 
-  dat[variables] <- lapply(dat[variables], as.numeric)
+  vnum <- variables[variables != "POPGROUP"]
 
-  v2 <- c(variables, "NAME")
+  dat[vnum] <- lapply(dat[vnum], as.numeric)
+
+  v2 <- c(variables, "NAME", "POPGROUP")
 
   # Get the geography ID variables
   id_vars <- names(dat)[! names(dat) %in% v2]

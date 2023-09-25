@@ -36,6 +36,8 @@
 #' @param summary_var Character string of a "summary variable" from the decennial Census
 #'                    to be included in your output. Usually a variable (e.g. total population)
 #'                    that you'll want to use as a denominator or comparison.
+#' @param pop_group The population group code for which you'd like to request data.  Applies to summary files for which population group breakdowns are available like the Detailed DHC-A file.
+#' @param pop_group_label If \code{TRUE}, return a \code{"pop_group_label"} column that contains the label for the population group.  Defaults to \code{FALSE}.
 #' @param key Your Census API key.
 #'            Obtain one at \url{https://api.census.gov/data/key_signup.html}
 #' @param show_call if TRUE, display call made to Census API. This can be very useful
@@ -77,10 +79,16 @@ get_decennial <- function(geography,
                           keep_geo_vars = FALSE,
                           shift_geo = FALSE,
                           summary_var = NULL,
+                          pop_group = NULL,
+                          pop_group_label = FALSE,
                           key = NULL,
                           show_call = FALSE,
                           ...
                           ) {
+
+  if (sumfile == "ddhca" && is.null(pop_group)) {
+    rlang::abort("You must specify a population group to use the DDHC-A file. Look up codes with `get_pop_groups()` or specify `pop_group = 'all' to get all available population groups for a given geography / variable combination.")
+  }
 
   if (shift_geo) {
     warning("The `shift_geo` argument is deprecated and will be removed in a future release. We recommend using `tigris::shift_geometry()` instead.", call. = FALSE)
@@ -231,6 +239,8 @@ get_decennial <- function(geography,
                                keep_geo_vars = keep_geo_vars,
                                shift_geo = FALSE,
                                summary_var = summary_var,
+                               pop_group = pop_group,
+                               pop_group_label = pop_group_label,
                                key = key,
                                show_call = show_call,
                                ...)
@@ -260,6 +270,8 @@ get_decennial <- function(geography,
                                keep_geo_vars = keep_geo_vars,
                                shift_geo = FALSE,
                                summary_var = summary_var,
+                               pop_group = pop_group,
+                               pop_group_label = pop_group_label,
                                key = key,
                                show_call = show_call))
       })
@@ -277,17 +289,25 @@ get_decennial <- function(geography,
   if (length(variables) > 48) {
     l <- split(variables, ceiling(seq_along(variables) / 48))
 
+    if (!is.null(pop_group)) {
+      join_vars <- c("GEOID", "NAME", "POPGROUP")
+    } else {
+      join_vars <- c("GEOID", "NAME")
+    }
+
     dat <- map(l, function(x) {
-      d <- try(load_data_decennial(geography, x, key, year, sumfile, state, county, show_call = show_call),
+      d <- try(load_data_decennial(geography, x, key, year, sumfile, pop_group, state, county, show_call = show_call),
                silent = silent)
+
       # If sf1 fails, try to get it from sf3
       if (inherits(d, "try-error") && year < 2010) {
 
         # stop("The 2000 decennial Census SF3 endpoint has been removed by the Census Bureau. We will support this data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.", call. = FALSE)
 
-        d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", state, county, show_call = show_call)))
+        d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", pop_group, state, county, show_call = show_call)))
         message("Variables not found in Summary File 1. Trying Summary File 3...")
       } else {
+
         if (sumfile == "sf3") {
           message("Using Census Summary File 3")
         } else if (sumfile == "sf1") {
@@ -298,13 +318,16 @@ get_decennial <- function(geography,
           message("Using the Demographic and Housing Characteristics File")
         } else if (sumfile == "dp") {
           message("Using the Demographic Profile")
+        } else if (sumfile == "ddhca") {
+          message("Using the Detailed DHC-A File")
         }
+
       }
       d
     }) %>%
-      reduce(left_join, by = c("GEOID", "NAME"))
+      reduce(left_join, by = join_vars)
   } else {
-    dat <- try(load_data_decennial(geography, variables, key, year, sumfile, state, county, show_call = show_call),
+    dat <- try(load_data_decennial(geography, variables, key, year, sumfile, pop_group, state, county, show_call = show_call),
                silent = silent)
 
     # If sf1 fails, try to get it from sf3
@@ -313,7 +336,7 @@ get_decennial <- function(geography,
 
       # stop("The 2000 decennial Census SF3 endpoint has been removed by the Census Bureau. We will support this data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.", call. = FALSE)
 
-      dat <- try(suppressMessages(load_data_decennial(geography, variables, key, year, sumfile = "sf3", state, county, show_call = show_call)))
+      dat <- try(suppressMessages(load_data_decennial(geography, variables, key, year, sumfile = "sf3", pop_group, state, county, show_call = show_call)))
       message("Variables not found in Summary File 1. Trying Summary File 3...")
     } else {
       if (sumfile == "sf3") {
@@ -326,17 +349,32 @@ get_decennial <- function(geography,
         message("Using the Demographic and Housing Characteristics File")
       } else if (sumfile == "dp") {
         message("Using the Demographic Profile")
+      } else if (sumfile == "ddhca") {
+        message("Using the Detailed DHC-A File")
       }
+
     }
 
   }
 
+  if (inherits(dat, "try-error")) {
+    rlang::abort(message = dat)
+  }
+
   if (output == "tidy") {
 
-    sub <- dat[c("GEOID", "NAME", variables)]
+    if (is.null(pop_group)) {
+      sub <- dat[c("GEOID", "NAME", variables)]
 
-    dat2 <- sub %>%
-      gather(key = variable, value = value, -GEOID, -NAME)
+      dat2 <- sub %>%
+        gather(key = variable, value = value, -GEOID, -NAME)
+    } else {
+      sub <- dat[c("GEOID", "NAME", "POPGROUP", variables)]
+
+      dat2 <- sub %>%
+        gather(key = variable, value = value, -GEOID, -NAME, -POPGROUP) %>%
+        dplyr::rename(pop_group = POPGROUP)
+    }
 
     if (!is.null(names(variables))) {
       for (i in 1:length(variables)) {
@@ -378,9 +416,28 @@ get_decennial <- function(geography,
     dat2[dat2 == -888888888] <- NA
     dat2[dat2 == -999999999] <- NA
 
-    dat2 <- dat2 %>%
-      select(GEOID, NAME, everything())
+    if ("POPGROUP" %in% names(dat2)) {
+      dat2 <- dat2 %>%
+        select(GEOID, NAME, POPGROUP, everything()) %>%
+        dplyr::rename(pop_group = POPGROUP)
+    } else {
+      dat2 <- dat2 %>%
+        select(GEOID, NAME, everything())
+    }
 
+  }
+
+  # If label is requested, join it here
+  if (pop_group_label) {
+    if (is.null(pop_group)) {
+      rlang::abort("This argument is only available when specifying a population group, which is only available for selected datasets.")
+    }
+
+    labels = get_pop_groups(year = year, sumfile = sumfile)
+    dat2 <- dat2 %>%
+      dplyr::left_join(labels, by = "pop_group") %>%
+      dplyr::select(GEOID, NAME, pop_group, pop_group_label,
+                    dplyr::everything())
   }
 
   # For ZCTAs, strip the state code from GEOID (issue #338 and #358)
@@ -445,7 +502,7 @@ get_decennial <- function(geography,
         geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
                                                 state = state, county = county, criteria = "2020", ...)))
       } else if (sumfile == "cd118") {
-        stop("Geometry is not yet available for this sumfile, but will be in mid-September 2023.")
+        stop("Geometry is not yet available for this sumfile in tidycensus.")
         # try(suppressMessages(use_tigris(geography = geography, year = 2022,
         #                                 state = state, county = county, ...)))
       } else {
