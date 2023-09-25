@@ -86,10 +86,6 @@ get_decennial <- function(geography,
                           ...
                           ) {
 
-  if (sumfile == "ddhca" && is.null(pop_group)) {
-    rlang::abort("You must specify a population group to use the DDHC-A file. Look up codes with `get_pop_groups()` or specify `pop_group = 'all' to get all available population groups for a given geography / variable combination.")
-  }
-
   if (shift_geo) {
     warning("The `shift_geo` argument is deprecated and will be removed in a future release. We recommend using `tigris::shift_geometry()` instead.", call. = FALSE)
   }
@@ -111,6 +107,10 @@ get_decennial <- function(geography,
   # are released in 2023)
   if (year == 2020 && sumfile == "sf1") {
     sumfile <- "pl"
+  }
+
+  if (sumfile == "ddhca" && is.null(pop_group)) {
+    rlang::abort("You must specify a population group to use the DDHC-A file. Look up codes with `get_pop_groups()` or specify `pop_group = 'all' to get all available population groups for a given geography / variable combination.")
   }
 
   if (year == 2020 && sumfile == "pl" && geography == "public use microdata area") {
