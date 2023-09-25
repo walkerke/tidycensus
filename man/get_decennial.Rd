@@ -19,6 +19,7 @@ get_decennial(
   shift_geo = FALSE,
   summary_var = NULL,
   pop_group = NULL,
+  pop_group_label = FALSE,
   key = NULL,
   show_call = FALSE,
   ...
@@ -75,6 +76,8 @@ to be included in your output. Usually a variable (e.g. total population)
 that you'll want to use as a denominator or comparison.}
 
 \item{pop_group}{The population group code for which you'd like to request data.  Applies to summary files for which population group breakdowns are available like the Detailed DHC-A file.}
+
+\item{pop_group_label}{If \code{TRUE}, return a \code{"pop_group_label"} column that contains the label for the population group.  Defaults to \code{FALSE}.}
 
 \item{key}{Your Census API key.
 Obtain one at \url{https://api.census.gov/data/key_signup.html}}

@@ -37,6 +37,7 @@
 #'                    to be included in your output. Usually a variable (e.g. total population)
 #'                    that you'll want to use as a denominator or comparison.
 #' @param pop_group The population group code for which you'd like to request data.  Applies to summary files for which population group breakdowns are available like the Detailed DHC-A file.
+#' @param pop_group_label If \code{TRUE}, return a \code{"pop_group_label"} column that contains the label for the population group.  Defaults to \code{FALSE}.
 #' @param key Your Census API key.
 #'            Obtain one at \url{https://api.census.gov/data/key_signup.html}
 #' @param show_call if TRUE, display call made to Census API. This can be very useful
@@ -79,6 +80,7 @@ get_decennial <- function(geography,
                           shift_geo = FALSE,
                           summary_var = NULL,
                           pop_group = NULL,
+                          pop_group_label = FALSE,
                           key = NULL,
                           show_call = FALSE,
                           ...
@@ -238,6 +240,7 @@ get_decennial <- function(geography,
                                shift_geo = FALSE,
                                summary_var = summary_var,
                                pop_group = pop_group,
+                               pop_group_label = pop_group_label,
                                key = key,
                                show_call = show_call,
                                ...)
@@ -268,6 +271,7 @@ get_decennial <- function(geography,
                                shift_geo = FALSE,
                                summary_var = summary_var,
                                pop_group = pop_group,
+                               pop_group_label = pop_group_label,
                                key = key,
                                show_call = show_call))
       })
@@ -368,7 +372,8 @@ get_decennial <- function(geography,
       sub <- dat[c("GEOID", "NAME", "POPGROUP", variables)]
 
       dat2 <- sub %>%
-        gather(key = variable, value = value, -GEOID, -NAME, -POPGROUP)
+        gather(key = variable, value = value, -GEOID, -NAME, -POPGROUP) %>%
+        dplyr::rename(pop_group = POPGROUP)
     }
 
     if (!is.null(names(variables))) {
@@ -413,14 +418,26 @@ get_decennial <- function(geography,
 
     if ("POPGROUP" %in% names(dat2)) {
       dat2 <- dat2 %>%
-        select(GEOID, NAME, POPGROUP, everything())
+        select(GEOID, NAME, POPGROUP, everything()) %>%
+        dplyr::rename(pop_group = POPGROUP)
     } else {
       dat2 <- dat2 %>%
         select(GEOID, NAME, everything())
     }
 
+  }
 
+  # If label is requested, join it here
+  if (pop_group_label) {
+    if (is.null(pop_group)) {
+      rlang::abort("This argument is only available when specifying a population group, which is only available for selected datasets.")
+    }
 
+    labels = get_pop_groups(year = year, sumfile = sumfile)
+    dat2 <- dat2 %>%
+      dplyr::left_join(labels, by = "pop_group") %>%
+      dplyr::select(GEOID, NAME, pop_group, pop_group_label,
+                    dplyr::everything())
   }
 
   # For ZCTAs, strip the state code from GEOID (issue #338 and #358)

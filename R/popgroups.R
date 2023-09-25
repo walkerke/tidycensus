@@ -15,12 +15,12 @@ get_pop_groups <- function(year, sumfile) {
   item_data <- j$variables$POPGROUP$values$item
 
   # Convert to a data frame
-  df <- tibble::tibble(code = names(item_data), label = unlist(item_data))
+  df <- tibble::tibble(pop_group = names(item_data), pop_group_label = unlist(item_data))
 
   # If the year is 2020, you need to get rid of anything that isn't 4 digits
   # as they left all the old codes in there
   if (year == 2020) {
-    df <- dplyr::filter(df, nchar(code) == 4)
+    df <- dplyr::filter(df, nchar(pop_group) == 4)
   }
 
   df
