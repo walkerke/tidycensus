@@ -740,7 +740,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
 
   # for which years is data dictionary available in pums_variables?
   # we'll use this a couple times later on
-  recode_years <- 2017:2021
+  recode_years <- 2017:2022
 
   base <- sprintf("https://api.census.gov/data/%s/acs/%s/pums",
                   year, survey)
