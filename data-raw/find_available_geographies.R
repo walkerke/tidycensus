@@ -62,4 +62,4 @@ table_availability <- future_map_dfr(first_var, function(var) {
 })
 
 # Write out to intermediate file
-readr::write_rds(table_availability, glue::glue("~/dev/tidycensus/data-raw/geo_availability/{survey}_{year}.rds"))
+readr::write_rds(table_availability, glue::glue("~/Dropbox/dev/tidycensus/data-raw/geo_availability/{survey}_{year}.rds"))

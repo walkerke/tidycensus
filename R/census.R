@@ -502,9 +502,11 @@ get_decennial <- function(geography,
         geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
                                                 state = state, county = county, criteria = "2020", ...)))
       } else if (sumfile == "cd118") {
-        stop("Geometry is not yet available for this sumfile in tidycensus.")
-        # try(suppressMessages(use_tigris(geography = geography, year = 2022,
-        #                                 state = state, county = county, ...)))
+        # stop("Geometry is not yet available for this sumfile in tidycensus.")
+        message("CB geometries for the 118th Congress are not yet available; using the TIGER/Line geometries instead")
+
+        geom <- try(suppressMessages(use_tigris(geography = geography, year = 2023,
+                                        state = state, county = county, cb = FALSE, ...)))
       } else {
         geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
                                                 state = state, county = county, ...)))

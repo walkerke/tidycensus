@@ -1,12 +1,12 @@
 Package: tidycensus
 Type: Package
 Title: Load US Census Boundary and Attribute Data as 'tidyverse' and 'sf'-Ready Data Frames
-Version: 1.5.1
+Version: 1.5.2
 Authors@R: c(
     person(given = "Kyle", family = "Walker", email="kyle@walker-data.com", role=c("aut", "cre")),
     person(given = "Matt", family = "Herman", email = "mfherman@gmail.com", role = "aut"),
     person(given = "Kris", family = "Eberwein", email = "eberwein@knights.ucf.edu", role = "ctb"))
-Date: 2023-10-24
+Date: 2023-12-14
 URL: https://walker-data.com/tidycensus/
 BugReports: https://github.com/walkerke/tidycensus/issues
 Description: An integrated R interface to several United States Census Bureau 
