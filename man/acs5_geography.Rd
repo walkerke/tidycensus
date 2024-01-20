@@ -5,7 +5,7 @@
 \alias{acs5_geography}
 \title{Dataset used to identify geography availability in the 5-year ACS Detailed Tables}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 11112 rows and 3 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 12228 rows and 3 columns.
 }
 \usage{
 data(acs5_geography)
