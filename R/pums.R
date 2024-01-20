@@ -458,6 +458,11 @@ to_survey <- function(df,
   # }
 
   if (design == "rep_weights"){
+    # Arguments are set according to guidance from the ipums documentation
+    # available at https://usa.ipums.org/usa/repwt.shtml#q50.
+    # Although these are successive difference weights use of the "JK1",
+    # jackknife, type setting below with the corresponding arguments
+    # produces equivalent results.
     survey <- survey::svrepdesign(
       variables = variables,
       weights = weights,
