@@ -8,7 +8,7 @@
 #'   to request data. To get data from PUMAs in more than one state, specify a
 #'   named vector of state/PUMA pairs and set \code{state = "multiple"}.
 #' @param year The data year of the 1-year ACS sample or the endyear of the
-#'   5-year sample. Defaults to 2020. Please note that 1-year data for 2020 is not available
+#'   5-year sample. Defaults to 2021. Please note that 1-year data for 2020 is not available
 #'   in tidycensus, so users requesting 1-year data should supply a different year.
 #' @param survey The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 #'   (the default).
