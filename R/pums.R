@@ -8,7 +8,7 @@
 #'   to request data. To get data from PUMAs in more than one state, specify a
 #'   named vector of state/PUMA pairs and set \code{state = "multiple"}.
 #' @param year The data year of the 1-year ACS sample or the endyear of the
-#'   5-year sample. Defaults to 2021. Please note that 1-year data for 2020 is not available
+#'   5-year sample. Defaults to 2022. Please note that 1-year data for 2020 is not available
 #'   in tidycensus, so users requesting 1-year data should supply a different year.
 #' @param survey The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 #'   (the default).
@@ -23,7 +23,7 @@
 #'   errors; one of \code{"person"}, \code{"housing"}, or \code{"both"}.
 #' @param recode If TRUE, recodes variable values using Census data dictionary
 #'   and creates a new \code{*_label} column for each variable that is recoded.
-#'   Available for 2017 - 2021 data. Defaults to FALSE.
+#'   Available for 2017 - 2022 data. Defaults to FALSE.
 #' @param return_vacant If TRUE, makes a separate request to the Census API to
 #'   retrieve microdata for vacant housing units, which are handled differently
 #'   in the API as they do not have person-level characteristics.  All person-level
@@ -50,7 +50,7 @@
 get_pums <- function(variables = NULL,
                      state = NULL,
                      puma = NULL,
-                     year = 2021,
+                     year = 2022,
                      survey = "acs5",
                      variables_filter = NULL,
                      rep_weights = NULL,
