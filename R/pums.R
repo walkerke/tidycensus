@@ -97,8 +97,12 @@ get_pums <- function(variables = NULL,
   key <- get_census_api_key(key)
 
   # Account for missing PUMAs in 2008-2012 through 2011-2015 ACS samples
-  if (year %in% 2012:2015 && survey == "acs5" && (!is.null(puma) || "PUMA" %in% variables)) {
-    stop("PUMAs are not available for end-years between 2012 and 2015 due to inconsistent PUMA boundary definitions.", call. = FALSE)
+  if (year %in% c(2012:2015, 2022) && survey == "acs5" && (!is.null(puma) || "PUMA" %in% variables)) {
+    rlang::abort(message = c(
+      "PUMAs are not available for the 5-year ACS with end-years between 2012 and 2015, and 2022, due to inconsistent PUMA boundary definitions.",
+      i = "Users can use the `PUMA00`, `PUMA10`, and `PUMA20` variables for year-specific PUMAs in these datasets.",
+      i = "See https://github.com/walkerke/tidycensus/issues/555 for discussion."
+    ))
   }
 
 
@@ -373,7 +377,7 @@ get_pums <- function(variables = NULL,
 #' @param type Whether to use person or housing-level weights; either
 #'   \code{"housing"} or \code{"person"} (the default).
 #' @param design The survey design to use when creating a survey object.
-#'   Currently the only option is code{"rep_weights"}/.
+#'   Currently the only option is \code{"rep_weights"}.
 #' @param class Whether to convert to a srvyr or survey object; either
 #'   \code{"survey"} or \code{"srvyr"} (the default).
 #'

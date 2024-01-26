@@ -22,7 +22,7 @@ likely returned by \code{\link{get_pums}}.}
 \code{"survey"} or \code{"srvyr"} (the default).}
 
 \item{design}{The survey design to use when creating a survey object.
-Currently the only option is code{"rep_weights"}/.}
+Currently the only option is \code{"rep_weights"}.}
 }
 \value{
 A tbl_svy or svyrep.design object.

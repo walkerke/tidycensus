@@ -1,3 +1,9 @@
+# tidycensus 1.6
+
+* Default year in `get_acs()` and `get_pums()` updated to 2022 following full release of the 2022 ACS datasets.
+* Geometry support for the 118th Congress in `get_decennial()` when `sumfile = "cd118"` is used, and in `get_acs()`
+* Various bug fixes and performance improvements.  
+
 # tidycensus 1.5
 
 * Support added for the new Detailed DHC-A file, which includes the ability to query for detailed population groups. This functionality is now enabled for Summary Files 2 and 4 in past years as well with the `pop_group` argument. 
