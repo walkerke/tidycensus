@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
       </span>
     </div>
 
@@ -81,19 +81,19 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_pums</span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="cn">NULL</span>,
-  state <span class="op">=</span> <span class="cn">NULL</span>,
-  puma <span class="op">=</span> <span class="cn">NULL</span>,
-  year <span class="op">=</span> <span class="fl">2021</span>,
-  survey <span class="op">=</span> <span class="st">"acs5"</span>,
-  variables_filter <span class="op">=</span> <span class="cn">NULL</span>,
-  rep_weights <span class="op">=</span> <span class="cn">NULL</span>,
-  recode <span class="op">=</span> <span class="cn">FALSE</span>,
-  return_vacant <span class="op">=</span> <span class="cn">FALSE</span>,
-  show_call <span class="op">=</span> <span class="cn">FALSE</span>,
-  key <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_pums</span><span class="op">(</span></span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  puma <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2022</span>,</span>
+<span>  survey <span class="op">=</span> <span class="st">"acs5"</span>,</span>
+<span>  variables_filter <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rep_weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  recode <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  return_vacant <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  show_call <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  key <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -116,7 +116,7 @@ named vector of state/PUMA pairs and set <code>state = "multiple"</code>.</p></d
 
 <dt>year</dt>
 <dd><p>The data year of the 1-year ACS sample or the endyear of the
-5-year sample. Defaults to 2020. Please note that 1-year data for 2020 is not available
+5-year sample. Defaults to 2022. Please note that 1-year data for 2020 is not available
 in tidycensus, so users requesting 1-year data should supply a different year.</p></dd>
 
 
@@ -143,7 +143,7 @@ errors; one of <code>"person"</code>, <code>"housing"</code>, or <code>"both"</c
 <dt>recode</dt>
 <dd><p>If TRUE, recodes variable values using Census data dictionary
 and creates a new <code>*_label</code> column for each variable that is recoded.
-Available for 2017 - 2021 data. Defaults to FALSE.</p></dd>
+Available for 2017 - 2022 data. Defaults to FALSE.</p></dd>
 
 
 <dt>return_vacant</dt>
@@ -175,13 +175,13 @@ what is returned by the API directly. Defaults to FALSE.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu">get_pums</span><span class="op">(</span>variables <span class="op">=</span> <span class="st">"AGEP"</span>, state <span class="op">=</span> <span class="st">"VT"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">get_pums</span><span class="op">(</span>variables <span class="op">=</span> <span class="st">"AGEP"</span>, state <span class="op">=</span> <span class="st">"multiple"</span>, puma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"UT"</span> <span class="op">=</span> <span class="fl">35008</span>, <span class="st">"NV"</span> <span class="op">=</span> <span class="fl">00403</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">get_pums</span><span class="op">(</span>variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGEP"</span>, <span class="st">"ANC1P"</span><span class="op">)</span>, state <span class="op">=</span> <span class="st">"VT"</span>, recode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">get_pums</span><span class="op">(</span>variables <span class="op">=</span> <span class="st">"AGEP"</span>, state <span class="op">=</span> <span class="st">"VT"</span>, survey <span class="op">=</span> <span class="st">"acs1"</span>, rep_weights <span class="op">=</span> <span class="st">"person"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu">get_pums</span><span class="op">(</span>variables <span class="op">=</span> <span class="st">"AGEP"</span>, state <span class="op">=</span> <span class="st">"VT"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">get_pums</span><span class="op">(</span>variables <span class="op">=</span> <span class="st">"AGEP"</span>, state <span class="op">=</span> <span class="st">"multiple"</span>, puma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"UT"</span> <span class="op">=</span> <span class="fl">35008</span>, <span class="st">"NV"</span> <span class="op">=</span> <span class="fl">00403</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">get_pums</span><span class="op">(</span>variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGEP"</span>, <span class="st">"ANC1P"</span><span class="op">)</span>, state <span class="op">=</span> <span class="st">"VT"</span>, recode <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">get_pums</span><span class="op">(</span>variables <span class="op">=</span> <span class="st">"AGEP"</span>, state <span class="op">=</span> <span class="st">"VT"</span>, survey <span class="op">=</span> <span class="st">"acs1"</span>, rep_weights <span class="op">=</span> <span class="st">"person"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

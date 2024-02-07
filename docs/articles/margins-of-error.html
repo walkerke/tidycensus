@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
       </span>
     </div>
 
@@ -134,27 +134,27 @@ Let’s say we want to study aging populations in Ramsey County, Minnesota
 from the 2012-2016 ACS by Census tracts. We can pull up a dataset with
 <code>get_acs</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
-
-<span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"B01001_0"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">25</span>, <span class="fl">44</span><span class="op">:</span><span class="fl">49</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">ramsey</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"tract"</span>, 
-                  variables <span class="op">=</span> <span class="va">vars</span>, 
-                  state <span class="op">=</span> <span class="st">"MN"</span>, 
-                  county <span class="op">=</span> <span class="st">"Ramsey"</span>, 
-                  year <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ramsey</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">NAME</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span>
-<span class="co">##   GEOID       variable   estimate   moe</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 27123030100 B01001_020       51    27</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 27123030100 B01001_021       92    40</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 27123030100 B01001_022       48    28</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 27123030100 B01001_023        8    13</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 27123030100 B01001_024       51    52</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 27123030100 B01001_025       23    18</span></code></pre>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"B01001_0"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">25</span>, <span class="fl">44</span><span class="op">:</span><span class="fl">49</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ramsey</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"tract"</span>, </span>
+<span>                  variables <span class="op">=</span> <span class="va">vars</span>, </span>
+<span>                  state <span class="op">=</span> <span class="st">"MN"</span>, </span>
+<span>                  county <span class="op">=</span> <span class="st">"Ramsey"</span>, </span>
+<span>                  year <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ramsey</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">NAME</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
+<span><span class="co">##   GEOID       variable   estimate   moe</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 27123030100 B01001_020       51    27</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 27123030100 B01001_021       92    40</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 27123030100 B01001_022       48    28</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> 27123030100 B01001_023        8    13</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> 27123030100 B01001_024       51    52</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> 27123030100 B01001_025       23    18</span></span></code></pre>
 <p>We can see that in two instances the margin of error exceeds the
 estimate. One way to address this is through data aggregation. While the
 specific group estimates in this Census tract may be unreliable, the
@@ -169,21 +169,21 @@ implemented in <strong>tidycensus</strong> in the <code>moe_sum</code>,
 use of <code>moe_sum</code> to calculate the margin of error around a
 derived estimate for Census tract population over age 65.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ramsey65</span> <span class="op">&lt;-</span> <span class="va">ramsey</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>sumest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span>, 
-            summoe <span class="op">=</span> <span class="fu"><a href="../reference/moe_sum.html">moe_sum</a></span><span class="op">(</span><span class="va">moe</span>, <span class="va">estimate</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ramsey65</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 3</span></span>
-<span class="co">##   GEOID       sumest summoe</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 27123030100    677  124. </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 27123030201    899  201. </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 27123030202    149   53.8</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 27123030300    783  154. </span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 27123030400    423  131. </span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 27123030500    396  111.</span></code></pre>
+<code class="sourceCode R"><span><span class="va">ramsey65</span> <span class="op">&lt;-</span> <span class="va">ramsey</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">GEOID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>sumest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span>, </span>
+<span>            summoe <span class="op">=</span> <span class="fu"><a href="../reference/moe_sum.html">moe_sum</a></span><span class="op">(</span><span class="va">moe</span>, <span class="va">estimate</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ramsey65</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 3</span></span></span>
+<span><span class="co">##   GEOID       sumest summoe</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 27123030100    677  124. </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 27123030201    899  201. </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 27123030202    149   53.8</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> 27123030300    783  154. </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> 27123030400    423  131. </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> 27123030500    396  111.</span></span></code></pre>
 <p>The margins of error for this aggregate population are more
 reasonable. However, the Census Bureau does issue this warning:</p>
 <blockquote>

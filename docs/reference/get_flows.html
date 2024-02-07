@@ -20,7 +20,7 @@ Flows"><meta property="og:image" content="/logo.png"><!-- mathjax --><script src
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
       </span>
     </div>
 
@@ -86,21 +86,21 @@ Flows</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_flows</span><span class="op">(</span>
-  <span class="va">geography</span>,
-  variables <span class="op">=</span> <span class="cn">NULL</span>,
-  breakdown <span class="op">=</span> <span class="cn">NULL</span>,
-  breakdown_labels <span class="op">=</span> <span class="cn">FALSE</span>,
-  year <span class="op">=</span> <span class="fl">2018</span>,
-  output <span class="op">=</span> <span class="st">"tidy"</span>,
-  state <span class="op">=</span> <span class="cn">NULL</span>,
-  county <span class="op">=</span> <span class="cn">NULL</span>,
-  msa <span class="op">=</span> <span class="cn">NULL</span>,
-  geometry <span class="op">=</span> <span class="cn">FALSE</span>,
-  key <span class="op">=</span> <span class="cn">NULL</span>,
-  moe_level <span class="op">=</span> <span class="fl">90</span>,
-  show_call <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_flows</span><span class="op">(</span></span>
+<span>  <span class="va">geography</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  breakdown <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  breakdown_labels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2018</span>,</span>
+<span>  output <span class="op">=</span> <span class="st">"tidy"</span>,</span>
+<span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  msa <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  geometry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  key <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  moe_level <span class="op">=</span> <span class="fl">90</span>,</span>
+<span>  show_call <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -206,31 +206,31 @@ what is returned by the API directly. Defaults to FALSE.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu">get_flows</span><span class="op">(</span></span>
-<span class="r-in">  geography <span class="op">=</span> <span class="st">"county"</span>,</span>
-<span class="r-in">  state <span class="op">=</span> <span class="st">"VT"</span>,</span>
-<span class="r-in">  county <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Washington"</span>, <span class="st">"Chittenden"</span><span class="op">)</span></span>
-<span class="r-in">  <span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">get_flows</span><span class="op">(</span></span>
-<span class="r-in">  geography <span class="op">=</span> <span class="st">"county subdivision"</span>,</span>
-<span class="r-in">  breakdown <span class="op">=</span> <span class="st">"RACE"</span>,</span>
-<span class="r-in">  breakdown_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">  state <span class="op">=</span> <span class="st">"NY"</span>,</span>
-<span class="r-in">  county <span class="op">=</span> <span class="st">"Westchester"</span>,</span>
-<span class="r-in">  output <span class="op">=</span> <span class="st">"wide"</span>,</span>
-<span class="r-in">  year <span class="op">=</span> <span class="fl">2015</span></span>
-<span class="r-in">  <span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">get_flows</span><span class="op">(</span></span>
-<span class="r-in">   geography <span class="op">=</span> <span class="st">"metropolitan statistical area"</span>,</span>
-<span class="r-in">   variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POP1YR"</span>, <span class="st">"POP1YRAGO"</span><span class="op">)</span>,</span>
-<span class="r-in">   geometry <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">   output <span class="op">=</span> <span class="st">"wide"</span>,</span>
-<span class="r-in">   show_call <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span class="r-in">  <span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu">get_flows</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  geography <span class="op">=</span> <span class="st">"county"</span>,</span></span>
+<span class="r-in"><span>  state <span class="op">=</span> <span class="st">"VT"</span>,</span></span>
+<span class="r-in"><span>  county <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Washington"</span>, <span class="st">"Chittenden"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">get_flows</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  geography <span class="op">=</span> <span class="st">"county subdivision"</span>,</span></span>
+<span class="r-in"><span>  breakdown <span class="op">=</span> <span class="st">"RACE"</span>,</span></span>
+<span class="r-in"><span>  breakdown_labels <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  state <span class="op">=</span> <span class="st">"NY"</span>,</span></span>
+<span class="r-in"><span>  county <span class="op">=</span> <span class="st">"Westchester"</span>,</span></span>
+<span class="r-in"><span>  output <span class="op">=</span> <span class="st">"wide"</span>,</span></span>
+<span class="r-in"><span>  year <span class="op">=</span> <span class="fl">2015</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">get_flows</span><span class="op">(</span></span></span>
+<span class="r-in"><span>   geography <span class="op">=</span> <span class="st">"metropolitan statistical area"</span>,</span></span>
+<span class="r-in"><span>   variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"POP1YR"</span>, <span class="st">"POP1YRAGO"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>   geometry <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>   output <span class="op">=</span> <span class="st">"wide"</span>,</span></span>
+<span class="r-in"><span>   show_call <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>

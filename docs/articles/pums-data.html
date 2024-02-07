@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
       </span>
     </div>
 
@@ -172,27 +172,27 @@ calculate PUMS estimates, so if you want to follow along and you don’t
 already have them installed, you should install these two packages from
 CRAN.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"survey"</span>, <span class="st">"srvyr"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"survey"</span>, <span class="st">"srvyr"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span>
-
-<span class="va">pums_vars_2018</span> <span class="op">&lt;-</span> <span class="va">pums_variables</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2018</span>, <span class="va">survey</span> <span class="op">==</span> <span class="st">"acs1"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pums_vars_2018</span> <span class="op">&lt;-</span> <span class="va">pums_variables</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2018</span>, <span class="va">survey</span> <span class="op">==</span> <span class="st">"acs1"</span><span class="op">)</span></span></code></pre></div>
 <p><code>pums_variables</code> contains both the variables as well as
 their possible values. So let’s just look at the unique variables.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pums_vars_2018</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">var_code</span>, <span class="va">var_label</span>, <span class="va">data_type</span>, <span class="va">level</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 513 × 4</span></span>
-<span class="co">##   var_code var_label                                                                      data_type level</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> SERIALNO Housing unit/GQ person serial number                                           chr       <span style="color: #BB0000;">NA</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> DIVISION Division code based on 2010 Census definitions                                 chr       <span style="color: #BB0000;">NA</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> PUMA     Public use microdata area code (PUMA) based on 2010 Census definition (areas … chr       <span style="color: #BB0000;">NA</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> REGION   Region code based on 2010 Census definitions                                   chr       <span style="color: #BB0000;">NA</span>   </span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> ST       State Code based on 2010 Census definitions                                    chr       <span style="color: #BB0000;">NA</span>   </span>
-<span class="co">## <span style="color: #949494;"># ℹ 508 more rows</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">pums_vars_2018</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">var_code</span>, <span class="va">var_label</span>, <span class="va">data_type</span>, <span class="va">level</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 513 × 4</span></span></span>
+<span><span class="co">##   var_code var_label                                                                      data_type level</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> SERIALNO Housing unit/GQ person serial number                                           chr       <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> DIVISION Division code based on 2010 Census definitions                                 chr       <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> PUMA     Public use microdata area code (PUMA) based on 2010 Census definition (areas … chr       <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> REGION   Region code based on 2010 Census definitions                                   chr       <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> ST       State Code based on 2010 Census definitions                                    chr       <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 508 more rows</span></span></span></code></pre>
 <p>If you’re new to PUMS data, this is a good dataset to browse to get a
 feel for what variables are available.</p>
 </div>
@@ -212,18 +212,18 @@ either “housing” or “person” variables in the level column. Here, for
 example, are the first five person-level variables in the data
 dictionary.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pums_vars_2018</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">var_code</span>, <span class="va">var_label</span>, <span class="va">data_type</span>, <span class="va">level</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">level</span> <span class="op">==</span> <span class="st">"person"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 279 × 4</span></span>
-<span class="co">##   var_code var_label                       data_type level </span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> SPORDER  Person number                   num       person</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> PWGTP    Person's weight                 num       person</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> AGEP     Age                             num       person</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> CIT      Citizenship status              chr       person</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> CITWP    Year of naturalization write-in num       person</span>
-<span class="co">## <span style="color: #949494;"># ℹ 274 more rows</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">pums_vars_2018</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">var_code</span>, <span class="va">var_label</span>, <span class="va">data_type</span>, <span class="va">level</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">level</span> <span class="op">==</span> <span class="st">"person"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 279 × 4</span></span></span>
+<span><span class="co">##   var_code var_label                       data_type level </span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> SPORDER  Person number                   num       person</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> PWGTP    Person's weight                 num       person</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> AGEP     Age                             num       person</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> CIT      Citizenship status              chr       person</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> CITWP    Year of naturalization write-in num       person</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 274 more rows</span></span></span></code></pre>
 <p>It is important to be mindful of whether the variables you choose to
 analyze are person- or household-level variables.</p>
 </div>
@@ -238,23 +238,23 @@ you. The key arguments to specify are <code>variables</code>,
 get <code>PUMA</code>, <code>SEX</code>, <code>AGEP</code>, and
 <code>SCHL</code> variables for Vermont from the 2018 1-year ACS.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_pums</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,
-  state <span class="op">=</span> <span class="st">"VT"</span>,
-  survey <span class="op">=</span> <span class="st">"acs1"</span>,
-  year <span class="op">=</span> <span class="fl">2018</span>
-  <span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">vt_pums</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span></span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,</span>
+<span>  state <span class="op">=</span> <span class="st">"VT"</span>,</span>
+<span>  survey <span class="op">=</span> <span class="st">"acs1"</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2018</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_pums</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6,436 × 9</span></span>
-<span class="co">##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX  </span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 2018GQ0000859       1     0    61    19 00200 50    19    1    </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 2018GQ0001119       1     0    67    80 00200 50    11    2    </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 2018GQ0001888       1     0   177    82 00400 50    16    2    </span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 2018GQ0002438       1     0    17    17 00100 50    16    2    </span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 2018GQ0003293       1     0    68    20 00400 50    19    2    </span>
-<span class="co">## <span style="color: #949494;"># ℹ 6,431 more rows</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">vt_pums</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6,436 × 9</span></span></span>
+<span><span class="co">##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX  </span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 2018GQ0002083       1     0    59    20 00100 50    19    2    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 2018GQ0002131       1     0     2    51 00400 50    16    1    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 2018GQ0002587       1     0    52    18 00400 50    16    1    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> 2018GQ0003751       1     0    34    19 00100 50    19    2    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> 2018GQ0003853       1     0   129    20 00400 50    19    1    </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 6,431 more rows</span></span></span></code></pre>
 <p>We get 6436 rows and 9 columns. In addition to the variables we
 specified, <code><a href="../reference/get_pums.html">get_pums()</a></code> also always returns
 <code>SERIALNO</code>, <code>SPORDER</code>, <code>WGTP</code>,
@@ -269,24 +269,24 @@ represent in the <code>pums_variables</code> dataset provided or set
 <code>recode = TRUE</code> in <code><a href="../reference/get_pums.html">get_pums()</a></code> to return
 additional columns with the values of these variables recoded.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_pums_recoded</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,
-  state <span class="op">=</span> <span class="st">"VT"</span>,
-  survey <span class="op">=</span> <span class="st">"acs1"</span>,
-  year <span class="op">=</span> <span class="fl">2018</span>,
-  recode <span class="op">=</span> <span class="cn">TRUE</span>
-  <span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">vt_pums_recoded</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span></span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,</span>
+<span>  state <span class="op">=</span> <span class="st">"VT"</span>,</span>
+<span>  survey <span class="op">=</span> <span class="st">"acs1"</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2018</span>,</span>
+<span>  recode <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_pums_recoded</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6,436 × 12</span></span>
-<span class="co">##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX   ST_label   SCHL_label         SEX_label</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>    </span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 2018GQ0000859       1     0    61    19 00200 50    19    1     Vermont/VT 1 or more years o… Male     </span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 2018GQ0001119       1     0    67    80 00200 50    11    2     Vermont/VT Grade 8            Female   </span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 2018GQ0001888       1     0   177    82 00400 50    16    2     Vermont/VT Regular high scho… Female   </span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 2018GQ0002438       1     0    17    17 00100 50    16    2     Vermont/VT Regular high scho… Female   </span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 2018GQ0003293       1     0    68    20 00400 50    19    2     Vermont/VT 1 or more years o… Female   </span>
-<span class="co">## <span style="color: #949494;"># ℹ 6,431 more rows</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">vt_pums_recoded</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6,436 × 12</span></span></span>
+<span><span class="co">##   SERIALNO      SPORDER  WGTP PWGTP  AGEP PUMA  ST    SCHL  SEX   ST_label   SCHL_label         SEX_label</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 2018GQ0001230       1     0     3    26 00300 50    20    1     Vermont/VT Associate's degree Male     </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 2018GQ0002135       1     0    64    18 00100 50    19    2     Vermont/VT 1 or more years o… Female   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 2018GQ0002999       1     0    62    20 00400 50    19    2     Vermont/VT 1 or more years o… Female   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> 2018GQ0004077       1     0    16    94 00200 50    21    2     Vermont/VT Bachelor's degree  Female   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> 2018GQ0006486       1     0    26    20 00400 50    19    1     Vermont/VT 1 or more years o… Male     </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 6,431 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="analyzing-pums-data">Analyzing PUMS data<a class="anchor" aria-label="anchor" href="#analyzing-pums-data"></a>
@@ -300,26 +300,26 @@ people in the population that the observation represents. So, if we
 simply add up all the person weights in our VT PUMS data, we get the
 (estimated) population of Vermont.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">vt_pums_recoded</span><span class="op">$</span><span class="va">PWGTP</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 626299</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">vt_pums_recoded</span><span class="op">$</span><span class="va">PWGTP</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 626299</span></span></code></pre>
 <p>Another convenient approach to weighting PUMS data is to use the
 <code>wt</code> argument in <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">dplyr::count()</a></code>. Here, we
 calculate the population by sex for each PUMA in Vermont (there are only
 four in the whole state!).</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_pums_recoded</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span>, wt <span class="op">=</span> <span class="va">PWGTP</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 8 × 3</span></span>
-<span class="co">##   PUMA  SEX_label      n</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male      <span style="text-decoration: underline;">108</span>732</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female    <span style="text-decoration: underline;">111</span>564</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male       <span style="text-decoration: underline;">73</span>768</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female     <span style="text-decoration: underline;">73</span>416</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male       <span style="text-decoration: underline;">61</span>601</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female     <span style="text-decoration: underline;">64</span>806</span>
-<span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male       <span style="text-decoration: underline;">65</span>675</span>
-<span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female     <span style="text-decoration: underline;">66</span>737</span></code></pre>
+<code class="sourceCode R"><span><span class="va">vt_pums_recoded</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span>, wt <span class="op">=</span> <span class="va">PWGTP</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 8 × 3</span></span></span>
+<span><span class="co">##   PUMA  SEX_label      n</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male      <span style="text-decoration: underline;">108</span>732</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female    <span style="text-decoration: underline;">111</span>564</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male       <span style="text-decoration: underline;">73</span>768</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female     <span style="text-decoration: underline;">73</span>416</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male       <span style="text-decoration: underline;">61</span>601</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female     <span style="text-decoration: underline;">64</span>806</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male       <span style="text-decoration: underline;">65</span>675</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female     <span style="text-decoration: underline;">66</span>737</span></span></code></pre>
 <p>Many of the variables included in the PUMS data are categorical and
 we might want to group some categories together and estimate the
 proportion of the population with these characteristics. In this
@@ -328,27 +328,27 @@ person has a Bachelor’s degree or above, group by PUMA and sex, then
 calculate the total population, average age, total with BA or above
 (only for people 25 and older), and percent with BA or above.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_pums_recoded</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ba_above <span class="op">=</span> <span class="va">SCHL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"21"</span>, <span class="st">"22"</span>, <span class="st">"23"</span>, <span class="st">"24"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>
-    total_pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">)</span>,
-    mean_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">AGEP</span>, <span class="va">PWGTP</span><span class="op">)</span>,
-    ba_above <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">ba_above</span> <span class="op">==</span> <span class="cn">TRUE</span> <span class="op">&amp;</span> <span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">]</span><span class="op">)</span>,
-    ba_above_pct <span class="op">=</span> <span class="va">ba_above</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">]</span><span class="op">)</span>
-  <span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 8 × 6</span></span>
-<span class="co">## <span style="color: #949494;"># Groups:   PUMA [4]</span></span>
-<span class="co">##   PUMA  SEX_label total_pop mean_age ba_above ba_above_pct</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male         <span style="text-decoration: underline;">108</span>732     38.2    <span style="text-decoration: underline;">34</span>113        0.469</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female       <span style="text-decoration: underline;">111</span>564     40.4    <span style="text-decoration: underline;">36</span>873        0.473</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male          <span style="text-decoration: underline;">73</span>768     41.4    <span style="text-decoration: underline;">15</span>831        0.303</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female        <span style="text-decoration: underline;">73</span>416     43.6    <span style="text-decoration: underline;">20</span>248        0.367</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male          <span style="text-decoration: underline;">61</span>601     43.7    <span style="text-decoration: underline;">14</span>869        0.326</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female        <span style="text-decoration: underline;">64</span>806     45.0    <span style="text-decoration: underline;">21</span>527        0.434</span>
-<span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male          <span style="text-decoration: underline;">65</span>675     41.9    <span style="text-decoration: underline;">12</span>788        0.278</span>
-<span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female        <span style="text-decoration: underline;">66</span>737     44.6    <span style="text-decoration: underline;">18</span>980        0.391</span></code></pre>
+<code class="sourceCode R"><span><span class="va">vt_pums_recoded</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ba_above <span class="op">=</span> <span class="va">SCHL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"21"</span>, <span class="st">"22"</span>, <span class="st">"23"</span>, <span class="st">"24"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
+<span>    total_pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">)</span>,</span>
+<span>    mean_age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">AGEP</span>, <span class="va">PWGTP</span><span class="op">)</span>,</span>
+<span>    ba_above <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">ba_above</span> <span class="op">==</span> <span class="cn">TRUE</span> <span class="op">&amp;</span> <span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>    ba_above_pct <span class="op">=</span> <span class="va">ba_above</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 8 × 6</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># Groups:   PUMA [4]</span></span></span>
+<span><span class="co">##   PUMA  SEX_label total_pop mean_age ba_above ba_above_pct</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male         <span style="text-decoration: underline;">108</span>732     38.2    <span style="text-decoration: underline;">34</span>113        0.469</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female       <span style="text-decoration: underline;">111</span>564     40.4    <span style="text-decoration: underline;">36</span>873        0.473</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male          <span style="text-decoration: underline;">73</span>768     41.4    <span style="text-decoration: underline;">15</span>831        0.303</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female        <span style="text-decoration: underline;">73</span>416     43.6    <span style="text-decoration: underline;">20</span>248        0.367</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male          <span style="text-decoration: underline;">61</span>601     43.7    <span style="text-decoration: underline;">14</span>869        0.326</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female        <span style="text-decoration: underline;">64</span>806     45.0    <span style="text-decoration: underline;">21</span>527        0.434</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male          <span style="text-decoration: underline;">65</span>675     41.9    <span style="text-decoration: underline;">12</span>788        0.278</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female        <span style="text-decoration: underline;">66</span>737     44.6    <span style="text-decoration: underline;">18</span>980        0.391</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="calculating-standard-errors">Calculating standard errors<a class="anchor" aria-label="anchor" href="#calculating-standard-errors"></a>
@@ -379,18 +379,18 @@ person- and housing-unit-level replicate weights.</p>
 Here we get the same Vermont PUMS data as above in addition to the 80
 person replicate weight columns.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_pums_rep_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,
-  state <span class="op">=</span> <span class="st">"VT"</span>,
-  survey <span class="op">=</span> <span class="st">"acs1"</span>,
-  year <span class="op">=</span> <span class="fl">2018</span>,
-  recode <span class="op">=</span> <span class="cn">TRUE</span>,
-  rep_weights <span class="op">=</span> <span class="st">"person"</span>
-  <span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">vt_pums_rep_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span></span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"SEX"</span>, <span class="st">"AGEP"</span>, <span class="st">"SCHL"</span><span class="op">)</span>,</span>
+<span>  state <span class="op">=</span> <span class="st">"VT"</span>,</span>
+<span>  survey <span class="op">=</span> <span class="st">"acs1"</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2018</span>,</span>
+<span>  recode <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  rep_weights <span class="op">=</span> <span class="st">"person"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>To easily convert this data frame to a survey or srvyr object, we can
 use the <code><a href="../reference/to_survey.html">to_survey()</a></code> function.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_survey_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="va">vt_pums_rep_weights</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">vt_survey_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="va">vt_pums_rep_weights</span><span class="op">)</span></span></code></pre></div>
 <p>By default, <code><a href="../reference/to_survey.html">to_survey()</a></code> converts a data frame to a
 <code>tbl_svy</code> object by using person replicate weights. You can
 change the arguments in <code>to_survey</code> if you are analyzing
@@ -402,61 +402,61 @@ survey functions on srvyr objects</a>.)</p>
 estimates as above, but we now get column with standard errors as
 well.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://gdfe.co/srvyr/" class="external-link">srvyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="va">vt_survey_design</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 8 × 4</span></span>
-<span class="co">##   PUMA  SEX_label      n  n_se</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male      <span style="text-decoration: underline;">108</span>732 <span style="text-decoration: underline;">1</span>123.</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female    <span style="text-decoration: underline;">111</span>564 <span style="text-decoration: underline;">1</span>360.</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male       <span style="text-decoration: underline;">73</span>768  754.</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female     <span style="text-decoration: underline;">73</span>416  809.</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male       <span style="text-decoration: underline;">61</span>601  491.</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female     <span style="text-decoration: underline;">64</span>806  578.</span>
-<span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male       <span style="text-decoration: underline;">65</span>675  702.</span>
-<span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female     <span style="text-decoration: underline;">66</span>737  776.</span></code></pre>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://gdfe.co/srvyr/" class="external-link">srvyr</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">vt_survey_design</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 8 × 4</span></span></span>
+<span><span class="co">##   PUMA  SEX_label      n  n_se</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male      <span style="text-decoration: underline;">108</span>732 <span style="text-decoration: underline;">1</span>123.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female    <span style="text-decoration: underline;">111</span>564 <span style="text-decoration: underline;">1</span>360.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male       <span style="text-decoration: underline;">73</span>768  754.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female     <span style="text-decoration: underline;">73</span>416  809.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male       <span style="text-decoration: underline;">61</span>601  491.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female     <span style="text-decoration: underline;">64</span>806  578.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male       <span style="text-decoration: underline;">65</span>675  702.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female     <span style="text-decoration: underline;">66</span>737  776.</span></span></code></pre>
 <p>The srvyr syntax is very similar to standard dplyr syntax, so this
 should look familiar; we’ve swapped out <code><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count()</a></code> for
 <code><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count()</a></code> and we don’t need a <code>wt</code> argument
 because we defined the weights when we set up the srvyr object.</p>
 <p>The equivalent estimate using survey syntax looks like this:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svyby.html" class="external-link">svyby</a></span><span class="op">(</span><span class="op">~</span><span class="va">SEX_label</span>, <span class="op">~</span><span class="va">PUMA</span>, design <span class="op">=</span> <span class="va">vt_survey_design</span>, <span class="fu">survey</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/survey/man/surveysummary.html" class="external-link">svytotal</a></span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##        PUMA SEX_labelMale SEX_labelFemale       se1       se2</span>
-<span class="co">## 00100 00100        108732          111564 1122.9765 1360.3476</span>
-<span class="co">## 00200 00200         73768           73416  754.0906  808.7364</span>
-<span class="co">## 00300 00300         61601           64806  490.5432  578.3529</span>
-<span class="co">## 00400 00400         65675           66737  702.0659  775.9812</span></code></pre>
+<code class="sourceCode R"><span><span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svyby.html" class="external-link">svyby</a></span><span class="op">(</span><span class="op">~</span><span class="va">SEX_label</span>, <span class="op">~</span><span class="va">PUMA</span>, design <span class="op">=</span> <span class="va">vt_survey_design</span>, <span class="fu">survey</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/survey/man/surveysummary.html" class="external-link">svytotal</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##        PUMA SEX_labelMale SEX_labelFemale       se1       se2</span></span>
+<span><span class="co">## 00100 00100        108732          111564 1122.9765 1360.3476</span></span>
+<span><span class="co">## 00200 00200         73768           73416  754.0906  808.7364</span></span>
+<span><span class="co">## 00300 00300         61601           64806  490.5432  578.3529</span></span>
+<span><span class="co">## 00400 00400         65675           66737  702.0659  775.9812</span></span></code></pre>
 <p>We can also repeat the estimate we did above and calculate the
 percentage of people that are 25 and up with a bachelor’s degree, while
 this time returning the upper and lower bounds of the confidence
 interval for these estimates. This time though, we have to subset our
 data frame to only those 25 and older before we summarize.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_survey_design</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">mutate</a></span><span class="op">(</span>ba_above <span class="op">=</span> <span class="va">SCHL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"21"</span>, <span class="st">"22"</span>, <span class="st">"23"</span>, <span class="st">"24"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>
-    age_25_up <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span>vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,
-    ba_above_n <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,
-    ba_above_pct <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html" class="external-link">survey_mean</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>
-    <span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 8 × 11</span></span>
-<span class="co">## <span style="color: #949494;"># Groups:   PUMA [4]</span></span>
-<span class="co">##   PUMA  SEX_label age_25_up age_25_up_low age_25_up_upp ba_above_n ba_above_n_low ba_above_n_upp</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male          <span style="text-decoration: underline;">72</span>680        <span style="text-decoration: underline;">70</span>216.        <span style="text-decoration: underline;">75</span>144.      <span style="text-decoration: underline;">34</span>113         <span style="text-decoration: underline;">29</span>913.         <span style="text-decoration: underline;">38</span>313.</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female        <span style="text-decoration: underline;">77</span>966        <span style="text-decoration: underline;">75</span>671.        <span style="text-decoration: underline;">80</span>261.      <span style="text-decoration: underline;">36</span>873         <span style="text-decoration: underline;">32</span>202.         <span style="text-decoration: underline;">41</span>544.</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male          <span style="text-decoration: underline;">52</span>278        <span style="text-decoration: underline;">50</span>826.        <span style="text-decoration: underline;">53</span>730.      <span style="text-decoration: underline;">15</span>831         <span style="text-decoration: underline;">13</span>327.         <span style="text-decoration: underline;">18</span>335.</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female        <span style="text-decoration: underline;">55</span>162        <span style="text-decoration: underline;">53</span>643.        <span style="text-decoration: underline;">56</span>681.      <span style="text-decoration: underline;">20</span>248         <span style="text-decoration: underline;">17</span>679.         <span style="text-decoration: underline;">22</span>817.</span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male          <span style="text-decoration: underline;">45</span>634        <span style="text-decoration: underline;">44</span>743.        <span style="text-decoration: underline;">46</span>525.      <span style="text-decoration: underline;">14</span>869         <span style="text-decoration: underline;">12</span>638.         <span style="text-decoration: underline;">17</span>100.</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female        <span style="text-decoration: underline;">49</span>546        <span style="text-decoration: underline;">48</span>576.        <span style="text-decoration: underline;">50</span>516.      <span style="text-decoration: underline;">21</span>527         <span style="text-decoration: underline;">19</span>010.         <span style="text-decoration: underline;">24</span>044.</span>
-<span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male          <span style="text-decoration: underline;">45</span>960        <span style="text-decoration: underline;">45</span>067.        <span style="text-decoration: underline;">46</span>853.      <span style="text-decoration: underline;">12</span>788         <span style="text-decoration: underline;">10</span>699.         <span style="text-decoration: underline;">14</span>877.</span>
-<span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female        <span style="text-decoration: underline;">48</span>601        <span style="text-decoration: underline;">47</span>783.        <span style="text-decoration: underline;">49</span>419.      <span style="text-decoration: underline;">18</span>980         <span style="text-decoration: underline;">16</span>540.         <span style="text-decoration: underline;">21</span>420.</span>
-<span class="co">## <span style="color: #949494;"># ℹ 3 more variables: ba_above_pct &lt;dbl&gt;, ba_above_pct_low &lt;dbl&gt;, ba_above_pct_upp &lt;dbl&gt;</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">vt_survey_design</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ba_above <span class="op">=</span> <span class="va">SCHL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"21"</span>, <span class="st">"22"</span>, <span class="st">"23"</span>, <span class="st">"24"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AGEP</span> <span class="op">&gt;=</span> <span class="fl">25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">PUMA</span>, <span class="va">SEX_label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
+<span>    age_25_up <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span>vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,</span>
+<span>    ba_above_n <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span>,</span>
+<span>    ba_above_pct <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html" class="external-link">survey_mean</a></span><span class="op">(</span><span class="va">ba_above</span>, vartype <span class="op">=</span> <span class="st">"ci"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 8 × 11</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># Groups:   PUMA [4]</span></span></span>
+<span><span class="co">##   PUMA  SEX_label age_25_up age_25_up_low age_25_up_upp ba_above_n ba_above_n_low ba_above_n_upp</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;ord&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 00100 Male          <span style="text-decoration: underline;">72</span>680        <span style="text-decoration: underline;">70</span>216.        <span style="text-decoration: underline;">75</span>144.      <span style="text-decoration: underline;">34</span>113         <span style="text-decoration: underline;">29</span>913.         <span style="text-decoration: underline;">38</span>313.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 00100 Female        <span style="text-decoration: underline;">77</span>966        <span style="text-decoration: underline;">75</span>671.        <span style="text-decoration: underline;">80</span>261.      <span style="text-decoration: underline;">36</span>873         <span style="text-decoration: underline;">32</span>202.         <span style="text-decoration: underline;">41</span>544.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 00200 Male          <span style="text-decoration: underline;">52</span>278        <span style="text-decoration: underline;">50</span>826.        <span style="text-decoration: underline;">53</span>730.      <span style="text-decoration: underline;">15</span>831         <span style="text-decoration: underline;">13</span>327.         <span style="text-decoration: underline;">18</span>335.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> 00200 Female        <span style="text-decoration: underline;">55</span>162        <span style="text-decoration: underline;">53</span>643.        <span style="text-decoration: underline;">56</span>681.      <span style="text-decoration: underline;">20</span>248         <span style="text-decoration: underline;">17</span>679.         <span style="text-decoration: underline;">22</span>817.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> 00300 Male          <span style="text-decoration: underline;">45</span>634        <span style="text-decoration: underline;">44</span>743.        <span style="text-decoration: underline;">46</span>525.      <span style="text-decoration: underline;">14</span>869         <span style="text-decoration: underline;">12</span>638.         <span style="text-decoration: underline;">17</span>100.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> 00300 Female        <span style="text-decoration: underline;">49</span>546        <span style="text-decoration: underline;">48</span>576.        <span style="text-decoration: underline;">50</span>516.      <span style="text-decoration: underline;">21</span>527         <span style="text-decoration: underline;">19</span>010.         <span style="text-decoration: underline;">24</span>044.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">7</span> 00400 Male          <span style="text-decoration: underline;">45</span>960        <span style="text-decoration: underline;">45</span>067.        <span style="text-decoration: underline;">46</span>853.      <span style="text-decoration: underline;">12</span>788         <span style="text-decoration: underline;">10</span>699.         <span style="text-decoration: underline;">14</span>877.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">8</span> 00400 Female        <span style="text-decoration: underline;">48</span>601        <span style="text-decoration: underline;">47</span>783.        <span style="text-decoration: underline;">49</span>419.      <span style="text-decoration: underline;">18</span>980         <span style="text-decoration: underline;">16</span>540.         <span style="text-decoration: underline;">21</span>420.</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 3 more variables: ba_above_pct &lt;dbl&gt;, ba_above_pct_low &lt;dbl&gt;, ba_above_pct_upp &lt;dbl&gt;</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="modeling-with-pums-data">Modeling with PUMS data<a class="anchor" aria-label="anchor" href="#modeling-with-pums-data"></a>
@@ -467,85 +467,85 @@ commute to work (<code>JWMNP</code>) based on their wages, employer type
 (private, public, self), and which PUMA they live in. We’ll use the 2018
 5-year estimates so we have a bigger sample to work with.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_pums_to_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"WAGP"</span>, <span class="st">"JWMNP"</span>, <span class="st">"JWTR"</span>, <span class="st">"COW"</span>, <span class="st">"ESR"</span><span class="op">)</span>,
-  state <span class="op">=</span> <span class="st">"VT"</span>,
-  survey <span class="op">=</span> <span class="st">"acs5"</span>,
-  year <span class="op">=</span> <span class="fl">2018</span>,
-  rep_weights <span class="op">=</span> <span class="st">"person"</span>
-  <span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">vt_pums_to_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span></span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"WAGP"</span>, <span class="st">"JWMNP"</span>, <span class="st">"JWTR"</span>, <span class="st">"COW"</span>, <span class="st">"ESR"</span><span class="op">)</span>,</span>
+<span>  state <span class="op">=</span> <span class="st">"VT"</span>,</span>
+<span>  survey <span class="op">=</span> <span class="st">"acs5"</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2018</span>,</span>
+<span>  rep_weights <span class="op">=</span> <span class="st">"person"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>Now, we filter out observations that aren’t relevant, do a little
 recoding of the class of worker variable, and finally convert the data
 frame to a survey design object.
 <!-- Note that we did not request replicate weights from the API, so we specify `design = "cluster"` when we create the survey design. This creates the survey using a cluster design with the household (`SERIALNO`) as the primary sampling unit, the PUMA as the strata, and `PWGTP` as the weight. --></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op">&lt;-</span> <span class="va">vt_pums_to_model</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">filter</a></span><span class="op">(</span>
-    <span class="va">ESR</span> <span class="op">==</span> <span class="fl">1</span>,   <span class="co"># civilian employed</span>
-    <span class="va">JWTR</span> <span class="op">!=</span> <span class="fl">11</span>, <span class="co"># does not work at home</span>
-    <span class="va">WAGP</span> <span class="op">&gt;</span> <span class="fl">0</span>,   <span class="co"># earned wages last year</span>
-    <span class="va">JWMNP</span> <span class="op">&gt;</span> <span class="fl">0</span>   <span class="co"># commute more than zero min</span>
-    <span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">mutate</a></span><span class="op">(</span>
-    emp_type <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span>
-      <span class="va">COW</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"2"</span><span class="op">)</span>      <span class="op">~</span> <span class="st">"private"</span>,
-      <span class="va">COW</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"public"</span>,
-      <span class="cn">TRUE</span>                      <span class="op">~</span> <span class="st">"self"</span>
-      <span class="op">)</span>
-    <span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">vt_model_sd</span> <span class="op">&lt;-</span> <span class="va">vt_pums_to_model</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span>    <span class="va">ESR</span> <span class="op">==</span> <span class="fl">1</span>,   <span class="co"># civilian employed</span></span>
+<span>    <span class="va">JWTR</span> <span class="op">!=</span> <span class="fl">11</span>, <span class="co"># does not work at home</span></span>
+<span>    <span class="va">WAGP</span> <span class="op">&gt;</span> <span class="fl">0</span>,   <span class="co"># earned wages last year</span></span>
+<span>    <span class="va">JWMNP</span> <span class="op">&gt;</span> <span class="fl">0</span>   <span class="co"># commute more than zero min</span></span>
+<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    emp_type <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="va">COW</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"2"</span><span class="op">)</span>      <span class="op">~</span> <span class="st">"private"</span>,</span>
+<span>      <span class="va">COW</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"3"</span>, <span class="st">"4"</span>, <span class="st">"5"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"public"</span>,</span>
+<span>      <span class="cn">TRUE</span>                      <span class="op">~</span> <span class="st">"self"</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Let’s quickly check out some summary stats using
 <code>srvyr</code>.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>
-    n              <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,
-    mean_wage      <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html" class="external-link">survey_mean</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span>,
-    median_wage    <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_quantile.html" class="external-link">survey_median</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span>,
-    mean_commute   <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html" class="external-link">survey_mean</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span>,
-    median_commute <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_quantile.html" class="external-link">survey_median</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span>
-    <span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 1 × 10</span></span>
-<span class="co">##        n  n_se mean_wage mean_wage_se median_wage median_wage_se mean_commute mean_commute_se</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> <span style="text-decoration: underline;">282</span>733 <span style="text-decoration: underline;">1</span>933.    <span style="text-decoration: underline;">44</span>601.         437.       <span style="text-decoration: underline;">35</span>000           251.         23.3           0.233</span>
-<span class="co">## <span style="color: #949494;"># ℹ 2 more variables: median_commute &lt;dbl&gt;, median_commute_se &lt;dbl&gt;</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">vt_model_sd</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
+<span>    n              <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,</span>
+<span>    mean_wage      <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html" class="external-link">survey_mean</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span>,</span>
+<span>    median_wage    <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_quantile.html" class="external-link">survey_median</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span>,</span>
+<span>    mean_commute   <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_mean.html" class="external-link">survey_mean</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span>,</span>
+<span>    median_commute <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_quantile.html" class="external-link">survey_median</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 10</span></span></span>
+<span><span class="co">##        n  n_se mean_wage mean_wage_se median_wage median_wage_se mean_commute mean_commute_se</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> <span style="text-decoration: underline;">282</span>733 <span style="text-decoration: underline;">1</span>933.    <span style="text-decoration: underline;">44</span>601.         437.       <span style="text-decoration: underline;">35</span>000           251.         23.3           0.233</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 2 more variables: median_commute &lt;dbl&gt;, median_commute_se &lt;dbl&gt;</span></span></span></code></pre>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt_model_sd</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">emp_type</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span>
-<span class="co">##   emp_type      n  n_se</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> private  <span style="text-decoration: underline;">224</span>760 <span style="text-decoration: underline;">2</span>001.</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> public    <span style="text-decoration: underline;">42</span>966 <span style="text-decoration: underline;">1</span>374.</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> self      <span style="text-decoration: underline;">15</span>007  756.</span></code></pre>
+<code class="sourceCode R"><span><span class="va">vt_model_sd</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">emp_type</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
+<span><span class="co">##   emp_type      n  n_se</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> private  <span style="text-decoration: underline;">224</span>760 <span style="text-decoration: underline;">2</span>001.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> public    <span style="text-decoration: underline;">42</span>966 <span style="text-decoration: underline;">1</span>374.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> self      <span style="text-decoration: underline;">15</span>007  756.</span></span></code></pre>
 <p>And now we’re ready to fit a simple linear regression model.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svyglm.html" class="external-link">svyglm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span> <span class="op">+</span> <span class="va">emp_type</span> <span class="op">+</span> <span class="va">PUMA</span>, design <span class="op">=</span> <span class="va">vt_model_sd</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## </span>
-<span class="co">## Call:</span>
-<span class="co">## survey::svyglm(formula = log(JWMNP) ~ log(WAGP) + emp_type + </span>
-<span class="co">##     PUMA, design = vt_model_sd)</span>
-<span class="co">## </span>
-<span class="co">## Survey design:</span>
-<span class="co">## Called via srvyr</span>
-<span class="co">## </span>
-<span class="co">## Coefficients:</span>
-<span class="co">##                 Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">## (Intercept)     1.699601   0.102181  16.633  &lt; 2e-16 ***</span>
-<span class="co">## log(WAGP)       0.113913   0.009548  11.931  &lt; 2e-16 ***</span>
-<span class="co">## emp_typepublic -0.052845   0.027420  -1.927   0.0578 .  </span>
-<span class="co">## emp_typeself   -0.306227   0.050016  -6.123 4.20e-08 ***</span>
-<span class="co">## PUMA00200       0.007800   0.023943   0.326   0.7455    </span>
-<span class="co">## PUMA00300       0.023629   0.025111   0.941   0.3498    </span>
-<span class="co">## PUMA00400      -0.117300   0.026028  -4.507 2.46e-05 ***</span>
-<span class="co">## ---</span>
-<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">## </span>
-<span class="co">## (Dispersion parameter for gaussian family taken to be 9328.921)</span>
-<span class="co">## </span>
-<span class="co">## Number of Fisher Scoring iterations: 2</span></code></pre>
+<code class="sourceCode R"><span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/svyglm.html" class="external-link">svyglm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">JWMNP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">WAGP</span><span class="op">)</span> <span class="op">+</span> <span class="va">emp_type</span> <span class="op">+</span> <span class="va">PUMA</span>, design <span class="op">=</span> <span class="va">vt_model_sd</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## survey::svyglm(formula = log(JWMNP) ~ log(WAGP) + emp_type + </span></span>
+<span><span class="co">##     PUMA, design = vt_model_sd)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Survey design:</span></span>
+<span><span class="co">## Called via srvyr</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                 Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span><span class="co">## (Intercept)     1.699601   0.102181  16.633  &lt; 2e-16 ***</span></span>
+<span><span class="co">## log(WAGP)       0.113913   0.009548  11.931  &lt; 2e-16 ***</span></span>
+<span><span class="co">## emp_typepublic -0.052845   0.027420  -1.927   0.0578 .  </span></span>
+<span><span class="co">## emp_typeself   -0.306227   0.050016  -6.123 4.20e-08 ***</span></span>
+<span><span class="co">## PUMA00200       0.007800   0.023943   0.326   0.7455    </span></span>
+<span><span class="co">## PUMA00300       0.023629   0.025111   0.941   0.3498    </span></span>
+<span><span class="co">## PUMA00400      -0.117300   0.026028  -4.507 2.46e-05 ***</span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for gaussian family taken to be 9328.921)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 2</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="mapping-pums-data">Mapping PUMS data<a class="anchor" aria-label="anchor" href="#mapping-pums-data"></a>
@@ -555,40 +555,40 @@ might also want to put your custom PUMS estimates on a map. To do this,
 let’s use <code>tigris</code> to download PUMA boundaries for the states
 in New England as an <code>sf</code> object.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ne_states</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"VT"</span>, <span class="st">"NH"</span>, <span class="st">"ME"</span>, <span class="st">"MA"</span>, <span class="st">"CT"</span>, <span class="st">"RI"</span><span class="op">)</span>
-<span class="va">ne_pumas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">ne_states</span>, <span class="fu">tigris</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/tigris/man/pumas.html" class="external-link">pumas</a></span>, class <span class="op">=</span> <span class="st">"sf"</span>, cb <span class="op">=</span> <span class="cn">TRUE</span>, year <span class="op">=</span> <span class="fl">2018</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://purrr.tidyverse.org/reference/reduce.html" class="external-link">reduce</a></span><span class="op">(</span><span class="va">rbind</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ne_states</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"VT"</span>, <span class="st">"NH"</span>, <span class="st">"ME"</span>, <span class="st">"MA"</span>, <span class="st">"CT"</span>, <span class="st">"RI"</span><span class="op">)</span></span>
+<span><span class="va">ne_pumas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">ne_states</span>, <span class="fu">tigris</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/tigris/man/pumas.html" class="external-link">pumas</a></span>, class <span class="op">=</span> <span class="st">"sf"</span>, cb <span class="op">=</span> <span class="cn">TRUE</span>, year <span class="op">=</span> <span class="fl">2018</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/reduce.html" class="external-link">reduce</a></span><span class="op">(</span><span class="va">rbind</span><span class="op">)</span></span></code></pre></div>
 <p>Next we download the income-to-poverty ratio from the PUMS dataset
 and calculate the percentage of population below 200% of the poverty
 line for each PUMA.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ne_pums</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"POVPIP"</span><span class="op">)</span>,
-  state <span class="op">=</span> <span class="va">ne_states</span>,
-  survey <span class="op">=</span> <span class="st">"acs1"</span>,
-  year <span class="op">=</span> <span class="fl">2018</span>
-  <span class="op">)</span>
-
-<span class="va">ne_pov</span> <span class="op">&lt;-</span> <span class="va">ne_pums</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">ST</span>, <span class="va">PUMA</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>
-    total_pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">)</span>,
-    pct_in_pov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">POVPIP</span> <span class="op">&lt;</span> <span class="fl">200</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">total_pop</span>
-  <span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ne_pums</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span></span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PUMA"</span>, <span class="st">"POVPIP"</span><span class="op">)</span>,</span>
+<span>  state <span class="op">=</span> <span class="va">ne_states</span>,</span>
+<span>  survey <span class="op">=</span> <span class="st">"acs1"</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2018</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">ne_pov</span> <span class="op">&lt;-</span> <span class="va">ne_pums</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">ST</span>, <span class="va">PUMA</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
+<span>    total_pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">)</span>,</span>
+<span>    pct_in_pov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PWGTP</span><span class="op">[</span><span class="va">POVPIP</span> <span class="op">&lt;</span> <span class="fl">200</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">total_pop</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>And now we can make a choropleth map by joining the PUMA boundaries
 with the PUMS data.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ne_pumas</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ne_pov</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STATEFP10"</span> <span class="op">=</span> <span class="st">"ST"</span>, <span class="st">"PUMACE10"</span> <span class="op">=</span> <span class="st">"PUMA"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">pct_in_pov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_b</a></span><span class="op">(</span>
-    name <span class="op">=</span> <span class="cn">NULL</span>,
-    option <span class="op">=</span> <span class="st">"magma"</span>,
-    labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_percent.html" class="external-link">label_percent</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
-    <span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Percentage of population below 200% of the poverty line"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">ne_pumas</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ne_pov</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STATEFP10"</span> <span class="op">=</span> <span class="st">"ST"</span>, <span class="st">"PUMACE10"</span> <span class="op">=</span> <span class="st">"PUMA"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">pct_in_pov</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_b</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>    option <span class="op">=</span> <span class="st">"magma"</span>,</span>
+<span>    labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_percent.html" class="external-link">label_percent</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Percentage of population below 200% of the poverty line"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pums-data_files/figure-html/unnamed-chunk-23-1.png" width="768"></p>
 </div>
 <div class="section level2">
@@ -633,57 +633,57 @@ estimates for user verification file:</p>
 </tbody>
 </table>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">wy_relp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="st">"RELP"</span>,
-  state <span class="op">=</span> <span class="st">"Wyoming"</span>,
-  survey <span class="op">=</span> <span class="st">"acs1"</span>,
-  year <span class="op">=</span> <span class="fl">2018</span>,
-  rep_weights <span class="op">=</span> <span class="st">"person"</span>
-<span class="op">)</span>
-
-<span class="va">ut_ten</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="st">"TEN"</span>,
-  state <span class="op">=</span> <span class="st">"Utah"</span>,
-  survey <span class="op">=</span> <span class="st">"acs1"</span>,
-  year <span class="op">=</span> <span class="fl">2018</span>,
-  rep_weights <span class="op">=</span> <span class="st">"housing"</span>
-<span class="op">)</span>
-
-<span class="va">hi_age</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span>
-  variables <span class="op">=</span> <span class="st">"AGEP"</span>,
-  state <span class="op">=</span> <span class="st">"Hawaii"</span>,
-  survey <span class="op">=</span> <span class="st">"acs1"</span>,
-  year <span class="op">=</span> <span class="fl">2018</span>,
-  rep_weights <span class="op">=</span> <span class="st">"person"</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">wy_relp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span></span>
+<span>  variables <span class="op">=</span> <span class="st">"RELP"</span>,</span>
+<span>  state <span class="op">=</span> <span class="st">"Wyoming"</span>,</span>
+<span>  survey <span class="op">=</span> <span class="st">"acs1"</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2018</span>,</span>
+<span>  rep_weights <span class="op">=</span> <span class="st">"person"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ut_ten</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span></span>
+<span>  variables <span class="op">=</span> <span class="st">"TEN"</span>,</span>
+<span>  state <span class="op">=</span> <span class="st">"Utah"</span>,</span>
+<span>  survey <span class="op">=</span> <span class="st">"acs1"</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2018</span>,</span>
+<span>  rep_weights <span class="op">=</span> <span class="st">"housing"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">hi_age</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_pums.html">get_pums</a></span><span class="op">(</span></span>
+<span>  variables <span class="op">=</span> <span class="st">"AGEP"</span>,</span>
+<span>  state <span class="op">=</span> <span class="st">"Hawaii"</span>,</span>
+<span>  survey <span class="op">=</span> <span class="st">"acs1"</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2018</span>,</span>
+<span>  rep_weights <span class="op">=</span> <span class="st">"person"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">wy_relp</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">RELP</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">RELP</span> <span class="op">==</span> <span class="st">"16"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span>
-<span class="co">##   RELP      n  n_se</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 16     <span style="text-decoration: underline;">7</span>018  2.64</span></code></pre>
+<code class="sourceCode R"><span><span class="va">wy_relp</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">RELP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">RELP</span> <span class="op">==</span> <span class="st">"16"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
+<span><span class="co">##   RELP      n  n_se</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 16     <span style="text-decoration: underline;">7</span>018  2.64</span></span></code></pre>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ut_ten</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">SERIALNO</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"housing"</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">TEN</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">TEN</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span>
-<span class="co">##   TEN        n  n_se</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 2     <span style="text-decoration: underline;">209</span>632 <span style="text-decoration: underline;">3</span>972.</span></code></pre>
+<code class="sourceCode R"><span><span class="va">ut_ten</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">SERIALNO</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"housing"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_tally.html" class="external-link">survey_count</a></span><span class="op">(</span><span class="va">TEN</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">TEN</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
+<span><span class="co">##   TEN        n  n_se</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 2     <span style="text-decoration: underline;">209</span>632 <span style="text-decoration: underline;">3</span>972.</span></span></code></pre>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">hi_age</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/dplyr_single.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="va">AGEP</span>, <span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="http://gdfe.co/srvyr/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="http://gdfe.co/srvyr/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>age_0_4 <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 1 × 2</span></span>
-<span class="co">##   age_0_4 age_0_4_se</span>
-<span class="co">##     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span>   <span style="text-decoration: underline;">86</span>452       944.</span></code></pre>
+<code class="sourceCode R"><span><span class="va">hi_age</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/between.html" class="external-link">between</a></span><span class="op">(</span><span class="va">AGEP</span>, <span class="fl">0</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/to_survey.html">to_survey</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>age_0_4 <span class="op">=</span> <span class="fu"><a href="http://gdfe.co/srvyr/reference/survey_total.html" class="external-link">survey_total</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>
+<span><span class="co">##   age_0_4 age_0_4_se</span></span>
+<span><span class="co">##     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>   <span style="text-decoration: underline;">86</span>452       944.</span></span></code></pre>
 <p>3 for 3 – yay!</p>
 </div>
 <div class="section level2">

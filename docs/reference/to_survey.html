@@ -22,7 +22,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
       </span>
     </div>
 
@@ -91,12 +91,12 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">to_survey</span><span class="op">(</span>
-  <span class="va">df</span>,
-  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"person"</span>, <span class="st">"housing"</span><span class="op">)</span>,
-  class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"srvyr"</span>, <span class="st">"survey"</span><span class="op">)</span>,
-  design <span class="op">=</span> <span class="st">"rep_weights"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">to_survey</span><span class="op">(</span></span>
+<span>  <span class="va">df</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"person"</span>, <span class="st">"housing"</span><span class="op">)</span>,</span>
+<span>  class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"srvyr"</span>, <span class="st">"survey"</span><span class="op">)</span>,</span>
+<span>  design <span class="op">=</span> <span class="st">"rep_weights"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -118,7 +118,7 @@ likely returned by <code><a href="get_pums.html">get_pums</a></code>.</p></dd>
 
 <dt>design</dt>
 <dd><p>The survey design to use when creating a survey object.
-Currently the only option is code"rep_weights"/.</p></dd>
+Currently the only option is <code>"rep_weights"</code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -130,11 +130,11 @@ Currently the only option is code"rep_weights"/.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">pums</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_pums.html">get_pums</a></span><span class="op">(</span>variables <span class="op">=</span> <span class="st">"AGEP"</span>, state <span class="op">=</span> <span class="st">"VT"</span>, rep_weights <span class="op">=</span> <span class="st">"person"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pums_design</span> <span class="op">&lt;-</span> <span class="fu">to_survey</span><span class="op">(</span><span class="va">pums</span>, type <span class="op">=</span> <span class="st">"person"</span>, class <span class="op">=</span> <span class="st">"srvyr"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/surveysummary.html" class="external-link">svymean</a></span><span class="op">(</span><span class="op">~</span><span class="va">AGEP</span>, <span class="va">pums_design</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">pums</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_pums.html">get_pums</a></span><span class="op">(</span>variables <span class="op">=</span> <span class="st">"AGEP"</span>, state <span class="op">=</span> <span class="st">"VT"</span>, rep_weights <span class="op">=</span> <span class="st">"person"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pums_design</span> <span class="op">&lt;-</span> <span class="fu">to_survey</span><span class="op">(</span><span class="va">pums</span>, type <span class="op">=</span> <span class="st">"person"</span>, class <span class="op">=</span> <span class="st">"srvyr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">survey</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/survey/man/surveysummary.html" class="external-link">svymean</a></span><span class="op">(</span><span class="op">~</span><span class="va">AGEP</span>, <span class="va">pums_design</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>

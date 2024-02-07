@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
       </span>
     </div>
 
@@ -81,26 +81,26 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_decennial</span><span class="op">(</span>
-  <span class="va">geography</span>,
-  variables <span class="op">=</span> <span class="cn">NULL</span>,
-  table <span class="op">=</span> <span class="cn">NULL</span>,
-  cache_table <span class="op">=</span> <span class="cn">FALSE</span>,
-  year <span class="op">=</span> <span class="fl">2020</span>,
-  sumfile <span class="op">=</span> <span class="cn">NULL</span>,
-  state <span class="op">=</span> <span class="cn">NULL</span>,
-  county <span class="op">=</span> <span class="cn">NULL</span>,
-  geometry <span class="op">=</span> <span class="cn">FALSE</span>,
-  output <span class="op">=</span> <span class="st">"tidy"</span>,
-  keep_geo_vars <span class="op">=</span> <span class="cn">FALSE</span>,
-  shift_geo <span class="op">=</span> <span class="cn">FALSE</span>,
-  summary_var <span class="op">=</span> <span class="cn">NULL</span>,
-  pop_group <span class="op">=</span> <span class="cn">NULL</span>,
-  pop_group_label <span class="op">=</span> <span class="cn">FALSE</span>,
-  key <span class="op">=</span> <span class="cn">NULL</span>,
-  show_call <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_decennial</span><span class="op">(</span></span>
+<span>  <span class="va">geography</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  table <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cache_table <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2020</span>,</span>
+<span>  sumfile <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  geometry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  output <span class="op">=</span> <span class="st">"tidy"</span>,</span>
+<span>  keep_geo_vars <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  shift_geo <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  summary_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pop_group <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pop_group_label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  key <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  show_call <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -213,24 +213,24 @@ a browser and see what is returned by the API directly. Defaults to FALSE.</p></
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Plot of race/ethnicity by county in Illinois for 2010</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/" class="external-link">viridis</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="census_api_key.html">census_api_key</a></span><span class="op">(</span><span class="st">"YOUR KEY GOES HERE"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">vars10</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P005003"</span>, <span class="st">"P005004"</span>, <span class="st">"P005006"</span>, <span class="st">"P004003"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">il</span> <span class="op">&lt;-</span> <span class="fu">get_decennial</span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, variables <span class="op">=</span> <span class="va">vars10</span>, year <span class="op">=</span> <span class="fl">2010</span>,</span>
-<span class="r-in">                    summary_var <span class="op">=</span> <span class="st">"P001001"</span>, state <span class="op">=</span> <span class="st">"IL"</span>, geometry <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="op">(</span><span class="va">value</span> <span class="op">/</span> <span class="va">summary_value</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">il</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">pct</span>, color <span class="op">=</span> <span class="va">pct</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">variable</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Plot of race/ethnicity by county in Illinois for 2010</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/" class="external-link">viridis</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="census_api_key.html">census_api_key</a></span><span class="op">(</span><span class="st">"YOUR KEY GOES HERE"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">vars10</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"P005003"</span>, <span class="st">"P005004"</span>, <span class="st">"P005006"</span>, <span class="st">"P004003"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">il</span> <span class="op">&lt;-</span> <span class="fu">get_decennial</span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, variables <span class="op">=</span> <span class="va">vars10</span>, year <span class="op">=</span> <span class="fl">2010</span>,</span></span>
+<span class="r-in"><span>                    summary_var <span class="op">=</span> <span class="st">"P001001"</span>, state <span class="op">=</span> <span class="st">"IL"</span>, geometry <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="op">(</span><span class="va">value</span> <span class="op">/</span> <span class="va">summary_value</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">il</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">pct</span>, color <span class="op">=</span> <span class="va">pct</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">variable</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>

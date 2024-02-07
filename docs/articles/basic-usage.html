@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
       </span>
     </div>
 
@@ -117,10 +117,10 @@
 load the package along with the <strong>tidyverse</strong> package, and
 set their Census API key. A key can be obtained from <a href="http://api.census.gov/data/key_signup.html" class="external-link uri">http://api.census.gov/data/key_signup.html</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/census_api_key.html">census_api_key</a></span><span class="op">(</span><span class="st">"YOUR API KEY GOES HERE"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/census_api_key.html">census_api_key</a></span><span class="op">(</span><span class="st">"YOUR API KEY GOES HERE"</span><span class="op">)</span></span></code></pre></div>
 <p>There are two major functions implemented in
 <strong>tidycensus</strong>: <code><a href="../reference/get_decennial.html">get_decennial()</a></code>, which grants
 access to the 2000, 2010, and 2020 decennial US Census APIs, and
@@ -130,21 +130,21 @@ American Community Survey APIs.</p>
 with data drawn from the Demographic and Housing Characteristics summary
 file:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">age20</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_decennial.html">get_decennial</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"state"</span>, 
-                       variables <span class="op">=</span> <span class="st">"P13_001N"</span>, 
-                       year <span class="op">=</span> <span class="fl">2020</span>,
-                       sumfile <span class="op">=</span> <span class="st">"dhc"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">age20</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span>
-<span class="co">##   GEOID NAME                 variable value</span>
-<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;">1</span> 09    Connecticut          P13_001N  41.1</span>
-<span class="co">## <span style="color: #BCBCBC;">2</span> 10    Delaware             P13_001N  41.1</span>
-<span class="co">## <span style="color: #BCBCBC;">3</span> 11    District of Columbia P13_001N  33.9</span>
-<span class="co">## <span style="color: #BCBCBC;">4</span> 12    Florida              P13_001N  43  </span>
-<span class="co">## <span style="color: #BCBCBC;">5</span> 13    Georgia              P13_001N  37.5</span>
-<span class="co">## <span style="color: #BCBCBC;">6</span> 15    Hawaii               P13_001N  40.8</span></code></pre>
+<code class="sourceCode R"><span><span class="va">age20</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_decennial.html">get_decennial</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"state"</span>, </span>
+<span>                       variables <span class="op">=</span> <span class="st">"P13_001N"</span>, </span>
+<span>                       year <span class="op">=</span> <span class="fl">2020</span>,</span>
+<span>                       sumfile <span class="op">=</span> <span class="st">"dhc"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">age20</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 4</span></span></span>
+<span><span class="co">##   GEOID NAME                 variable value</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> 09    Connecticut          P13_001N  41.1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> 10    Delaware             P13_001N  41.1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> 11    District of Columbia P13_001N  33.9</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> 12    Florida              P13_001N  43  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> 13    Georgia              P13_001N  37.5</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> 15    Hawaii               P13_001N  40.8</span></span></code></pre>
 <p>The function returns a tibble with four columns by default:
 <code>GEOID</code>, which is an identifier for the geographical unit
 associated with the row; <code>NAME</code>, which is a descriptive name
@@ -158,9 +158,9 @@ in the function call.</p>
 <p>As the function has returned a tidy object, we can visualize it
 quickly with <strong>ggplot2</strong>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">age20</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">NAME</span>, <span class="va">value</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">age20</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">NAME</span>, <span class="va">value</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="basic-usage_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
 <div class="section level2">
 <h2 id="geography-in-tidycensus">Geography in tidycensus<a class="anchor" aria-label="anchor" href="#geography-in-tidycensus"></a>
@@ -449,9 +449,9 @@ use the <code>View</code> function in RStudio. An optional argument
 <code>cache = TRUE</code> will cache the dataset on your computer for
 future use.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">v17</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_variables.html">load_variables</a></span><span class="op">(</span><span class="fl">2017</span>, <span class="st">"acs5"</span>, cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">v17</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">v17</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_variables.html">load_variables</a></span><span class="op">(</span><span class="fl">2017</span>, <span class="st">"acs5"</span>, cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">v17</span><span class="op">)</span></span></code></pre></div>
 <p><img src="img/view.png" style="width: 100%"></p>
 <p>By filtering for “median age” variable IDs corresponding to that
 query can be browsed interactively. For the 5-year ACS detailed tables
@@ -480,29 +480,29 @@ using <code><a href="../reference/get_acs.html">get_acs()</a></code>. In turn, w
 fetch median household income data from the 2017-2021 ACS for counties
 in Vermont.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, 
-              variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>medincome <span class="op">=</span> <span class="st">"B19013_001"</span><span class="op">)</span>, 
-              state <span class="op">=</span> <span class="st">"VT"</span>, 
-              year <span class="op">=</span> <span class="fl">2021</span><span class="op">)</span>
-
-<span class="va">vt</span></code></pre></div>
-<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 14 × 5</span></span>
-<span class="co">##    GEOID NAME                       variable  estimate   moe</span>
-<span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">## <span style="color: #BCBCBC;"> 1</span> 50001 Addison County, Vermont    medincome    <span style="text-decoration: underline;">77</span>978  <span style="text-decoration: underline;">3</span>393</span>
-<span class="co">## <span style="color: #BCBCBC;"> 2</span> 50003 Bennington County, Vermont medincome    <span style="text-decoration: underline;">63</span>448  <span style="text-decoration: underline;">3</span>413</span>
-<span class="co">## <span style="color: #BCBCBC;"> 3</span> 50005 Caledonia County, Vermont  medincome    <span style="text-decoration: underline;">55</span>159  <span style="text-decoration: underline;">3</span>974</span>
-<span class="co">## <span style="color: #BCBCBC;"> 4</span> 50007 Chittenden County, Vermont medincome    <span style="text-decoration: underline;">81</span>957  <span style="text-decoration: underline;">2</span>521</span>
-<span class="co">## <span style="color: #BCBCBC;"> 5</span> 50009 Essex County, Vermont      medincome    <span style="text-decoration: underline;">48</span>194  <span style="text-decoration: underline;">3</span>577</span>
-<span class="co">## <span style="color: #BCBCBC;"> 6</span> 50011 Franklin County, Vermont   medincome    <span style="text-decoration: underline;">68</span>476  <span style="text-decoration: underline;">3</span>297</span>
-<span class="co">## <span style="color: #BCBCBC;"> 7</span> 50013 Grand Isle County, Vermont medincome    <span style="text-decoration: underline;">85</span>154  <span style="text-decoration: underline;">7</span>894</span>
-<span class="co">## <span style="color: #BCBCBC;"> 8</span> 50015 Lamoille County, Vermont   medincome    <span style="text-decoration: underline;">66</span>016  <span style="text-decoration: underline;">4</span>777</span>
-<span class="co">## <span style="color: #BCBCBC;"> 9</span> 50017 Orange County, Vermont     medincome    <span style="text-decoration: underline;">67</span>906  <span style="text-decoration: underline;">2</span>710</span>
-<span class="co">## <span style="color: #BCBCBC;">10</span> 50019 Orleans County, Vermont    medincome    <span style="text-decoration: underline;">58</span>037  <span style="text-decoration: underline;">3</span>153</span>
-<span class="co">## <span style="color: #BCBCBC;">11</span> 50021 Rutland County, Vermont    medincome    <span style="text-decoration: underline;">59</span>751  <span style="text-decoration: underline;">2</span>133</span>
-<span class="co">## <span style="color: #BCBCBC;">12</span> 50023 Washington County, Vermont medincome    <span style="text-decoration: underline;">70</span>128  <span style="text-decoration: underline;">3</span>014</span>
-<span class="co">## <span style="color: #BCBCBC;">13</span> 50025 Windham County, Vermont    medincome    <span style="text-decoration: underline;">59</span>195  <span style="text-decoration: underline;">2</span>060</span>
-<span class="co">## <span style="color: #BCBCBC;">14</span> 50027 Windsor County, Vermont    medincome    <span style="text-decoration: underline;">63</span>787  <span style="text-decoration: underline;">2</span>209</span></code></pre>
+<code class="sourceCode R"><span><span class="va">vt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_acs.html">get_acs</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, </span>
+<span>              variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>medincome <span class="op">=</span> <span class="st">"B19013_001"</span><span class="op">)</span>, </span>
+<span>              state <span class="op">=</span> <span class="st">"VT"</span>, </span>
+<span>              year <span class="op">=</span> <span class="fl">2021</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">vt</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 14 × 5</span></span></span>
+<span><span class="co">##    GEOID NAME                       variable  estimate   moe</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> 50001 Addison County, Vermont    medincome    <span style="text-decoration: underline;">77</span>978  <span style="text-decoration: underline;">3</span>393</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> 50003 Bennington County, Vermont medincome    <span style="text-decoration: underline;">63</span>448  <span style="text-decoration: underline;">3</span>413</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> 50005 Caledonia County, Vermont  medincome    <span style="text-decoration: underline;">55</span>159  <span style="text-decoration: underline;">3</span>974</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> 50007 Chittenden County, Vermont medincome    <span style="text-decoration: underline;">81</span>957  <span style="text-decoration: underline;">2</span>521</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> 50009 Essex County, Vermont      medincome    <span style="text-decoration: underline;">48</span>194  <span style="text-decoration: underline;">3</span>577</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> 50011 Franklin County, Vermont   medincome    <span style="text-decoration: underline;">68</span>476  <span style="text-decoration: underline;">3</span>297</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> 50013 Grand Isle County, Vermont medincome    <span style="text-decoration: underline;">85</span>154  <span style="text-decoration: underline;">7</span>894</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> 50015 Lamoille County, Vermont   medincome    <span style="text-decoration: underline;">66</span>016  <span style="text-decoration: underline;">4</span>777</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> 50017 Orange County, Vermont     medincome    <span style="text-decoration: underline;">67</span>906  <span style="text-decoration: underline;">2</span>710</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> 50019 Orleans County, Vermont    medincome    <span style="text-decoration: underline;">58</span>037  <span style="text-decoration: underline;">3</span>153</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">11</span> 50021 Rutland County, Vermont    medincome    <span style="text-decoration: underline;">59</span>751  <span style="text-decoration: underline;">2</span>133</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">12</span> 50023 Washington County, Vermont medincome    <span style="text-decoration: underline;">70</span>128  <span style="text-decoration: underline;">3</span>014</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">13</span> 50025 Windham County, Vermont    medincome    <span style="text-decoration: underline;">59</span>195  <span style="text-decoration: underline;">2</span>060</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">14</span> 50027 Windsor County, Vermont    medincome    <span style="text-decoration: underline;">63</span>787  <span style="text-decoration: underline;">2</span>209</span></span></code></pre>
 <p>The output is similar to a call to <code><a href="../reference/get_decennial.html">get_decennial()</a></code>, but
 instead of a <code>value</code> column, <code>get_acs</code> returns
 <code>estimate</code> and <code>moe</code> columns for the ACS estimate
@@ -513,15 +513,15 @@ changed to 95 or 99 percent with the <code>moe_level</code> parameter in
 <p>As we have the margin of error, we can visualize the uncertainty
 around the estimate:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">vt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>NAME <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">" County, Vermont"</span>, <span class="st">""</span>, <span class="va">NAME</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">estimate</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">NAME</span>, <span class="va">estimate</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_errorbarh.html" class="external-link">geom_errorbarh</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">estimate</span> <span class="op">-</span> <span class="va">moe</span>, xmax <span class="op">=</span> <span class="va">estimate</span> <span class="op">+</span> <span class="va">moe</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Household income by county in Vermont"</span>,
-       subtitle <span class="op">=</span> <span class="st">"2017-2021 American Community Survey"</span>,
-       y <span class="op">=</span> <span class="st">""</span>,
-       x <span class="op">=</span> <span class="st">"ACS estimate (bars represent margin of error)"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">vt</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>NAME <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span><span class="st">" County, Vermont"</span>, <span class="st">""</span>, <span class="va">NAME</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">estimate</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">NAME</span>, <span class="va">estimate</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_errorbarh.html" class="external-link">geom_errorbarh</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">estimate</span> <span class="op">-</span> <span class="va">moe</span>, xmax <span class="op">=</span> <span class="va">estimate</span> <span class="op">+</span> <span class="va">moe</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Household income by county in Vermont"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"2017-2021 American Community Survey"</span>,</span>
+<span>       y <span class="op">=</span> <span class="st">""</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"ACS estimate (bars represent margin of error)"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="basic-usage_files/figure-html/unnamed-chunk-7-1.png" width="768"></p>
 </div>
   </div>

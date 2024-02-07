@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.1</span>
       </span>
     </div>
 
@@ -81,16 +81,16 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">interpolate_pw</span><span class="op">(</span>
-  <span class="va">from</span>,
-  <span class="va">to</span>,
-  to_id <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">extensive</span>,
-  <span class="va">weights</span>,
-  weight_column <span class="op">=</span> <span class="cn">NULL</span>,
-  weight_placement <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"surface"</span>, <span class="st">"centroid"</span><span class="op">)</span>,
-  crs <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">interpolate_pw</span><span class="op">(</span></span>
+<span>  <span class="va">from</span>,</span>
+<span>  <span class="va">to</span>,</span>
+<span>  to_id <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">extensive</span>,</span>
+<span>  <span class="va">weights</span>,</span>
+<span>  weight_column <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weight_placement <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"surface"</span>, <span class="st">"centroid"</span><span class="op">)</span>,</span>
+<span>  crs <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -142,50 +142,50 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Example: interpolating work-from-home from 2011-2015 ACS</span></span>
-<span class="r-in"><span class="co"># to 2020 shapes</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tigris" class="external-link">tigris</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">wfh_15</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_acs.html">get_acs</a></span><span class="op">(</span></span>
-<span class="r-in">  geography <span class="op">=</span> <span class="st">"tract"</span>,</span>
-<span class="r-in">  variables <span class="op">=</span> <span class="st">"B08006_017"</span>,</span>
-<span class="r-in">  year <span class="op">=</span> <span class="fl">2015</span>,</span>
-<span class="r-in">  state <span class="op">=</span> <span class="st">"AZ"</span>,</span>
-<span class="r-in">  county <span class="op">=</span> <span class="st">"Maricopa"</span>,</span>
-<span class="r-in">  geometry <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span class="r-in"><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/tigris/man/tigris-exports.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">wfh_20</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_acs.html">get_acs</a></span><span class="op">(</span></span>
-<span class="r-in">  geography <span class="op">=</span> <span class="st">"tract"</span>,</span>
-<span class="r-in">  variables <span class="op">=</span> <span class="st">"B08006_017"</span>,</span>
-<span class="r-in">  year <span class="op">=</span> <span class="fl">2020</span>,</span>
-<span class="r-in">  state <span class="op">=</span> <span class="st">"AZ"</span>,</span>
-<span class="r-in">  county <span class="op">=</span> <span class="st">"Maricopa"</span>,</span>
-<span class="r-in">  geometry <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span class="r-in"> <span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">maricopa_blocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/blocks.html" class="external-link">blocks</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="st">"AZ"</span>,</span>
-<span class="r-in">  <span class="st">"Maricopa"</span>,</span>
-<span class="r-in">  year <span class="op">=</span> <span class="fl">2020</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">wfh_15_to_20</span> <span class="op">&lt;-</span> <span class="fu">interpolate_pw</span><span class="op">(</span></span>
-<span class="r-in">  from <span class="op">=</span> <span class="va">wfh_15</span>,</span>
-<span class="r-in">  to <span class="op">=</span> <span class="va">wfh_20</span>,</span>
-<span class="r-in">  to_id <span class="op">=</span> <span class="st">"GEOID"</span>,</span>
-<span class="r-in">  weights <span class="op">=</span> <span class="va">maricopa_blocks</span>,</span>
-<span class="r-in">  weight_column <span class="op">=</span> <span class="st">"POP20"</span>,</span>
-<span class="r-in">  crs <span class="op">=</span> <span class="fl">26949</span>,</span>
-<span class="r-in">  extensive <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Example: interpolating work-from-home from 2011-2015 ACS</span></span></span>
+<span class="r-in"><span><span class="co"># to 2020 shapes</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tigris" class="external-link">tigris</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">wfh_15</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_acs.html">get_acs</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  geography <span class="op">=</span> <span class="st">"tract"</span>,</span></span>
+<span class="r-in"><span>  variables <span class="op">=</span> <span class="st">"B08006_017"</span>,</span></span>
+<span class="r-in"><span>  year <span class="op">=</span> <span class="fl">2015</span>,</span></span>
+<span class="r-in"><span>  state <span class="op">=</span> <span class="st">"AZ"</span>,</span></span>
+<span class="r-in"><span>  county <span class="op">=</span> <span class="st">"Maricopa"</span>,</span></span>
+<span class="r-in"><span>  geometry <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">wfh_20</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_acs.html">get_acs</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  geography <span class="op">=</span> <span class="st">"tract"</span>,</span></span>
+<span class="r-in"><span>  variables <span class="op">=</span> <span class="st">"B08006_017"</span>,</span></span>
+<span class="r-in"><span>  year <span class="op">=</span> <span class="fl">2020</span>,</span></span>
+<span class="r-in"><span>  state <span class="op">=</span> <span class="st">"AZ"</span>,</span></span>
+<span class="r-in"><span>  county <span class="op">=</span> <span class="st">"Maricopa"</span>,</span></span>
+<span class="r-in"><span>  geometry <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span> <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">maricopa_blocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tigris/man/blocks.html" class="external-link">blocks</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="st">"AZ"</span>,</span></span>
+<span class="r-in"><span>  <span class="st">"Maricopa"</span>,</span></span>
+<span class="r-in"><span>  year <span class="op">=</span> <span class="fl">2020</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">wfh_15_to_20</span> <span class="op">&lt;-</span> <span class="fu">interpolate_pw</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  from <span class="op">=</span> <span class="va">wfh_15</span>,</span></span>
+<span class="r-in"><span>  to <span class="op">=</span> <span class="va">wfh_20</span>,</span></span>
+<span class="r-in"><span>  to_id <span class="op">=</span> <span class="st">"GEOID"</span>,</span></span>
+<span class="r-in"><span>  weights <span class="op">=</span> <span class="va">maricopa_blocks</span>,</span></span>
+<span class="r-in"><span>  weight_column <span class="op">=</span> <span class="st">"POP20"</span>,</span></span>
+<span class="r-in"><span>  crs <span class="op">=</span> <span class="fl">26949</span>,</span></span>
+<span class="r-in"><span>  extensive <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
