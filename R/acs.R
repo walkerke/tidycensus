@@ -200,6 +200,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   if (geography == "puma") geography <- "public use microdata area"
 
+  # allow underscores and convert back to spaces
+  if (grepl("_", geography) & !grepl(" ", geography)) geography <- gsub("_", " ", geography)
+
   if (any(grepl("^S[0-9]|^DP", variables)) && geography == "block group") {
     stop("Block groups are not an available geography in the Data Profile and Subject Tables datasets.",
          call. = FALSE)
