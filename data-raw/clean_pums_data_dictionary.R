@@ -43,6 +43,18 @@ clean_data_dict <- function(path, survey, year) {
     filter(type == "VAL") %>%
     select(var_code, val_min = var_label, val_max, val_label)
 
+  # Fix missing YRBLT value that pops up in 2021 and 2022, but is missing from the dict
+  if (year >= 2021) {
+    addl_yrblt <- tibble::tibble(
+      var_code = "YRBLT",
+      val_min = "1938",
+      val_max = "1938",
+      val_label = "N/A (GQ)"
+    )
+
+    var_value <- bind_rows(var_value, addl_yrblt)
+  }
+
   pums_variables <- var_name %>%
     left_join(var_value, by = "var_code") %>%
     group_by(var_code) %>%
