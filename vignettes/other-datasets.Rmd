@@ -19,7 +19,7 @@ The post-2020 Population Estimates are no longer on the Census API, but they are
 
 ### Components of change population estimates
 
-By default, specifying `"population"`, `"components"`, or `"housing"` (housing is not available for 2020 and later) as the `product` in `get_estimates()` returns all variables associated with that component.   For example, we can request all components of change variables for US states in 2022: 
+By default, specifying `"population"`, `"components"`, or `"housing"` (housing is not available for 2020 and later) as the `product` in `get_estimates()` returns all variables associated with that component.   For example, we can request all components of change variables for US states in 2023: 
 
 ```{r}
 library(tidycensus)
@@ -27,7 +27,7 @@ library(tidyverse)
 library(tigris)
 options(tigris_use_cache = TRUE)
 
-us_components <- get_estimates(geography = "state", product = "components", year = 2022)
+us_components <- get_estimates(geography = "state", product = "components", vintage = 2023)
 
 us_components
 ```
@@ -40,13 +40,13 @@ unique(us_components$variable)
 
 Available geographies include `"us"`, `"state"`, `"county"`, `"metropolitan statistical area/micropolitan statistical area"` or `"cbsa"`, `"combined statistical area"`, and `"place"`.   
 
-If desired, users can request a specific component or components by supplying a character vector to the `variables` parameter, as in other tidycensus functions.   `get_estimates()` also supports simple feature geometry integration to facilitate mapping.   In the example below, we'll acquire data on the net migration rate between 2021 and 2022 for all counties in the United States. We'll also use the `shift_geometry()` function from the __tigris__ package to shift and rescale counties outside the continental US for national mapping.   
+If desired, users can request a specific component or components by supplying a character vector to the `variables` parameter, as in other tidycensus functions.   `get_estimates()` also supports simple feature geometry integration to facilitate mapping.   In the example below, we'll acquire data on the net migration rate between 2022 and 2023 for all counties in the United States. We'll also use the `shift_geometry()` function from the __tigris__ package to shift and rescale counties outside the continental US for national mapping.   
 
 ```{r}
 
 net_migration <- get_estimates(geography = "county",
                                variables = "RNETMIG",
-                               year = 2022,
+                               vintage = 2023,
                                geometry = TRUE,
                                resolution = "20m") %>%
   shift_geometry()
@@ -58,6 +58,10 @@ net_migration
 We'll next use tidyverse tools to generate a `groups` column that bins the net migration rates into comprehensible categories, and plot the result using `geom_sf()` and ggplot2.   
 
 ```{r}
+library(showtext)
+font_add_google("Roboto")
+showtext_auto()
+
 order = c("-15 and below", "-15 to -5", "-5 to +5", "+5 to +15", "+15 and up")
 
 net_migration <- net_migration %>%
@@ -83,9 +87,9 @@ ggplot() +
   scale_fill_brewer(palette = "PuOr", direction = -1) +
   scale_color_brewer(palette = "PuOr", direction = -1, guide = FALSE) +
   coord_sf(datum = NA) +
-  theme_minimal(base_family = "Roboto") +
+  theme_minimal(base_family = "Roboto", base_size = 18) +
   labs(title = "Net migration per 1000 residents by county",
-       subtitle = "US Census Bureau 2022 Population Estimates",
+       subtitle = "US Census Bureau 2023 Population Estimates",
        fill = "Rate",
        caption = "Data acquired with the R tidycensus package | @kyle_e_walker")
 ```
@@ -103,7 +107,7 @@ la_age_hisp <- get_estimates(geography = "county",
                              breakdown_labels = TRUE, 
                              state = "CA", 
                              county = "Los Angeles",
-                             year = 2022)
+                             vintage = 2022)
 
 la_age_hisp
 ```
