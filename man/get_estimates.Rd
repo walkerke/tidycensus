@@ -98,8 +98,13 @@ a browser and see what is returned by the API directly. Defaults to FALSE.}
 A tibble, or sf tibble, of population estimates data
 }
 \description{
-\code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Population Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
+The \code{get_estimates()} function requests data from the US Census Bureau's Population Estimates Program (PEP) datasets.  The PEP datasets are defined by the US Census Bureau as follows: "The Census Bureau's Population Estimates Program (PEP) produces estimates of the population for the United States, its states, counties, cities, and towns, as well as for the Commonwealth of Puerto Rico and its municipios. Demographic components of population change (births, deaths, and migration) are produced at the national, state, and county levels of geography. Additionally, housing unit estimates are produced for the nation, states, and counties.  PEP annually utilizes current data on births, deaths, and migration to calculate population change since the most recent decennial census and produce a time series of estimates of population, demographic components of change, and housing units. The annual time series of estimates begins with the most recent decennial census data and extends to the vintage year. As each vintage of estimates includes all years since the most recent decennial census, the latest vintage of data available supersedes all previously-produced estimates for those dates."
 }
 \details{
+\code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Population Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
+
 As of April 2022, variables available for 2020 and later datasets are as follows: ESTIMATESBASE, POPESTIMATE, NPOPCHG, BIRTHS, DEATHS, NATURALCHG, INTERNATIONALMIG, DOMESTICMIG, NETMIG, RESIDUAL, GQESTIMATESBASE, GQESTIMATES, RBIRTH, RDEATH, RNATURALCHG, RINTERNATIONALMIG, RDOMESTICMIG, and RNETMIG.
+}
+\seealso{
+\url{https://www.census.gov/programs-surveys/popest/about.html}
 }
