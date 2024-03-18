@@ -13,7 +13,8 @@ get_estimates(
   variables = NULL,
   breakdown = NULL,
   breakdown_labels = FALSE,
-  year = 2022,
+  vintage = 2022,
+  year = vintage,
   state = NULL,
   county = NULL,
   time_series = FALSE,
@@ -45,13 +46,12 @@ a vector, returning population estimates in the \code{value} column for all
 combinations of these breakdowns.  For years 2020 and later, \code{"AGE"} is also available for single-year age when using \code{geography = "state"}.}
 
 \item{breakdown_labels}{Whether or not to label breakdown elements returned when
-                        \code{product = "characteristics"}. Defaults to FALSE.
+\code{product = "characteristics"}. Defaults to FALSE.}
 
-                        Not yet supported for 2020 and later.}
+\item{vintage}{It is recommended to use the most recent vintage
+available for a given decennial series (so, year = 2019 for the 2010s, and year = 2023 for the 2020s).  Will default to 2022 until the full PEP for 2023 is released.}
 
-\item{year}{The data year (defaults to 2022). It is recommended to use the most recent vintage
-available for a given decennial series (so, year = 2019 for the 2010s, and year = 2022 for the 2020s)
-and use \code{time_series = TRUE} to access time-series estimates.}
+\item{year}{The data year (defaults to the vintage requested). Use \code{time_series = TRUE} to access time-series estimates.}
 
 \item{state}{The state for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.
@@ -98,8 +98,13 @@ a browser and see what is returned by the API directly. Defaults to FALSE.}
 A tibble, or sf tibble, of population estimates data
 }
 \description{
-\code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Population Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
+The \code{get_estimates()} function requests data from the US Census Bureau's Population Estimates Program (PEP) datasets.  The PEP datasets are defined by the US Census Bureau as follows: "The Census Bureau's Population Estimates Program (PEP) produces estimates of the population for the United States, its states, counties, cities, and towns, as well as for the Commonwealth of Puerto Rico and its municipios. Demographic components of population change (births, deaths, and migration) are produced at the national, state, and county levels of geography. Additionally, housing unit estimates are produced for the nation, states, and counties.  PEP annually utilizes current data on births, deaths, and migration to calculate population change since the most recent decennial census and produce a time series of estimates of population, demographic components of change, and housing units. The annual time series of estimates begins with the most recent decennial census data and extends to the vintage year. As each vintage of estimates includes all years since the most recent decennial census, the latest vintage of data available supersedes all previously-produced estimates for those dates."
 }
 \details{
+\code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Population Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
+
 As of April 2022, variables available for 2020 and later datasets are as follows: ESTIMATESBASE, POPESTIMATE, NPOPCHG, BIRTHS, DEATHS, NATURALCHG, INTERNATIONALMIG, DOMESTICMIG, NETMIG, RESIDUAL, GQESTIMATESBASE, GQESTIMATES, RBIRTH, RDEATH, RNATURALCHG, RINTERNATIONALMIG, RDOMESTICMIG, and RNETMIG.
+}
+\seealso{
+\url{https://www.census.gov/programs-surveys/popest/about.html}
 }
