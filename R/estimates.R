@@ -71,6 +71,17 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, show_call = FALSE, ...) {
 
+  if (missing(vintage) && year > 2020) {
+    rlang::warn(c("`get_estimates()` now uses the `vintage` argument to specify the PEP vintage, and the `year` argument to isolate a year within that vintage.",
+                  "!" = "This may be a breaking change in your code",
+                  "!" = "Omitting `vintage` may lead to incorrect or unexpected results."))
+  }
+
+  if (year > 2020) {
+    rlang::inform(sprintf("Using the Vintage %s Population Estimates", vintage))
+  }
+
+
   geography <- rlang::arg_match(geography)
 
   if (shift_geo) {
