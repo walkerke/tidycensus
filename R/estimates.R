@@ -20,11 +20,9 @@
 #'
 #' @param breakdown_labels Whether or not to label breakdown elements returned when
 #'                         \code{product = "characteristics"}. Defaults to FALSE.
-#'
-#'                         Not yet supported for 2020 and later.
-#' @param year The data year (defaults to 2022). It is recommended to use the most recent vintage
-#'             available for a given decennial series (so, year = 2019 for the 2010s, and year = 2022 for the 2020s)
-#'             and use \code{time_series = TRUE} to access time-series estimates.
+#' @param vintage It is recommended to use the most recent vintage
+#'             available for a given decennial series (so, year = 2019 for the 2010s, and year = 2023 for the 2020s).  Will default to 2022 until the full PEP for 2023 is released.
+#' @param year The data year (defaults to the vintage requested). Use \code{time_series = TRUE} to access time-series estimates.
 #' @param state The state for which you are requesting data. State
 #'              names, postal codes, and FIPS codes are accepted.
 #'              Defaults to NULL.
@@ -64,8 +62,8 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
                                         "metropolitan statistical area/micropolitan statistical area", "cbsa",
                                         "metropolitan division", "combined statistical area"),
                           product = NULL, variables = NULL,
-                          breakdown = NULL, breakdown_labels = FALSE,
-                          year = 2022, state = NULL, county = NULL,
+                          breakdown = NULL, breakdown_labels = FALSE, vintage = 2022,
+                          year = vintage, state = NULL, county = NULL,
                           time_series = FALSE,
                           output = "tidy", geometry = FALSE, keep_geo_vars = FALSE,
                           shift_geo = FALSE, key = NULL, show_call = FALSE, ...) {
@@ -89,6 +87,10 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
 
         if (!geography %in% c("state", "county")) {
           rlang::abort("The only supported geographies at this time for population characteristics 2020 and later are 'state' and 'county'.")
+        }
+
+        if (vintage > 2022) {
+          rlang::abort("The Characteristics dataset has not yet been released for vintages beyond 2022.")
         }
 
         if (geography == "state") {
@@ -311,15 +313,26 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
           if (product == "population") {
             variables <- population_estimates_variables22
           } else if (product == "components") {
-            variables <- components_estimates_variables22
+            if (year == 2021) {
+              variables <- components_estimates_variables21
+
+            } else {
+              variables <- components_estimates_variables22
+
+            }
           }
         }
 
         # Get the data into a reasonable first format that is consistent for downstream use
         if (geography == "us") {
 
-          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
-            dplyr::filter(SUMLEV == "010")
+          if (vintage == 2021) {
+            raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/state/totals/NST-EST%s-alldata.csv", vintage, vintage))) %>%
+              dplyr::filter(SUMLEV == "010")
+          } else {
+            raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/state/totals/NST-EST%s-ALLDATA.csv", vintage, vintage))) %>%
+              dplyr::filter(SUMLEV == "010")
+          }
 
           raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
 
@@ -335,9 +348,15 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
 
         } else if (geography == "region") {
 
-          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
-            dplyr::filter(SUMLEV == "020") %>%
-            dplyr::mutate(GEOID = REGION)
+          if (vintage == 2021) {
+            raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/state/totals/NST-EST%s-alldata.csv", vintage, vintage))) %>%
+              dplyr::filter(SUMLEV == "020") %>%
+              dplyr::mutate(GEOID = REGION)
+          } else {
+            raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/state/totals/NST-EST%s-ALLDATA.csv", vintage, vintage))) %>%
+              dplyr::filter(SUMLEV == "020") %>%
+              dplyr::mutate(GEOID = REGION)
+          }
 
           raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
 
@@ -350,9 +369,13 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
 
         } else if (geography == "division") {
 
-          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
-            dplyr::filter(SUMLEV == "030") %>%
-            dplyr::mutate(GEOID = DIVISION)
+          if (vintage == 2021) {
+            rlang::abort("Divisions are not available in the 2021 vintage dataset.")
+          } else {
+            raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/state/totals/NST-EST%s-ALLDATA.csv", vintage, vintage))) %>%
+              dplyr::filter(SUMLEV == "030") %>%
+              dplyr::mutate(GEOID = DIVISION)
+          }
 
           raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
 
@@ -365,9 +388,15 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
 
         } else if (geography == "state") {
 
-          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/state/totals/NST-EST2022-ALLDATA.csv")) %>%
-            dplyr::filter(SUMLEV == "040") %>%
-            dplyr::mutate(GEOID = STATE)
+          if (vintage == 2021) {
+            raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/state/totals/NST-EST%s-alldata.csv", vintage, vintage))) %>%
+              dplyr::filter(SUMLEV == "040") %>%
+              dplyr::mutate(GEOID = STATE)
+          } else {
+            raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/state/totals/NST-EST%s-ALLDATA.csv", vintage, vintage))) %>%
+              dplyr::filter(SUMLEV == "040") %>%
+              dplyr::mutate(GEOID = STATE)
+          }
 
           raw <- raw[,!(names(raw) %in% c("SUMLEV", "REGION", "DIVISION", "STATE"))]
 
@@ -380,7 +409,7 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
 
         } else if (geography == "county") {
 
-          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/counties/totals/co-est2022-alldata.csv")) %>%
+          raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/totals/co-est%s-alldata.csv", vintage, vintage))) %>%
             dplyr::filter(SUMLEV == "050") %>%
             dplyr::mutate(GEOID = paste0(STATE, COUNTY),
                           NAME = paste0(CTYNAME, ", ", STNAME))
@@ -397,9 +426,15 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
 
         } else if (geography == "cbsa" || geography == "metropolitan statistical area/micropolitan statistical area") {
 
-          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/metro/totals/cbsa-est2022.csv")) %>%
-            dplyr::filter(LSAD %in% c("Micropolitan Statistical Area", "Metropolitan Statistical Area")) %>%
-            dplyr::mutate(GEOID = CBSA)
+          if (vintage != 2022) {
+            raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/metro/totals/cbsa-est%s-alldata.csv", vintage, vintage))) %>%
+              dplyr::filter(LSAD %in% c("Micropolitan Statistical Area", "Metropolitan Statistical Area")) %>%
+              dplyr::mutate(GEOID = CBSA)
+          } else {
+            raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/metro/totals/cbsa-est2022.csv")) %>%
+              dplyr::filter(LSAD %in% c("Micropolitan Statistical Area", "Metropolitan Statistical Area")) %>%
+              dplyr::mutate(GEOID = CBSA)
+          }
 
           raw <- raw[,!(names(raw) %in% c("MDIV", "STCOU", "LSAD", "CBSA"))]
 
@@ -411,9 +446,16 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
             dplyr::mutate(variable = stringr::str_remove(variable, "_"))
 
         } else if (geography == "combined statistical area") {
-          raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/metro/totals/csa-est2022.csv")) %>%
-            dplyr::filter(LSAD == "Combined Statistical Area") %>%
-            dplyr::mutate(GEOID = CSA)
+
+          if (vintage != 2022) {
+            raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/metro/totals/csa-est%s-alldata.csv", vintage, vintage))) %>%
+              dplyr::filter(LSAD == "Combined Statistical Area") %>%
+              dplyr::mutate(GEOID = CSA)
+          } else {
+            raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/metro/totals/csa-est2022.csv")) %>%
+              dplyr::filter(LSAD == "Combined Statistical Area") %>%
+              dplyr::mutate(GEOID = CSA)
+          }
 
           raw <- raw[,!(names(raw) %in% c("MDIV", "STCOU", "LSAD", "CBSA", "CSA"))]
 
@@ -425,6 +467,11 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
             dplyr::mutate(variable = stringr::str_remove(variable, "_"))
 
         } else if (geography == "place") {
+
+          if (vintage > 2022) {
+            rlang::abort("The most recent PEP release for this geography is 2022.")
+          }
+
           raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/cities/totals/sub-est2022.csv")) %>%
             dplyr::filter(SUMLEV == "162") %>%
             dplyr::mutate(GEOID = paste0(STATE, PLACE),
@@ -554,7 +601,7 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
                                    variables = variables,
                                    breakdown = breakdown,
                                    breakdown_labels = breakdown_labels,
-                                   year = year,
+                                   year = vintage,
                                    state = .x,
                                    county = county,
                                    time_series = time_series,

@@ -13,7 +13,8 @@ get_estimates(
   variables = NULL,
   breakdown = NULL,
   breakdown_labels = FALSE,
-  year = 2022,
+  vintage = 2022,
+  year = vintage,
   state = NULL,
   county = NULL,
   time_series = FALSE,
@@ -45,13 +46,12 @@ a vector, returning population estimates in the \code{value} column for all
 combinations of these breakdowns.  For years 2020 and later, \code{"AGE"} is also available for single-year age when using \code{geography = "state"}.}
 
 \item{breakdown_labels}{Whether or not to label breakdown elements returned when
-                        \code{product = "characteristics"}. Defaults to FALSE.
+\code{product = "characteristics"}. Defaults to FALSE.}
 
-                        Not yet supported for 2020 and later.}
+\item{vintage}{It is recommended to use the most recent vintage
+available for a given decennial series (so, year = 2019 for the 2010s, and year = 2023 for the 2020s).  Will default to 2022 until the full PEP for 2023 is released.}
 
-\item{year}{The data year (defaults to 2022). It is recommended to use the most recent vintage
-available for a given decennial series (so, year = 2019 for the 2010s, and year = 2022 for the 2020s)
-and use \code{time_series = TRUE} to access time-series estimates.}
+\item{year}{The data year (defaults to the vintage requested). Use \code{time_series = TRUE} to access time-series estimates.}
 
 \item{state}{The state for which you are requesting data. State
 names, postal codes, and FIPS codes are accepted.
