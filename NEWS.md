@@ -1,6 +1,6 @@
 # tidycensus 1.6.3
 
-* Support added in `get_estimates()` for the 2023 PEP datasets. A new argument, `vintage`, allows users to request data by vintage and then by `year` within that vintage.  
+* Support added in `get_estimates()` for the 2023 PEP datasets. A new argument, `vintage`, allows users to request data by vintage and then by `year` within that vintage for post-2020 PEP datasets.  
 
 # tidycensus 1.6
 
