@@ -389,11 +389,16 @@ interpolate_pw <- function(from,
          call. = FALSE)
   }
 
-  # If CRS is given, transform all the objects
+  # If CRS is given, transform all the objects; error if mismatched CRS
   if (!is.null(crs)) {
     from <- sf::st_transform(from, crs)
     to <- sf::st_transform(to, crs)
     weights <- sf::st_transform(weights, crs)
+  } else {
+    unique_crs <- unique(c(sf::st_crs(from), sf::st_crs(to), sf::st_crs(weights)))
+    if (length(unique_crs) != 1) {
+      stop("All inputs must have the same CRS if CRS is not supplied")
+    }
   }
 
   # Make a from and a to ID
