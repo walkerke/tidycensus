@@ -1,11 +1,10 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
-pkgdown_sha: ~
+pandoc: 3.1.11
+pkgdown: 2.0.9.9000
+pkgdown_sha: 5c1d34d1950ff53d20a9a1d590a04c160bdb2099
 articles:
   basic-usage: basic-usage.html
   margins-of-error: margins-of-error.html
   other-datasets: other-datasets.html
   pums-data: pums-data.html
   spatial-data: spatial-data.html
-last_built: 2024-03-18T16:17Z
-
+last_built: 2024-07-16T19:57Z

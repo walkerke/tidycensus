@@ -107,7 +107,7 @@ la_age_hisp <- get_estimates(geography = "county",
                              breakdown_labels = TRUE, 
                              state = "CA", 
                              county = "Los Angeles",
-                             vintage = 2022)
+                             vintage = 2023)
 
 la_age_hisp
 ```
@@ -129,7 +129,7 @@ ggplot(compare, aes(x = AGEGROUP, y = value, fill = SEX)) +
   coord_flip() + 
   facet_wrap(~HISP) + 
   labs(x = "", 
-       y = "2022 Census Bureau population estimate", 
+       y = "2023 Census Bureau population estimate", 
        title = "Population structure by Hispanic origin", 
        subtitle = "Los Angeles County, California", 
        fill = "", 

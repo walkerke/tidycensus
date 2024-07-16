@@ -1,123 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/articles/basic-usage.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/margins-of-error.html</loc>
-  </url>
-  <url>
-    <loc>/articles/other-datasets.html</loc>
-  </url>
-  <url>
-    <loc>/articles/pums-data.html</loc>
-  </url>
-  <url>
-    <loc>/articles/spatial-data.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/acs5_geography.html</loc>
-  </url>
-  <url>
-    <loc>/reference/as_dot_density.html</loc>
-  </url>
-  <url>
-    <loc>/reference/census_api_key.html</loc>
-  </url>
-  <url>
-    <loc>/reference/check_ddhca_groups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/county_laea.html</loc>
-  </url>
-  <url>
-    <loc>/reference/df_to_survey.html</loc>
-  </url>
-  <url>
-    <loc>/reference/fips_codes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_acs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_census_api_key.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_decennial.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_estimates.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_flows.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_pop_groups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_pums.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hello.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/interpolate_pw.html</loc>
-  </url>
-  <url>
-    <loc>/reference/load_variables.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mig_recodes.html</loc>
-  </url>
-  <url>
-    <loc>/reference/moe_product.html</loc>
-  </url>
-  <url>
-    <loc>/reference/moe_prop.html</loc>
-  </url>
-  <url>
-    <loc>/reference/moe_ratio.html</loc>
-  </url>
-  <url>
-    <loc>/reference/moe_sum.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pums_variables.html</loc>
-  </url>
-  <url>
-    <loc>/reference/significance.html</loc>
-  </url>
-  <url>
-    <loc>/reference/state_laea.html</loc>
-  </url>
-  <url>
-    <loc>/reference/summary_files.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tidycensus.html</loc>
-  </url>
-  <url>
-    <loc>/reference/to_survey.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/articles/basic-usage.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/margins-of-error.html</loc></url>
+<url><loc>/articles/other-datasets.html</loc></url>
+<url><loc>/articles/pums-data.html</loc></url>
+<url><loc>/articles/spatial-data.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/acs5_geography.html</loc></url>
+<url><loc>/reference/as_dot_density.html</loc></url>
+<url><loc>/reference/census_api_key.html</loc></url>
+<url><loc>/reference/check_ddhca_groups.html</loc></url>
+<url><loc>/reference/county_laea.html</loc></url>
+<url><loc>/reference/df_to_survey.html</loc></url>
+<url><loc>/reference/fips_codes.html</loc></url>
+<url><loc>/reference/get_acs.html</loc></url>
+<url><loc>/reference/get_census_api_key.html</loc></url>
+<url><loc>/reference/get_decennial.html</loc></url>
+<url><loc>/reference/get_estimates.html</loc></url>
+<url><loc>/reference/get_flows.html</loc></url>
+<url><loc>/reference/get_pop_groups.html</loc></url>
+<url><loc>/reference/get_pums.html</loc></url>
+<url><loc>/reference/hello.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/interpolate_pw.html</loc></url>
+<url><loc>/reference/load_variables.html</loc></url>
+<url><loc>/reference/mig_recodes.html</loc></url>
+<url><loc>/reference/moe_product.html</loc></url>
+<url><loc>/reference/moe_prop.html</loc></url>
+<url><loc>/reference/moe_ratio.html</loc></url>
+<url><loc>/reference/moe_sum.html</loc></url>
+<url><loc>/reference/pums_variables.html</loc></url>
+<url><loc>/reference/significance.html</loc></url>
+<url><loc>/reference/state_laea.html</loc></url>
+<url><loc>/reference/summary_files.html</loc></url>
+<url><loc>/reference/tidycensus.html</loc></url>
+<url><loc>/reference/to_survey.html</loc></url>
 </urlset>
+
