@@ -103,8 +103,8 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
           rlang::abort("The only supported geographies at this time for population characteristics 2020 and later are 'state' and 'county'.")
         }
 
-        if (vintage > 2022) {
-          rlang::abort("The Characteristics dataset has not yet been released for vintages beyond 2022")
+        if (vintage > 2023) {
+          rlang::abort("The Characteristics dataset has not yet been released for vintages beyond 2023")
         }
 
         if (geography == "state") {
@@ -156,17 +156,17 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
 
         } else if (geography == "county") {
 
-          if (vintage > 2022) {
+          if (vintage > 2023) {
             rlang::abort("The county characteristics dataset for this vintage has not yet been released.")
           }
 
           if (!is.null(state)) {
             state <- validate_state(state)
 
-            county_raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/counties/asrh/cc-est2022-alldata-%s.csv", state)))
+            county_raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/asrh/cc-est%s-alldata-%s.csv", vintage, vintage, state)))
 
           } else {
-            county_raw <- suppressMessages(readr::read_csv("https://www2.census.gov/programs-surveys/popest/datasets/2020-2022/counties/asrh/cc-est2022-all.csv"))
+            county_raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/asrh/cc-est%s-all.csv", vintage, vintage)))
           }
 
 
@@ -234,7 +234,8 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
             dplyr::mutate(year = dplyr::case_when(
               year == 2 ~ 2020L,
               year == 3 ~ 2021L,
-              year == 4 ~ 2022L
+              year == 4 ~ 2022L,
+              year == 5 ~ 2023L
             ))
 
         } else {
