@@ -683,8 +683,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   } else {
     vars <- format_variables_acs(variables)
 
-    dat <- suppressWarnings(load_data_acs(geography, vars, key, year, state, county,
-                                          zcta, survey, show_call = show_call))
+
+      dat <- suppressWarnings(load_data_acs(geography, vars, key, year, state, county,
+                                            zcta, survey, show_call = show_call))
+
   }
 
   vars2 <- format_variables_acs(variables)
@@ -739,6 +741,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
     dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
     dat <- dat[c("GEOID", "NAME", var_vector)]
+
+    }
+
+  # Filters zctas within state queried
+  if(!is.na(state) & geography == "zip code tabulation area"){
+    dat <- dat[dat$GEOID %in% zctaCrosswalk::zcta_crosswalk[zctaCrosswalk::zcta_crosswalk$state_usps == state,]$zcta,]
 
 
     # Convert missing values to NA
