@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{interpolate_pw}
 \alias{interpolate_pw}
-\title{Use population-weighted interpolation to transfer information from one set of shapes to another}
+\title{Use population-weighted areal interpolation to transfer information from one set of shapes to another}
 \usage{
 interpolate_pw(
   from,
