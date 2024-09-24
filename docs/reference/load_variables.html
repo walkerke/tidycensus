@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.6</span>
       </span>
     </div>
 
@@ -83,15 +83,15 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">load_variables</span><span class="op">(</span></span>
 <span>  <span class="va">year</span>,</span>
-<span>  dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sf1"</span>, <span class="st">"sf2"</span>, <span class="st">"sf3"</span>, <span class="st">"sf4"</span>, <span class="st">"pl"</span>, <span class="st">"dhc"</span>, <span class="st">"dp"</span>, <span class="st">"ddhca"</span>, <span class="st">"as"</span>, <span class="st">"gu"</span>, <span class="st">"mp"</span>,</span>
-<span>    <span class="st">"vi"</span>, <span class="st">"acsse"</span>, <span class="st">"dpas"</span>, <span class="st">"dpgu"</span>, <span class="st">"dpmp"</span>, <span class="st">"dpvi"</span>, <span class="st">"dhcvi"</span>, <span class="st">"dhcgu"</span>, <span class="st">"dhcvi"</span>, <span class="st">"dhcas"</span>,</span>
-<span>    <span class="st">"acs1"</span>, <span class="st">"acs3"</span>, <span class="st">"acs5"</span>, <span class="st">"acs1/profile"</span>, <span class="st">"acs3/profile"</span>, <span class="st">"acs5/profile"</span>,</span>
-<span>    <span class="st">"acs1/subject"</span>, <span class="st">"acs3/subject"</span>, <span class="st">"acs5/subject"</span>, <span class="st">"acs1/cprofile"</span>, <span class="st">"acs5/cprofile"</span>,</span>
-<span>    <span class="st">"sf2profile"</span>, <span class="st">"sf3profile"</span>, <span class="st">"sf4profile"</span>, <span class="st">"aian"</span>, <span class="st">"aianprofile"</span>, <span class="st">"cd110h"</span>, <span class="st">"cd110s"</span>,</span>
-<span>    <span class="st">"cd110hprofile"</span>, <span class="st">"cd110sprofile"</span>, <span class="st">"sldh"</span>, <span class="st">"slds"</span>, <span class="st">"sldhprofile"</span>, <span class="st">"sldsprofile"</span>,</span>
-<span>    <span class="st">"cqr"</span>, <span class="st">"cd113"</span>, <span class="st">"cd113profile"</span>, </span>
-<span>     <span class="st">"cd115"</span>, <span class="st">"cd115profile"</span>, <span class="st">"cd116"</span>, <span class="st">"plnat"</span>,</span>
-<span>    <span class="st">"cd118"</span><span class="op">)</span>,</span>
+<span>  dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sf1"</span>, <span class="st">"sf2"</span>, <span class="st">"sf3"</span>, <span class="st">"sf4"</span>, <span class="st">"pl"</span>, <span class="st">"dhc"</span>, <span class="st">"dp"</span>, <span class="st">"ddhca"</span>, <span class="st">"ddhcb"</span>, <span class="st">"sdhc"</span>,</span>
+<span>    <span class="st">"as"</span>, <span class="st">"gu"</span>, <span class="st">"mp"</span>, <span class="st">"vi"</span>, <span class="st">"acsse"</span>, <span class="st">"dpas"</span>, <span class="st">"dpgu"</span>, <span class="st">"dpmp"</span>, <span class="st">"dpvi"</span>, <span class="st">"dhcvi"</span>, <span class="st">"dhcgu"</span>,</span>
+<span>    <span class="st">"dhcvi"</span>, <span class="st">"dhcas"</span>, <span class="st">"acs1"</span>, <span class="st">"acs3"</span>, <span class="st">"acs5"</span>, <span class="st">"acs1/profile"</span>, <span class="st">"acs3/profile"</span>,</span>
+<span>    <span class="st">"acs5/profile"</span>, <span class="st">"acs1/subject"</span>, <span class="st">"acs3/subject"</span>, <span class="st">"acs5/subject"</span>, <span class="st">"acs1/cprofile"</span>,</span>
+<span>    <span class="st">"acs5/cprofile"</span>, <span class="st">"sf2profile"</span>, <span class="st">"sf3profile"</span>, <span class="st">"sf4profile"</span>, <span class="st">"aian"</span>, <span class="st">"aianprofile"</span>,</span>
+<span>    <span class="st">"cd110h"</span>, <span class="st">"cd110s"</span>, <span class="st">"cd110hprofile"</span>, <span class="st">"cd110sprofile"</span>, <span class="st">"sldh"</span>, <span class="st">"slds"</span>, <span class="st">"sldhprofile"</span>,</span>
+<span>    <span class="st">"sldsprofile"</span>, <span class="st">"cqr"</span>, </span>
+<span>     <span class="st">"cd113"</span>, <span class="st">"cd113profile"</span>, <span class="st">"cd115"</span>, <span class="st">"cd115profile"</span>,</span>
+<span>    <span class="st">"cd116"</span>, <span class="st">"plnat"</span>, <span class="st">"cd118"</span><span class="op">)</span>,</span>
 <span>  cache <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -124,7 +124,7 @@ or load the dataset from an existing cache. Defaults to FALSE.</p></dd>
     <h2>Details</h2>
     <p><code>load_variables()</code> returns three columns by default: <code>name</code>, which is the Census ID code to be supplied to the <code>variables</code> parameter in <code><a href="get_decennial.html">get_decennial()</a></code> or <code><a href="get_acs.html">get_acs()</a></code>; <code>label</code>, which is a detailed description of the variable; and <code>concept</code>, which provides information about the table that a given variable belongs to.  For 5-year ACS detailed tables datasets, a fourth column, <code>geography</code>, tells you the smallest geography at which a given variable is available.</p>
 <p>Datasets available are as follows: "sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp",
-"dhca", "ddhca", "as", "gu", "mp", "vi", "acsse",
+"dhca", "ddhca", "ddhcb", "sdhc", "as", "gu", "mp", "vi", "acsse",
 "dpas", "dpgu", "dpmp", "dpvi",
 "dhcvi", "dhcgu", "dhcvi", "dhcas",
 "acs1", "acs3", "acs5", "acs1/profile",
