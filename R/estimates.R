@@ -166,7 +166,7 @@ get_estimates <- function(geography = c("us", "region", "division", "state", "co
             county_raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/asrh/cc-est%s-alldata-%s.csv", vintage, vintage, state)))
 
           } else {
-            county_raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/asrh/cc-est%s-all.csv", vintage, vintage)))
+            county_raw <- suppressMessages(readr::read_csv(sprintf("https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/asrh/cc-est%s-alldata.csv", vintage, vintage)))
           }
 
 
