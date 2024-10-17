@@ -154,7 +154,13 @@ get_pums <- function(variables = NULL,
   #   }
   # }
 
-  join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
+  # As of 2023, `ST` is renamed to `STATE`
+  if (year < 2023) {
+    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
+  } else {
+    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "STATE")
+  }
+
 
   variables <- variables[!variables %in% join_vars]
 

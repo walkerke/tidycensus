@@ -740,7 +740,7 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
 
   # for which years is data dictionary available in pums_variables?
   # we'll use this a couple times later on
-  recode_years <- 2017:2022
+  recode_years <- 2017:2023
 
   base <- sprintf("https://api.census.gov/data/%s/acs/%s/pums",
                   year, survey)
@@ -846,7 +846,11 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
 
     # If geo is NULL, state should be added back in here
     if (is.null(geo)) {
-      vars_to_get <- paste0(vars_to_get, ",ST")
+      if (year > 2022) {
+        vars_to_get <- paste0(vars_to_get, ",STATE")
+      } else {
+        vars_to_get <- paste0(vars_to_get, ",ST")
+      }
     }
 
     query <- list(get = vars_to_get,
@@ -1022,7 +1026,7 @@ load_data_pums_vacant <- function(variables, state, puma, key, year, survey,
 
   # for which years is data dictionary available in pums_variables?
   # we'll use this a couple times later on
-  recode_years <- 2017:2022
+  recode_years <- 2017:2023
 
   base <- sprintf("https://api.census.gov/data/%s/acs/%s/pums",
                   year, survey)
@@ -1096,7 +1100,11 @@ load_data_pums_vacant <- function(variables, state, puma, key, year, survey,
 
     # If geo is NULL, state should be added back in here
     if (is.null(geo)) {
-      vars_to_get <- paste0(vars_to_get, ",ST")
+      if (year > 2022) {
+        vars_to_get <- paste0(vars_to_get, ",STATE")
+      } else {
+        vars_to_get <- paste0(vars_to_get, ",ST")
+      }
     }
 
     # Combine the default query with the variables filter query
