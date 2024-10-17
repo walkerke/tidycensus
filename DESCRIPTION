@@ -35,7 +35,8 @@ Imports:
     utils,
     rlang,
     crayon,
-    tidyselect
+    tidyselect,
+    zctaCrosswalk
 Suggests: 
     ggplot2,
     survey,
