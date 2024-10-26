@@ -378,15 +378,63 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
             survey = survey,
             show_call = show_call,
             ...
-            )
           )
+        )
 
-        # return acs data without geometry for remaining elements and join
-        result_no_geo <- map(vars_rest, ~
+        if(length(vars_rest)>0)
+        {
+          # return acs data without geometry for remaining elements and join
+          result_no_geo <- map(vars_rest, ~
+                                 suppressMessages(
+                                   insist_get_acs(
+                                     geography = geography,
+                                     variables = .x,
+                                     table = table,
+                                     cache_table = cache_table,
+                                     year = year,
+                                     output = output,
+                                     state = state,
+                                     county = county,
+                                     zcta = zcta,
+                                     summary_var = summary_var,
+                                     geometry = FALSE,
+                                     keep_geo_vars = keep_geo_vars,
+                                     shift_geo = FALSE,
+                                     key = key,
+                                     moe_level = moe_level,
+                                     survey = survey,
+                                     show_call = show_call
+                                   )
+                                 )
+          ) %>%
+            reduce(left_join, by = c("GEOID", "NAME"))
+
+          # NAME.x and NAME.y columns exist when keep_geo_vars = TRUE
+          if(keep_geo_vars) {
+            join_cols <- c("GEOID", "NAME.y" = "NAME")
+          } else {
+            join_cols <- c("GEOID", "NAME")
+          }
+
+          # join non geo result to first result sf object
+          result <- result_geo %>%
+            left_join(result_no_geo, by = join_cols) %>%
+            select(-geometry, geometry)  # move geometry to last column
+        }
+        else
+        {
+          result  <- result_geo  %>%
+          select(-geometry, geometry)  # move geometry to last column
+        }
+
+      } else {
+        # if output is tidy, we don't need to worry about this as results can
+        # be combined using rbind
+        result <- map(vars_by_type, function(v, ...) {
           suppressMessages(
             insist_get_acs(
               geography = geography,
-              variables = .x,
+              variables = v,
               table = table,
               cache_table = cache_table,
               year = year,
@@ -395,60 +443,19 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               county = county,
               zcta = zcta,
               summary_var = summary_var,
-              geometry = FALSE,
+              geometry = geometry,
               keep_geo_vars = keep_geo_vars,
               shift_geo = FALSE,
               key = key,
               moe_level = moe_level,
               survey = survey,
-              show_call = show_call
-              )
+              show_call = show_call,
+              ...
             )
-          ) %>%
-          reduce(left_join, by = c("GEOID", "NAME"))
-
-        # NAME.x and NAME.y columns exist when keep_geo_vars = TRUE
-        if(keep_geo_vars) {
-            join_cols <- c("GEOID", "NAME.y" = "NAME")
-        } else {
-          join_cols <- c("GEOID", "NAME")
-        }
-
-        # join non geo result to first result sf object
-        result <- result_geo %>%
-          left_join(result_no_geo, by = join_cols) %>%
-          select(-geometry, geometry)  # move geometry to last column
-
-
-      } else {
-      # if output is tidy, we don't need to worry about this as results can
-      # be combined using rbind
-      result <- map(vars_by_type, function(v, ...) {
-        suppressMessages(
-          insist_get_acs(
-            geography = geography,
-            variables = v,
-            table = table,
-            cache_table = cache_table,
-            year = year,
-            output = output,
-            state = state,
-            county = county,
-            zcta = zcta,
-            summary_var = summary_var,
-            geometry = geometry,
-            keep_geo_vars = keep_geo_vars,
-            shift_geo = FALSE,
-            key = key,
-            moe_level = moe_level,
-            survey = survey,
-            show_call = show_call,
-            ...
           )
-        )
-      }, ...
-      ) %>%
-        reduce(rbind)
+        }, ...
+        ) %>%
+          reduce(rbind)
       }
 
       geoms <- unique(st_geometry_type(result))
@@ -464,52 +471,52 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         # when output is wide and geometry = FALSE make one call per list element
         # and then left join results into one df
         result <- map(vars_by_type, ~
-          suppressMessages(
-            insist_get_acs(
-              geography = geography,
-              variables = .x,
-              table = table,
-              cache_table = cache_table,
-              year = year,
-              output = output,
-              state = state,
-              county = county,
-              zcta = zcta,
-              summary_var = summary_var,
-              geometry = geometry,
-              keep_geo_vars = keep_geo_vars,
-              shift_geo = FALSE,
-              key = key,
-              moe_level = moe_level,
-              survey = survey,
-              show_call = show_call
-            )
-          )
+                        suppressMessages(
+                          insist_get_acs(
+                            geography = geography,
+                            variables = .x,
+                            table = table,
+                            cache_table = cache_table,
+                            year = year,
+                            output = output,
+                            state = state,
+                            county = county,
+                            zcta = zcta,
+                            summary_var = summary_var,
+                            geometry = geometry,
+                            keep_geo_vars = keep_geo_vars,
+                            shift_geo = FALSE,
+                            key = key,
+                            moe_level = moe_level,
+                            survey = survey,
+                            show_call = show_call
+                          )
+                        )
         ) %>%
           reduce(left_join, by = c("GEOID", "NAME"))
       } else {
         result <- map_df(vars_by_type, ~
-          suppressMessages(
-            insist_get_acs(
-              geography = geography,
-              variables = .x,
-              table = table,
-              cache_table = cache_table,
-              year = year,
-              output = output,
-              state = state,
-              county = county,
-              zcta = zcta,
-              summary_var = summary_var,
-              geometry = geometry,
-              keep_geo_vars = keep_geo_vars,
-              shift_geo = FALSE,
-              key = key,
-              moe_level = moe_level,
-              survey = survey,
-              show_call = show_call
-            )
-          )
+                           suppressMessages(
+                             insist_get_acs(
+                               geography = geography,
+                               variables = .x,
+                               table = table,
+                               cache_table = cache_table,
+                               year = year,
+                               output = output,
+                               state = state,
+                               county = county,
+                               zcta = zcta,
+                               summary_var = summary_var,
+                               geometry = geometry,
+                               keep_geo_vars = keep_geo_vars,
+                               shift_geo = FALSE,
+                               key = key,
+                               moe_level = moe_level,
+                               survey = survey,
+                               show_call = show_call
+                             )
+                           )
         )
       }
 
@@ -528,23 +535,23 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       result <- map(state, function(s, ...) {
         suppressMessages(
           insist_get_acs(geography = geography,
-                variables = variables,
-                table = table,
-                cache_table = cache_table,
-                year = year,
-                output = output,
-                state = s,
-                county = county,
-                zcta = zcta,
-                summary_var = summary_var,
-                geometry = geometry,
-                keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE,
-                key = key,
-                moe_level = moe_level,
-                survey = survey,
-                show_call = show_call,
-                ...)) %>%
+                         variables = variables,
+                         table = table,
+                         cache_table = cache_table,
+                         year = year,
+                         output = output,
+                         state = s,
+                         county = county,
+                         zcta = zcta,
+                         summary_var = summary_var,
+                         geometry = geometry,
+                         keep_geo_vars = keep_geo_vars,
+                         shift_geo = FALSE,
+                         key = key,
+                         moe_level = moe_level,
+                         survey = survey,
+                         show_call = show_call,
+                         ...)) %>%
           st_cast("MULTIPOLYGON")
       }, ...) %>%
         reduce(rbind)
@@ -559,22 +566,22 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       result <- map_df(state, ~{
         suppressMessages(
           insist_get_acs(geography = geography,
-                variables = variables,
-                table = table,
-                cache_table = cache_table,
-                year = year,
-                output = output,
-                state = .x,
-                county = county,
-                zcta = zcta,
-                summary_var = summary_var,
-                geometry = geometry,
-                keep_geo_vars = keep_geo_vars,
-                shift_geo = FALSE,
-                key = key,
-                moe_level = moe_level,
-                survey = survey,
-                show_call = show_call))
+                         variables = variables,
+                         table = table,
+                         cache_table = cache_table,
+                         year = year,
+                         output = output,
+                         state = .x,
+                         county = county,
+                         zcta = zcta,
+                         summary_var = summary_var,
+                         geometry = geometry,
+                         keep_geo_vars = keep_geo_vars,
+                         shift_geo = FALSE,
+                         key = key,
+                         moe_level = moe_level,
+                         survey = survey,
+                         show_call = show_call))
       })
     }
     return(result)
@@ -679,7 +686,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       suppressWarnings(load_data_acs(geography, vars, key, year, state, county,
                                      zcta, survey, show_call = show_call))
     }) %>%
-    Reduce(function(x, y) full_join(x, y, by = "GEOID", suffix = c("", ".y")), .)
+      Reduce(function(x, y) full_join(x, y, by = "GEOID", suffix = c("", ".y")), .)
   } else {
     vars <- format_variables_acs(variables)
 
