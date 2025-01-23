@@ -418,7 +418,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
         # NAME.x and NAME.y columns exist when keep_geo_vars = TRUE
         if(keep_geo_vars) {
-            join_cols <- c("GEOID", "NAME.y" = "NAME")
+          join_cols <- c("GEOID", "NAME.y" = "NAME")
         } else {
           join_cols <- c("GEOID", "NAME")
         }
