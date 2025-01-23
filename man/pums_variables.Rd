@@ -5,7 +5,7 @@
 \alias{pums_variables}
 \title{Dataset with PUMS variables and codes}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 63966 rows and 12 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 69400 rows and 12 columns.
 }
 \usage{
 data(pums_variables)
