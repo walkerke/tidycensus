@@ -202,10 +202,17 @@ get_pums <- function(variables = NULL,
     # merge that in as well
 
     if (recode) {
-      if (!is.null(puma)) {
-        join_vars <- c(join_vars, "ST_label", "PUMA")
+
+      if (year < 2023) {
+        state_label <- "ST_label"
       } else {
-        join_vars <- c(join_vars, "ST_label")
+        state_label <- "STATE_label"
+      }
+
+      if (!is.null(puma)) {
+        join_vars <- c(join_vars, state_label, "PUMA")
+      } else {
+        join_vars <- c(join_vars, state_label)
       }
     } else {
       if (!is.null(puma)) {
