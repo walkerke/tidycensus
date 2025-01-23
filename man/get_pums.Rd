@@ -8,7 +8,7 @@ get_pums(
   variables = NULL,
   state = NULL,
   puma = NULL,
-  year = 2022,
+  year = 2023,
   survey = "acs5",
   variables_filter = NULL,
   rep_weights = NULL,
@@ -30,7 +30,7 @@ to request data. To get data from PUMAs in more than one state, specify a
 named vector of state/PUMA pairs and set \code{state = "multiple"}.}
 
 \item{year}{The data year of the 1-year ACS sample or the endyear of the
-5-year sample. Defaults to 2022. Please note that 1-year data for 2020 is not available
+5-year sample. Defaults to 2023. Please note that 1-year data for 2020 is not available
 in tidycensus, so users requesting 1-year data should supply a different year.}
 
 \item{survey}{The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
