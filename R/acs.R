@@ -404,8 +404,17 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               show_call = show_call
               )
             )
-          ) %>%
-          reduce(left_join, by = c("GEOID", "NAME"))
+          )
+
+        if (year == 2010) {
+          result_no_geo <- result_no_geo %>%
+            reduce(left_join, by = "GEOID")
+        } else {
+          result_no_geo <- result_no_geo %>%
+            reduce(left_join, by = c("GEOID", "NAME"))
+        }
+
+
 
         # NAME.x and NAME.y columns exist when keep_geo_vars = TRUE
         if(keep_geo_vars) {
@@ -485,8 +494,16 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               show_call = show_call
             )
           )
-        ) %>%
-          reduce(left_join, by = c("GEOID", "NAME"))
+        )
+
+        if (year == 2010) {
+          result <- result %>%
+            reduce(left_join, by = "GEOID")
+        } else {
+          result <- result %>%
+            reduce(left_join, by = c("GEOID", "NAME"))
+        }
+
       } else {
         result <- map_df(vars_by_type, ~
           suppressMessages(
