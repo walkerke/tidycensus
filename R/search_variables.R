@@ -5,7 +5,7 @@
 #' \code{load_variables()} returns three columns by default: \code{name}, which is the Census ID code to be supplied to the \code{variables} parameter in \code{get_decennial()} or \code{get_acs()}; \code{label}, which is a detailed description of the variable; and \code{concept}, which provides information about the table that a given variable belongs to.  For 5-year ACS detailed tables datasets, a fourth column, \code{geography}, tells you the smallest geography at which a given variable is available.
 #'
 #' Datasets available are as follows: "sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp",
-#' "dhca", "ddhca", "as", "gu", "mp", "vi", "acsse",
+#' "dhca", "ddhca", "ddhcb", "sdhc", "as", "gu", "mp", "vi", "acsse",
 #' "dpas", "dpgu", "dpmp", "dpvi",
 #' "dhcvi", "dhcgu", "dhcvi", "dhcas",
 #' "acs1", "acs3", "acs5", "acs1/profile",
@@ -36,7 +36,7 @@
 load_variables <- function(
   year,
   dataset = c("sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp",
-              "ddhca", "as", "gu", "mp", "vi", "acsse",
+              "ddhca", "ddhcb", "sdhc", "as", "gu", "mp", "vi", "acsse",
               "dpas", "dpgu", "dpmp", "dpvi",
               "dhcvi", "dhcgu", "dhcvi", "dhcas",
               "acs1", "acs3", "acs5", "acs1/profile",
@@ -94,7 +94,7 @@ load_variables <- function(
     var_type <- split[2]
   }
 
-  if (dataset %in% c("sf1", "sf2", "sf3", "sf4", "pl", "ddhca",
+  if (dataset %in% c("sf1", "sf2", "sf3", "sf4", "pl", "ddhca", "ddhcb", "sdhc",
                      "as", "gu", "mp", "vi", "dhc", "dp",
                      "dpas", "dpgu", "dpmp", "dpvi",
                      "dhcvi", "dhcgu", "dhcvi", "dhcas",

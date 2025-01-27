@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7.1</span>
       </span>
     </div>
 
@@ -153,8 +153,11 @@ available for 2020 and later) as the <code>product</code> in
 component. For example, we can request all components of change
 variables for US states in 2023:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://walker-data.com/tidycensus/" class="external-link">tidycensus</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
+<span><span class="co">##   object 'type_sum.accel' not found</span></span></code></pre>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/walkerke/tigris" class="external-link">tigris</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>tigris_use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -179,7 +182,7 @@ variables for US states in 2023:</p>
 both estimates of <em>counts</em> and <em>rates</em>. Rates are preceded
 by an <code>R</code> in the variable name and are calculated per 1000
 residents.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">us_components</span><span class="op">$</span><span class="va">variable</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "BIRTHS"            "DEATHS"            "NATURALCHG"       </span></span>
 <span><span class="co">##  [4] "INTERNATIONALMIG"  "DOMESTICMIG"       "NETMIG"           </span></span>
@@ -200,7 +203,7 @@ the example below, we’ll acquire data on the net migration rate between
 <code><a href="https://rdrr.io/pkg/tigris/man/shift_geometry.html" class="external-link">shift_geometry()</a></code> function from the <strong>tigris</strong>
 package to shift and rescale counties outside the continental US for
 national mapping.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">net_migration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_estimates.html">get_estimates</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>,</span>
 <span>                               variables <span class="op">=</span> <span class="st">"RNETMIG"</span>,</span>
 <span>                               vintage <span class="op">=</span> <span class="fl">2023</span>,</span>
@@ -231,7 +234,7 @@ national mapping.</p>
 <p>We’ll next use tidyverse tools to generate a <code>groups</code>
 column that bins the net migration rates into comprehensible categories,
 and plot the result using <code><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf()</a></code> and ggplot2.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yixuan/showtext" class="external-link">showtext</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/sysfonts/man/font_add_google.html" class="external-link">font_add_google</a></span><span class="op">(</span><span class="st">"Roboto"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/showtext/man/showtext_auto.html" class="external-link">showtext_auto</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -283,7 +286,7 @@ supplied to the <code>breakdown</code> parameter when the
 map onto the Census Bureau definitions explained here: <a href="https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html" class="external-link uri">https://www.census.gov/data/developers/data-sets/popest-popproj/popest/popest-vars/2017.html</a>.
 However, by specifying <code>breakdown_labels = TRUE</code>, the
 function will return the appropriate labels instead. For example:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">la_age_hisp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_estimates.html">get_estimates</a></span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, </span>
 <span>                             product <span class="op">=</span> <span class="st">"characteristics"</span>, </span>
 <span>                             breakdown <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SEX"</span>, <span class="st">"AGEGROUP"</span>, <span class="st">"HISP"</span><span class="op">)</span>,  </span>
@@ -311,7 +314,7 @@ function will return the appropriate labels instead. For example:</p>
 analysis and visualization. For example, we can compare population
 pyramids for Hispanic and non-Hispanic populations in Los Angeles
 County:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">compare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">la_age_hisp</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">AGEGROUP</span>, <span class="st">"^Age"</span><span class="op">)</span>, </span>
 <span>                  <span class="va">HISP</span> <span class="op">!=</span> <span class="st">"Both Hispanic Origins"</span>, </span>
 <span>                  <span class="va">SEX</span> <span class="op">!=</span> <span class="st">"Both sexes"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -369,7 +372,7 @@ county, county subdivision, or MSA. In this case, you can specify the
 state and county or MSA.</p>
 <p>Here we get county-to-county flow data for Westchester County,
 NY:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wch_flows</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_flows.html">get_flows</a></span><span class="op">(</span></span>
 <span>  geography <span class="op">=</span> <span class="st">"county"</span>,</span>
 <span>  state <span class="op">=</span> <span class="st">"NY"</span>,</span>
@@ -401,7 +404,7 @@ Westchester County since that is the only county we requested.
 name of the destination county.</p>
 <p>One simple question we can answer with this data is, to which county
 did the most people move from Westchester?</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wch_flows</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDOUT"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -420,7 +423,7 @@ people that moved out of Westchester County and doesn’t account for the
 number of people that moved in to Westchester from each county. If you
 are interested in net migration (moved in - moved out), you can use the
 <code>MOVEDNET</code> variable.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wch_flows</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">variable</span> <span class="op">==</span> <span class="st">"MOVEDNET"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -443,7 +446,7 @@ many people moved out of the United States, so for all pairs of US to
 non-US places, the value of <code>MOVEDOUT</code> and
 <code>MOVEDNET</code> is <code>NA</code>. The <code>GEOID</code> of
 non-US places is also <code>NA</code>.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wch_flows</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">GEOID2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -464,7 +467,7 @@ non-US places is also <code>NA</code>.</p>
 flow data with selected demographic characteristics such as age, race,
 employment status. For instance, the following call will get the number
 of movers to and from the Los Angeles-Long Beach Metro Area by race.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">la_flows</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_flows.html">get_flows</a></span><span class="op">(</span></span>
 <span>  geography <span class="op">=</span> <span class="st">"metropolitan statistical area"</span>,</span>
 <span>  breakdown <span class="op">=</span> <span class="st">"RACE"</span>,</span>
@@ -506,7 +509,7 @@ columns. The origin point feature is returned in a column named
 <code>centroid1</code> and is the active geometry column in the sf
 object. The destination point feature is returned in the
 <code>centroid2</code> column.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">phx_flows</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_flows.html">get_flows</a></span><span class="op">(</span></span>
 <span>  geography <span class="op">=</span> <span class="st">"metropolitan statistical area"</span>,</span>
 <span>  msa <span class="op">=</span> <span class="fl">38060</span>,</span>
@@ -538,7 +541,7 @@ common origin MSAs for people moving to Phoenix-Mesa-Scottsdale, AZ. To
 make an interactive map of the flows, we’ll use the excellent <a href="https://symbolixau.github.io/mapdeck/articles/mapdeck.html" class="external-link"><strong>mapdeck</strong>
 package</a>. To use mapdeck, you’ll need a <a href="https://docs.mapbox.com/help/getting-started/access-tokens/" class="external-link">Mapbox
 account and access token</a>.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://symbolixau.github.io/mapdeck/articles/mapdeck.html" class="external-link">mapdeck</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">top_move_in</span> <span class="op">&lt;-</span> <span class="va">phx_flows</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>

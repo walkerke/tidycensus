@@ -70,6 +70,7 @@ clean_data_dict <- function(path, survey, year) {
       survey = survey,
       year = year
       ) %>%
+
     select(survey, year, everything())
 
   # If the year is 2020, we need to pad the character values
@@ -78,6 +79,10 @@ clean_data_dict <- function(path, survey, year) {
       mutate(val_min = if_else(data_type == "chr", str_pad(val_min, val_length, "left", "0"), val_min),
              val_max = if_else(data_type == "chr", str_pad(val_max, val_length, "left", "0"), val_max))
   }
+
+  # Correct problem field with en-dash
+  pums_variables <- pums_variables %>%
+    mutate(val_label = str_replace_all(val_label, "Field of degree science and engineering related flag – National Science Foundation definition", "Field of degree science and engineering related flag - NSF definition"))
 
   print(glue::glue("{survey}{year}"))
   pums_variables

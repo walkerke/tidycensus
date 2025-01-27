@@ -1,4 +1,4 @@
-pandoc: 3.1.11
+pandoc: '3.2'
 pkgdown: 2.0.9.9000
 pkgdown_sha: 5c1d34d1950ff53d20a9a1d590a04c160bdb2099
 articles:
@@ -7,4 +7,4 @@ articles:
   other-datasets: other-datasets.html
   pums-data: pums-data.html
   spatial-data: spatial-data.html
-last_built: 2024-07-16T19:57Z
+last_built: 2025-01-23T19:36Z

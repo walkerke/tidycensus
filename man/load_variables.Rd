@@ -6,15 +6,15 @@
 \usage{
 load_variables(
   year,
-  dataset = c("sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp", "ddhca", "as", "gu", "mp",
-    "vi", "acsse", "dpas", "dpgu", "dpmp", "dpvi", "dhcvi", "dhcgu", "dhcvi", "dhcas",
-    "acs1", "acs3", "acs5", "acs1/profile", "acs3/profile", "acs5/profile",
-    "acs1/subject", "acs3/subject", "acs5/subject", "acs1/cprofile", "acs5/cprofile",
-    "sf2profile", "sf3profile", "sf4profile", "aian", "aianprofile", "cd110h", "cd110s",
-    "cd110hprofile", "cd110sprofile", "sldh", "slds", "sldhprofile", "sldsprofile",
-    "cqr", "cd113", "cd113profile", 
-     "cd115", "cd115profile", "cd116", "plnat",
-    "cd118"),
+  dataset = c("sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp", "ddhca", "ddhcb", "sdhc",
+    "as", "gu", "mp", "vi", "acsse", "dpas", "dpgu", "dpmp", "dpvi", "dhcvi", "dhcgu",
+    "dhcvi", "dhcas", "acs1", "acs3", "acs5", "acs1/profile", "acs3/profile",
+    "acs5/profile", "acs1/subject", "acs3/subject", "acs5/subject", "acs1/cprofile",
+    "acs5/cprofile", "sf2profile", "sf3profile", "sf4profile", "aian", "aianprofile",
+    "cd110h", "cd110s", "cd110hprofile", "cd110sprofile", "sldh", "slds", "sldhprofile",
+    "sldsprofile", "cqr", 
+     "cd113", "cd113profile", "cd115", "cd115profile",
+    "cd116", "plnat", "cd118"),
   cache = FALSE
 )
 }
@@ -39,7 +39,7 @@ Finding the right variables to use with \code{get_decennial()} or \code{get_acs(
 \code{load_variables()} returns three columns by default: \code{name}, which is the Census ID code to be supplied to the \code{variables} parameter in \code{get_decennial()} or \code{get_acs()}; \code{label}, which is a detailed description of the variable; and \code{concept}, which provides information about the table that a given variable belongs to.  For 5-year ACS detailed tables datasets, a fourth column, \code{geography}, tells you the smallest geography at which a given variable is available.
 
 Datasets available are as follows: "sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp",
-"dhca", "ddhca", "as", "gu", "mp", "vi", "acsse",
+"dhca", "ddhca", "ddhcb", "sdhc", "as", "gu", "mp", "vi", "acsse",
 "dpas", "dpgu", "dpmp", "dpvi",
 "dhcvi", "dhcgu", "dhcvi", "dhcas",
 "acs1", "acs3", "acs5", "acs1/profile",

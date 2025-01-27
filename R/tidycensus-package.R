@@ -1,10 +1,7 @@
-#' Return tidy data frames from the US Census Bureau API
-#'
-#' This packages uses US Census Bureau data but is neither endorsed nor supported by the US Census Bureau.
-#'
-#' @author Kyle Walker
-#' @name tidycensus
-#' @docType package
+#' @keywords internal
+"_PACKAGE"
+
+## usethis namespace: start
 #' @import httr
 #' @import sf
 #' @import dplyr
@@ -22,4 +19,5 @@
 #' @importFrom rlang inform abort arg_match sym
 #' @importFrom crayon cyan silver red green
 #' @importFrom tidyselect vars_select_helpers
+## usethis namespace: end
 NULL

@@ -13,8 +13,8 @@
 #'   dataset.  If variables dataset is already cached via the
 #'   \code{load_variables} function, this can be bypassed.
 #' @param year The year, or endyear, of the ACS sample. 5-year ACS data is
-#'   available from 2009 through 2022; 1-year ACS data is available from 2005
-#'   through 2022, with the exception of 2020.  Defaults to 2022.
+#'   available from 2009 through 2023; 1-year ACS data is available from 2005
+#'   through 2023, with the exception of 2020.  Defaults to 2023.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'   enumeration unit-variable combination, or "wide" in which each row
 #'   represents an enumeration unit and the variables are in the columns.
@@ -84,7 +84,7 @@
 #' }
 #' @export
 get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FALSE,
-                    year = 2022, output = "tidy",
+                    year = 2023, output = "tidy",
                     state = NULL, county = NULL, zcta = NULL,
                     geometry = FALSE, keep_geo_vars = FALSE,
                     shift_geo = FALSE, summary_var = NULL, key = NULL,
@@ -404,12 +404,21 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               show_call = show_call
               )
             )
-          ) %>%
-          reduce(left_join, by = c("GEOID", "NAME"))
+          )
+
+        if (year == 2010) {
+          result_no_geo <- result_no_geo %>%
+            reduce(left_join, by = "GEOID")
+        } else {
+          result_no_geo <- result_no_geo %>%
+            reduce(left_join, by = c("GEOID", "NAME"))
+        }
+
+
 
         # NAME.x and NAME.y columns exist when keep_geo_vars = TRUE
         if(keep_geo_vars) {
-            join_cols <- c("GEOID", "NAME.y" = "NAME")
+          join_cols <- c("GEOID", "NAME.y" = "NAME")
         } else {
           join_cols <- c("GEOID", "NAME")
         }
@@ -485,8 +494,16 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               show_call = show_call
             )
           )
-        ) %>%
-          reduce(left_join, by = c("GEOID", "NAME"))
+        )
+
+        if (year == 2010) {
+          result <- result %>%
+            reduce(left_join, by = "GEOID")
+        } else {
+          result <- result %>%
+            reduce(left_join, by = c("GEOID", "NAME"))
+        }
+
       } else {
         result <- map_df(vars_by_type, ~
           suppressMessages(

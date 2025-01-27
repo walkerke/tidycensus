@@ -8,7 +8,7 @@
 #'   to request data. To get data from PUMAs in more than one state, specify a
 #'   named vector of state/PUMA pairs and set \code{state = "multiple"}.
 #' @param year The data year of the 1-year ACS sample or the endyear of the
-#'   5-year sample. Defaults to 2022. Please note that 1-year data for 2020 is not available
+#'   5-year sample. Defaults to 2023. Please note that 1-year data for 2020 is not available
 #'   in tidycensus, so users requesting 1-year data should supply a different year.
 #' @param survey The ACS survey; one of either \code{"acs1"} or \code{"acs5"}
 #'   (the default).
@@ -50,7 +50,7 @@
 get_pums <- function(variables = NULL,
                      state = NULL,
                      puma = NULL,
-                     year = 2022,
+                     year = 2023,
                      survey = "acs5",
                      variables_filter = NULL,
                      rep_weights = NULL,
@@ -154,7 +154,13 @@ get_pums <- function(variables = NULL,
   #   }
   # }
 
-  join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
+  # As of 2023, `ST` is renamed to `STATE`
+  if (year < 2023) {
+    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "ST")
+  } else {
+    join_vars <- c("SERIALNO", "SPORDER", "WGTP", "PWGTP", "STATE")
+  }
+
 
   variables <- variables[!variables %in% join_vars]
 
@@ -196,10 +202,17 @@ get_pums <- function(variables = NULL,
     # merge that in as well
 
     if (recode) {
-      if (!is.null(puma)) {
-        join_vars <- c(join_vars, "ST_label", "PUMA")
+
+      if (year < 2023) {
+        state_label <- "ST_label"
       } else {
-        join_vars <- c(join_vars, "ST_label")
+        state_label <- "STATE_label"
+      }
+
+      if (!is.null(puma)) {
+        join_vars <- c(join_vars, state_label, "PUMA")
+      } else {
+        join_vars <- c(join_vars, state_label)
       }
     } else {
       if (!is.null(puma)) {
@@ -288,13 +301,25 @@ get_pums <- function(variables = NULL,
       # to combine the multiple API calls, we need to join using the repeated
       # variables so they don't get duplicated in the final data frame
       # the repeated variables will depend on how we requested data
-      vacant_join_vars <- c("SERIALNO", "WGTP", "ST")
+      # As of 2023, `ST` is renamed to `STATE`
+      if (year < 2023) {
+        vacant_join_vars <- c("SERIALNO", "WGTP", "ST")
+      } else {
+        vacant_join_vars <- c("SERIALNO", "WGTP", "STATE")
+      }
+
 
       if (recode) {
-        if (!is.null(puma)) {
-          vacant_join_vars <- c(vacant_join_vars, "ST_label", "PUMA")
+        if (year < 2023) {
+          state_label <- "ST_label"
         } else {
-          vacant_join_vars <- c(vacant_join_vars, "ST_label")
+          state_label <- "STATE_label"
+        }
+
+        if (!is.null(puma)) {
+          vacant_join_vars <- c(vacant_join_vars, state_label, "PUMA")
+        } else {
+          vacant_join_vars <- c(vacant_join_vars, state_label)
         }
       } else {
         if (!is.null(puma)) {

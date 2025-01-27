@@ -299,7 +299,7 @@ as_dot_density <- function(
 }
 
 
-#' Use population-weighted interpolation to transfer information from one set of shapes to another
+#' Use population-weighted areal interpolation to transfer information from one set of shapes to another
 #'
 #' A common use-case when working with time-series small-area Census data is to transfer data from one set of shapes (e.g. 2010 Census tracts) to another set of shapes (e.g. 2020 Census tracts). Population-weighted interpolation is one such solution to this problem that takes into account the distribution of the population within a Census unit to intelligently transfer data between incongruent units.
 #'

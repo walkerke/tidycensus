@@ -212,8 +212,8 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "metropolitan statistical area/micropolitan statistical area" || geography == "cbsa") {
 
-    # 2022 CBSA files for CB not yet available
-    if (cb && year == 2022) {
+    # 2022 CBSA files not available
+    if (year == 2022) {
       year <- 2021
     }
 
@@ -314,7 +314,12 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "combined statistical area") {
 
-    csa <- combined_statistical_areas(cb = cb, class = "sf", year = year, ...)
+    # CSA file not published for '22, so we need '21 geometries
+    if (year == 2022) {
+      csa <- combined_statistical_areas(cb = cb, class = "sf", year = 2021, ...)
+    } else {
+      csa <- combined_statistical_areas(cb = cb, class = "sf", year = year, ...)
+    }
 
     return(csa)
 
@@ -662,7 +667,7 @@ summary_files <- function(year) {
                   "cd115", "cd115profile", "cd116")
   } else if (year == 2020) {
     sumfiles <- c("pl", "dhc", "dp", "pes", "dpas", "ddhca",
-                  "dpmp", "dpgu", "dpvi",
+                  "dpmp", "dpgu", "dpvi", "ddhcb", "sdhc",
                   "dhcvi", "dhcgu", "dhcvi", "dhcas", "cd118")
   } else {
     stop("Invalid year for `get_decennial()`; valid years are 2000, 2010, and 2020.", call. = FALSE)

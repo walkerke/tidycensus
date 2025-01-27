@@ -28,12 +28,14 @@ year <- 2021
 rstudioapi::jobRunScript("data-raw/find_available_geographies.R", importEnv = TRUE)
 year <- 2022
 rstudioapi::jobRunScript("data-raw/find_available_geographies.R", importEnv = TRUE)
+year <- 2023
+rstudioapi::jobRunScript("data-raw/find_available_geographies.R", importEnv = TRUE)
 
 
 # Iterate through the datasets and assemble, then check the size
 library(magrittr)
 
-years <- 2011:2022
+years <- 2011:2023
 
 acs5_geography <- purrr::map_dfr(years, ~{
   readr::read_rds(glue::glue("data-raw/geo_availability/acs5_{.x}.rds")) %>%
