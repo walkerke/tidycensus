@@ -6,7 +6,7 @@ Authors@R: c(
     person(given = "Kyle", family = "Walker", email="kyle@walker-data.com", role=c("aut", "cre")),
     person(given = "Matt", family = "Herman", email = "mfherman@gmail.com", role = "aut"),
     person(given = "Kris", family = "Eberwein", email = "eberwein@knights.ucf.edu", role = "ctb"))
-Date: 2025-01-23
+Date: 2025-01-28
 URL: https://walker-data.com/tidycensus/
 BugReports: https://github.com/walkerke/tidycensus/issues
 Description: An integrated R interface to several United States Census Bureau 
