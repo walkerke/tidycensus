@@ -389,14 +389,22 @@ interpolate_pw <- function(from,
          call. = FALSE)
   }
 
-  # If CRS is given, transform all the objects; error if mismatched CRS
-  if (!is.null(crs)) {
-    from <- sf::st_transform(from, crs)
-    to <- sf::st_transform(to, crs)
-    weights <- sf::st_transform(weights, crs)
-  } else {
-    unique_crs <- unique(c(sf::st_crs(from), sf::st_crs(to), sf::st_crs(weights)))
-    if (length(unique_crs) != 1) {
+  # Check for valid CRS processing
+  # Ensure all inputs have a valid CRS defined
+  if (any(sapply(list(sf::st_crs(from), sf::st_crs(to), sf::st_crs(weights)), is.na))) {
+    stop("All inputs must have a valid CRS defined.")
+  }
+
+  # Check if all CRSs are identical
+  if (!identical(sf::st_crs(from), sf::st_crs(to)) ||
+      !identical(sf::st_crs(from), sf::st_crs(weights))) {
+    # If CRS is provided, transform all the objects
+    if (!is.null(crs)) {
+      from <- sf::st_transform(from, crs)
+      to <- sf::st_transform(to, crs)
+      weights <- sf::st_transform(weights, crs)
+    } else {
+      # If no target CRS is provided, error out
       stop("All inputs must have the same CRS if CRS is not supplied")
     }
   }
