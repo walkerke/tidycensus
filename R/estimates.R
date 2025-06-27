@@ -126,9 +126,9 @@ get_estimates <- function(
   # previous years that are on the API
   if (year >= 2020) {
     if (!is.null(product) && product == "characteristics") {
-      if (!geography %in% c("state", "county")) {
+      if (!geography %in% c("state", "county", "cbsa", "metropolitan statistical area/micropolitan statistical area", "combined statistical area")) {
         rlang::abort(
-          "The only supported geographies at this time for population characteristics 2020 and later are 'state' and 'county'."
+          "The only supported geographies at this time for population characteristics 2020 and later are 'state', 'county', 'cbsa'/'metropolitan statistical area/micropolitan statistical area', and 'combined statistical area'."
         )
       }
 
@@ -334,9 +334,211 @@ get_estimates <- function(
               TRUE ~ year
             )
           )
+      } else if (geography == "cbsa" || geography == "metropolitan statistical area/micropolitan statistical area") {
+        if (vintage > 2024) {
+          rlang::abort(
+            "The CBSA characteristics dataset for this vintage has not yet been released."
+          )
+        }
+
+        cbsa_raw <- suppressWarnings(try(
+          suppressMessages(readr::read_csv(sprintf(
+            "https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/metro/asrh/cbsa-est%s-alldata-char.csv",
+            vintage,
+            vintage
+          ))),
+          silent = TRUE
+        ))
+
+        if (inherits(cbsa_raw, "try-error")) {
+          cbsa_raw <- suppressMessages(readr::read_csv(sprintf(
+            "ftp://ftp2.census.gov/programs-surveys/popest/datasets/2020-%s/metro/asrh/cbsa-est%s-alldata-char.csv",
+            vintage,
+            vintage
+          )))
+        }
+
+        total_vals <- c(
+          "TOT",
+          "WA",
+          "BA",
+          "IA",
+          "AA",
+          "NA",
+          "TOM",
+          "WAC",
+          "BAC",
+          "IAC",
+          "AAC",
+          "NAC"
+        )
+
+        parsed <- cbsa_raw %>%
+          tidyr::pivot_longer(
+            TOT_POP:HNAC_FEMALE,
+            names_to = c("category", "SEX"),
+            values_to = "value",
+            names_sep = "_"
+          ) %>%
+          dplyr::mutate(
+            category = ifelse(
+              category %in% total_vals,
+              paste0("BH", category),
+              category
+            ),
+            category = stringr::str_replace(category, "H", "H_")
+          ) %>%
+          tidyr::separate_wider_delim(
+            category,
+            delim = "_",
+            names = c("HISP", "RACE")
+          ) %>%
+          dplyr::filter(SEX != "POP") %>%
+          dplyr::mutate(RACE = ifelse(RACE == "", "TOT", RACE)) %>%
+          dplyr::mutate(
+            HISP = dplyr::case_when(
+              HISP == "BH" ~ 0L,
+              HISP == "H" ~ 2L,
+              HISP == "NH" ~ 1L
+            ),
+            RACE = dplyr::case_when(
+              RACE == "TOT" ~ 0L,
+              RACE == "WA" ~ 1L,
+              RACE == "BA" ~ 2L,
+              RACE == "IA" ~ 3L,
+              RACE == "AA" ~ 4L,
+              RACE == "NA" ~ 5L,
+              RACE == "TOM" ~ 6L,
+              RACE == "WAC" ~ 7L,
+              RACE == "BAC" ~ 8L,
+              RACE == "IAC" ~ 9L,
+              RACE == "AAC" ~ 10L,
+              RACE == "NAC" ~ 11L,
+            ),
+            SEX = dplyr::case_when(
+              SEX == "MALE" ~ 1L,
+              SEX == "FEMALE" ~ 2L
+            ),
+            GEOID = CBSA
+          ) %>%
+          dplyr::rename(AGEGROUP = AGEGRP) %>%
+          dplyr::select(GEOID, NAME, YEAR:value) %>%
+          dplyr::rename(year = YEAR) %>%
+          dplyr::filter(year != 1) %>%
+          dplyr::mutate(
+            year = dplyr::case_when(
+              year == 2 ~ 2020L,
+              year == 3 ~ 2021L,
+              year == 4 ~ 2022L,
+              year == 5 ~ 2023L,
+              year == 6 ~ 2024L,
+              TRUE ~ year
+            )
+          )
+      } else if (geography == "combined statistical area") {
+        if (vintage > 2024) {
+          rlang::abort(
+            "The CSA characteristics dataset for this vintage has not yet been released."
+          )
+        }
+
+        csa_raw <- suppressWarnings(try(
+          suppressMessages(readr::read_csv(sprintf(
+            "https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/metro/asrh/csa-est%s-alldata-char.csv",
+            vintage,
+            vintage
+          ))),
+          silent = TRUE
+        ))
+
+        if (inherits(csa_raw, "try-error")) {
+          csa_raw <- suppressMessages(readr::read_csv(sprintf(
+            "ftp://ftp2.census.gov/programs-surveys/popest/datasets/2020-%s/metro/asrh/csa-est%s-alldata-char.csv",
+            vintage,
+            vintage
+          )))
+        }
+
+        total_vals <- c(
+          "TOT",
+          "WA",
+          "BA",
+          "IA",
+          "AA",
+          "NA",
+          "TOM",
+          "WAC",
+          "BAC",
+          "IAC",
+          "AAC",
+          "NAC"
+        )
+
+        parsed <- csa_raw %>%
+          tidyr::pivot_longer(
+            TOT_POP:HNAC_FEMALE,
+            names_to = c("category", "SEX"),
+            values_to = "value",
+            names_sep = "_"
+          ) %>%
+          dplyr::mutate(
+            category = ifelse(
+              category %in% total_vals,
+              paste0("BH", category),
+              category
+            ),
+            category = stringr::str_replace(category, "H", "H_")
+          ) %>%
+          tidyr::separate_wider_delim(
+            category,
+            delim = "_",
+            names = c("HISP", "RACE")
+          ) %>%
+          dplyr::filter(SEX != "POP") %>%
+          dplyr::mutate(RACE = ifelse(RACE == "", "TOT", RACE)) %>%
+          dplyr::mutate(
+            HISP = dplyr::case_when(
+              HISP == "BH" ~ 0L,
+              HISP == "H" ~ 2L,
+              HISP == "NH" ~ 1L
+            ),
+            RACE = dplyr::case_when(
+              RACE == "TOT" ~ 0L,
+              RACE == "WA" ~ 1L,
+              RACE == "BA" ~ 2L,
+              RACE == "IA" ~ 3L,
+              RACE == "AA" ~ 4L,
+              RACE == "NA" ~ 5L,
+              RACE == "TOM" ~ 6L,
+              RACE == "WAC" ~ 7L,
+              RACE == "BAC" ~ 8L,
+              RACE == "IAC" ~ 9L,
+              RACE == "AAC" ~ 10L,
+              RACE == "NAC" ~ 11L,
+            ),
+            SEX = dplyr::case_when(
+              SEX == "MALE" ~ 1L,
+              SEX == "FEMALE" ~ 2L
+            ),
+            GEOID = CSA
+          ) %>%
+          dplyr::rename(AGEGROUP = AGEGRP) %>%
+          dplyr::select(GEOID, NAME, YEAR:value) %>%
+          dplyr::rename(year = YEAR) %>%
+          dplyr::filter(year != 1) %>%
+          dplyr::mutate(
+            year = dplyr::case_when(
+              year == 2 ~ 2020L,
+              year == 3 ~ 2021L,
+              year == 4 ~ 2022L,
+              year == 5 ~ 2023L,
+              year == 6 ~ 2024L,
+              TRUE ~ year
+            )
+          )
       } else {
         rlang::abort(
-          "The only available geographies for population characteristics years 2020 and later are 'state' and 'county'."
+          "The only available geographies for population characteristics years 2020 and later are 'state', 'county', 'cbsa'/'metropolitan statistical area/micropolitan statistical area', and 'combined statistical area'."
         )
       }
 
