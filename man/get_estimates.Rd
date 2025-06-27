@@ -13,7 +13,7 @@ get_estimates(
   variables = NULL,
   breakdown = NULL,
   breakdown_labels = FALSE,
-  vintage = 2022,
+  vintage = 2024,
   year = vintage,
   state = NULL,
   county = NULL,
