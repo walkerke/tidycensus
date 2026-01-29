@@ -157,10 +157,6 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
   if (!is.null(zcta))  {
 
-    # if (is.null(state)) {
-    #   stop("The `zcta` argument requires specifying a state.", call. = FALSE)
-    # }
-
     if (!is.null(county)) {
       stop("ZCTAs do not nest within counties, so `county` should not be specified.",
            call. = FALSE)
@@ -172,6 +168,10 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
       })
 
       in_area <- paste0("state:", state)
+
+      if(geography == "zip code tabulation area"){
+        in_area <- NULL
+      }
 
     } else {
       in_area <- NULL
@@ -231,6 +231,11 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
         in_area <- paste0("state:", state)
       }
 
+    }
+
+    # If state is supplied for zctas, query all and filter after in get_acs
+    if(geography == "zip code tabulation area"){
+      in_area <- NULL
     }
 
     vars_to_get <- paste0(formatted_variables, ",NAME")
