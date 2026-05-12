@@ -118,10 +118,10 @@ load_variables <- function(
   get_dataset <- function(d, year) {
 
     set <- paste(year, d, sep = "/")
-
+    key <- get_census_api_key(key)
     url <- paste("https://api.census.gov/data",
                  set,
-                 "variables.json", sep = "/")
+                 "variables.json?key=",key, sep = "/")
     resp <- httr::GET(url)
     if(httr::status_code(resp) == 404L){
       stop("API endpoint not found. Does this data set exist for the specified year? See https://api.census.gov/data.html for data availability.")
