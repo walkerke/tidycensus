@@ -25,6 +25,7 @@
 #' @param dataset The dataset name as used on the Census website.  See the Details in this documentation for a full list of dataset names.
 #' @param cache Whether you would like to cache the dataset for future access,
 #'   or load the dataset from an existing cache. Defaults to FALSE.
+#' @param key a Census API key
 #'
 #' @return A tibble of variables from the requested dataset.
 #' @examples \dontrun{
@@ -48,6 +49,7 @@ load_variables <- function(
               "slds", "sldhprofile", "sldsprofile", "cqr",
               "cd113", "cd113profile", "cd115", "cd115profile", "cd116",
               "plnat", "cd118"),
+  key = NULL,
   cache = FALSE) {
 
   if (length(year) != 1 || !grepl('[0-9]{4}', year)){
@@ -119,9 +121,9 @@ load_variables <- function(
 
     set <- paste(year, d, sep = "/")
     key <- get_census_api_key(key)
-    url <- paste("https://api.census.gov/data",
+    url <- paste0(paste("https://api.census.gov/data",
                  set,
-                 "variables.json?key=",key, sep = "/")
+                 "variables.json", sep = "/"), "?key=", key)
     resp <- httr::GET(url)
     if(httr::status_code(resp) == 404L){
       stop("API endpoint not found. Does this data set exist for the specified year? See https://api.census.gov/data.html for data availability.")

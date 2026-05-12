@@ -6,7 +6,7 @@
 \alias{tidycensus-package}
 \title{tidycensus: Load US Census Boundary and Attribute Data as 'tidyverse' and 'sf'-Ready Data Frames}
 \description{
-An integrated R interface to several United States Census Bureau APIs (\url{https://www.census.gov/data/developers/data-sets.html}) and the US Census Bureau's geographic boundary files. Allows R users to return Census and ACS data as tidyverse-ready data frames, and optionally returns a list-column with feature geometry for mapping and spatial analysis.
+An integrated R interface to several United States Census Bureau APIs (<https://www.census.gov/data/developers/data-sets.html>) and the US Census Bureau's geographic boundary files. Allows R users to return Census and ACS data as tidyverse-ready data frames, and optionally returns a list-column with feature geometry for mapping and spatial analysis.
 }
 \seealso{
 Useful links:

@@ -12,9 +12,9 @@ load_variables(
     "acs5/profile", "acs1/subject", "acs3/subject", "acs5/subject", "acs1/cprofile",
     "acs5/cprofile", "sf2profile", "sf3profile", "sf4profile", "aian", "aianprofile",
     "cd110h", "cd110s", "cd110hprofile", "cd110sprofile", "sldh", "slds", "sldhprofile",
-    "sldsprofile", "cqr", 
-     "cd113", "cd113profile", "cd115", "cd115profile",
-    "cd116", "plnat", "cd118"),
+    "sldsprofile", "cqr",      "cd113", "cd113profile", "cd115", "cd115profile", "cd116",
+    "plnat", "cd118"),
+  key = NULL,
   cache = FALSE
 )
 }
@@ -25,6 +25,8 @@ available from 2009 through 2020. 1-year ACS data is available from 2005
 through 2021, with the exception of 2020.}
 
 \item{dataset}{The dataset name as used on the Census website.  See the Details in this documentation for a full list of dataset names.}
+
+\item{key}{a Census API key}
 
 \item{cache}{Whether you would like to cache the dataset for future access,
 or load the dataset from an existing cache. Defaults to FALSE.}
