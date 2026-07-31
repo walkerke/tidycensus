@@ -462,7 +462,7 @@ get_decennial <- function(geography,
     if (geography == "zip code tabulation area (or part)" && year == 2020 && any(nchar(dat2$GEOID) == 7L)) {
       dat2 <- dat2 %>%
         dplyr::mutate(
-          GEOID = stringr::str_sub(GEOID, start = -5L)
+          GEOID = stringr::str_sub(GEOID, start = 3L)
         )
     }
 
