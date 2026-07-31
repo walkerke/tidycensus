@@ -441,8 +441,8 @@ get_decennial <- function(geography,
   }
 
   # For ZCTAs, strip the state code from GEOID (issue #338 and #358)
-  # Should only happen if the GEOID is 7 characters
-  if (stringr::str_detect(geography, "^zip code tabulation area") && unique(nchar(dat2$GEOID)) == 7) {
+  # Should only happen if any GEOID is 7 characters
+  if (stringr::str_detect(geography, "^zip code tabulation area") && any(nchar(dat2$GEOID) == 7L)) {
     dat2 <- dat2 %>%
       dplyr::mutate(
         GEOID = stringr::str_sub(GEOID, start = -5L)
@@ -459,10 +459,10 @@ get_decennial <- function(geography,
                                                          sumfile = "sf3", pop_group, state, county, show_call = show_call)))
     }
 
-    if (geography == "zip code tabulation area (or part)" && year == 2020 && unique(nchar(dat2$GEOID)) == 7) {
+    if (geography == "zip code tabulation area (or part)" && year == 2020 && any(nchar(dat2$GEOID) == 7L)) {
       dat2 <- dat2 %>%
         dplyr::mutate(
-          GEOID = stringr::str_sub(GEOID, start = 3L)
+          GEOID = stringr::str_sub(GEOID, start = -5L)
         )
     }
 
@@ -513,6 +513,12 @@ get_decennial <- function(geography,
 
       if ("try-error" %in% class(geom)) {
         stop("Your geometry data download failed. Please try again later or check the status of the Census Bureau website at https://www2.census.gov/geo/tiger/", call. = FALSE)
+      }
+
+      # For ZCTAs, strip the state code from GEOID
+      # Should only happen if any GEOID is 7 characters
+      if (stringr::str_detect(geography, "^zip code tabulation area") && any(nchar(geom$GEOID) == 7L)) {
+        geom$GEOID <- stringr::str_sub(geom$GEOID, start = -5L)
       }
     }
 
