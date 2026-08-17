@@ -1,3 +1,62 @@
+# Helpers for post-processing Census API responses
+
+census_missing_values <- -seq.int(111111111, 999999999, by = 111111111)
+
+replace_census_missing <- function(data) {
+  missing_character <- as.character(census_missing_values)
+
+  data[] <- lapply(data, function(column) {
+    if (is.numeric(column)) {
+      replace(column, column %in% census_missing_values, NA)
+    } else if (is.character(column)) {
+      replace(column, column %in% missing_character, NA_character_)
+    } else {
+      column
+    }
+  })
+
+  data
+}
+
+recode_named_variables <- function(data, variables) {
+  if (is.null(names(variables))) {
+    return(data)
+  }
+
+  original <- unname(variables)
+  replacement <- Reduce(
+    function(values, i) {
+      replace(values, values == original[[i]], names(variables)[[i]])
+    },
+    seq_along(original),
+    init = original
+  )
+
+  data[] <- lapply(data, function(column) {
+    if (!is.character(column)) {
+      return(column)
+    }
+
+    index <- match(column, original)
+    matched <- !is.na(index)
+    replace(column, matched, replacement[index[matched]])
+  })
+
+  data
+}
+
+recode_wide_variable_names <- function(data, variables) {
+  if (is.null(names(variables))) {
+    return(data)
+  }
+
+  names(data) <- stringr::str_replace_all(
+    names(data),
+    stats::setNames(names(variables), variables)
+  )
+  data
+}
+
 # Called to check to see if "state" is a FIPS code, full name or abbreviation.
 #
 # returns NULL if input is NULL

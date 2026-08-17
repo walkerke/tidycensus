@@ -1,19 +1,3 @@
-baseline_replace_census_missing <- function(data) {
-  for (value in tidycensus:::census_missing_values) {
-    data[data == value] <- NA
-  }
-  data
-}
-
-baseline_recode_named_variables <- function(data, variables) {
-  if (!is.null(names(variables))) {
-    for (i in seq_along(variables)) {
-      data[data == variables[i]] <- names(variables)[i]
-    }
-  }
-  data
-}
-
 test_that("missing-value replacement preserves Census response semantics", {
   input <- dplyr::tibble(
     GEOID = c("001", "-111111111", "003"),
@@ -23,10 +7,15 @@ test_that("missing-value replacement preserves Census response semantics", {
     flag = c(TRUE, FALSE, TRUE)
   )
 
-  expect_identical(
-    tidycensus:::replace_census_missing(input),
-    baseline_replace_census_missing(input)
+  expected <- dplyr::tibble(
+    GEOID = c("001", NA, "003"),
+    NAME = c("First", "Second", NA),
+    estimate = c(NA, 10, NA),
+    integer_value = c(NA_integer_, 20L, 30L),
+    flag = c(TRUE, FALSE, TRUE)
   )
+
+  expect_identical(tidycensus:::replace_census_missing(input), expected)
 })
 
 test_that("named-variable recoding preserves sequential aliases", {
@@ -38,9 +27,16 @@ test_that("named-variable recoding preserves sequential aliases", {
     estimate = c(1, 2, 3)
   )
 
+  expected <- dplyr::tibble(
+    GEOID = c("001", "second", "003"),
+    NAME = c("Area A", "final", "Area C"),
+    variable = c("second", "second", "final"),
+    estimate = c(1, 2, 3)
+  )
+
   expect_identical(
     tidycensus:::recode_named_variables(input, variables),
-    baseline_recode_named_variables(input, variables)
+    expected
   )
 })
 
@@ -68,11 +64,9 @@ test_that("wide-output recoding preserves existing name replacement", {
   )
 
   expected <- input
-  for (i in seq_along(variables)) {
-    names(expected) <- stringr::str_replace(
-      names(expected), variables[i], names(variables)[i]
-    )
-  }
+  names(expected) <- c(
+    "GEOID", "firstE", "firstM", "secondE", "secondM"
+  )
 
   expect_identical(
     tidycensus:::recode_wide_variable_names(input, variables),
