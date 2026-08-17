@@ -24,23 +24,23 @@ recode_named_variables <- function(data, variables) {
   }
 
   original <- unname(variables)
-  replacement <- Reduce(
-    function(values, i) {
-      replace(values, values == original[[i]], names(variables)[[i]])
-    },
-    seq_along(original),
-    init = original
-  )
+  replacement <- original
 
-  data[] <- lapply(data, function(column) {
-    if (!is.character(column)) {
-      return(column)
-    }
+  # Iterate over requested variables, not response rows. Each comparison and
+  # replacement remains vectorized and preserves sequential alias behavior.
+  for (i in seq_along(original)) {
+    replacement[replacement == original[[i]]] <- names(variables)[[i]]
+  }
 
-    index <- match(column, original)
+  character_columns <- which(vapply(data, is.character, logical(1)))
+
+  # Census responses contain only a few character columns; match() processes
+  # every row in each selected column at once.
+  for (column in character_columns) {
+    index <- match(data[[column]], original)
     matched <- !is.na(index)
-    replace(column, matched, replacement[index[matched]])
-  })
+    data[[column]][matched] <- replacement[index[matched]]
+  }
 
   data
 }
@@ -50,10 +50,17 @@ recode_wide_variable_names <- function(data, variables) {
     return(data)
   }
 
-  names(data) <- stringr::str_replace_all(
-    names(data),
-    stats::setNames(names(variables), variables)
-  )
+  new_names <- names(data)
+
+  for (i in seq_along(variables)) {
+    new_names <- stringr::str_replace(
+      new_names,
+      variables[[i]],
+      names(variables)[[i]]
+    )
+  }
+
+  names(data) <- new_names
   data
 }
 
