@@ -1261,7 +1261,7 @@ get_estimates <- function(
               )
             }
           ) %>%
-            reduce(rbind)
+            bind_spatial_rows()
           geoms <- unique(st_geometry_type(result))
           if (length(geoms) > 1) {
             result <- st_cast(result, "MULTIPOLYGON")

@@ -16,4 +16,5 @@ index.md
 ^\.github$
 logo.png
 ^pkgdown$
+^benchmarks$
 .claude
