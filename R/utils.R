@@ -1,3 +1,8 @@
+# Bind a list of sf results without repeatedly copying accumulated rows.
+bind_spatial_rows <- function(pieces) {
+  dplyr::bind_rows(pieces)
+}
+
 # Called to check to see if "state" is a FIPS code, full name or abbreviation.
 #
 # returns NULL if input is NULL
