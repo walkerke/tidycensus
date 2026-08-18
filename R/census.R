@@ -243,7 +243,7 @@ get_decennial <- function(geography,
                                ...)
         )
       }, ...) %>%
-        reduce(rbind)
+        bind_spatial_rows()
       geoms <- unique(st_geometry_type(result))
       if (length(geoms) > 1) {
         result <- st_cast(result, "MULTIPOLYGON")

@@ -283,7 +283,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                              show_call = show_call,
                              ...))
           }, ...) %>%
-            reduce(rbind)
+            bind_spatial_rows()
           geoms <- unique(st_geometry_type(result))
           if (length(geoms) > 1) {
             result <- st_cast(result, "MULTIPOLYGON")
@@ -454,7 +454,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         )
       }, ...
       ) %>%
-        reduce(rbind)
+        bind_spatial_rows()
       }
 
       geoms <- unique(st_geometry_type(result))
@@ -561,7 +561,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 ...)) %>%
           st_cast("MULTIPOLYGON")
       }, ...) %>%
-        reduce(rbind)
+        bind_spatial_rows()
       geoms <- unique(st_geometry_type(result))
       if (length(geoms) > 1) {
         result <- st_cast(result, "MULTIPOLYGON")
@@ -622,7 +622,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                            ...)) %>%
             st_cast("MULTIPOLYGON")
         }, ...) %>%
-          reduce(rbind)
+          bind_spatial_rows()
         geoms <- unique(st_geometry_type(result))
         if (length(geoms) > 1) {
           result <- st_cast(result, "MULTIPOLYGON")
