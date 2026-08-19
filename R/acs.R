@@ -726,15 +726,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     }
 
     # Convert missing values to NA
-    dat2[dat2 == -111111111] <- NA
-    dat2[dat2 == -222222222] <- NA
-    dat2[dat2 == -333333333] <- NA
-    dat2[dat2 == -444444444] <- NA
-    dat2[dat2 == -555555555] <- NA
-    dat2[dat2 == -666666666] <- NA
-    dat2[dat2 == -777777777] <- NA
-    dat2[dat2 == -888888888] <- NA
-    dat2[dat2 == -999999999] <- NA
+    dat2 <- replace_census_missing(dat2)
 
     if ("moe" %in% names(dat2)) {
       dat2 <- mutate(dat2, moe = moe * moe_factor)
@@ -742,11 +734,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
 
     # Change names if supplied
-    if (!is.null(names(variables))) {
-      for (i in 1:length(variables)) {
-        dat2[dat2 == variables[i]] <- names(variables)[i]
-      }
-    }
+    dat2 <- recode_named_variables(dat2, variables)
 
 
   } else if (output == "wide") {
@@ -758,15 +746,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
 
     # Convert missing values to NA
-    dat[dat == -111111111] <- NA
-    dat[dat == -222222222] <- NA
-    dat[dat == -333333333] <- NA
-    dat[dat == -444444444] <- NA
-    dat[dat == -555555555] <- NA
-    dat[dat == -666666666] <- NA
-    dat[dat == -777777777] <- NA
-    dat[dat == -888888888] <- NA
-    dat[dat == -999999999] <- NA
+    dat <- replace_census_missing(dat)
 
     # Find MOE vars
     # moe_vars <- grep("*M", names(dat))
@@ -776,11 +756,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     dat2 <- dat %>%
       mutate_if(grepl("*M$", names(.)), list(~(. * moe_factor)))
 
-    if (!is.null(names(variables))) {
-      for (i in 1:length(variables)) {
-        names(dat2) <- str_replace(names(dat2), variables[i], names(variables)[i])
-      }
-    }
+    dat2 <- recode_wide_variable_names(dat2, variables)
 
     dat2 <- dat2 %>%
       select(GEOID, NAME, everything())
@@ -828,15 +804,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       mutate(summary_moe = round(summary_moe * moe_factor, 0))
 
     # Convert missing values to NA
-    dat2[dat2 == -111111111] <- NA
-    dat2[dat2 == -222222222] <- NA
-    dat2[dat2 == -333333333] <- NA
-    dat2[dat2 == -444444444] <- NA
-    dat2[dat2 == -555555555] <- NA
-    dat2[dat2 == -666666666] <- NA
-    dat2[dat2 == -777777777] <- NA
-    dat2[dat2 == -888888888] <- NA
-    dat2[dat2 == -999999999] <- NA
+    dat2 <- replace_census_missing(dat2)
   }
 
 

@@ -1,3 +1,69 @@
+# Helpers for post-processing Census API responses
+
+census_missing_values <- -seq.int(111111111, 999999999, by = 111111111)
+
+replace_census_missing <- function(data) {
+  missing_character <- as.character(census_missing_values)
+
+  data[] <- lapply(data, function(column) {
+    if (is.numeric(column)) {
+      replace(column, column %in% census_missing_values, NA)
+    } else if (is.character(column)) {
+      replace(column, column %in% missing_character, NA_character_)
+    } else {
+      column
+    }
+  })
+
+  data
+}
+
+recode_named_variables <- function(data, variables) {
+  if (is.null(names(variables))) {
+    return(data)
+  }
+
+  original <- unname(variables)
+  replacement <- original
+
+  # Iterate over requested variables, not response rows. Each comparison and
+  # replacement remains vectorized and preserves sequential alias behavior.
+  for (i in seq_along(original)) {
+    replacement[replacement == original[[i]]] <- names(variables)[[i]]
+  }
+
+  character_columns <- which(vapply(data, is.character, logical(1)))
+
+  # Census responses contain only a few character columns; match() processes
+  # every row in each selected column at once.
+  for (column in character_columns) {
+    index <- match(data[[column]], original)
+    matched <- !is.na(index)
+    data[[column]][matched] <- replacement[index[matched]]
+  }
+
+  data
+}
+
+recode_wide_variable_names <- function(data, variables) {
+  if (is.null(names(variables))) {
+    return(data)
+  }
+
+  new_names <- names(data)
+
+  for (i in seq_along(variables)) {
+    new_names <- stringr::str_replace(
+      new_names,
+      variables[[i]],
+      names(variables)[[i]]
+    )
+  }
+
+  names(data) <- new_names
+  data
+}
+
 # Called to check to see if "state" is a FIPS code, full name or abbreviation.
 #
 # returns NULL if input is NULL

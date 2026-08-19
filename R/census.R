@@ -376,22 +376,10 @@ get_decennial <- function(geography,
         dplyr::rename(pop_group = POPGROUP)
     }
 
-    if (!is.null(names(variables))) {
-      for (i in 1:length(variables)) {
-        dat2[dat2 == variables[i]] <- names(variables)[i]
-      }
-    }
+    dat2 <- recode_named_variables(dat2, variables)
 
     # Convert missing values to NA
-    dat2[dat2 == -111111111] <- NA
-    dat2[dat2 == -222222222] <- NA
-    dat2[dat2 == -333333333] <- NA
-    dat2[dat2 == -444444444] <- NA
-    dat2[dat2 == -555555555] <- NA
-    dat2[dat2 == -666666666] <- NA
-    dat2[dat2 == -777777777] <- NA
-    dat2[dat2 == -888888888] <- NA
-    dat2[dat2 == -999999999] <- NA
+    dat2 <- replace_census_missing(dat2)
 
   } else if (output == "wide") {
 
@@ -399,22 +387,10 @@ get_decennial <- function(geography,
 
     dat2 <- dat
 
-    if (!is.null(names(variables))) {
-      for (i in 1:length(variables)) {
-        names(dat2) <- str_replace(names(dat2), variables[i], names(variables)[i])
-      }
-    }
+    dat2 <- recode_wide_variable_names(dat2, variables)
 
     # Convert missing values to NA
-    dat2[dat2 == -111111111] <- NA
-    dat2[dat2 == -222222222] <- NA
-    dat2[dat2 == -333333333] <- NA
-    dat2[dat2 == -444444444] <- NA
-    dat2[dat2 == -555555555] <- NA
-    dat2[dat2 == -666666666] <- NA
-    dat2[dat2 == -777777777] <- NA
-    dat2[dat2 == -888888888] <- NA
-    dat2[dat2 == -999999999] <- NA
+    dat2 <- replace_census_missing(dat2)
 
     if ("POPGROUP" %in% names(dat2)) {
       dat2 <- dat2 %>%

@@ -1426,11 +1426,7 @@ get_estimates <- function(
         }
       }
 
-      if (!is.null(names(variables))) {
-        for (i in 1:length(variables)) {
-          dat2[dat2 == variables[i]] <- names(variables)[i]
-        }
-      }
+      dat2 <- recode_named_variables(dat2, variables)
     } else if (output == "wide") {
       dat <- dat[!duplicated(names(dat), fromLast = TRUE)]
 
@@ -1525,15 +1521,7 @@ get_estimates <- function(
         }
       }
 
-      if (!is.null(names(variables))) {
-        for (i in 1:length(variables)) {
-          names(dat2) <- str_replace(
-            names(dat2),
-            variables[i],
-            names(variables)[i]
-          )
-        }
-      }
+      dat2 <- recode_wide_variable_names(dat2, variables)
 
       if ("GEONAME" %in% names(dat2)) {
         dat2 <- dat2 %>%
