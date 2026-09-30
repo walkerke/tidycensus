@@ -162,8 +162,9 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     # No ZCTA geometry for 2011, so use 2010 instead
     if (year == 2011) year <- 2010
 
-    # Similarly, we don't have cb ZCTAs for 2021 yet, so use 2020 instead
-    if (year == 2021 && cb) {
+    # Cartographic boundary ZCTA files are only published for decennial years
+    # (ZCTAs are redrawn with each Census), so use 2020 for later years
+    if (year > 2020 && cb) {
       year <- 2020
     }
 

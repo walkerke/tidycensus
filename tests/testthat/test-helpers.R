@@ -170,3 +170,19 @@ test_that("ZCTAs by state error clearly for 2020 and later (#564)", {
     "does not support requesting ZCTAs by state"
   )
 })
+
+test_that("cartographic boundary ZCTAs use 2020 shapes for later years", {
+  captured_year <- NULL
+  local_mocked_bindings(
+    zctas = function(..., year) {
+      captured_year <<- year
+      sf::st_sf(GEOID20 = "02809", geometry = sf::st_sfc(sf::st_point(c(0, 0))))
+    }
+  )
+
+  use_tigris(geography = "zcta", year = 2024)
+  expect_equal(captured_year, 2020)
+
+  use_tigris(geography = "zcta", year = 2024, cb = FALSE)
+  expect_equal(captured_year, 2024)
+})
