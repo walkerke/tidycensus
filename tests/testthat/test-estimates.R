@@ -106,3 +106,14 @@ test_that("Puerto Rico municipios error clearly for unpublished data (#581)", {
     "Vintage 2025 and later"
   )
 })
+
+test_that("PEP names convert Latin-1 to UTF-8 and leave UTF-8 alone", {
+  latin1 <- iconv("Doña Ana County", from = "UTF-8", to = "latin1")
+  Encoding(latin1) <- "unknown"
+  utf8 <- "Mayagüez, PR"
+
+  expect_equal(
+    tidycensus:::fix_pep_encoding(c(latin1, utf8, "Travis County")),
+    c("Doña Ana County", "Mayagüez, PR", "Travis County")
+  )
+})

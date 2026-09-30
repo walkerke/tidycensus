@@ -35,6 +35,14 @@ read_pr_municipios <- function(vintage) {
   )
 }
 
+# Most PEP flat files are Latin-1 encoded (e.g. "Do\u00f1a Ana County"), but some
+# (like the Puerto Rico files) are UTF-8; convert only the invalid strings
+fix_pep_encoding <- function(x) {
+  bad <- !validUTF8(x)
+  x[bad] <- iconv(x[bad], from = "latin1", to = "UTF-8")
+  x
+}
+
 #' Get data from the US Census Bureau Population Estimates Program
 #'
 #' The \code{get_estimates()} function requests data from the US Census Bureau's Population Estimates Program (PEP) datasets.  The PEP datasets are defined by the US Census Bureau as follows: "The Census Bureau's Population Estimates Program (PEP) produces estimates of the population for the United States, its states, counties, cities, and towns, as well as for the Commonwealth of Puerto Rico and its municipios. Demographic components of population change (births, deaths, and migration) are produced at the national, state, and county levels of geography. Additionally, housing unit estimates are produced for the nation, states, and counties.  PEP annually utilizes current data on births, deaths, and migration to calculate population change since the most recent decennial census and produce a time series of estimates of population, demographic components of change, and housing units. The annual time series of estimates begins with the most recent decennial census data and extends to the vintage year. As each vintage of estimates includes all years since the most recent decennial census, the latest vintage of data available supersedes all previously-produced estimates for those dates."
@@ -630,6 +638,8 @@ get_estimates <- function(
           "The only available geographies for population characteristics years 2020 and later are 'state', 'county', 'cbsa'/'metropolitan statistical area/micropolitan statistical area', and 'combined statistical area'."
         )
       }
+
+      parsed$NAME <- fix_pep_encoding(parsed$NAME)
 
       # Handle timeseries
       if (!time_series) {
@@ -1314,6 +1324,7 @@ get_estimates <- function(
       base$year <- as.integer(base$year)
       year_to_keep <- as.integer(year)
       base$GEOID <- as.character(base$GEOID)
+      base$NAME <- fix_pep_encoding(base$NAME)
 
       # Use `variables = 'all'`
       if (all(variables == "all")) {
