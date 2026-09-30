@@ -767,6 +767,19 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
   var_vector <- unlist(strsplit(vars2, split = ","))
 
+  # Median year structure built comes back from the API as coded values rather
+  # than years in some ACS releases (2014-2018 through 2017-2021) (#526)
+  year_built_cols <- grep("^B2503[57]_[0-9]{3}E$", names(dat), value = TRUE)
+
+  if (length(year_built_cols) > 0 &&
+      any(suppressWarnings(as.numeric(unlist(dat[year_built_cols]))) %in% c(0, 18))) {
+    rlang::warn(
+      'Median year structure built (tables B25035 / B25037) is returned with coded values for some ACS releases: 0 means "1939 or earlier" and 18 means "2014 or later". Treat these as top / bottom-coded values rather than years.',
+      .frequency = "once",
+      .frequency_id = "acs_year_built"
+    )
+  }
+
   if (output == "tidy") {
 
     sub <- dat[c("GEOID", "NAME", var_vector)]
