@@ -186,3 +186,29 @@ test_that("cartographic boundary ZCTAs use 2020 shapes for later years", {
   use_tigris(geography = "zcta", year = 2024, cb = FALSE)
   expect_equal(captured_year, 2024)
 })
+
+test_that("coded median year built values give a warning (#526)", {
+  mock_acs <- function(values) {
+    function(...) {
+      data.frame(
+        GEOID = c("48001950100", "48001950200"),
+        NAME = c("Tract 9501", "Tract 9502"),
+        B25035_001E = values,
+        B25035_001M = c(5, 5)
+      )
+    }
+  }
+
+  local_mocked_bindings(load_data_acs = mock_acs(c(0, 1985)))
+  expect_warning(
+    suppressMessages(get_acs(geography = "tract", variables = c(yr_built = "B25035_001"),
+                             state = "TX", year = 2020, key = "test-key")),
+    "0 means \"1939 or earlier\""
+  )
+
+  local_mocked_bindings(load_data_acs = mock_acs(c(1938, 1985)))
+  expect_no_warning(
+    suppressMessages(get_acs(geography = "tract", variables = "B25035_001",
+                             state = "TX", year = 2024, key = "test-key"))
+  )
+})
