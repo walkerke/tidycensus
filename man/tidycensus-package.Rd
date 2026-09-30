@@ -21,6 +21,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Kyle Walker \email{kyle@walker-data.com}
   \item Matt Herman \email{mfherman@gmail.com}
 }
 
