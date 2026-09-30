@@ -136,11 +136,11 @@ get_estimates <- function(
   show_call = FALSE,
   ...
 ) {
-  if (missing(vintage) && year > 2020) {
-    rlang::warn(c(
-      "For post-2020 Census estimates, `get_estimates()` now uses the `vintage` argument to specify the PEP vintage, and the `year` argument to isolate a year within that vintage.",
-      "!" = "This may be a breaking change in your code",
-      "!" = "Omitting `vintage` may lead to incorrect or unexpected results."
+  if (missing(vintage) && !missing(year) && year > 2020) {
+    rlang::warn(sprintf(
+      "Returning %s estimates from the Vintage %s Population Estimates. Specify `vintage` to use a different vintage.",
+      year,
+      vintage
     ))
   }
 
