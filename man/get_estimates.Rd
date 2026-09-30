@@ -36,6 +36,7 @@ be used an alias for \code{"metropolitan statistical area/micropolitan statistic
 
 \item{product}{The data product (optional). \code{"population"}, \code{"components"}
                \code{"housing"}, and \code{"characteristics"} are supported.
+               \code{"intercensal"} returns intercensal estimates; see Details.
 
                For 2020 and later, available products vary by geography.
                \code{"population"} is supported for total population
@@ -54,7 +55,8 @@ combinations of these breakdowns.  For years 2020 and later, \code{"AGE"} is als
 \code{product = "characteristics"}. Defaults to FALSE.}
 
 \item{vintage}{It is recommended to use the most recent vintage
-available for a given decennial series (so, year = 2019 for the 2010s, and year = 2025 for the 2020s).}
+available for a given decennial series (so, year = 2019 for the 2010s, and year = 2025 for the 2020s).
+For intercensal estimates, use the end year of the series (2010 or 2020).}
 
 \item{year}{The data year (defaults to the vintage requested). Use \code{time_series = TRUE} to access time-series estimates.}
 
@@ -123,6 +125,8 @@ The \code{get_estimates()} function requests data from the US Census Bureau's Po
 \code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Population Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
 
 Puerto Rico municipio estimates (Vintage 2025 and later) are returned for \code{geography = "county"} when \code{state = "PR"} is specified, for both \code{product = "population"} and \code{product = "characteristics"}.  The Census Bureau publishes Puerto Rico characteristics by age and sex only, so the \code{"RACE"} and \code{"HISP"} breakdowns are not available.  Puerto Rico metropolitan and micropolitan areas are included in \code{"cbsa"} and \code{"combined statistical area"} population estimates for Vintage 2025 and later.
+
+Intercensal estimates, which revise the estimates between two decennial Censuses to be consistent with both, are available with \code{product = "intercensal"}.  Use \code{vintage = 2020} for the 2010-2020 intercensal estimates and \code{vintage = 2010} for 2000-2010.  Population totals (\code{ESTIMATESBASE}, \code{POPESTIMATE}, and the decennial Census count \code{CENSUSPOP}) are available for states, counties, and places; supply a \code{breakdown} to get county characteristics by age, sex, race, and Hispanic origin.  If \code{year} is not specified, the full intercensal series is returned.
 
 As of April 2022, variables available for 2020 and later datasets are as follows: ESTIMATESBASE, POPESTIMATE, NPOPCHG, BIRTHS, DEATHS, NATURALCHG, INTERNATIONALMIG, DOMESTICMIG, NETMIG, RESIDUAL, GQESTIMATESBASE, GQESTIMATES, RBIRTH, RDEATH, RNATURALCHG, RINTERNATIONALMIG, RDOMESTICMIG, and RNETMIG.
 }

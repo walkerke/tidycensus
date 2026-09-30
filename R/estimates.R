@@ -43,6 +43,78 @@ fix_pep_encoding <- function(x) {
   x
 }
 
+# Reshape a PEP county characteristics ("alldata") file to one row per county,
+# year code, age group, sex, Hispanic origin, and race
+parse_pep_county_char <- function(raw) {
+  total_vals <- c(
+    "TOT",
+    "WA",
+    "BA",
+    "IA",
+    "AA",
+    "NA",
+    "TOM",
+    "WAC",
+    "BAC",
+    "IAC",
+    "AAC",
+    "NAC"
+  )
+
+  raw %>%
+    tidyr::pivot_longer(
+      TOT_POP:dplyr::last_col(),
+      names_to = c("category", "SEX"),
+      values_to = "value",
+      names_sep = "_"
+    ) %>%
+    dplyr::mutate(
+      category = ifelse(
+        category %in% total_vals,
+        paste0("BH", category),
+        category
+      ),
+      category = stringr::str_replace(category, "H", "H_")
+    ) %>%
+    tidyr::separate_wider_delim(
+      category,
+      delim = "_",
+      names = c("HISP", "RACE")
+    ) %>%
+    dplyr::filter(SEX != "POP") %>%
+    dplyr::mutate(RACE = ifelse(RACE == "", "TOT", RACE)) %>%
+    dplyr::mutate(
+      HISP = dplyr::case_when(
+        HISP == "BH" ~ 0L,
+        HISP == "H" ~ 2L,
+        HISP == "NH" ~ 1L
+      ),
+      RACE = dplyr::case_when(
+        RACE == "TOT" ~ 0L,
+        RACE == "WA" ~ 1L,
+        RACE == "BA" ~ 2L,
+        RACE == "IA" ~ 3L,
+        RACE == "AA" ~ 4L,
+        RACE == "NA" ~ 5L,
+        RACE == "TOM" ~ 6L,
+        RACE == "WAC" ~ 7L,
+        RACE == "BAC" ~ 8L,
+        RACE == "IAC" ~ 9L,
+        RACE == "AAC" ~ 10L,
+        RACE == "NAC" ~ 11L,
+      ),
+      SEX = dplyr::case_when(
+        SEX == "MALE" ~ 1L,
+        SEX == "FEMALE" ~ 2L
+      ),
+      GEOID = paste0(STATE, COUNTY),
+      NAME = paste0(CTYNAME, ", ", STNAME)
+    ) %>%
+    dplyr::rename(AGEGROUP = AGEGRP) %>%
+    dplyr::select(GEOID, NAME, YEAR:value) %>%
+    dplyr::rename(year = YEAR)
+}
+
 #' Get data from the US Census Bureau Population Estimates Program
 #'
 #' The \code{get_estimates()} function requests data from the US Census Bureau's Population Estimates Program (PEP) datasets.  The PEP datasets are defined by the US Census Bureau as follows: "The Census Bureau's Population Estimates Program (PEP) produces estimates of the population for the United States, its states, counties, cities, and towns, as well as for the Commonwealth of Puerto Rico and its municipios. Demographic components of population change (births, deaths, and migration) are produced at the national, state, and county levels of geography. Additionally, housing unit estimates are produced for the nation, states, and counties.  PEP annually utilizes current data on births, deaths, and migration to calculate population change since the most recent decennial census and produce a time series of estimates of population, demographic components of change, and housing units. The annual time series of estimates begins with the most recent decennial census data and extends to the vintage year. As each vintage of estimates includes all years since the most recent decennial census, the latest vintage of data available supersedes all previously-produced estimates for those dates."
@@ -51,6 +123,8 @@ fix_pep_encoding <- function(x) {
 #'
 #' Puerto Rico municipio estimates (Vintage 2025 and later) are returned for \code{geography = "county"} when \code{state = "PR"} is specified, for both \code{product = "population"} and \code{product = "characteristics"}.  The Census Bureau publishes Puerto Rico characteristics by age and sex only, so the \code{"RACE"} and \code{"HISP"} breakdowns are not available.  Puerto Rico metropolitan and micropolitan areas are included in \code{"cbsa"} and \code{"combined statistical area"} population estimates for Vintage 2025 and later.
 #'
+#' Intercensal estimates, which revise the estimates between two decennial Censuses to be consistent with both, are available with \code{product = "intercensal"}.  Use \code{vintage = 2020} for the 2010-2020 intercensal estimates and \code{vintage = 2010} for 2000-2010.  Population totals (\code{ESTIMATESBASE}, \code{POPESTIMATE}, and the decennial Census count \code{CENSUSPOP}) are available for states, counties, and places; supply a \code{breakdown} to get county characteristics by age, sex, race, and Hispanic origin.  If \code{year} is not specified, the full intercensal series is returned.
+#'
 #' As of April 2022, variables available for 2020 and later datasets are as follows: ESTIMATESBASE, POPESTIMATE, NPOPCHG, BIRTHS, DEATHS, NATURALCHG, INTERNATIONALMIG, DOMESTICMIG, NETMIG, RESIDUAL, GQESTIMATESBASE, GQESTIMATES, RBIRTH, RDEATH, RNATURALCHG, RINTERNATIONALMIG, RDOMESTICMIG, and RNETMIG.
 #'
 #' @param geography The geography of your data. Available geographies for the most recent data vintage are listed
@@ -58,6 +132,7 @@ fix_pep_encoding <- function(x) {
 #'                  be used an alias for \code{"metropolitan statistical area/micropolitan statistical area"}.
 #' @param product The data product (optional). \code{"population"}, \code{"components"}
 #'                \code{"housing"}, and \code{"characteristics"} are supported.
+#'                \code{"intercensal"} returns intercensal estimates; see Details.
 #'
 #'                For 2020 and later, available products vary by geography.
 #'                \code{"population"} is supported for total population
@@ -74,6 +149,7 @@ fix_pep_encoding <- function(x) {
 #'                         \code{product = "characteristics"}. Defaults to FALSE.
 #' @param vintage It is recommended to use the most recent vintage
 #'             available for a given decennial series (so, year = 2019 for the 2010s, and year = 2025 for the 2020s).
+#'             For intercensal estimates, use the end year of the series (2010 or 2020).
 #' @param year The data year (defaults to the vintage requested). Use \code{time_series = TRUE} to access time-series estimates.
 #' @param state The state for which you are requesting data. State
 #'              names, postal codes, and FIPS codes are accepted.
@@ -158,6 +234,8 @@ get_estimates <- function(
   cb = TRUE,
   ...
 ) {
+  intercensal <- identical(product, "intercensal")
+
   if (missing(vintage) && !missing(year) && year > 2020) {
     rlang::warn(sprintf(
       "Returning %s estimates from the Vintage %s Population Estimates. Specify `vintage` to use a different vintage.",
@@ -166,7 +244,7 @@ get_estimates <- function(
     ))
   }
 
-  if (year > 2020) {
+  if (year > 2020 && !intercensal) {
     rlang::inform(sprintf("Using the Vintage %s Population Estimates", vintage))
   }
 
@@ -179,7 +257,7 @@ get_estimates <- function(
     )
   }
 
-  if (year < 2015) {
+  if (year < 2015 && !intercensal) {
     stop(
       "The Population Estimates API is not available in tidycensus for years prior to 2015. Consider using `time_series = TRUE` or the censusapi package for earlier estimates."
     )
@@ -188,15 +266,133 @@ get_estimates <- function(
   ###### New logic for 2020 and later
   # Adjust as needed over the next few months, and try to keep consistent with
   # previous years that are on the API
-  if (year >= 2020) {
-    if (!is.null(product) && product == "characteristics") {
+  # Intercensal estimates (#629): `vintage` is the end year of the series
+  if (intercensal) {
+    if (!vintage %in% c(2010, 2020)) {
+      rlang::abort(
+        "Intercensal estimates are available for `vintage = 2020` (2010-2020) and `vintage = 2010` (2000-2010)."
+      )
+    }
+
+    # Return the full series unless a specific year is requested
+    if (missing(year)) {
+      time_series <- TRUE
+    } else if (!year %in% (vintage - 10):vintage) {
+      rlang::abort(sprintf(
+        "`year` must be between %s and %s for the %s-%s intercensal estimates.",
+        vintage - 10, vintage, vintage - 10, vintage
+      ))
+    }
+
+    rlang::inform(sprintf(
+      "Using the %s-%s intercensal population estimates",
+      vintage - 10,
+      vintage
+    ))
+  }
+
+  if (year >= 2020 || intercensal) {
+    if (
+      !is.null(product) &&
+        (product == "characteristics" || (intercensal && !is.null(breakdown)))
+    ) {
       if (!geography %in% c("state", "county", "cbsa", "metropolitan statistical area/micropolitan statistical area", "combined statistical area")) {
         rlang::abort(
           "The only supported geographies at this time for population characteristics 2020 and later are 'state', 'county', 'cbsa'/'metropolitan statistical area/micropolitan statistical area', and 'combined statistical area'."
         )
       }
 
-      if (geography == "state") {
+      if (intercensal) {
+        if (geography != "county") {
+          rlang::abort(
+            "Intercensal population characteristics are available for counties."
+          )
+        }
+
+        if (vintage == 2020) {
+          file_base <- "2010-2020/intercensal/county/asrh/cc-est2020int-alldata"
+        } else {
+          file_base <- "2000-2010/intercensal/county/co-est00int-alldata"
+        }
+
+        read_intercensal_county <- function(suffix) {
+          read_estimates_csv(
+            paste0("https://www2.census.gov/programs-surveys/popest/datasets/", file_base, suffix, ".csv"),
+            paste0("ftp://ftp2.census.gov/programs-surveys/popest/datasets/", file_base, suffix, ".csv"),
+            "STATE"
+          ) %>%
+            dplyr::mutate(
+              STATE = stringr::str_pad(STATE, 2, pad = "0"),
+              COUNTY = stringr::str_pad(COUNTY, 3, pad = "0")
+            )
+        }
+
+        if (!is.null(state)) {
+          state <- validate_state(state)
+          county_raw <- read_intercensal_county(paste0("-", state))
+        } else if (vintage == 2020) {
+          county_raw <- read_intercensal_county("")
+        } else {
+          # No all-counties file for 2000-2010, so combine the state files
+          county_raw <- purrr::map_dfr(
+            unique(fips_codes$state_code)[1:51],
+            ~ read_intercensal_county(paste0("-", .x))
+          )
+        }
+
+        if (!is.null(county)) {
+          county <- purrr::map_chr(county, function(x) {
+            validate_county(state, x)
+          })
+          county_raw <- dplyr::filter(county_raw, COUNTY %in% county)
+        }
+
+        parsed <- parse_pep_county_char(county_raw)
+
+        # Keep the July 1 estimates; drop the estimates base and Census counts
+        if (vintage == 2020) {
+          parsed <- parsed %>%
+            dplyr::filter(year %in% 2:11) %>%
+            dplyr::mutate(
+              year = dplyr::case_when(
+                year == 2 ~ 2010L,
+                year == 3 ~ 2011L,
+                year == 4 ~ 2012L,
+                year == 5 ~ 2013L,
+                year == 6 ~ 2014L,
+                year == 7 ~ 2015L,
+                year == 8 ~ 2016L,
+                year == 9 ~ 2017L,
+                year == 10 ~ 2018L,
+                year == 11 ~ 2019L
+              )
+            )
+        } else {
+          # The 2000-2010 file codes all ages as 99 and splits age 0 from 1-4
+          parsed <- parsed %>%
+            dplyr::filter(year %in% c(2:11, 13)) %>%
+            dplyr::mutate(
+              year = dplyr::case_when(
+                year == 2 ~ 2000L,
+                year == 3 ~ 2001L,
+                year == 4 ~ 2002L,
+                year == 5 ~ 2003L,
+                year == 6 ~ 2004L,
+                year == 7 ~ 2005L,
+                year == 8 ~ 2006L,
+                year == 9 ~ 2007L,
+                year == 10 ~ 2008L,
+                year == 11 ~ 2009L,
+                year == 13 ~ 2010L
+              ),
+              AGEGROUP = dplyr::case_when(
+                AGEGROUP == 99 ~ 0,
+                AGEGROUP == 0 ~ 1,
+                TRUE ~ AGEGROUP
+              )
+            )
+        }
+      } else if (geography == "state") {
         state_raw <- suppressWarnings(try(
           suppressMessages(readr::read_csv(sprintf(
             "https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/state/asrh/sc-est%s-alldata6.csv",
@@ -376,73 +572,7 @@ get_estimates <- function(
           county_raw <- dplyr::filter(county_raw, COUNTY %in% county)
         }
 
-        total_vals <- c(
-          "TOT",
-          "WA",
-          "BA",
-          "IA",
-          "AA",
-          "NA",
-          "TOM",
-          "WAC",
-          "BAC",
-          "IAC",
-          "AAC",
-          "NAC"
-        )
-
-        parsed <- county_raw %>%
-          tidyr::pivot_longer(
-            TOT_POP:HNAC_FEMALE,
-            names_to = c("category", "SEX"),
-            values_to = "value",
-            names_sep = "_"
-          ) %>%
-          dplyr::mutate(
-            category = ifelse(
-              category %in% total_vals,
-              paste0("BH", category),
-              category
-            ),
-            category = stringr::str_replace(category, "H", "H_")
-          ) %>%
-          tidyr::separate_wider_delim(
-            category,
-            delim = "_",
-            names = c("HISP", "RACE")
-          ) %>%
-          dplyr::filter(SEX != "POP") %>%
-          dplyr::mutate(RACE = ifelse(RACE == "", "TOT", RACE)) %>%
-          dplyr::mutate(
-            HISP = dplyr::case_when(
-              HISP == "BH" ~ 0L,
-              HISP == "H" ~ 2L,
-              HISP == "NH" ~ 1L
-            ),
-            RACE = dplyr::case_when(
-              RACE == "TOT" ~ 0L,
-              RACE == "WA" ~ 1L,
-              RACE == "BA" ~ 2L,
-              RACE == "IA" ~ 3L,
-              RACE == "AA" ~ 4L,
-              RACE == "NA" ~ 5L,
-              RACE == "TOM" ~ 6L,
-              RACE == "WAC" ~ 7L,
-              RACE == "BAC" ~ 8L,
-              RACE == "IAC" ~ 9L,
-              RACE == "AAC" ~ 10L,
-              RACE == "NAC" ~ 11L,
-            ),
-            SEX = dplyr::case_when(
-              SEX == "MALE" ~ 1L,
-              SEX == "FEMALE" ~ 2L
-            ),
-            GEOID = paste0(STATE, COUNTY),
-            NAME = paste0(CTYNAME, ", ", STNAME)
-          ) %>%
-          dplyr::rename(AGEGROUP = AGEGRP) %>%
-          dplyr::select(GEOID, NAME, YEAR:value) %>%
-          dplyr::rename(year = YEAR) %>%
+        parsed <- parse_pep_county_char(county_raw) %>%
           dplyr::filter(year != 1) %>%
           dplyr::mutate(
             year = dplyr::case_when(
@@ -758,10 +888,15 @@ get_estimates <- function(
         return(parsed)
       }
     } else if (
-      product == "population" || product == "components" || is.null(product)
+      is.null(product) ||
+        product %in% c("population", "components", "intercensal")
     ) {
       if (!is.null(product)) {
-        if (product == "population") {
+        if (intercensal) {
+          if (is.null(variables)) {
+            variables <- "POPESTIMATE"
+          }
+        } else if (product == "population") {
           variables <- if (geography == "place") {
             "POPESTIMATE"
           } else {
@@ -777,7 +912,65 @@ get_estimates <- function(
       }
 
       # Get the data into a reasonable first format that is consistent for downstream use
-      if (geography == "us") {
+      if (intercensal) {
+        if (!geography %in% c("state", "county", "place")) {
+          rlang::abort(
+            "Intercensal population estimates are available for states, counties, and places."
+          )
+        }
+
+        if (vintage == 2020) {
+          file_path <- "2010-2020/intercensal/cities/sub-est2020int.csv"
+        } else {
+          file_path <- "2000-2010/intercensal/cities/sub-est00int.csv"
+        }
+
+        raw <- read_estimates_csv(
+          paste0("https://www2.census.gov/programs-surveys/popest/datasets/", file_path),
+          paste0("ftp://ftp2.census.gov/programs-surveys/popest/datasets/", file_path),
+          "SUMLEV"
+        )
+
+        sumlev <- c(state = "040", county = "050", place = "162")[[geography]]
+
+        raw <- raw %>%
+          dplyr::filter(SUMLEV == sumlev) %>%
+          dplyr::mutate(STATE = stringr::str_pad(STATE, 2, pad = "0"))
+
+        if (geography == "state") {
+          raw <- dplyr::mutate(raw, GEOID = STATE)
+        } else if (geography == "county") {
+          raw <- dplyr::mutate(
+            raw,
+            GEOID = paste0(STATE, stringr::str_pad(COUNTY, 3, pad = "0")),
+            NAME = paste0(NAME, ", ", STNAME)
+          )
+        } else {
+          raw <- dplyr::mutate(
+            raw,
+            GEOID = paste0(STATE, stringr::str_pad(PLACE, 5, pad = "0")),
+            NAME = paste0(NAME, ", ", STNAME)
+          )
+        }
+
+        # CENSUS2020POP -> CENSUSPOP2020 so the year splits off like the others
+        base <- raw %>%
+          dplyr::select(
+            GEOID,
+            NAME,
+            dplyr::matches("^(ESTIMATESBASE|POPESTIMATE|CENSUS)")
+          ) %>%
+          dplyr::rename_with(
+            ~ sub("^CENSUS(\\d{4})POP$", "CENSUSPOP\\1", .x),
+            dplyr::starts_with("CENSUS")
+          ) %>%
+          tidyr::pivot_longer(
+            -c(GEOID, NAME),
+            names_to = c("variable", "year"),
+            names_pattern = "(\\D+)(\\d+)",
+            values_to = "value"
+          )
+      } else if (geography == "us") {
         if (vintage == 2021) {
           raw <- suppressWarnings(try(
             suppressMessages(readr::read_csv(sprintf(
@@ -1804,7 +1997,7 @@ get_estimates <- function(
     } else {
       geom <- try(suppressMessages(use_tigris(
         geography = geography,
-        year = year,
+        year = if (intercensal) vintage else year,
         state = state,
         county = county,
         cb = cb,
