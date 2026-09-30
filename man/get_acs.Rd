@@ -22,6 +22,7 @@ get_acs(
   moe_level = 90,
   survey = "acs5",
   show_call = FALSE,
+  drop_empty = FALSE,
   ...
 )
 }
@@ -89,6 +90,12 @@ expressed as "acs1", "acs3", and "acs5". The default selection is "acs5."}
 useful in debugging and determining if error messages returned are due to
 tidycensus or the Census API. Copy to the API call into a browser and see
 what is returned by the API directly. Defaults to FALSE.}
+
+\item{drop_empty}{if TRUE and \code{geometry = TRUE}, drops rows with empty geometries.
+These are typically water-only areas, such as offshore block groups,
+that are not in the cartographic boundary files used by default; use
+\code{cb = FALSE} to return TIGER/Line geometries for these areas instead.
+Defaults to FALSE.}
 
 \item{...}{Other keyword arguments}
 }

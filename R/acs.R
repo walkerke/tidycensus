@@ -47,6 +47,11 @@
 #'   useful in debugging and determining if error messages returned are due to
 #'   tidycensus or the Census API. Copy to the API call into a browser and see
 #'   what is returned by the API directly. Defaults to FALSE.
+#' @param drop_empty if TRUE and \code{geometry = TRUE}, drops rows with empty geometries.
+#'                   These are typically water-only areas, such as offshore block groups,
+#'                   that are not in the cartographic boundary files used by default; use
+#'                   \code{cb = FALSE} to return TIGER/Line geometries for these areas instead.
+#'                   Defaults to FALSE.
 #' @param ... Other keyword arguments
 #'
 #' @return A tibble or sf tibble of ACS data
@@ -85,7 +90,8 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                     state = NULL, county = NULL, zcta = NULL,
                     geometry = FALSE, keep_geo_vars = FALSE,
                     shift_geo = FALSE, summary_var = NULL, key = NULL,
-                    moe_level = 90, survey = "acs5", show_call = FALSE, ...) {
+                    moe_level = 90, survey = "acs5", show_call = FALSE,
+                    drop_empty = FALSE, ...) {
 
   if (survey == "acs1") {
     message(sprintf("Getting data from the %s 1-year ACS", year))
@@ -287,6 +293,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                              summary_var = summary_var,
                              geometry = geometry,
                              keep_geo_vars = keep_geo_vars,
+                             drop_empty = drop_empty,
                              shift_geo = FALSE,
                              key = key,
                              moe_level = moe_level,
@@ -317,6 +324,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                              summary_var = summary_var,
                              geometry = geometry,
                              keep_geo_vars = keep_geo_vars,
+                             drop_empty = drop_empty,
                              shift_geo = FALSE,
                              key = key,
                              moe_level = moe_level,
@@ -387,6 +395,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
             summary_var = summary_var,
             geometry = geometry,
             keep_geo_vars = keep_geo_vars,
+            drop_empty = drop_empty,
             shift_geo = FALSE,
             key = key,
             moe_level = moe_level,
@@ -412,6 +421,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               summary_var = summary_var,
               geometry = FALSE,
               keep_geo_vars = keep_geo_vars,
+              drop_empty = drop_empty,
               shift_geo = FALSE,
               key = key,
               moe_level = moe_level,
@@ -462,6 +472,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
             summary_var = summary_var,
             geometry = geometry,
             keep_geo_vars = keep_geo_vars,
+            drop_empty = drop_empty,
             shift_geo = FALSE,
             key = key,
             moe_level = moe_level,
@@ -502,6 +513,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               summary_var = summary_var,
               geometry = geometry,
               keep_geo_vars = keep_geo_vars,
+              drop_empty = drop_empty,
               shift_geo = FALSE,
               key = key,
               moe_level = moe_level,
@@ -535,6 +547,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               summary_var = summary_var,
               geometry = geometry,
               keep_geo_vars = keep_geo_vars,
+              drop_empty = drop_empty,
               shift_geo = FALSE,
               key = key,
               moe_level = moe_level,
@@ -571,6 +584,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
+                drop_empty = drop_empty,
                 shift_geo = FALSE,
                 key = key,
                 moe_level = moe_level,
@@ -602,6 +616,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 summary_var = summary_var,
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
+                drop_empty = drop_empty,
                 shift_geo = FALSE,
                 key = key,
                 moe_level = moe_level,
@@ -632,6 +647,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                            summary_var = summary_var,
                            geometry = geometry,
                            keep_geo_vars = keep_geo_vars,
+                           drop_empty = drop_empty,
                            shift_geo = FALSE,
                            key = key,
                            moe_level = moe_level,
@@ -664,6 +680,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                            summary_var = summary_var,
                            geometry = geometry,
                            keep_geo_vars = keep_geo_vars,
+                           drop_empty = drop_empty,
                            shift_geo = FALSE,
                            key = key,
                            moe_level = moe_level,
@@ -926,6 +943,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     } else {
       out <- right_join(geom, dat2, by = "GEOID") %>%
         st_as_sf()
+    }
+
+    # Rows in the data but not the boundary file (e.g. water-only areas
+    # clipped from cartographic boundary files) have empty geometries (#650)
+    if (drop_empty) {
+      out <- out[!sf::st_is_empty(out), ]
     }
 
     return(out)

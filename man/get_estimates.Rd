@@ -24,6 +24,7 @@ get_estimates(
   shift_geo = FALSE,
   key = NULL,
   show_call = FALSE,
+  drop_empty = FALSE,
   ...
 )
 }
@@ -94,6 +95,12 @@ in your .Renviron with \code{census_api_key("YOUR KEY", install = TRUE)}}
 in debugging and determining if error messages returned are
 due to tidycensus or the Census API. Copy to the API call into
 a browser and see what is returned by the API directly. Defaults to FALSE.}
+
+\item{drop_empty}{if TRUE and \code{geometry = TRUE}, drops rows with empty geometries.
+These are typically water-only areas, such as offshore block groups,
+that are not in the cartographic boundary files used by default; use
+\code{cb = FALSE} to return TIGER/Line geometries for these areas instead.
+Defaults to FALSE.}
 
 \item{...}{other keyword arguments}
 }
