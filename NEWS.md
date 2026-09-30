@@ -1,5 +1,6 @@
 # tidycensus (development version)
 
+* `get_estimates()` now defaults to Vintage 2025 and supports Puerto Rico: municipio population and age / sex characteristics are available with `geography = "county", state = "PR"`, and Puerto Rico metro areas are included in CBSA and CSA population estimates (#581).
 * Various bug fixes and performance improvements (#649, #590, #652).
 
 # tidycensus 1.8

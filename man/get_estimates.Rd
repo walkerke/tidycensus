@@ -13,7 +13,7 @@ get_estimates(
   variables = NULL,
   breakdown = NULL,
   breakdown_labels = FALSE,
-  vintage = 2024,
+  vintage = 2025,
   year = vintage,
   state = NULL,
   county = NULL,
@@ -105,6 +105,8 @@ The \code{get_estimates()} function requests data from the US Census Bureau's Po
 }
 \details{
 \code{get_estimates()} requests data from the Population Estimates API for years 2019 and earlier; however the Population Estimates are no longer supported on the API as of 2020.  For recent years, \code{get_estimates()} reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.
+
+Puerto Rico municipio estimates (Vintage 2025 and later) are returned for \code{geography = "county"} when \code{state = "PR"} is specified, for both \code{product = "population"} and \code{product = "characteristics"}.  The Census Bureau publishes Puerto Rico characteristics by age and sex only, so the \code{"RACE"} and \code{"HISP"} breakdowns are not available.  Puerto Rico metropolitan and micropolitan areas are included in \code{"cbsa"} and \code{"combined statistical area"} population estimates for Vintage 2025 and later.
 
 As of April 2022, variables available for 2020 and later datasets are as follows: ESTIMATESBASE, POPESTIMATE, NPOPCHG, BIRTHS, DEATHS, NATURALCHG, INTERNATIONALMIG, DOMESTICMIG, NETMIG, RESIDUAL, GQESTIMATESBASE, GQESTIMATES, RBIRTH, RDEATH, RNATURALCHG, RINTERNATIONALMIG, RDOMESTICMIG, and RNETMIG.
 }

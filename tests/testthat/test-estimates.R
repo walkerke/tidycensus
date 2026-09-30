@@ -50,3 +50,70 @@ test_that("2025 place population estimates parse from the city totals file", {
   expect_equal(estimates$NAME, "Austin city, Texas")
   expect_equal(estimates$POPESTIMATE, 1001000)
 })
+
+test_that("Puerto Rico municipio characteristics parse from the single-year file (#581)", {
+  skip_on_cran()
+
+  local_mocked_bindings(
+    read_estimates_csv = function(https_url, ftp_url, required_col) {
+      expect_match(https_url, "2020-2025/counties/asrh/cc-est2025-syasex-72[.]csv")
+      expect_match(ftp_url, "2020-2025/counties/asrh/cc-est2025-syasex-72[.]csv")
+
+      expand.grid(YEAR = 1:7, AGE = c(0, 85)) |>
+        transform(
+          SUMLEV = "050",
+          STATE = "72",
+          COUNTY = "001",
+          STNAME = "Puerto Rico Commonwealth",
+          CTYNAME = "Adjuntas Municipio",
+          TOT_POP = 30,
+          TOT_MALE = 10,
+          TOT_FEMALE = 20
+        )
+    }
+  )
+
+  out <- suppressMessages(get_estimates(
+    geography = "county",
+    product = "characteristics",
+    breakdown = c("AGEGROUP", "SEX"),
+    state = "PR",
+    vintage = 2025,
+    time_series = TRUE
+  ))
+
+  expect_equal(unique(out$GEOID), "72001")
+  expect_equal(unique(out$NAME), "Adjuntas Municipio, Puerto Rico")
+  expect_equal(sort(unique(out$year)), 2020:2025)
+  expect_equal(sort(unique(out$AGEGROUP)), c(1, 18))
+  expect_equal(out$value[out$year == 2025 & out$AGEGROUP == 18 & out$SEX == 2], 20)
+})
+
+test_that("Puerto Rico municipios error clearly for unpublished data (#581)", {
+  expect_error(
+    suppressMessages(get_estimates(
+      geography = "county", product = "characteristics", breakdown = "RACE",
+      state = "PR", vintage = 2025
+    )),
+    "Race and Hispanic origin breakdowns are not available"
+  )
+
+  expect_error(
+    suppressMessages(get_estimates(
+      geography = "county", product = "characteristics", breakdown = "SEX",
+      state = "PR", vintage = 2024
+    )),
+    "Vintage 2025 and later"
+  )
+})
+
+test_that("PEP names convert Latin-1 to UTF-8 and leave UTF-8 alone", {
+  latin1 <- iconv("Doña Ana County", from = "UTF-8", to = "latin1")
+  Encoding(latin1) <- "unknown"
+  utf8 <- "Mayagüez, PR"
+
+  expect_equal(
+    tidycensus:::fix_pep_encoding(c(latin1, utf8, "Travis County")),
+    c("Doña Ana County", "Mayagüez, PR", "Travis County")
+  )
+})
