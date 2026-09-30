@@ -1,6 +1,6 @@
 # tidycensus (development version)
 
-* Various bug fixes and performance improvements (#649).
+* Various bug fixes and performance improvements (#649, #590).
 
 # tidycensus 1.8
 

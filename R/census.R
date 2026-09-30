@@ -134,6 +134,17 @@ get_decennial <- function(geography,
          call. = FALSE)
   }
 
+  if (any(is.na(variables) | variables == "")) {
+    stop("One or more requested variables is empty or missing; please check the `variables` argument.",
+         call. = FALSE)
+  }
+
+  if (any(variables != toupper(variables))) {
+    message(sprintf("Converting variable IDs to uppercase: %s",
+                    paste(variables[variables != toupper(variables)], collapse = ", ")))
+    variables <- toupper(variables)
+  }
+
   if (length(table) > 1) {
     stop("Only one table may be requested per call.", call. = FALSE)
   }

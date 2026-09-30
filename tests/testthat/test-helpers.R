@@ -61,3 +61,34 @@ test_that("variables_from_table_acs drops comparison profile significance column
   expect_equal(as.vector(vars), c("CP02_2023_001", "CP02_2023_001P"))
   expect_equal(attr(vars, "census_group"), "CP02")
 })
+
+test_that("empty or missing variable IDs error clearly (#590)", {
+  expect_error(
+    get_acs(geography = "county", variables = c(income = "B19013_001", poverty = ""),
+            state = "VT", key = "test-key"),
+    "empty or missing"
+  )
+
+  expect_error(
+    get_decennial(geography = "county", variables = c("P1_001N", NA),
+                  state = "VT", year = 2020, key = "test-key"),
+    "empty or missing"
+  )
+})
+
+test_that("lowercase variable IDs are converted to uppercase with a message", {
+  local_mocked_bindings(
+    load_data_acs = function(geography, formatted_variables, ...) {
+      stop(formatted_variables)
+    }
+  )
+
+  expect_message(
+    expect_error(
+      get_acs(geography = "county", variables = c(income = "b19013_001"),
+              state = "VT", year = 2024, key = "test-key"),
+      "B19013_001E"
+    ),
+    "Converting variable IDs to uppercase: b19013_001"
+  )
+})
