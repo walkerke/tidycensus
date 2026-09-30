@@ -110,6 +110,11 @@ fix_pep_encoding <- function(x) {
 #'                   that are not in the cartographic boundary files used by default; use
 #'                   \code{cb = FALSE} to return TIGER/Line geometries for these areas instead.
 #'                   Defaults to FALSE.
+#' @param cb if TRUE (the default), uses the Census Bureau's cartographic boundary files
+#'   for feature geometry when \code{geometry = TRUE}. These are generalized and clipped to
+#'   the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
+#'   area. Note that tigris functions default to \code{cb = FALSE}. TIGER/Line files are
+#'   always used for 2011 and 2012, when cartographic boundary files are not available.
 #' @param ... other keyword arguments
 #'
 #' @return A tibble, or sf tibble, of population estimates data
@@ -148,6 +153,7 @@ get_estimates <- function(
   key = NULL,
   show_call = FALSE,
   drop_empty = FALSE,
+  cb = TRUE,
   ...
 ) {
   if (missing(vintage) && !missing(year) && year > 2020) {
@@ -1469,6 +1475,7 @@ get_estimates <- function(
                   geometry = geometry,
                   keep_geo_vars = keep_geo_vars,
                   drop_empty = drop_empty,
+                  cb = cb,
                   shift_geo = shift_geo,
                   key = key,
                   show_call = show_call
@@ -1503,6 +1510,7 @@ get_estimates <- function(
                   geometry = geometry,
                   keep_geo_vars = keep_geo_vars,
                   drop_empty = drop_empty,
+                  cb = cb,
                   shift_geo = shift_geo,
                   key = key,
                   show_call = show_call
@@ -1797,6 +1805,7 @@ get_estimates <- function(
         year = year,
         state = state,
         county = county,
+        cb = cb,
         ...
       )))
 

@@ -21,9 +21,9 @@ load_variables(
 }
 \arguments{
 \item{year}{The year for which you are requesting variables. Either the year
-or endyear of the decennial Census or ACS sample. 5-year ACS data is
-available from 2009 through 2020. 1-year ACS data is available from 2005
-through 2021, with the exception of 2020.}
+of the decennial Census or the year / endyear of the ACS sample. 5-year ACS
+data are available from 2009, and 1-year ACS data from 2005, with the
+exception of 2020.}
 
 \item{dataset}{The dataset name as used on the Census website.  See the Details in this documentation for a full list of dataset names.}
 
@@ -42,19 +42,11 @@ Finding the right variables to use with \code{get_decennial()} or \code{get_acs(
 \details{
 \code{load_variables()} returns three columns by default: \code{name}, which is the Census ID code to be supplied to the \code{variables} parameter in \code{get_decennial()} or \code{get_acs()}; \code{label}, which is a detailed description of the variable; and \code{concept}, which provides information about the table that a given variable belongs to.  For 5-year ACS detailed tables datasets, a fourth column, \code{geography}, tells you the smallest geography at which a given variable is available.
 
-Datasets available are as follows: "sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp",
-"dhca", "ddhca", "ddhcb", "sdhc", "as", "gu", "mp", "vi", "acsse",
-"dpas", "dpgu", "dpmp", "dpvi",
-"dhcvi", "dhcgu", "dhcvi", "dhcas",
-"acs1", "acs3", "acs5", "acs1/profile",
-"acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject",
-"acs5/subject", "acs1/cprofile", "acs5/cprofile",
-"sf2profile", "sf3profile",
-"sf4profile", "aian", "aianprofile",
-"cd110h", "cd110s", "cd110hprofile", "cd110sprofile", "sldh",
-"slds", "sldhprofile", "sldsprofile", "cqr",
-"cd113", "cd113profile", "cd115", "cd115profile", "cd116", "cd118", and
-"plnat".
+Datasets are named as they are in the Census API; see \url{https://api.census.gov/data.html} for a description of each dataset by year.
+
+For the American Community Survey, use \code{"acs1"}, \code{"acs3"}, or \code{"acs5"} for the Detailed Tables. Add \code{"/profile"} for the Data Profile (e.g. \code{"acs5/profile"}), \code{"/subject"} for the Subject Tables, or \code{"/cprofile"} for the Comparison Profile (\code{"acs1/cprofile"} and \code{"acs5/cprofile"}). \code{"acsse"} is the ACS 1-year Supplemental Estimates.
+
+For the decennial Census, use the name of a summary file, as supplied to the \code{sumfile} argument of \code{get_decennial()}. Run \code{summary_files(year)} to see the summary files available for 2000, 2010, or 2020. Common examples are \code{"pl"} (Redistricting Data), \code{"dhc"} (Demographic and Housing Characteristics, 2020), \code{"dp"} (Demographic Profile, 2020), and \code{"sf1"} (Summary File 1, 2000 and 2010).
 }
 \examples{
 \dontrun{

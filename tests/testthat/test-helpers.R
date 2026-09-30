@@ -139,3 +139,34 @@ test_that("drop_empty removes rows missing from the boundary file (#650)", {
   dropped <- suppressMessages(do.call(get_decennial, c(args, drop_empty = TRUE)))
   expect_equal(dropped$GEOID, "22071001701")
 })
+
+test_that("cb is passed to use_tigris() (#604)", {
+  skip_on_cran()
+  captured_cb <- NULL
+  local_mocked_bindings(
+    load_data_decennial = function(...) {
+      data.frame(GEOID = "44001", NAME = "Bristol County, Rhode Island", P1_001N = 1)
+    },
+    use_tigris = function(..., cb) {
+      captured_cb <<- cb
+      sf::st_sf(GEOID = "44001", geometry = sf::st_sfc(sf::st_point(c(0, 0))))
+    }
+  )
+
+  args <- list(geography = "county", variables = "P1_001N", year = 2020,
+               state = "RI", key = "test-key", geometry = TRUE)
+
+  suppressMessages(do.call(get_decennial, args))
+  expect_true(captured_cb)
+
+  suppressMessages(do.call(get_decennial, c(args, cb = FALSE)))
+  expect_false(captured_cb)
+})
+
+test_that("ZCTAs by state error clearly for 2020 and later (#564)", {
+  expect_error(
+    suppressMessages(get_acs(geography = "zcta", variables = "B01003_001",
+                             state = "VT", year = 2024, key = "test-key")),
+    "does not support requesting ZCTAs by state"
+  )
+})

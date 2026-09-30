@@ -23,8 +23,9 @@
 #' @param zcta The zip code tabulation area(s) for which you are requesting
 #'   data. Specify a single value or a vector of values to get data for more
 #'   than one ZCTA. Numeric or character ZCTA GEOIDs are accepted. When
-#'   specifying ZCTAs, geography must be set to `"zcta"` and `state` must be specified with
-#'   `county` left as `NULL`. Defaults to NULL.
+#'   specifying ZCTAs, geography must be set to `"zcta"` and `county` left as `NULL`.
+#'   `state` can be used to request ZCTAs within a state for the 2011-2019 ACS only;
+#'   the Census API does not support this for 2020 and later. Defaults to NULL.
 #' @param geometry if FALSE (the default), return a regular tibble of ACS data.
 #'   if TRUE, uses the tigris package to return an sf tibble with simple feature
 #'   geometry in the `geometry` column.
@@ -52,6 +53,11 @@
 #'                   that are not in the cartographic boundary files used by default; use
 #'                   \code{cb = FALSE} to return TIGER/Line geometries for these areas instead.
 #'                   Defaults to FALSE.
+#' @param cb if TRUE (the default), uses the Census Bureau's cartographic boundary files
+#'   for feature geometry when \code{geometry = TRUE}. These are generalized and clipped to
+#'   the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
+#'   area. Note that tigris functions default to \code{cb = FALSE}. TIGER/Line files are
+#'   always used for 2011 and 2012, when cartographic boundary files are not available.
 #' @param ... Other keyword arguments
 #'
 #' @return A tibble or sf tibble of ACS data
@@ -91,7 +97,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                     geometry = FALSE, keep_geo_vars = FALSE,
                     shift_geo = FALSE, summary_var = NULL, key = NULL,
                     moe_level = 90, survey = "acs5", show_call = FALSE,
-                    drop_empty = FALSE, ...) {
+                    drop_empty = FALSE, cb = TRUE, ...) {
 
   if (survey == "acs1") {
     message(sprintf("Getting data from the %s 1-year ACS", year))
@@ -228,6 +234,12 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
          call. = FALSE)
   }
 
+  # The ACS API supports ZCTAs within states only through 2019 (#564)
+  if (geography == "zip code tabulation area" && !is.null(state) && year >= 2020) {
+    stop("The Census API does not support requesting ZCTAs by state for the 2020 ACS and later. Request all ZCTAs, or specific ZCTAs with the `zcta` argument, without specifying `state`.",
+         call. = FALSE)
+  }
+
   # If multiple states and multiple ZCTAs are requested, handle the filtering on the
   # R side rather than the tidycensus side
   if (geography == "zip code tabulation area" && length(state) > 1 && !is.null(zcta)) {
@@ -294,6 +306,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                              geometry = geometry,
                              keep_geo_vars = keep_geo_vars,
                              drop_empty = drop_empty,
+                             cb = cb,
                              shift_geo = FALSE,
                              key = key,
                              moe_level = moe_level,
@@ -325,6 +338,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                              geometry = geometry,
                              keep_geo_vars = keep_geo_vars,
                              drop_empty = drop_empty,
+                             cb = cb,
                              shift_geo = FALSE,
                              key = key,
                              moe_level = moe_level,
@@ -396,6 +410,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
             geometry = geometry,
             keep_geo_vars = keep_geo_vars,
             drop_empty = drop_empty,
+            cb = cb,
             shift_geo = FALSE,
             key = key,
             moe_level = moe_level,
@@ -422,6 +437,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               geometry = FALSE,
               keep_geo_vars = keep_geo_vars,
               drop_empty = drop_empty,
+              cb = cb,
               shift_geo = FALSE,
               key = key,
               moe_level = moe_level,
@@ -473,6 +489,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
             geometry = geometry,
             keep_geo_vars = keep_geo_vars,
             drop_empty = drop_empty,
+            cb = cb,
             shift_geo = FALSE,
             key = key,
             moe_level = moe_level,
@@ -514,6 +531,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               geometry = geometry,
               keep_geo_vars = keep_geo_vars,
               drop_empty = drop_empty,
+              cb = cb,
               shift_geo = FALSE,
               key = key,
               moe_level = moe_level,
@@ -548,6 +566,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
               geometry = geometry,
               keep_geo_vars = keep_geo_vars,
               drop_empty = drop_empty,
+              cb = cb,
               shift_geo = FALSE,
               key = key,
               moe_level = moe_level,
@@ -585,6 +604,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
                 drop_empty = drop_empty,
+                cb = cb,
                 shift_geo = FALSE,
                 key = key,
                 moe_level = moe_level,
@@ -617,6 +637,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                 geometry = geometry,
                 keep_geo_vars = keep_geo_vars,
                 drop_empty = drop_empty,
+                cb = cb,
                 shift_geo = FALSE,
                 key = key,
                 moe_level = moe_level,
@@ -648,6 +669,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                            geometry = geometry,
                            keep_geo_vars = keep_geo_vars,
                            drop_empty = drop_empty,
+                           cb = cb,
                            shift_geo = FALSE,
                            key = key,
                            moe_level = moe_level,
@@ -681,6 +703,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                            geometry = geometry,
                            keep_geo_vars = keep_geo_vars,
                            drop_empty = drop_empty,
+                           cb = cb,
                            shift_geo = FALSE,
                            key = key,
                            moe_level = moe_level,
@@ -916,10 +939,10 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       # for `zctas()`
       if (geography == "zip code tabulation area") {
         geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
-                                                state = NULL, county = NULL, ...)))
+                                                state = NULL, county = NULL, cb = cb, ...)))
       } else {
         geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
-                                                state = state, county = county, ...)))
+                                                state = state, county = county, cb = cb, ...)))
       }
 
 
