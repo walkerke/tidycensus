@@ -94,7 +94,9 @@ fix_pep_encoding <- function(x) {
 #'                 if TRUE, uses the tigris package to return an sf tibble
 #'                 with simple feature geometry in the `geometry` column.
 #' @param keep_geo_vars if TRUE, keeps all the variables from the Census
-#'                      shapefile obtained by tigris.  Defaults to FALSE.
+#'                      shapefile obtained by tigris.  Defaults to FALSE.  As the shapefile has its own \code{NAME} column, the
+#'                      shapefile's name is returned as \code{NAME.x} and the Census name for each geography
+#'                      (the \code{NAME} column when \code{keep_geo_vars = FALSE}) as \code{NAME.y}.
 #' @param shift_geo (deprecated) if TRUE, returns geometry with Alaska and Hawaii shifted for thematic
 #'                  mapping of the entire US.  As of May 2021, we recommend using \code{tigris::shift_geometry()}
 #'                  instead.
