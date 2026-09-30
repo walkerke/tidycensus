@@ -26,7 +26,9 @@ Built-in dataset for variable name and code label lookup.
   \item \code{val_label}: Value label
   \item \code{recode}: Use labels to recode values
   \item \code{val_length}: Length of value returned
-  \item \code{val_na}: Value of NA value returned by API (if known)
+  \item \code{val_na}: Value of NA value returned by API (if known). Some variables
+    (e.g. OCCP, INDP, LANP, POWSP) return \code{"N"} instead; \code{get_pums()}
+    handles these when recoding.
 }
 }
 \details{

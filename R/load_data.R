@@ -964,8 +964,9 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
         left_join(var_val_length, by = "var_code") %>%
         mutate(
           val = ifelse(!is.na(.data$val_na) & .data$val_na == .data$val, strrep("b", .data$val_length), .data$val),
+          # Some variables (OCCP, INDP, LANP, POWSP, etc.) return "N" for blank values, and NAICSP has returned "*" (#652)
+          val = ifelse(.data$val == "N" | (.data$var_code == "NAICSP" & .data$val == "*"), strrep("b", .data$val_length), .data$val),
           val = ifelse(.data$var_code != "NAICSP", str_pad(.data$val, .data$val_length, pad = "0"), .data$val),
-          val = ifelse(.data$var_code == "NAICSP" & .data$val == "*", "bbbbbbbb", .data$val),  # special NULL value returned by API for this var
         ) %>%
         select(-.data$val_length, -.data$val_na) %>%
         pivot_wider(
@@ -1245,8 +1246,9 @@ load_data_pums_vacant <- function(variables, state, puma, key, year, survey,
         dplyr::left_join(var_val_length, by = "var_code") %>%
         dplyr::mutate(
           val = ifelse(!is.na(.data$val_na) & .data$val_na == .data$val, strrep("b", .data$val_length), .data$val),
+          # Some variables (OCCP, INDP, LANP, POWSP, etc.) return "N" for blank values, and NAICSP has returned "*" (#652)
+          val = ifelse(.data$val == "N" | (.data$var_code == "NAICSP" & .data$val == "*"), strrep("b", .data$val_length), .data$val),
           val = ifelse(.data$var_code != "NAICSP", str_pad(.data$val, .data$val_length, pad = "0"), .data$val),
-          val = ifelse(.data$var_code == "NAICSP" & .data$val == "*", "bbbbbbbb", .data$val),  # special NULL value returned by API for this var
         ) %>%
         dplyr::select(-.data$val_length, -.data$val_na) %>%
         tidyr::pivot_wider(
