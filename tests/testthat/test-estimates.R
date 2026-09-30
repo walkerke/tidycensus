@@ -117,3 +117,154 @@ test_that("PEP names convert Latin-1 to UTF-8 and leave UTF-8 alone", {
     c("Doña Ana County", "Mayagüez, PR", "Travis County")
   )
 })
+
+test_that("intercensal population totals parse from the city totals file (#629)", {
+  skip_on_cran()
+
+  local_mocked_bindings(
+    read_estimates_csv = function(https_url, ftp_url, required_col) {
+      expect_match(https_url, "2010-2020/intercensal/cities/sub-est2020int[.]csv")
+
+      data.frame(
+        SUMLEV = c("040", "050", "162"),
+        STATE = "26",
+        COUNTY = c("000", "001", "000"),
+        PLACE = c("00000", "00000", "22000"),
+        NAME = c("Michigan", "Alcona County", "Detroit city"),
+        STNAME = "Michigan",
+        ESTIMATESBASE2010 = c(9883640, 10942, 713777),
+        POPESTIMATE2010 = c(9877510, 10894, 711210),
+        POPESTIMATE2015 = c(9987448, 10433, 679402),
+        CENSUS2020POP = c(10077331, 10167, 639111)
+      )
+    }
+  )
+
+  out <- suppressMessages(get_estimates(
+    geography = "county",
+    product = "intercensal",
+    vintage = 2020,
+    variables = "all",
+    state = "MI"
+  ))
+
+  expect_equal(unique(out$GEOID), "26001")
+  expect_equal(unique(out$NAME), "Alcona County, Michigan")
+  expect_setequal(unique(out$variable), c("ESTIMATESBASE", "POPESTIMATE", "CENSUSPOP"))
+  expect_equal(out$value[out$variable == "CENSUSPOP"], 10167)
+  expect_equal(out$year[out$variable == "CENSUSPOP"], 2020L)
+})
+
+test_that("2000-2010 intercensal characteristics map year and age codes (#629)", {
+  skip_on_cran()
+
+  local_mocked_bindings(
+    read_estimates_csv = function(https_url, ftp_url, required_col) {
+      expect_match(https_url, "2000-2010/intercensal/county/co-est00int-alldata-44[.]csv")
+
+      # YEAR 1 = 2000 base, 2 = July 2000, 12 = 2010 Census, 13 = July 2010;
+      # AGEGRP 99 = all ages, 0 = under 1, 1 = ages 1-4
+      expand.grid(YEAR = c(1, 2, 12, 13), AGEGRP = c(99, 0, 1)) |>
+        transform(
+          SUMLEV = "050", STATE = 44, COUNTY = 1,
+          STNAME = "Rhode Island", CTYNAME = "Bristol County",
+          TOT_POP = 0, TOT_MALE = ifelse(AGEGRP == 99, 30, 15), TOT_FEMALE = 0,
+          NHWA_MALE = ifelse(AGEGRP == 99, 30, 15), NHWA_FEMALE = 0,
+          HWA_MALE = 0, HWA_FEMALE = 0
+        )
+    }
+  )
+
+  out <- suppressMessages(get_estimates(
+    geography = "county",
+    product = "intercensal",
+    vintage = 2010,
+    breakdown = c("AGEGROUP", "SEX"),
+    state = "RI"
+  ))
+
+  expect_equal(unique(out$GEOID), "44001")
+  expect_equal(sort(unique(out$year)), c(2000L, 2010L))
+  # Under 1 and 1-4 combine into the 0-4 group
+  expect_equal(out$value[out$year == 2000 & out$AGEGROUP == 1 & out$SEX == 1], 30)
+  expect_equal(out$value[out$year == 2000 & out$AGEGROUP == 0 & out$SEX == 1], 30)
+
+  # time_series stops at `year`, as it does for population totals
+  ts <- suppressMessages(get_estimates(
+    geography = "county",
+    product = "intercensal",
+    vintage = 2010,
+    year = 2000,
+    time_series = TRUE,
+    breakdown = "SEX",
+    state = "RI"
+  ))
+  expect_equal(unique(ts$year), 2000L)
+})
+
+test_that("intercensal estimates error clearly for unsupported requests (#629)", {
+  expect_error(
+    suppressMessages(get_estimates(geography = "county", product = "intercensal", state = "RI")),
+    "vintage = 2020"
+  )
+  expect_error(
+    suppressMessages(get_estimates(geography = "county", product = "intercensal",
+                                   vintage = 2020, year = 2005, state = "RI")),
+    "available for 2010 through 2019"
+  )
+  expect_error(
+    suppressMessages(get_estimates(geography = "county", product = "intercensal",
+                                   vintage = 2020, year = 2020, state = "RI",
+                                   breakdown = "SEX")),
+    "available for 2010 through 2019"
+  )
+})
+
+test_that("intercensal characteristics support multiple states and geometry (#629)", {
+  skip_on_cran()
+
+  local_mocked_bindings(
+    read_estimates_csv = function(https_url, ftp_url, required_col) {
+      st <- sub(".*alldata-([0-9]{2})[.]csv$", "\\1", https_url)
+
+      expand.grid(YEAR = 2:11, AGEGRP = 0:1) |>
+        transform(
+          SUMLEV = "050", STATE = st, COUNTY = "001",
+          STNAME = ifelse(st == "44", "Rhode Island", "Massachusetts"),
+          CTYNAME = "First County",
+          TOT_POP = 20, TOT_MALE = 10, TOT_FEMALE = 10,
+          NHWA_MALE = 10, NHWA_FEMALE = 10, HWA_MALE = 0, HWA_FEMALE = 0
+        )
+    },
+    use_tigris = function(...) {
+      sf::st_sf(
+        GEOID = c("44001", "25001"),
+        geometry = sf::st_sfc(sf::st_point(c(0, 0)), sf::st_point(c(1, 1)))
+      )
+    }
+  )
+
+  out <- suppressMessages(get_estimates(
+    geography = "county",
+    product = "intercensal",
+    vintage = 2020,
+    state = c("RI", "MA"),
+    breakdown = "SEX",
+    year = 2015,
+    time_series = TRUE,
+    geometry = TRUE
+  ))
+
+  expect_s3_class(out, "sf")
+  expect_setequal(unique(out$GEOID), c("44001", "25001"))
+  expect_equal(range(out$year), c(2010L, 2015L))
+  expect_false(any(sf::st_is_empty(out)))
+})
+
+test_that("intercensal requests for Puerto Rico error clearly (#629)", {
+  expect_error(
+    suppressMessages(get_estimates(geography = "county", product = "intercensal",
+                                   vintage = 2020, state = "PR")),
+    "Puerto Rico are not currently available"
+  )
+})
