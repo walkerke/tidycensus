@@ -63,7 +63,9 @@ row represents an enumeration unit and the variables are in the
 columns.}
 
 \item{keep_geo_vars}{if TRUE, keeps all the variables from the Census
-shapefile obtained by tigris.  Defaults to FALSE.}
+shapefile obtained by tigris.  Defaults to FALSE.  As the shapefile has its own \code{NAME} column, the
+shapefile's name is returned as \code{NAME.x} and the Census name for each geography
+(the \code{NAME} column when \code{keep_geo_vars = FALSE}) as \code{NAME.y}.}
 
 \item{shift_geo}{(deprecated) if TRUE, returns geometry with Alaska and Hawaii
 shifted for thematic mapping of the entire US.
