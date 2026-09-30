@@ -41,6 +41,11 @@
 #'                  in debugging and determining if error messages returned are
 #'                  due to tidycensus or the Census API. Copy to the API call into
 #'                  a browser and see what is returned by the API directly. Defaults to FALSE.
+#' @param drop_empty if TRUE and \code{geometry = TRUE}, drops rows with empty geometries.
+#'                   These are typically water-only areas, such as offshore block groups,
+#'                   that are not in the cartographic boundary files used by default; use
+#'                   \code{cb = FALSE} to return TIGER/Line geometries for these areas instead.
+#'                   Defaults to FALSE.
 #' @param ... Other keyword arguments
 #'
 #' @return a tibble or sf tibble of decennial Census data
@@ -80,6 +85,7 @@ get_decennial <- function(geography,
                           pop_group_label = FALSE,
                           key = NULL,
                           show_call = FALSE,
+                          drop_empty = FALSE,
                           ...
                           ) {
 
@@ -245,6 +251,7 @@ get_decennial <- function(geography,
                                county = county,
                                geometry = geometry,
                                keep_geo_vars = keep_geo_vars,
+                               drop_empty = drop_empty,
                                shift_geo = FALSE,
                                summary_var = summary_var,
                                pop_group = pop_group,
@@ -276,6 +283,7 @@ get_decennial <- function(geography,
                                county = county,
                                geometry = geometry,
                                keep_geo_vars = keep_geo_vars,
+                               drop_empty = drop_empty,
                                shift_geo = FALSE,
                                summary_var = summary_var,
                                pop_group = pop_group,
@@ -543,6 +551,12 @@ get_decennial <- function(geography,
       out <- right_join(geom, dat2, by = "GEOID") %>%
         as_tibble() %>%
         st_as_sf()
+    }
+
+    # Rows in the data but not the boundary file (e.g. water-only areas
+    # clipped from cartographic boundary files) have empty geometries (#650)
+    if (drop_empty) {
+      out <- out[!sf::st_is_empty(out), ]
     }
 
     # Give users a heads-up about differential privacy in the 2020 decennial data

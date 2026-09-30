@@ -108,3 +108,34 @@ test_that("VACS is requested once when return_vacant = TRUE", {
     "^VACS,HHLANP$"
   )
 })
+
+test_that("drop_empty removes rows missing from the boundary file (#650)", {
+  skip_on_cran()
+  local_mocked_bindings(
+    load_data_decennial = function(...) {
+      data.frame(
+        GEOID = c("22071001701", "22071990000"),
+        NAME = c("Census Tract 17.01", "Census Tract 9900 (water)"),
+        P1_001N = c(1200, 0)
+      )
+    },
+    use_tigris = function(...) {
+      sf::st_sf(
+        GEOID = "22071001701",
+        geometry = sf::st_sfc(sf::st_point(c(0, 0)))
+      )
+    }
+  )
+
+  args <- list(
+    geography = "tract", variables = "P1_001N", year = 2020,
+    state = "LA", key = "test-key", output = "wide", geometry = TRUE
+  )
+
+  kept <- suppressMessages(do.call(get_decennial, args))
+  expect_equal(nrow(kept), 2)
+  expect_equal(sum(sf::st_is_empty(kept)), 1)
+
+  dropped <- suppressMessages(do.call(get_decennial, c(args, drop_empty = TRUE)))
+  expect_equal(dropped$GEOID, "22071001701")
+})
