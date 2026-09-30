@@ -188,6 +188,18 @@ test_that("2000-2010 intercensal characteristics map year and age codes (#629)",
   # Under 1 and 1-4 combine into the 0-4 group
   expect_equal(out$value[out$year == 2000 & out$AGEGROUP == 1 & out$SEX == 1], 30)
   expect_equal(out$value[out$year == 2000 & out$AGEGROUP == 0 & out$SEX == 1], 30)
+
+  # time_series stops at `year`, as it does for population totals
+  ts <- suppressMessages(get_estimates(
+    geography = "county",
+    product = "intercensal",
+    vintage = 2010,
+    year = 2000,
+    time_series = TRUE,
+    breakdown = "SEX",
+    state = "RI"
+  ))
+  expect_equal(unique(ts$year), 2000L)
 })
 
 test_that("intercensal estimates error clearly for unsupported requests (#629)", {
@@ -198,6 +210,12 @@ test_that("intercensal estimates error clearly for unsupported requests (#629)",
   expect_error(
     suppressMessages(get_estimates(geography = "county", product = "intercensal",
                                    vintage = 2020, year = 2005, state = "RI")),
-    "between 2010 and 2020"
+    "available for 2010 through 2019"
+  )
+  expect_error(
+    suppressMessages(get_estimates(geography = "county", product = "intercensal",
+                                   vintage = 2020, year = 2020, state = "RI",
+                                   breakdown = "SEX")),
+    "available for 2010 through 2019"
   )
 })

@@ -275,12 +275,17 @@ get_estimates <- function(
     }
 
     # Return the full series unless a specific year is requested
+    last_estimate <- if (vintage == 2020) 2019 else 2010
+    census_only <- !is.null(variables) && all(variables == "CENSUSPOP") &&
+      is.null(breakdown)
+
     if (missing(year)) {
       time_series <- TRUE
-    } else if (!year %in% (vintage - 10):vintage) {
+    } else if (!year %in% (vintage - 10):last_estimate &&
+               !(year == vintage && census_only)) {
       rlang::abort(sprintf(
-        "`year` must be between %s and %s for the %s-%s intercensal estimates.",
-        vintage - 10, vintage, vintage - 10, vintage
+        "Intercensal estimates for %s-%s are available for %s through %s; use `variables = \"CENSUSPOP\"` with `year = %s` for the %s Census count.",
+        vintage - 10, vintage, vintage - 10, last_estimate, vintage, vintage
       ))
     }
 
@@ -328,8 +333,8 @@ get_estimates <- function(
         }
 
         if (!is.null(state)) {
-          state <- validate_state(state)
-          county_raw <- read_intercensal_county(paste0("-", state))
+          state <- purrr::map_chr(state, validate_state)
+          county_raw <- purrr::map_dfr(state, ~ read_intercensal_county(paste0("-", .x)))
         } else if (vintage == 2020) {
           county_raw <- read_intercensal_county("")
         } else {
@@ -458,6 +463,7 @@ get_estimates <- function(
           dplyr::mutate(year = as.integer(year))
       } else if (
         geography == "county" &&
+          length(state) == 1 &&
           identical(suppressMessages(validate_state(state)), "72")
       ) {
         # Puerto Rico municipios are published by age and sex only (#581)
@@ -526,26 +532,35 @@ get_estimates <- function(
           )
       } else if (geography == "county") {
         if (!is.null(state)) {
-          state <- validate_state(state)
+          state <- purrr::map_chr(state, validate_state)
 
-          county_raw <- suppressWarnings(try(
-            suppressMessages(readr::read_csv(sprintf(
-              "https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/asrh/cc-est%s-alldata-%s.csv",
-              vintage,
-              vintage,
-              state
-            ))),
-            silent = TRUE
-          ))
-
-          if (inherits(county_raw, "try-error") || !"STATE" %in% names(county_raw)) {
-            county_raw <- suppressMessages(readr::read_csv(sprintf(
-              "ftp://ftp2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/asrh/cc-est%s-alldata-%s.csv",
-              vintage,
-              vintage,
-              state
-            )))
+          if ("72" %in% state) {
+            rlang::abort(
+              "Request Puerto Rico municipios separately with `state = \"PR\"`."
+            )
           }
+
+          county_raw <- purrr::map_dfr(state, function(st) {
+            read_estimates_csv(
+              sprintf(
+                "https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/asrh/cc-est%s-alldata-%s.csv",
+                vintage,
+                vintage,
+                st
+              ),
+              sprintf(
+                "ftp://ftp2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/asrh/cc-est%s-alldata-%s.csv",
+                vintage,
+                vintage,
+                st
+              ),
+              "STATE"
+            ) %>%
+              dplyr::mutate(
+                STATE = stringr::str_pad(STATE, 2, pad = "0"),
+                COUNTY = stringr::str_pad(COUNTY, 3, pad = "0")
+              )
+          })
         } else {
           county_raw <- suppressWarnings(try(
             suppressMessages(readr::read_csv(sprintf(
@@ -786,10 +801,12 @@ get_estimates <- function(
       parsed$NAME <- fix_pep_encoding(parsed$NAME)
 
       # Handle timeseries
-      if (!time_series) {
-        in_year <- year
+      in_year <- year
 
+      if (!time_series) {
         parsed <- dplyr::filter(parsed, year == in_year)
+      } else {
+        parsed <- dplyr::filter(parsed, year <= in_year)
       }
 
       if (!is.null(breakdown)) {
@@ -883,9 +900,9 @@ get_estimates <- function(
           }
         }
 
-        return(output)
+        dat2 <- output
       } else {
-        return(parsed)
+        dat2 <- parsed
       }
     } else if (
       is.null(product) ||
