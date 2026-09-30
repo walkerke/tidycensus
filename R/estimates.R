@@ -97,7 +97,7 @@ get_estimates <- function(
   variables = NULL,
   breakdown = NULL,
   breakdown_labels = FALSE,
-  vintage = 2024,
+  vintage = 2025,
   year = vintage,
   state = NULL,
   county = NULL,
@@ -145,12 +145,6 @@ get_estimates <- function(
       if (!geography %in% c("state", "county", "cbsa", "metropolitan statistical area/micropolitan statistical area", "combined statistical area")) {
         rlang::abort(
           "The only supported geographies at this time for population characteristics 2020 and later are 'state', 'county', 'cbsa'/'metropolitan statistical area/micropolitan statistical area', and 'combined statistical area'."
-        )
-      }
-
-      if (vintage > 2024) {
-        rlang::abort(
-          "The Characteristics dataset has not yet been released for vintages beyond 2024"
         )
       }
 
@@ -219,12 +213,6 @@ get_estimates <- function(
           ) %>%
           dplyr::mutate(year = as.integer(year))
       } else if (geography == "county") {
-        if (vintage > 2024) {
-          rlang::abort(
-            "The county characteristics dataset for this vintage has not yet been released."
-          )
-        }
-
         if (!is.null(state)) {
           state <- validate_state(state)
 
@@ -347,16 +335,11 @@ get_estimates <- function(
               year == 4 ~ 2022L,
               year == 5 ~ 2023L,
               year == 6 ~ 2024L,
+              year == 7 ~ 2025L,
               TRUE ~ year
             )
           )
       } else if (geography == "cbsa" || geography == "metropolitan statistical area/micropolitan statistical area") {
-        if (vintage > 2024) {
-          rlang::abort(
-            "The CBSA characteristics dataset for this vintage has not yet been released."
-          )
-        }
-
         cbsa_raw <- suppressWarnings(try(
           suppressMessages(readr::read_csv(sprintf(
             "https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/metro/asrh/cbsa-est%s-alldata-char.csv",
@@ -448,16 +431,11 @@ get_estimates <- function(
               year == 4 ~ 2022L,
               year == 5 ~ 2023L,
               year == 6 ~ 2024L,
+              year == 7 ~ 2025L,
               TRUE ~ year
             )
           )
       } else if (geography == "combined statistical area") {
-        if (vintage > 2024) {
-          rlang::abort(
-            "The CSA characteristics dataset for this vintage has not yet been released."
-          )
-        }
-
         csa_raw <- suppressWarnings(try(
           suppressMessages(readr::read_csv(sprintf(
             "https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/metro/asrh/csa-est%s-alldata-char.csv",
@@ -549,6 +527,7 @@ get_estimates <- function(
               year == 4 ~ 2022L,
               year == 5 ~ 2023L,
               year == 6 ~ 2024L,
+              year == 7 ~ 2025L,
               TRUE ~ year
             )
           )
@@ -1576,24 +1555,13 @@ get_estimates <- function(
         )
       }
     } else {
-      # Handle CB file availability
-      if (year == 2025) {
-        geom <- try(suppressMessages(use_tigris(
-          geography = geography,
-          year = 2024,
-          state = state,
-          county = county,
-          ...
-        )))
-      } else {
-        geom <- try(suppressMessages(use_tigris(
-          geography = geography,
-          year = year,
-          state = state,
-          county = county,
-          ...
-        )))
-      }
+      geom <- try(suppressMessages(use_tigris(
+        geography = geography,
+        year = year,
+        state = state,
+        county = county,
+        ...
+      )))
 
       if ("try-error" %in% class(geom)) {
         stop(
