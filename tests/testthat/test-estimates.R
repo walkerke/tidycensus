@@ -219,3 +219,52 @@ test_that("intercensal estimates error clearly for unsupported requests (#629)",
     "available for 2010 through 2019"
   )
 })
+
+test_that("intercensal characteristics support multiple states and geometry (#629)", {
+  skip_on_cran()
+
+  local_mocked_bindings(
+    read_estimates_csv = function(https_url, ftp_url, required_col) {
+      st <- sub(".*alldata-([0-9]{2})[.]csv$", "\\1", https_url)
+
+      expand.grid(YEAR = 2:11, AGEGRP = 0:1) |>
+        transform(
+          SUMLEV = "050", STATE = st, COUNTY = "001",
+          STNAME = ifelse(st == "44", "Rhode Island", "Massachusetts"),
+          CTYNAME = "First County",
+          TOT_POP = 20, TOT_MALE = 10, TOT_FEMALE = 10,
+          NHWA_MALE = 10, NHWA_FEMALE = 10, HWA_MALE = 0, HWA_FEMALE = 0
+        )
+    },
+    use_tigris = function(...) {
+      sf::st_sf(
+        GEOID = c("44001", "25001"),
+        geometry = sf::st_sfc(sf::st_point(c(0, 0)), sf::st_point(c(1, 1)))
+      )
+    }
+  )
+
+  out <- suppressMessages(get_estimates(
+    geography = "county",
+    product = "intercensal",
+    vintage = 2020,
+    state = c("RI", "MA"),
+    breakdown = "SEX",
+    year = 2015,
+    time_series = TRUE,
+    geometry = TRUE
+  ))
+
+  expect_s3_class(out, "sf")
+  expect_setequal(unique(out$GEOID), c("44001", "25001"))
+  expect_equal(range(out$year), c(2010L, 2015L))
+  expect_false(any(sf::st_is_empty(out)))
+})
+
+test_that("intercensal requests for Puerto Rico error clearly (#629)", {
+  expect_error(
+    suppressMessages(get_estimates(geography = "county", product = "intercensal",
+                                   vintage = 2020, state = "PR")),
+    "Puerto Rico are not currently available"
+  )
+})

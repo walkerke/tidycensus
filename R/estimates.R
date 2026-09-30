@@ -289,6 +289,13 @@ get_estimates <- function(
       ))
     }
 
+    if (!is.null(state) &&
+        "72" %in% suppressMessages(purrr::map_chr(state, validate_state))) {
+      rlang::abort(
+        "Intercensal estimates for Puerto Rico are not currently available in tidycensus."
+      )
+    }
+
     rlang::inform(sprintf(
       "Using the %s-%s intercensal population estimates",
       vintage - 10,
