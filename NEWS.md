@@ -1,3 +1,7 @@
+# tidycensus (development version)
+
+* Various bug fixes and performance improvements (#649, #590, #652).
+
 # tidycensus 1.8
 
 * **Breaking change:** the Census Bureau now requires an API key for all requests, including metadata endpoints used by `load_variables()` and `get_pop_groups()`.  Tidycensus will now error (rather than warn) when no key is available.  Pass a key with the `key` argument or store one for future sessions with `census_api_key("YOUR KEY", install = TRUE)`.  `load_variables()` and `get_pop_groups()` gain a `key` argument, and table lookups triggered by the `table =` argument to `get_acs()` / `get_decennial()` now forward the resolved key automatically.

@@ -185,6 +185,17 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
          call. = FALSE)
   }
 
+  if (any(is.na(variables) | variables == "")) {
+    stop("One or more requested variables is empty or missing; please check the `variables` argument.",
+         call. = FALSE)
+  }
+
+  if (any(variables != toupper(variables))) {
+    message(sprintf("Converting variable IDs to uppercase: %s",
+                    paste(variables[variables != toupper(variables)], collapse = ", ")))
+    variables <- toupper(variables)
+  }
+
   # CBSA alias (fixes #514 by reverting back)
   if (geography == "cbsa") {
     geography <- "metropolitan statistical area/micropolitan statistical area"
@@ -340,6 +351,13 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     # split variables by type into list, discard empty list elements
     vars_by_type <- map(c("^B|^C", "^S", "^D"), ~ variables[str_detect(variables, .x)]) %>%
       purrr::compact()
+
+    vars_unknown <- variables[!str_detect(variables, "^B|^C|^S|^D")]
+
+    if (length(vars_unknown) > 0) {
+      warning(sprintf("Skipping variables not found in the B/C, S, or DP tables: %s",
+                      paste(vars_unknown, collapse = ", ")), call. = FALSE)
+    }
 
     if (geometry) {
       if (output == "wide") {
