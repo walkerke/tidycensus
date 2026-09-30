@@ -46,6 +46,11 @@
 #'                   that are not in the cartographic boundary files used by default; use
 #'                   \code{cb = FALSE} to return TIGER/Line geometries for these areas instead.
 #'                   Defaults to FALSE.
+#' @param cb if TRUE (the default), uses the Census Bureau's cartographic boundary files
+#'   for feature geometry when \code{geometry = TRUE}. These are generalized and clipped to
+#'   the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
+#'   area. Note that tigris functions default to \code{cb = FALSE}. TIGER/Line files are
+#'   always used for 2011 and 2012, when cartographic boundary files are not available.
 #' @param ... Other keyword arguments
 #'
 #' @return a tibble or sf tibble of decennial Census data
@@ -86,6 +91,7 @@ get_decennial <- function(geography,
                           key = NULL,
                           show_call = FALSE,
                           drop_empty = FALSE,
+                          cb = TRUE,
                           ...
                           ) {
 
@@ -252,6 +258,7 @@ get_decennial <- function(geography,
                                geometry = geometry,
                                keep_geo_vars = keep_geo_vars,
                                drop_empty = drop_empty,
+                               cb = cb,
                                shift_geo = FALSE,
                                summary_var = summary_var,
                                pop_group = pop_group,
@@ -284,6 +291,7 @@ get_decennial <- function(geography,
                                geometry = geometry,
                                keep_geo_vars = keep_geo_vars,
                                drop_empty = drop_empty,
+                               cb = cb,
                                shift_geo = FALSE,
                                summary_var = summary_var,
                                pop_group = pop_group,
@@ -519,15 +527,15 @@ get_decennial <- function(geography,
 
       if (geography == "urban area" && year == 2020) {
         geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
-                                                state = state, county = county, criteria = "2020", ...)))
+                                                state = state, county = county, criteria = "2020", cb = cb, ...)))
       } else if (sumfile == "cd118") {
         # stop("Geometry is not yet available for this sumfile in tidycensus.")
 
         geom <- try(suppressMessages(use_tigris(geography = geography, year = 2022,
-                                        state = state, county = county, ...)))
+                                        state = state, county = county, cb = cb, ...)))
       } else {
         geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
-                                                state = state, county = county, ...)))
+                                                state = state, county = county, cb = cb, ...)))
       }
 
       if ("try-error" %in% class(geom)) {

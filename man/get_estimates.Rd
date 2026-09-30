@@ -25,6 +25,7 @@ get_estimates(
   key = NULL,
   show_call = FALSE,
   drop_empty = FALSE,
+  cb = TRUE,
   ...
 )
 }
@@ -101,6 +102,12 @@ These are typically water-only areas, such as offshore block groups,
 that are not in the cartographic boundary files used by default; use
 \code{cb = FALSE} to return TIGER/Line geometries for these areas instead.
 Defaults to FALSE.}
+
+\item{cb}{if TRUE (the default), uses the Census Bureau's cartographic boundary files
+for feature geometry when \code{geometry = TRUE}. These are generalized and clipped to
+the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
+area. Note that tigris functions default to \code{cb = FALSE}. TIGER/Line files are
+always used for 2011 and 2012, when cartographic boundary files are not available.}
 
 \item{...}{other keyword arguments}
 }

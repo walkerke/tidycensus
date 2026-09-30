@@ -23,6 +23,7 @@ get_acs(
   survey = "acs5",
   show_call = FALSE,
   drop_empty = FALSE,
+  cb = TRUE,
   ...
 )
 }
@@ -58,8 +59,9 @@ Defaults to NULL.}
 \item{zcta}{The zip code tabulation area(s) for which you are requesting
 data. Specify a single value or a vector of values to get data for more
 than one ZCTA. Numeric or character ZCTA GEOIDs are accepted. When
-specifying ZCTAs, geography must be set to `"zcta"` and `state` must be specified with
-`county` left as `NULL`. Defaults to NULL.}
+specifying ZCTAs, geography must be set to `"zcta"` and `county` left as `NULL`.
+`state` can be used to request ZCTAs within a state for the 2011-2019 ACS only;
+the Census API does not support this for 2020 and later. Defaults to NULL.}
 
 \item{geometry}{if FALSE (the default), return a regular tibble of ACS data.
 if TRUE, uses the tigris package to return an sf tibble with simple feature
@@ -96,6 +98,12 @@ These are typically water-only areas, such as offshore block groups,
 that are not in the cartographic boundary files used by default; use
 \code{cb = FALSE} to return TIGER/Line geometries for these areas instead.
 Defaults to FALSE.}
+
+\item{cb}{if TRUE (the default), uses the Census Bureau's cartographic boundary files
+for feature geometry when \code{geometry = TRUE}. These are generalized and clipped to
+the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
+area. Note that tigris functions default to \code{cb = FALSE}. TIGER/Line files are
+always used for 2011 and 2012, when cartographic boundary files are not available.}
 
 \item{...}{Other keyword arguments}
 }
