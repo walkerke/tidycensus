@@ -85,7 +85,7 @@ get_pums <- function(variables = NULL,
   }
 
   if (return_vacant) {
-    variables <- c(variables, "VACS")
+    variables <- unique(c(variables, "VACS"))
   }
 
   if ("VACS" %in% variables) {

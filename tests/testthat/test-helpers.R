@@ -92,3 +92,19 @@ test_that("lowercase variable IDs are converted to uppercase with a message", {
     "Converting variable IDs to uppercase: b19013_001"
   )
 })
+
+test_that("VACS is requested once when return_vacant = TRUE", {
+  local_mocked_bindings(
+    load_data_pums = function(variables, ...) {
+      stop(paste(variables, collapse = ","))
+    }
+  )
+
+  expect_error(
+    suppressMessages(
+      get_pums(variables = c("VACS", "HHLANP"), state = "RI", year = 2024,
+               return_vacant = TRUE, key = "test-key")
+    ),
+    "^VACS,HHLANP$"
+  )
+})
