@@ -33,6 +33,10 @@ test_that("metadata requests include the Census API key", {
     GET = function(url, query = list(), ...) {
       captured[[length(captured) + 1]] <<- list(url = url, query = query)
       stop("captured GET", call. = FALSE)
+    },
+    census_api_get = function(url, query = list(), ...) {
+      captured[[length(captured) + 1]] <<- list(url = url, query = query)
+      stop("captured GET", call. = FALSE)
     }
   )
 
@@ -52,6 +56,10 @@ test_that("load_variables deprecates cache without writing to a cache directory"
 
   local_mocked_bindings(
     GET = function(url, query = list(), ...) {
+      captured[[length(captured) + 1]] <<- list(url = url, query = query)
+      stop("captured GET", call. = FALSE)
+    },
+    census_api_get = function(url, query = list(), ...) {
       captured[[length(captured) + 1]] <<- list(url = url, query = query)
       stop("captured GET", call. = FALSE)
     }
@@ -363,6 +371,10 @@ test_that("low-level Census API data requests include the API key", {
     GET = function(url, query = list(), ...) {
       captured[[length(captured) + 1]] <<- list(url = url, query = query)
       stop("captured GET", call. = FALSE)
+    },
+    census_api_get = function(url, query = list(), ...) {
+      captured[[length(captured) + 1]] <<- list(url = url, query = query)
+      stop("captured GET", call. = FALSE)
     }
   )
 
@@ -452,6 +464,10 @@ test_that("low-level table data requests use Census API groups", {
 
   local_mocked_bindings(
     GET = function(url, query = list(), ...) {
+      captured[[length(captured) + 1]] <<- list(url = url, query = query)
+      stop("captured GET", call. = FALSE)
+    },
+    census_api_get = function(url, query = list(), ...) {
       captured[[length(captured) + 1]] <<- list(url = url, query = query)
       stop("captured GET", call. = FALSE)
     }
