@@ -1129,33 +1129,10 @@ load_data_pums_vacant <- function(variables, state, puma, key, year, survey,
 
   }
 
-  call <- GET(base,
-              query = query,
-              progress())
-
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", call_url))
-  }
+  call <- census_api_get(base, query, show_call = show_call, progress = TRUE)
 
   # Make sure call status returns 200, else, print the error message for the user.
-  if (call$status_code != 200) {
-    msg <- content(call, as = "text")
-
-    if (grepl("The requested resource is not available", msg)) {
-      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
-    } else {
-      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
-    }
-
-  }
-
-
-  content <- content(call, as = "text")
-
-  if (grepl("You included a key with this request", content)) {
-    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
-  }
+  content <- census_api_content(call)
 
   dat <- jsonlite::fromJSON(content)
 
