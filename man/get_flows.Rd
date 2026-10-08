@@ -10,7 +10,7 @@ get_flows(
   variables = NULL,
   breakdown = NULL,
   breakdown_labels = FALSE,
-  year = 2018,
+  year = 2020,
   output = "tidy",
   state = NULL,
   county = NULL,
@@ -24,7 +24,9 @@ get_flows(
 \arguments{
 \item{geography}{The geography of your requested data. Possible values are
 \code{"county"}, \code{"county subdivision"}, and \code{"metropolitan statistical area"}.
-MSA data is only available beginning with the 2009-2013 5-year ACS.}
+MSA data is only available beginning with the 2009-2013 5-year ACS.
+County subdivision and MSA data are available through the 2016-2020 5-year
+ACS; beginning with the 2017-2021 5-year ACS, only county data are available.}
 
 \item{variables}{Character string or vector of character strings of variable
 names. By default, \code{get_flows()} returns the GEOID and names of the
@@ -33,7 +35,7 @@ movers of each geography (\code{"MOVEDIN"}, \code{"MOVEDOUT"}, \code{"MOVEDNET"}
 variables are specified, they are pulled in addition to the default
 variables. The names of additional variables can be found in the Census
 Migration Flows API
-documentation at \url{https://api.census.gov/data/2018/acs/flows/variables.html}.}
+documentation at \url{https://api.census.gov/data/2020/acs/flows/variables.html}.}
 
 \item{breakdown}{A character vector of the population breakdown
 characteristics to be crossed with migration flows data. For datasets
@@ -51,7 +53,12 @@ documentation at \url{https://www.census.gov/data/developers/data-sets/acs-migra
 breakdown characteristic codes. Defaults to \code{FALSE}.}
 
 \item{year}{The year, or endyear, of the ACS sample. The Migration Flows API
-is available for 5-year ACS samples from 2010 to 2018. Defaults to 2018.}
+is available for 5-year ACS samples from 2010 to 2022. Defaults to 2020,
+the most recent sample with county-to-county flows. Beginning with the
+2017-2021 5-year ACS, the Census Bureau publishes flows between each county
+and states or world regions rather than other counties: only
+\code{"MOVEDIN"} is available (\code{"MOVEDOUT"} and \code{"MOVEDNET"} are
+\code{NA}), and \code{geometry = TRUE} is not supported.}
 
 \item{output}{One of "tidy" (the default) in which each row represents an
 enumeration unit-variable combination, or "wide" in which each row
@@ -71,11 +78,14 @@ MSAs, geography must be set to \code{"metropolitan statistical area"} and
 \code{state} and \code{county} must be \code{NULL}.}
 
 \item{geometry}{if FALSE (the default), return a tibble of ACS Migration
-Flows data. If TRUE, return an sf object with the centroids of both origin
-and destination as \code{sfc_POINT} columns. The origin point feature is
-returned in a column named \code{centroid1} and is the active geometry column in
-the sf object. The destination point feature is returned in the \code{centroid2}
-column.}
+Flows data. If TRUE, return an sf object with the centroids of both
+geographies in each flow as \code{sfc_POINT} columns. The centroid of the
+reference geography (\code{GEOID1}) is returned in a column named
+\code{centroid1} and is the active geometry column in the sf object. The
+centroid of the second geography (\code{GEOID2}) is returned in the
+\code{centroid2} column. For \code{"MOVEDIN"}, the second geography is
+where movers came from; for \code{"MOVEDOUT"}, it is where they went. Not
+available for years after 2020.}
 
 \item{key}{Your Census API key. Obtain one at
 \url{https://api.census.gov/data/key_signup.html}}

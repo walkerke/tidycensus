@@ -4,6 +4,8 @@
 #' @param geography The geography of your requested data. Possible values are
 #'   \code{"county"}, \code{"county subdivision"}, and \code{"metropolitan statistical area"}.
 #'   MSA data is only available beginning with the 2009-2013 5-year ACS.
+#'   County subdivision and MSA data are available through the 2016-2020 5-year
+#'   ACS; beginning with the 2017-2021 5-year ACS, only county data are available.
 #' @param variables Character string or vector of character strings of variable
 #'   names. By default, \code{get_flows()} returns the GEOID and names of the
 #'   geographies as well as the number of people who moved in, out, and net
@@ -11,7 +13,7 @@
 #'   variables are specified, they are pulled in addition to the default
 #'   variables. The names of additional variables can be found in the Census
 #'   Migration Flows API
-#'   documentation at \url{https://api.census.gov/data/2018/acs/flows/variables.html}.
+#'   documentation at \url{https://api.census.gov/data/2020/acs/flows/variables.html}.
 #' @param breakdown A character vector of the population breakdown
 #'   characteristics to be crossed with migration flows data. For datasets
 #'   between 2006-2010 and 2011-2015, selected demographic characteristics such
@@ -26,7 +28,12 @@
 #' @param breakdown_labels Whether or not to add columns with labels for the
 #'   breakdown characteristic codes. Defaults to \code{FALSE}.
 #' @param year The year, or endyear, of the ACS sample. The Migration Flows API
-#'   is available for 5-year ACS samples from 2010 to 2018. Defaults to 2018.
+#'   is available for 5-year ACS samples from 2010 to 2022. Defaults to 2020,
+#'   the most recent sample with county-to-county flows. Beginning with the
+#'   2017-2021 5-year ACS, the Census Bureau publishes flows between each county
+#'   and states or world regions rather than other counties: only
+#'   \code{"MOVEDIN"} is available (\code{"MOVEDOUT"} and \code{"MOVEDNET"} are
+#'   \code{NA}), and \code{geometry = TRUE} is not supported.
 #' @param output One of "tidy" (the default) in which each row represents an
 #'   enumeration unit-variable combination, or "wide" in which each row
 #'   represents an enumeration unit and the variables are in the columns.
@@ -41,11 +48,14 @@
 #'   MSAs, geography must be set to \code{"metropolitan statistical area"} and
 #'   \code{state} and \code{county} must be \code{NULL}.
 #' @param geometry if FALSE (the default), return a tibble of ACS Migration
-#'   Flows data. If TRUE, return an sf object with the centroids of both origin
-#'   and destination as \code{sfc_POINT} columns. The origin point feature is
-#'   returned in a column named \code{centroid1} and is the active geometry column in
-#'   the sf object. The destination point feature is returned in the \code{centroid2}
-#'   column.
+#'   Flows data. If TRUE, return an sf object with the centroids of both
+#'   geographies in each flow as \code{sfc_POINT} columns. The centroid of the
+#'   reference geography (\code{GEOID1}) is returned in a column named
+#'   \code{centroid1} and is the active geometry column in the sf object. The
+#'   centroid of the second geography (\code{GEOID2}) is returned in the
+#'   \code{centroid2} column. For \code{"MOVEDIN"}, the second geography is
+#'   where movers came from; for \code{"MOVEDOUT"}, it is where they went. Not
+#'   available for years after 2020.
 #' @param key Your Census API key. Obtain one at
 #'   \url{https://api.census.gov/data/key_signup.html}
 #' @param moe_level The confidence level of the returned margin of error.  One
@@ -83,7 +93,7 @@
 #' }
 #' @export
 get_flows <- function(geography, variables = NULL, breakdown = NULL,
-                      breakdown_labels = FALSE, year = 2018, output = "tidy",
+                      breakdown_labels = FALSE, year = 2020, output = "tidy",
                       state = NULL, county = NULL, msa = NULL, geometry = FALSE,
                       key = NULL, moe_level = 90, show_call = FALSE) {
 
@@ -93,7 +103,7 @@ get_flows <- function(geography, variables = NULL, breakdown = NULL,
   if (geography %in% c("cbsa", "msa", "metropolitan statistical area")) {
     geography <- "metropolitan statistical area/micropolitan statistical area"
     if (year <= 2012) {
-      stop("Data at the MSA-level is only avaialable beginning with the 2009-2013 5-year ACS", .call = FALSE)
+      stop("Data at the MSA-level is only available beginning with the 2009-2013 5-year ACS", call. = FALSE)
     }
   }
 
@@ -128,6 +138,16 @@ get_flows <- function(geography, variables = NULL, breakdown = NULL,
 
   if (year < 2010) {
     stop("Migration flows are available via API beginning in 2010", call. = FALSE)
+  }
+
+  # Beginning with the 2017-2021 ACS, flows are published between counties and
+  # states / world regions only
+  if (year > 2020 && geography != "county") {
+    stop("Beginning with the 2017-2021 5-year ACS, migration flows are only available for counties. Use `year = 2020` or earlier for county subdivision or MSA data.", call. = FALSE)
+  }
+
+  if (year > 2020 && geometry) {
+    stop("`geometry = TRUE` is not supported for years after 2020, as flows are published between counties and states or world regions rather than other counties. Use `geometry = FALSE`.", call. = FALSE)
   }
 
   # if different moe level is specified, calculate factor to adjust by
