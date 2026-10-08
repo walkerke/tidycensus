@@ -34,6 +34,25 @@ test_that("Census API responses map to tidycensus error messages", {
   expect_equal(resp_text(httr2::response(204)), "")
 })
 
+test_that("the API's invalid-key page gets the invalid key message", {
+  expect_error(
+    census_api_content(httr2::response(
+      200,
+      url = "https://api.census.gov/data/invalid_key.html",
+      body = charToRaw("<html><title>Invalid Key</title></html>")
+    )),
+    "invalid or inactive API key"
+  )
+  expect_equal(
+    census_api_content(httr2::response(
+      200,
+      url = "https://api.census.gov/data/2023/acs/acs5?get=NAME&for=state:50",
+      body = charToRaw('[["NAME"],["Vermont"]]')
+    )),
+    '[["NAME"],["Vermont"]]'
+  )
+})
+
 test_that("requests are built the same way as before, with a user agent and no timeout", {
   query <- list(get = "NAME", "for" = "state:*", "in" = NULL, key = "k")
   req <- census_request("https://api.census.gov/data/2024/acs/acs5", query)
