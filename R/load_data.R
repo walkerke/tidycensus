@@ -922,6 +922,15 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
 
   dat <- dat[-1,]
 
+  # The API has occasionally returned the same person record twice, which breaks
+  # the padding and recoding below; drop exact repeats, and stop if a
+  # repeated record has conflicting values
+  dat <- dplyr::distinct(dat)
+
+  if (anyDuplicated(dat[c("SERIALNO", "SPORDER")])) {
+    stop("The Census API returned conflicting duplicate records for this request. This is likely a temporary problem with the API; please try again.", call. = FALSE)
+  }
+
   # Convert the weights columns to numeric
   dat <- dat %>%
     dplyr::mutate(
@@ -1203,6 +1212,15 @@ load_data_pums_vacant <- function(variables, state, puma, key, year, survey,
   dat <- dplyr::as_tibble(dat, .name_repair = "minimal")
 
   dat <- dat[-1,]
+
+  # The API has occasionally returned the same housing record twice, which breaks
+  # the padding and recoding below; drop exact repeats, and stop if a
+  # repeated record has conflicting values
+  dat <- dplyr::distinct(dat)
+
+  if (anyDuplicated(dat["SERIALNO"])) {
+    stop("The Census API returned conflicting duplicate records for this request. This is likely a temporary problem with the API; please try again.", call. = FALSE)
+  }
 
   # Convert the weights columns to numeric
   dat <- dat %>%
