@@ -21,6 +21,7 @@ Depends:
     R (>= 4.1)
 Imports:
     httr,
+    httr2 (>= 1.1.0),
     sf,
     dplyr (>= 1.0.0),
     tigris,
@@ -29,7 +30,7 @@ Imports:
     purrr,
     rvest,
     tidyr (>= 1.0.0),
-    readr,
+    readr (>= 2.0.0),
     xml2,
     units,
     utils,
