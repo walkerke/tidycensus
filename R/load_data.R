@@ -406,36 +406,33 @@ load_data_decennial <- function(geography, variables, key, year, sumfile, pop_gr
 
     if (geography == "state" && !is.null(state)) {
 
-      call <- GET(base, query = list(get = vars_to_get,
-                                     "for" = for_area,
-                                     key = key,
-                                     "POPGROUP" = pop_group))
+      query <- list(get = vars_to_get,
+                    "for" = for_area,
+                    key = key,
+                    "POPGROUP" = pop_group)
     } else {
 
-      call <- GET(base, query = list(get = vars_to_get,
-                                     "for" = for_area,
-                                     "in" = in_area,
-                                     key = key,
-                                     "POPGROUP" = pop_group))
+      query <- list(get = vars_to_get,
+                    "for" = for_area,
+                    "in" = in_area,
+                    key = key,
+                    "POPGROUP" = pop_group)
     }
   }
 
   else {
 
-    call <- GET(base, query = list(get = vars_to_get,
-                                   "for" = paste0(geography, ":*"),
-                                   key = key,
-                                   "POPGROUP" = pop_group))
+    query <- list(get = vars_to_get,
+                  "for" = paste0(geography, ":*"),
+                  key = key,
+                  "POPGROUP" = pop_group)
   }
 
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", call_url))
-  }
+  call <- census_api_get(base, query, show_call = show_call)
 
   # Make sure call status returns 200, else, print the error message for the user.
   # Try to handle 204's here
-  if (call$status_code == 204) {
+  if (httr2::resp_status(call) == 204) {
 
     if (sumfile == "ddhca") {
       rlang::abort(c("Your DDHC-A request returned No Content from the API.",
@@ -450,8 +447,8 @@ load_data_decennial <- function(geography, variables, key, year, sumfile, pop_gr
 
   }
 
-  if (call$status_code != 200) {
-    msg <- content(call, as = "text")
+  if (httr2::resp_status(call) != 200) {
+    msg <- redact_api_key(resp_text(call), response_api_keys(call))
 
     if (grepl("The requested resource is not available", msg)) {
       stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
@@ -475,11 +472,7 @@ load_data_decennial <- function(geography, variables, key, year, sumfile, pop_gr
   #   content <- content(call, as = "text")
   # }
 
-  content <- content(call, as = "text")
-
-  if (grepl("You included a key with this request", content)) {
-    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
-  }
+  content <- census_api_content(call)
 
   # Fix issue in SF3 2000 API - https://github.com/walkerke/tidycensus/issues/22
   if (year == 2000 && sumfile == "sf3") {
