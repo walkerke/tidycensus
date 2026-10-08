@@ -1352,32 +1352,11 @@ load_data_flows <- function(geography, variables, key, year, state = NULL,
                 "in" = in_area,
                 key = key)
 
-  # execute api call
-  call <- GET(base, query = query)
-
-  # print nicely formatted api call if requested
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", utils::URLdecode(call_url)))
-  }
+  # execute api call, printing a nicely formatted api call if requested
+  call <- census_api_get(base, query, show_call = show_call, decode_call = TRUE)
 
   # Make sure call status returns 200, else, print the error message for the user.
-  if (call$status_code != 200) {
-    msg <- content(call, as = "text")
-
-    if (grepl("The requested resource is not available", msg)) {
-      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
-    } else {
-      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
-    }
-  }
-
-  # convert json response to text
-  content <- content(call, as = "text")
-
-  if (grepl("You included a key with this request", content)) {
-    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
-  }
+  content <- census_api_content(call)
 
   # convert response to json
   dat <- fromJSON(content)
