@@ -20,7 +20,6 @@ LazyData: true
 Depends:
     R (>= 4.1)
 Imports:
-    httr,
     httr2 (>= 1.1.0),
     sf,
     dplyr (>= 1.0.0),
