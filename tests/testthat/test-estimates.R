@@ -369,3 +369,31 @@ test_that("2020s housing geometry uses the vintage's boundaries", {
   )
   expect_equal(captured_year, 2025)
 })
+
+test_that("2020s population geometry uses the vintage's boundaries", {
+  skip_on_cran()
+
+  captured_year <- NULL
+
+  local_mocked_bindings(
+    census_read_csv = function(https_url, ftp_url, required_col) {
+      data.frame(
+        SUMLEV = "050", REGION = "1", DIVISION = "1", STATE = "09", COUNTY = "110",
+        STNAME = "Connecticut", CTYNAME = "Capitol Planning Region",
+        POPESTIMATE2020 = 975000, POPESTIMATE2025 = 980000,
+        stringsAsFactors = FALSE
+      )
+    },
+    use_tigris = function(geography, year, ...) {
+      captured_year <<- year
+      stop("captured geometry", call. = FALSE)
+    }
+  )
+
+  expect_error(
+    suppressMessages(get_estimates("county", variables = "POPESTIMATE", state = "CT",
+                                   vintage = 2025, year = 2020, geometry = TRUE)),
+    "geometry data download failed"
+  )
+  expect_equal(captured_year, 2025)
+})

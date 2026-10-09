@@ -2116,8 +2116,10 @@ get_estimates <- function(
     } else {
       geom <- try(suppressMessages(use_tigris(
         geography = geography,
-        # Intercensal and 2020s housing GEOIDs follow the vintage's boundaries
-        year = if (intercensal || identical(product, "housing")) vintage else year,
+        # GEOIDs in the 2020s and intercensal files follow the vintage's
+        # boundaries (e.g. Connecticut's planning regions for every year of
+        # Vintage 2022 and later)
+        year = if (year >= 2020 || intercensal) vintage else year,
         state = state,
         county = county,
         cb = cb,
