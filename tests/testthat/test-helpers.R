@@ -57,7 +57,7 @@ test_that("get_decennial normalizes state-prefixed ZCTA GEOIDs", {
   expect_equal(out$GEOID, c("82001", "82007"))
 
   # Geometry column has data
-  expect_all_false(sf::st_is_empty(out))
+  expect_false(any(sf::st_is_empty(out)))
 
   ##############################################################################
   # Year 2010
@@ -77,7 +77,7 @@ test_that("get_decennial normalizes state-prefixed ZCTA GEOIDs", {
   expect_equal(out$GEOID, c("82001", "82007"))
 
   # Geometry column has data
-  expect_all_false(sf::st_is_empty(out))
+  expect_false(any(sf::st_is_empty(out)))
 })
 
 test_that("variables_from_table_acs drops comparison profile significance columns", {
