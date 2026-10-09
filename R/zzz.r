@@ -56,7 +56,8 @@ utils::globalVariables(c("variable", "value", "GEOID", "NAME", "type", "moe",
                          "CBSA", "CSA", "PLACE", "ZCTA", "ZCTA5CE00", "AGE", "AGEGROUP", "AGEGRP",
                          "HISP", "HNAC_FEMALE", "ORIGIN", "POPESTIMATE2020",
                          "POPESTIMATE2022", "RACE", "SEX", "TOT_POP", "YEAR", "category",
-                         "POPGROUP", "pop_group"))
+                         "POPGROUP", "pop_group", "TOT_MALE", "TOT_FEMALE",
+                         "ESTIMATESBASE", "POPESTIMATE", "NPOPCHG"))
 
 #' @importFrom rlang .data
 NULL
