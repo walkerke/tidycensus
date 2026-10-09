@@ -98,3 +98,14 @@ test_that("connection errors show only the root cause", {
   outer <- rlang::error_cnd(message = "Failed to perform HTTP request.", parent = inner)
   expect_equal(root_cause_message(outer), "Could not resolve host: api.census.gov")
 })
+
+test_that("inner requests stay quiet except for show_call output (#485)", {
+  expect_message(
+    suppress_messages_but_calls({
+      message("Getting data from the 2019-2023 5-year ACS")
+      message("Census API call: https://api.census.gov/data/2023/acs/acs5?get=NAME")
+    }),
+    "^Census API call:"
+  )
+  expect_silent(suppress_messages_but_calls(message("Using FIPS code '44' for state 'RI'")))
+})

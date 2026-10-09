@@ -1770,7 +1770,7 @@ get_estimates <- function(
           result <- map(
             state,
             ~ {
-              suppressMessages(
+              suppress_messages_but_calls(
                 insist_get_estimates(
                   geography = geography,
                   product = product,
@@ -1805,7 +1805,7 @@ get_estimates <- function(
           result <- map_df(
             state,
             ~ {
-              suppressMessages(
+              suppress_messages_but_calls(
                 insist_get_estimates(
                   geography = geography,
                   product = product,

@@ -294,7 +294,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
         if (geometry) {
           result <- map(state, function(s, ...) {
-            suppressMessages(
+            suppress_messages_but_calls(
               insist_get_acs(geography = geography,
                              variables = variables,
                              table = table,
@@ -326,7 +326,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
             st_as_sf()
         } else {
           result <- map_df(state, ~{
-            suppressMessages(
+            suppress_messages_but_calls(
               insist_get_acs(geography = geography,
                              variables = variables,
                              table = table,
@@ -397,7 +397,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         vars_rest <- vars_by_type[-1]
 
         # return acs data with geometry for first element of list
-        result_geo <- suppressMessages(
+        result_geo <- suppress_messages_but_calls(
           insist_get_acs(
             geography = geography,
             variables = vars_first,
@@ -424,7 +424,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
         # return acs data without geometry for remaining elements and join
         result_no_geo <- map(vars_rest, ~
-          suppressMessages(
+          suppress_messages_but_calls(
             insist_get_acs(
               geography = geography,
               variables = .x,
@@ -476,7 +476,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       # if output is tidy, we don't need to worry about this as results can
       # be combined using rbind
       result <- map(vars_by_type, function(v, ...) {
-        suppressMessages(
+        suppress_messages_but_calls(
           insist_get_acs(
             geography = geography,
             variables = v,
@@ -518,7 +518,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         # when output is wide and geometry = FALSE make one call per list element
         # and then left join results into one df
         result <- map(vars_by_type, ~
-          suppressMessages(
+          suppress_messages_but_calls(
             insist_get_acs(
               geography = geography,
               variables = .x,
@@ -553,7 +553,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
 
       } else {
         result <- map_df(vars_by_type, ~
-          suppressMessages(
+          suppress_messages_but_calls(
             insist_get_acs(
               geography = geography,
               variables = .x,
@@ -592,7 +592,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
       result <- map(state, function(s, ...) {
-        suppressMessages(
+        suppress_messages_but_calls(
           insist_get_acs(geography = geography,
                 variables = variables,
                 table = table,
@@ -625,7 +625,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
         st_as_sf()
     } else {
       result <- map_df(state, ~{
-        suppressMessages(
+        suppress_messages_but_calls(
           insist_get_acs(geography = geography,
                 variables = variables,
                 table = table,
@@ -657,7 +657,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       if (geometry) {
         message("Fetching block group data by county and combining the result.")
         result <- map(county, function(co, ...) {
-          suppressMessages(
+          suppress_messages_but_calls(
             insist_get_acs(geography = geography,
                            variables = variables,
                            table = table,
@@ -691,7 +691,7 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
       } else {
         message("Fetching block group data by county and combining the result.")
         result <- map_df(county, ~{
-          suppressMessages(
+          suppress_messages_but_calls(
             insist_get_acs(geography = geography,
                            variables = variables,
                            table = table,

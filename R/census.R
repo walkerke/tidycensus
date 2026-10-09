@@ -247,7 +247,7 @@ get_decennial <- function(geography,
     # mc <- match.call(expand.dots = TRUE)
     if (geometry) {
       result <- map(state, function(s, ...) {
-        suppressMessages(
+        suppress_messages_but_calls(
           insist_get_decennial(geography = geography,
                                variables = variables,
                                table = table,
@@ -280,7 +280,7 @@ get_decennial <- function(geography,
         st_as_sf()
     } else {
       result <- map_df(state, ~{
-        suppressMessages(
+        suppress_messages_but_calls(
           insist_get_decennial(geography = geography,
                                variables = variables,
                                table = table,
@@ -332,7 +332,7 @@ get_decennial <- function(geography,
 
         # stop("The 2000 decennial Census SF3 endpoint has been removed by the Census Bureau. We will support this data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.", call. = FALSE)
 
-        d <- try(suppressMessages(load_data_decennial(geography, x, key, year, sumfile = "sf3", pop_group, state, county, show_call = show_call)))
+        d <- try(suppress_messages_but_calls(load_data_decennial(geography, x, key, year, sumfile = "sf3", pop_group, state, county, show_call = show_call)))
         message("Variables not found in Summary File 1. Trying Summary File 3...")
       } else {
 
@@ -365,7 +365,7 @@ get_decennial <- function(geography,
 
       # stop("The 2000 decennial Census SF3 endpoint has been removed by the Census Bureau. We will support this data again when the endpoint is updated; in the meantime, we recommend using NHGIS (https://nhgis.org) and the ipumsr R package.", call. = FALSE)
 
-      dat <- try(suppressMessages(load_data_decennial(geography, variables, key, year, sumfile = "sf3", pop_group, state, county, show_call = show_call)))
+      dat <- try(suppress_messages_but_calls(load_data_decennial(geography, variables, key, year, sumfile = "sf3", pop_group, state, county, show_call = show_call)))
       message("Variables not found in Summary File 1. Trying Summary File 3...")
     } else {
       if (sumfile == "sf3") {

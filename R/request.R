@@ -106,6 +106,16 @@ census_api_get <- function(url, query = list(), show_call = FALSE,
   resp
 }
 
+# Like suppressMessages(), but keeps show_call output ("Census API call: ...")
+# from inner requests, e.g. when a multi-state request is made state by state
+suppress_messages_but_calls <- function(expr) {
+  withCallingHandlers(expr, message = function(m) {
+    if (!startsWith(conditionMessage(m), "Census API call:")) {
+      invokeRestart("muffleMessage")
+    }
+  })
+}
+
 # Standard checks for Census API data requests: a non-200 status or an invalid
 # API key. Returns the response body as text.
 census_api_content <- function(resp) {
