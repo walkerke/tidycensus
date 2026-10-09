@@ -4,7 +4,7 @@ test_that("2025 place population estimates parse from the city totals file", {
   captured_url <- NULL
 
   local_mocked_bindings(
-    read_estimates_csv = function(https_url, ftp_url, required_col) {
+    census_read_csv = function(https_url, ftp_url, required_col) {
       captured_url <<- https_url
       expect_match(https_url, "2020-2025/cities/totals/sub-est2025[.]csv")
       expect_match(ftp_url, "2020-2025/cities/totals/sub-est2025[.]csv")
@@ -55,7 +55,7 @@ test_that("Puerto Rico municipio characteristics parse from the single-year file
   skip_on_cran()
 
   local_mocked_bindings(
-    read_estimates_csv = function(https_url, ftp_url, required_col) {
+    census_read_csv = function(https_url, ftp_url, required_col) {
       expect_match(https_url, "2020-2025/counties/asrh/cc-est2025-syasex-72[.]csv")
       expect_match(ftp_url, "2020-2025/counties/asrh/cc-est2025-syasex-72[.]csv")
 
@@ -122,7 +122,7 @@ test_that("intercensal population totals parse from the city totals file (#629)"
   skip_on_cran()
 
   local_mocked_bindings(
-    read_estimates_csv = function(https_url, ftp_url, required_col) {
+    census_read_csv = function(https_url, ftp_url, required_col) {
       expect_match(https_url, "2010-2020/intercensal/cities/sub-est2020int[.]csv")
 
       data.frame(
@@ -159,7 +159,7 @@ test_that("2000-2010 intercensal characteristics map year and age codes (#629)",
   skip_on_cran()
 
   local_mocked_bindings(
-    read_estimates_csv = function(https_url, ftp_url, required_col) {
+    census_read_csv = function(https_url, ftp_url, required_col) {
       expect_match(https_url, "2000-2010/intercensal/county/co-est00int-alldata-44[.]csv")
 
       # YEAR 1 = 2000 base, 2 = July 2000, 12 = 2010 Census, 13 = July 2010;
@@ -224,7 +224,7 @@ test_that("intercensal characteristics support multiple states and geometry (#62
   skip_on_cran()
 
   local_mocked_bindings(
-    read_estimates_csv = function(https_url, ftp_url, required_col) {
+    census_read_csv = function(https_url, ftp_url, required_col) {
       st <- sub(".*alldata-([0-9]{2})[.]csv$", "\\1", https_url)
 
       expand.grid(YEAR = 2:11, AGEGRP = 0:1) |>
