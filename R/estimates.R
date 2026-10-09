@@ -1776,9 +1776,15 @@ get_estimates <- function(
         check <- FALSE
       }
 
-      # if there is more than one TRUE, grab data by variable
+      # if there is more than one TRUE, grab data by variable and join the
+      # results on their shared columns (the API returns rows in a different
+      # order for each product, so they can't be bound side by side)
       if (length(which(check)) > 1) {
-        dat <- map_dfc(variables, function(eachvar) {
+        if (time_series && check[2]) {
+          stop("Components of change are indexed by period, and population and housing estimates by date, so they can't be combined in one time series request. Request components of change separately.", call. = FALSE)
+        }
+
+        dat <- map(variables, function(eachvar) {
           load_data_estimates(
             geography = geography,
             product = NULL,
@@ -1790,10 +1796,8 @@ get_estimates <- function(
             key = key,
             show_call = show_call
           )
-        })
-
-        # Remove any extra GEOID or GEONAME columns
-        dat <- dat[, -grep("GEOID[0-9]|GEONAME[0-9]|NAME[0-9]", colnames(dat))]
+        }) %>%
+          purrr::reduce(function(x, y) left_join(x, y, by = intersect(names(x), names(y))))
       } else {
         dat <- load_data_estimates(
           geography = geography,
