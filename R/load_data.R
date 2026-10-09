@@ -187,10 +187,10 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
     for_area <- paste0(zcta, collapse = ",")
 
-    call <- GET(base, query = list(get = vars_to_get,
-                                   "for" = paste0(geography, ":", for_area),
-                                   "in" = in_area,
-                                   key = key))
+    query <- list(get = vars_to_get,
+                  "for" = paste0(geography, ":", for_area),
+                  "in" = in_area,
+                  key = key)
 
   } else if (!is.null(state) && is.null(zcta)) {
 
@@ -241,41 +241,26 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
 
     if (geography == "state" && !is.null(state)) {
 
-      call <- GET(base, query = list(get = vars_to_get,
-                                     "for" = for_area,
-                                     key = key))
+      query <- list(get = vars_to_get,
+                    "for" = for_area,
+                    key = key)
     } else {
 
-      call <- GET(base, query = list(get = vars_to_get,
-                                     "for" = for_area,
-                                     "in" = in_area,
-                                     key = key))
+      query <- list(get = vars_to_get,
+                    "for" = for_area,
+                    "in" = in_area,
+                    key = key)
     }
 
 
   } else {
 
-    call <- GET(base, query = list(get = vars_to_get,
-                                   "for" = paste0(geography, ":*"),
-                                   key = key))
+    query <- list(get = vars_to_get,
+                  "for" = paste0(geography, ":*"),
+                  key = key)
   }
 
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", call_url))
-  }
-
-  # Make sure call status returns 200, else, print the error message for the user.
-  if (call$status_code != 200) {
-    msg <- content(call, as = "text")
-
-    if (grepl("The requested resource is not available", msg)) {
-      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
-    } else {
-      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
-    }
-
-  }
+  call <- census_api_get(base, query, show_call = show_call)
 
   # callStatus <- http_status(call)
   # if (callStatus$reason != "OK") {
@@ -287,11 +272,8 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
   # validate_call(content = content, geography = geography, year = year,
   #               dataset = survey)
 
-  content <- content(call, as = "text")
-
-  if (grepl("You included a key with this request", content)) {
-    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
-  }
+  # Make sure call status returns 200, else, print the error message for the user.
+  content <- census_api_content(call)
 
   dat <- fromJSON(content)
 
@@ -424,36 +406,33 @@ load_data_decennial <- function(geography, variables, key, year, sumfile, pop_gr
 
     if (geography == "state" && !is.null(state)) {
 
-      call <- GET(base, query = list(get = vars_to_get,
-                                     "for" = for_area,
-                                     key = key,
-                                     "POPGROUP" = pop_group))
+      query <- list(get = vars_to_get,
+                    "for" = for_area,
+                    key = key,
+                    "POPGROUP" = pop_group)
     } else {
 
-      call <- GET(base, query = list(get = vars_to_get,
-                                     "for" = for_area,
-                                     "in" = in_area,
-                                     key = key,
-                                     "POPGROUP" = pop_group))
+      query <- list(get = vars_to_get,
+                    "for" = for_area,
+                    "in" = in_area,
+                    key = key,
+                    "POPGROUP" = pop_group)
     }
   }
 
   else {
 
-    call <- GET(base, query = list(get = vars_to_get,
-                                   "for" = paste0(geography, ":*"),
-                                   key = key,
-                                   "POPGROUP" = pop_group))
+    query <- list(get = vars_to_get,
+                  "for" = paste0(geography, ":*"),
+                  key = key,
+                  "POPGROUP" = pop_group)
   }
 
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", call_url))
-  }
+  call <- census_api_get(base, query, show_call = show_call)
 
   # Make sure call status returns 200, else, print the error message for the user.
   # Try to handle 204's here
-  if (call$status_code == 204) {
+  if (httr2::resp_status(call) == 204) {
 
     if (sumfile == "ddhca") {
       rlang::abort(c("Your DDHC-A request returned No Content from the API.",
@@ -468,8 +447,8 @@ load_data_decennial <- function(geography, variables, key, year, sumfile, pop_gr
 
   }
 
-  if (call$status_code != 200) {
-    msg <- content(call, as = "text")
+  if (httr2::resp_status(call) != 200) {
+    msg <- redact_api_key(resp_text(call), response_api_keys(call))
 
     if (grepl("The requested resource is not available", msg)) {
       stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
@@ -493,11 +472,7 @@ load_data_decennial <- function(geography, variables, key, year, sumfile, pop_gr
   #   content <- content(call, as = "text")
   # }
 
-  content <- content(call, as = "text")
-
-  if (grepl("You included a key with this request", content)) {
-    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
-  }
+  content <- census_api_content(call)
 
   # Fix issue in SF3 2000 API - https://github.com/walkerke/tidycensus/issues/22
   if (year == 2000 && sumfile == "sf3") {
@@ -633,6 +608,17 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
     }
   }
 
+  # Housing unit estimates before Vintage 2019 require a date (2015-2017) or
+  # return every date in the series without one (2018). Request the date and
+  # keep the latest, the July 1 estimate for the vintage year, which is what the
+  # other products return by default
+  housing_latest_only <- !time_series && product == "housing" && year < 2019
+
+  if (housing_latest_only) {
+    date_var <- if (year >= 2018) "DATE_CODE" else "DATE_"
+    vars_to_get <- paste0(vars_to_get, ",", date_var)
+  }
+
   base <- sprintf("https://api.census.gov/data/%s/pep/%s", year, product)
 
   if (!is.null(state)) {
@@ -679,15 +665,15 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
     if (geography == "state" && !is.null(state)) {
 
-      call <- GET(base, query = list(get = vars_to_get,
-                                     "for" = for_area,
-                                     key = key))
+      query <- list(get = vars_to_get,
+                    "for" = for_area,
+                    key = key)
     } else {
 
-      call <- GET(base, query = list(get = vars_to_get,
-                                     "for" = for_area,
-                                     "in" = in_area,
-                                     key = key))
+      query <- list(get = vars_to_get,
+                    "for" = for_area,
+                    "in" = in_area,
+                    key = key)
     }
 
 
@@ -695,34 +681,15 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
 
   else {
 
-    call <- GET(base, query = list(get = vars_to_get,
-                                   "for" = paste0(geography, ":*"),
-                                   key = key))
+    query <- list(get = vars_to_get,
+                  "for" = paste0(geography, ":*"),
+                  key = key)
   }
 
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", call_url))
-  }
+  call <- census_api_get(base, query, show_call = show_call)
 
   # Make sure call status returns 200, else, print the error message for the user.
-  if (call$status_code != 200) {
-    msg <- content(call, as = "text")
-
-    if (grepl("The requested resource is not available", msg)) {
-      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
-    } else {
-      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
-    }
-
-  }
-
-
-  content <- content(call, as = "text")
-
-  if (grepl("You included a key with this request", content)) {
-    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
-  }
+  content <- census_api_content(call)
 
   dat <- fromJSON(content)
 
@@ -737,6 +704,11 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
   var_vector <- var_vector[var_vector != geo_name]
 
   dat[var_vector] <- lapply(dat[var_vector], as.numeric)
+
+  if (housing_latest_only) {
+    dat <- dat[dat[[date_var]] == max(dat[[date_var]]), names(dat) != date_var]
+    var_vector <- var_vector[var_vector != date_var]
+  }
 
   v2 <- c(var_vector, geo_name)
 
@@ -886,33 +858,10 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
 
   }
 
-  call <- GET(base,
-              query = query,
-              progress())
-
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", call_url))
-  }
+  call <- census_api_get(base, query, show_call = show_call, progress = TRUE)
 
   # Make sure call status returns 200, else, print the error message for the user.
-  if (call$status_code != 200) {
-    msg <- content(call, as = "text")
-
-    if (grepl("The requested resource is not available", msg)) {
-      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
-    } else {
-      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
-    }
-
-  }
-
-
-  content <- content(call, as = "text")
-
-  if (grepl("You included a key with this request", content)) {
-    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
-  }
+  content <- census_api_content(call)
 
   dat <- jsonlite::fromJSON(content)
 
@@ -921,6 +870,15 @@ load_data_pums <- function(variables, state, puma, key, year, survey,
   dat <- dplyr::as_tibble(dat, .name_repair = "minimal")
 
   dat <- dat[-1,]
+
+  # The API has occasionally returned the same person record twice, which breaks
+  # the padding and recoding below; drop exact repeats, and stop if a
+  # repeated record has conflicting values
+  dat <- dplyr::distinct(dat)
+
+  if (anyDuplicated(dat[c("SERIALNO", "SPORDER")])) {
+    stop("The Census API returned conflicting duplicate records for this request. This is likely a temporary problem with the API; please try again.", call. = FALSE)
+  }
 
   # Convert the weights columns to numeric
   dat <- dat %>%
@@ -1168,33 +1126,10 @@ load_data_pums_vacant <- function(variables, state, puma, key, year, survey,
 
   }
 
-  call <- GET(base,
-              query = query,
-              progress())
-
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", call_url))
-  }
+  call <- census_api_get(base, query, show_call = show_call, progress = TRUE)
 
   # Make sure call status returns 200, else, print the error message for the user.
-  if (call$status_code != 200) {
-    msg <- content(call, as = "text")
-
-    if (grepl("The requested resource is not available", msg)) {
-      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
-    } else {
-      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
-    }
-
-  }
-
-
-  content <- content(call, as = "text")
-
-  if (grepl("You included a key with this request", content)) {
-    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
-  }
+  content <- census_api_content(call)
 
   dat <- jsonlite::fromJSON(content)
 
@@ -1203,6 +1138,15 @@ load_data_pums_vacant <- function(variables, state, puma, key, year, survey,
   dat <- dplyr::as_tibble(dat, .name_repair = "minimal")
 
   dat <- dat[-1,]
+
+  # The API has occasionally returned the same housing record twice, which breaks
+  # the padding and recoding below; drop exact repeats, and stop if a
+  # repeated record has conflicting values
+  dat <- dplyr::distinct(dat)
+
+  if (anyDuplicated(dat["SERIALNO"])) {
+    stop("The Census API returned conflicting duplicate records for this request. This is likely a temporary problem with the API; please try again.", call. = FALSE)
+  }
 
   # Convert the weights columns to numeric
   dat <- dat %>%
@@ -1399,38 +1343,17 @@ load_data_flows <- function(geography, variables, key, year, state = NULL,
   }
 
   # build query for api call
-  # for calls where in_area is not defined, "in" will be NULL and not included in GET()
+  # for calls where in_area is not defined, "in" will be NULL and not included in the request
   query <- list(get = vars_to_get,
                 "for" = for_area,
                 "in" = in_area,
                 key = key)
 
-  # execute api call
-  call <- GET(base, query = query)
-
-  # print nicely formatted api call if requested
-  if (show_call) {
-    call_url <- gsub("&key.*", "", call$url)
-    message(paste("Census API call:", utils::URLdecode(call_url)))
-  }
+  # execute api call, printing a nicely formatted api call if requested
+  call <- census_api_get(base, query, show_call = show_call, decode_call = TRUE)
 
   # Make sure call status returns 200, else, print the error message for the user.
-  if (call$status_code != 200) {
-    msg <- content(call, as = "text")
-
-    if (grepl("The requested resource is not available", msg)) {
-      stop("One or more of your requested variables is likely not available at the requested geography.  Please refine your selection.", call. = FALSE)
-    } else {
-      stop(sprintf("Your API call has errors.  The API message returned is %s.", msg), call. = FALSE)
-    }
-  }
-
-  # convert json response to text
-  content <- content(call, as = "text")
-
-  if (grepl("You included a key with this request", content)) {
-    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
-  }
+  content <- census_api_content(call)
 
   # convert response to json
   dat <- fromJSON(content)

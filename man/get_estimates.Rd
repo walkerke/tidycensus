@@ -41,7 +41,10 @@ be used an alias for \code{"metropolitan statistical area/micropolitan statistic
                For 2020 and later, available products vary by geography.
                \code{"population"} is supported for total population
                estimates, and \code{"characteristics"} is supported for
-               selected geographies.}
+               selected geographies. \code{"housing"} returns housing unit
+               estimates (\code{"HUEST"}) for the US, regions, states, and
+               counties for Vintage 2021 and later; these are read from the
+               Census Bureau's Excel tables and require the readxl package.}
 
 \item{variables}{A character string or vector of character strings of requested variables.  For years 2020 and later, use \code{variables = "all"} to request all available variables.}
 
