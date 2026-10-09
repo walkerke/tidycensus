@@ -78,20 +78,17 @@ test_that("table expansion helpers pass direct keys to Census group metadata", {
   seen <- list()
 
   local_mocked_bindings(
-    GET = function(url, query = list(), ...) {
+    census_api_get = function(url, query = list(), ...) {
       seen[[length(seen) + 1]] <<- list(
         url = url,
         query = query
       )
-      structure(list(status_code = 200L, text = if (grepl("B01001", url)) {
+      httr2::response(200, url = url, body = charToRaw(if (grepl("B01001", url)) {
         '{"variables":{"B01001_001E":{},"B01001_001EA":{},"B01001_001M":{},"B01001_002E":{},"B01001_002M":{},"GEO_ID":{},"NAME":{}}}'
       } else {
         '{"variables":{"P1_001N":{},"P1_001NA":{},"P1_002N":{},"GEO_ID":{},"NAME":{}}}'
-      }), class = "response")
-    },
-    status_code = function(x) x$status_code,
-    http_status = function(x) list(category = "Success", message = "OK"),
-    content = function(x, as = NULL, ...) x$text
+      }))
+    }
   )
 
   expect_equal(

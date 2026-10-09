@@ -14,16 +14,20 @@ get_pop_groups <- function(year, sumfile, key = NULL) {
   url <- sprintf("https://api.census.gov/data/%s/dec/%s/variables.json",
                  year, sumfile)
 
-  resp <- GET(url, query = list(key = key))
+  resp <- census_api_get(url, list(key = key))
 
-  if (status_code(resp) == 404L) {
+  if (httr2::resp_status(resp) == 404L) {
     stop("API endpoint not found. Does this data set exist for the specified year? See https://api.census.gov/data.html for data availability.", call. = FALSE)
-  } else if (http_status(resp)$category != "Success") {
-    stop(paste("API request failed. Reason:", http_status(resp)$message), call. = FALSE)
+  } else if (httr2::resp_status(resp) %/% 100 != 2) {
+    stop(paste("API request failed. Reason:", http_status_message(resp)), call. = FALSE)
+  }
+
+  if (is_invalid_key_page(resp)) {
+    stop_invalid_key()
   }
 
   j <- resp %>%
-    content(as = "text") %>%
+    resp_text() %>%
     jsonlite::fromJSON()
 
   item_data <- j$variables$POPGROUP$values$item

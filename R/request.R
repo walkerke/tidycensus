@@ -123,10 +123,14 @@ census_api_content <- function(resp) {
   content <- resp_text(resp)
 
   if (is_invalid_key_page(resp) || grepl("You included a key with this request", content)) {
-    stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
+    stop_invalid_key()
   }
 
   content
+}
+
+stop_invalid_key <- function() {
+  stop("You have supplied an invalid or inactive API key. To obtain a valid API key, visit https://api.census.gov/data/key_signup.html. To activate your key, be sure to click the link provided to you in the email from the Census Bureau that contained your key.", call. = FALSE)
 }
 
 # The Census API answers an invalid or inactive key by redirecting to this page

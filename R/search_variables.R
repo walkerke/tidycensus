@@ -113,14 +113,17 @@ load_variables <- function(
     url <- paste("https://api.census.gov/data",
                  set,
                  "variables.json", sep = "/")
-    resp <- GET(url, query = list(key = key))
-    if(httr::status_code(resp) == 404L){
+    resp <- census_api_get(url, list(key = key))
+    if(httr2::resp_status(resp) == 404L){
       stop("API endpoint not found. Does this data set exist for the specified year? See https://api.census.gov/data.html for data availability.")
-    }else if(httr::http_status(resp)$category != "Success"){
-      stop(paste("API request failed. Reason:", httr::http_status(resp)$message))
+    }else if(httr2::resp_status(resp) %/% 100 != 2){
+      stop(paste("API request failed. Reason:", http_status_message(resp)))
+    }
+    if (is_invalid_key_page(resp)) {
+      stop_invalid_key()
     }
     dat <- resp %>%
-      httr::content(as = "text") %>%
+      resp_text() %>%
       jsonlite::fromJSON() %>%
       purrr::modify_depth(2, function(x) {
         x$validValues <- NULL

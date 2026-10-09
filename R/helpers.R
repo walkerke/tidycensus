@@ -526,20 +526,24 @@ warn_cache_table_deprecated <- function(cache_table) {
 group_variables <- function(base, table, key) {
   key <- get_census_api_key(key)
 
-  resp <- GET(
+  resp <- census_api_get(
     paste0(base, "/groups/", table, ".json"),
-    query = list(key = key)
+    list(key = key)
   )
 
-  if (status_code(resp) == 404L) {
+  if (httr2::resp_status(resp) == 404L) {
     return(NULL)
   }
 
-  if (http_status(resp)$category != "Success") {
-    stop(paste("API request failed. Reason:", http_status(resp)$message), call. = FALSE)
+  if (httr2::resp_status(resp) %/% 100 != 2) {
+    stop(paste("API request failed. Reason:", http_status_message(resp)), call. = FALSE)
   }
 
-  dat <- content(resp, as = "text") %>%
+  if (is_invalid_key_page(resp)) {
+    stop_invalid_key()
+  }
+
+  dat <- resp_text(resp) %>%
     fromJSON(simplifyVector = FALSE)
 
   names(dat$variables)
