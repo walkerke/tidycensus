@@ -244,3 +244,24 @@ test_that("coded median year built values give a warning (#526)", {
                              state = "TX", year = 2024, key = "test-key"))
   )
 })
+
+test_that("get_acs() wide output uses the requested estimate and MOE suffixes (#600)", {
+  local_mocked_bindings(
+    load_data_acs = function(...) {
+      dplyr::tibble(GEOID = c("44001", "44003"), NAME = c("Bristol County, Rhode Island", "Kent County, Rhode Island"),
+                    B19013_001E = c(100000, 90000), B19013_001M = c(5000, 4000))
+    }
+  )
+
+  default <- suppressMessages(get_acs("county", c(income = "B19013_001"), state = "RI", year = 2023,
+                                      output = "wide", key = "test-key"))
+  expect_equal(names(default), c("GEOID", "NAME", "incomeE", "incomeM"))
+
+  custom <- suppressMessages(get_acs("county", c(income = "B19013_001"), state = "RI", year = 2023,
+                                     output = "wide", suffix = c("_est", "_MOE"), key = "test-key"))
+  expect_equal(names(custom), c("GEOID", "NAME", "income_est", "income_MOE"))
+  expect_equal(unname(as.list(custom)), unname(as.list(default)))
+
+  expect_error(get_acs("county", "B19013_001", state = "RI", year = 2023, output = "wide",
+                       suffix = c("E", "E"), key = "test-key"), "two different strings")
+})

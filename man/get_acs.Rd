@@ -24,6 +24,7 @@ get_acs(
   show_call = FALSE,
   drop_empty = FALSE,
   cb = TRUE,
+  suffix = c("E", "M"),
   ...
 )
 }
@@ -106,6 +107,12 @@ for feature geometry when \code{geometry = TRUE}. These are generalized and clip
 the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
 area. Note that tigris functions default to \code{cb = FALSE}. TIGER/Line files are
 always used for 2011 and 2012, when cartographic boundary files are not available.}
+
+\item{suffix}{A character vector of two suffixes for the estimate and margin of
+error columns when \code{output = "wide"}. Defaults to \code{c("E", "M")}, giving
+columns like \code{B19013_001E} and \code{B19013_001M}; for example,
+\code{c("_est", "_moe")} gives \code{B19013_001_est} and \code{B19013_001_moe}.
+Ignored when \code{output = "tidy"}.}
 
 \item{...}{Other keyword arguments}
 }

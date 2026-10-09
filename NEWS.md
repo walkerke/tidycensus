@@ -6,6 +6,7 @@
 * `get_estimates()` now supports housing unit estimates for 2020 and later with `product = "housing"` (Vintage 2021 and later) for the US, regions, states, and counties.  The Census Bureau publishes these only as Excel tables, so the readxl package is required.
 * `get_flows()` now defaults to `year = 2020`, the most recent ACS Migration Flows release with county-to-county flows, and supports the 2017-2021 and 2018-2022 releases, which provide flows between counties and states or world regions (inflows only, with no county subdivision, MSA, or geometry support).
 * `get_acs()` and `get_decennial()` now support metropolitan divisions (`geography = "metropolitan division"`) and tribal census tracts (`geography = "tribal census tract"`), returned for the entire US (#519, #621).
+* New `suffix` argument in `get_acs()` sets the estimate and margin of error suffixes for `output = "wide"`, e.g. `suffix = c("_est", "_moe")`; the default remains `c("E", "M")` (#600).
 * `load_variables()` now includes each table's universe where the Census API publishes it (ACS detailed tables and the 2020 decennial files) (#596).
 * Various bug fixes and performance improvements (#649, #590, #652, #557, #564, #582, #526, #651, #653, #654, #485).
 
