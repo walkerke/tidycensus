@@ -483,3 +483,35 @@ test_that("low-level table data requests use Census API groups", {
   expect_equal(captured[[2]]$query$get, "group(P1)")
   expect_true(all(vapply(captured, function(x) identical(x$query$key, "data-key"), logical(1))))
 })
+
+test_that("load_variables adds table universes when the API publishes them (#596)", {
+  variables_json <- '{"variables":{"B01001_001E":{"label":"Estimate!!Total:","concept":"Sex by Age","predicateType":"int"},"B19013_001E":{"label":"Estimate!!Median household income","concept":"Median Household Income","predicateType":"int"}}}'
+  groups_json <- function(universe) {
+    if (universe) {
+      '{"groups":[{"name":"B01001","description":"Sex by Age","variables":"","universe ":"Total population"},{"name":"B19013","description":"Median Household Income","variables":"","universe ":"Households "}]}'
+    } else {
+      '{"groups":[{"name":"B01001","description":"Sex by Age","variables":""}]}'
+    }
+  }
+  mock_api <- function(groups) {
+    function(url, query = list(), ...) {
+      if (grepl("variables[.]json$", url)) {
+        httr2::response(200, url = url, body = charToRaw(variables_json))
+      } else if (is.null(groups)) {
+        httr2::response(404, url = url, body = charToRaw("Not Found"))
+      } else {
+        httr2::response(200, url = url, body = charToRaw(groups))
+      }
+    }
+  }
+
+  local_mocked_bindings(census_api_get = mock_api(groups_json(TRUE)))
+  v <- load_variables(2023, "acs1", key = "test-key")
+  expect_equal(v$universe, c("Total population", "Households"))
+
+  local_mocked_bindings(census_api_get = mock_api(groups_json(FALSE)))
+  expect_false("universe" %in% names(load_variables(2023, "acs1", key = "test-key")))
+
+  local_mocked_bindings(census_api_get = mock_api(NULL))
+  expect_equal(names(load_variables(2023, "acs1", key = "test-key")), c("name", "label", "concept"))
+})

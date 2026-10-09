@@ -20,7 +20,9 @@
 #' @param key Your Census API key. Defaults to \code{NULL}, which uses your
 #'   \code{CENSUS_API_KEY} environment variable.
 #'
-#' @return A tibble of variables from the requested dataset.
+#' @return A tibble of variables from the requested dataset. For datasets where the
+#'   Census API publishes it (ACS detailed tables and the 2020 decennial files), a
+#'   \code{universe} column gives the universe of each variable's table.
 #' @examples \dontrun{
 #' v15 <- load_variables(2015, "acs5")
 #' View(v15)
@@ -156,6 +158,17 @@ load_variables <- function(
         dplyr::select(-year, -table)
     }
 
+    # Add the universe of each table where the Census API publishes it (ACS
+    # detailed tables and the 2020 decennial files, #596)
+    universes <- table_universes(paste("https://api.census.gov/data", set, "groups.json", sep = "/"), key)
+
+    if (!is.null(universes)) {
+      out2 <- out2 %>%
+        dplyr::mutate(table = stringr::str_remove(name, "_.*")) %>%
+        dplyr::left_join(universes, by = "table") %>%
+        dplyr::select(-table)
+    }
+
     return(as_tibble(out2))
   }
 
@@ -167,4 +180,26 @@ load_variables <- function(
   }
 
   get_dataset(dataset, year, key = key)
+}
+
+# The universe of each table in a dataset, from the API's groups.json; NULL if
+# the dataset doesn't publish universes (e.g. Data Profile and Subject tables,
+# decennial files before 2020) or the request fails
+table_universes <- function(url, key) {
+  resp <- tryCatch(census_api_get(url, list(key = key)), error = function(e) NULL)
+
+  if (is.null(resp) || httr2::resp_status(resp) != 200 || is_invalid_key_page(resp)) {
+    return(NULL)
+  }
+
+  groups <- tryCatch(jsonlite::fromJSON(resp_text(resp))$groups, error = function(e) NULL)
+
+  # The API names the field "universe " (with a trailing space)
+  universe_col <- names(groups)[trimws(names(groups)) == "universe"]
+
+  if (!is.data.frame(groups) || length(universe_col) != 1) {
+    return(NULL)
+  }
+
+  dplyr::tibble(table = groups$name, universe = trimws(groups[[universe_col]]))
 }

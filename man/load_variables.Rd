@@ -34,7 +34,9 @@ the Census API without writing to a local cache.}
 \code{CENSUS_API_KEY} environment variable.}
 }
 \value{
-A tibble of variables from the requested dataset.
+A tibble of variables from the requested dataset. For datasets where the
+  Census API publishes it (ACS detailed tables and the 2020 decennial files), a
+  \code{universe} column gives the universe of each variable's table.
 }
 \description{
 Finding the right variables to use with \code{get_decennial()} or \code{get_acs()} can be challenging; \code{load_variables()} attempts to make this easier for you.  Choose a year and a dataset to search for variables; those variables will be loaded from the Census website as an R data frame.  It is recommended that RStudio users use the \code{View()} function to interactively browse and filter these variables to find the right variables to use.
