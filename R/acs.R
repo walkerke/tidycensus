@@ -225,6 +225,14 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
   # allow underscores and convert back to spaces
   if (grepl("_", geography) & !grepl(" ", geography)) geography <- gsub("_", " ", geography)
 
+  if (geography %in% names(national_within_parent) && (!is.null(state) || !is.null(county))) {
+    stop(sprintf("%ss are returned for the entire US; remove `state` and `county` and filter the result instead.", stringr::str_to_sentence(geography)), call. = FALSE)
+  }
+
+  if (geography == "tribal census tract" && survey == "acs1") {
+    stop("Tribal census tracts are not available in the 1-year ACS. Use `survey = \"acs5\"` instead.", call. = FALSE)
+  }
+
   if (any(grepl("^S[0-9]|^DP", variables)) && geography == "block group") {
     stop("Block groups are not an available geography in the Data Profile and Subject Tables datasets.",
          call. = FALSE)

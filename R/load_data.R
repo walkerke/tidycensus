@@ -131,6 +131,35 @@ format_variables_acs <- function(variables) {
 
 }
 
+# Geographies the Census API returns only within named parent areas (it doesn't
+# accept a wildcard parent), with their parents (#519, #621). tidycensus returns
+# these for the entire US: it asks for every parent area, then for the
+# geography within all of them.
+national_within_parent <- c(
+  "metropolitan division" = "metropolitan statistical area/micropolitan statistical area",
+  "tribal census tract" = "american indian area/alaska native area/hawaiian home land"
+)
+
+add_national_parent <- function(query, geography, base, key) {
+  if (!geography %in% names(national_within_parent)) {
+    return(query)
+  }
+
+  parent <- national_within_parent[[geography]]
+
+  resp <- census_api_get(base, list(get = "NAME", "for" = paste0(parent, ":*"), key = key))
+  parents <- jsonlite::fromJSON(census_api_content(resp))[-1, , drop = FALSE]
+
+  # Only metropolitan (not micropolitan) areas have divisions; listing just
+  # those keeps the request URL within the API's length limit
+  if (geography == "metropolitan division") {
+    parents <- parents[grepl("Metro Area$", parents[, 1]), , drop = FALSE]
+  }
+
+  query[["in"]] <- paste0(parent, ":", paste(parents[, ncol(parents)], collapse = ","))
+  query
+}
+
 load_data_acs <- function(geography, formatted_variables, key, year, state = NULL,
                           county = NULL, zcta = NULL, survey, show_call = FALSE,
                           group = NULL) {
@@ -259,6 +288,8 @@ load_data_acs <- function(geography, formatted_variables, key, year, state = NUL
                   "for" = paste0(geography, ":*"),
                   key = key)
   }
+
+  query <- add_national_parent(query, geography, base, key)
 
   call <- census_api_get(base, query, show_call = show_call)
 
@@ -427,6 +458,8 @@ load_data_decennial <- function(geography, variables, key, year, sumfile, pop_gr
                   key = key,
                   "POPGROUP" = pop_group)
   }
+
+  query <- add_national_parent(query, geography, base, key)
 
   call <- census_api_get(base, query, show_call = show_call)
 

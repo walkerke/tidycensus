@@ -292,6 +292,18 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
     return(slc)
 
+  } else if (geography == "metropolitan division") {
+
+    md <- metro_divisions(year = year, class = "sf", ...)
+
+    return(md)
+
+  } else if (geography == "tribal census tract") {
+
+    tt <- tribal_census_tracts(cb = cb, year = year, class = "sf", ...)
+
+    return(tt)
+
   } else if (geography == c("american indian area/alaska native area/hawaiian home land")) {
 
     nv <- native_areas(cb = cb, year = year, class = "sf", ...)

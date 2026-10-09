@@ -180,6 +180,10 @@ get_decennial <- function(geography,
 
   if (geography == "zcta") geography <- "zip code tabulation area"
 
+  if (geography %in% names(national_within_parent) && (!is.null(state) || !is.null(county))) {
+    stop(sprintf("%ss are returned for the entire US; remove `state` and `county` and filter the result instead.", stringr::str_to_sentence(geography)), call. = FALSE)
+  }
+
   if (year == 2020 && sumfile == "pl" && geography == "zip code tabulation area") {
     stop("ZCTAs are not available in the 2020 PL file.", call. = FALSE)
   }

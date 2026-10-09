@@ -68,7 +68,9 @@ If __state__ or __county__ is in bold face in "Available by", you are required t
 |`"american indian area/alaska native area/hawaiian home land"`|Federal and state-recognized American Indian reservations and Hawaiian home lands|state|`get_acs()`, `get_decennial()`|  
 |`"american indian area/alaska native area (reservation or statistical entity only)"`|Only reservations and statistical entities|state|`get_acs()`, `get_decennial()`| 
 |`"american indian area (off-reservation trust land only)/hawaiian home land"`|Only off-reservation trust lands and Hawaiian home lands|state|`get_acs()`| 
+|`"tribal census tract"`|Tribal census tract (within American Indian areas); returned for the entire US||`get_acs()` (5-year), `get_decennial()`| 
 |`"metropolitan/micropolitan statistical area"` (2021 5-year ACS and later) OR `"metropolitan statistical area/micropolitan statistical area"` OR `"cbsa"` |Core-based statistical area||`get_acs()`, `get_decennial()`|
+|`"metropolitan division"`|Metropolitan division (within the largest metropolitan areas); returned for the entire US||`get_acs()`, `get_decennial()`|
 |`"combined statistical area"`|Combined statistical area|state|`get_acs()`, `get_decennial()`| 
 |`"new england city and town area"`|New England city/town area|state|`get_acs()`, `get_decennial()`| 
 |`"combined new england city and town area"`|Combined New England area|state|`get_acs()`, `get_decennial()`| 
