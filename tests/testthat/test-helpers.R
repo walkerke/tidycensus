@@ -34,18 +34,50 @@ test_that("get_decennial normalizes state-prefixed ZCTA GEOIDs", {
     }
   )
 
+  ##############################################################################
+  # Year 2000
+
+  # Anticipate the warning for year-2000 ZCTAs including separate polygons
+  expect_warning(
+    out <- suppressMessages(
+      get_decennial(
+        geography = "zcta",
+        variables = "P010001",
+        year = 2000,
+        state = "WY",
+        key = "test-key",
+        output = "wide",
+        geometry = TRUE
+      )
+    ),
+    regexp = "ZCTAs for 2000 include separate polygons for discontiguous parts"
+  )
+
+  # Ensure GEOIDs for ZCTAs got the two-digit state prefix removed
+  expect_equal(out$GEOID, c("82001", "82007"))
+
+  # Geometry column has data
+  expect_all_false(sf::st_is_empty(out))
+
+  ##############################################################################
+  # Year 2010
   out <- suppressMessages(
     get_decennial(
       geography = "zcta",
       variables = "P010001",
-      year = 2000,
+      year = 2010,
       state = "WY",
       key = "test-key",
-      output = "wide"
+      output = "wide",
+      geometry = TRUE
     )
   )
 
+  # Ensure GEOIDs for ZCTAs got the two-digit state prefix removed
   expect_equal(out$GEOID, c("82001", "82007"))
+
+  # Geometry column has data
+  expect_all_false(sf::st_is_empty(out))
 })
 
 test_that("variables_from_table_acs drops comparison profile significance columns", {
