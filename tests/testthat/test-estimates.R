@@ -397,3 +397,47 @@ test_that("2020s population geometry uses the vintage's boundaries", {
   )
   expect_equal(captured_year, 2025)
 })
+
+# load_data_estimates() stand-in: one product per call, rows in a different order
+# and names spelled differently per product (as in Vintage 2015)
+mock_estimates_by_product <- function(time_series = FALSE) {
+  function(geography, product, variables, year, state, county, time_series, key, show_call) {
+    if (identical(variables, "POP")) {
+      out <- data.frame(GEONAME = c("Bristol County, Rhode Island", "Kent County, Rhode Island"),
+                        POP = c(49084, 164801), GEOID = c("44001", "44003"), stringsAsFactors = FALSE)
+    } else {
+      out <- data.frame(GEONAME = c("Kent County,Rhode Island", "Bristol County,Rhode Island"),
+                        HUEST = c(73593, 20787), GEOID = c("44003", "44001"), stringsAsFactors = FALSE)
+    }
+    if (time_series) {
+      out <- out[rep(1:2, each = 2), ]
+      out$DATE_ <- rep(c(1, 2), 2)
+      out[[2]] <- out[[2]] + out$DATE_
+    }
+    dplyr::as_tibble(out)
+  }
+}
+
+test_that("mixed-product variables (2019 and earlier) join on GEOID, not names or row order", {
+  local_mocked_bindings(load_data_estimates = mock_estimates_by_product())
+
+  for (product in list(NULL, "population")) {
+    x <- suppressMessages(get_estimates("county", product = product, variables = c("POP", "HUEST"),
+                                        state = "RI", year = 2015, output = "wide", key = "test-key"))
+    x <- x[order(x$GEOID), ]
+    expect_equal(x$GEOID, c("44001", "44003"))
+    expect_equal(x$POP, c(49084, 164801))
+    expect_equal(x$HUEST, c(20787, 73593))
+  }
+})
+
+test_that("mixed-product time series join on GEOID and date", {
+  local_mocked_bindings(load_data_estimates = mock_estimates_by_product(time_series = TRUE))
+
+  x <- suppressMessages(get_estimates("county", variables = c("POP", "HUEST"), state = "RI",
+                                      year = 2015, time_series = TRUE, output = "wide", key = "test-key"))
+  x <- x[order(x$GEOID, x$DATE), ]
+  expect_equal(nrow(x), 4)
+  expect_equal(x$POP, c(49085, 49086, 164802, 164803))
+  expect_equal(x$HUEST, c(20788, 20789, 73594, 73595))
+})

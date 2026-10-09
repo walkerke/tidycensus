@@ -1857,7 +1857,7 @@ get_estimates <- function(
 
     # For a variables vector, check to see if the variables cut across multiple products
     if (!is.null(variables) && length(variables) > 1) {
-      if (!is.null(product) && product != "charagegroups") {
+      if (is.null(product) || product != "charagegroups") {
         check <- c(
           any(variables %in% population_estimates_variables),
           any(variables %in% components_estimates_variables),
@@ -1868,8 +1868,9 @@ get_estimates <- function(
       }
 
       # if there is more than one TRUE, grab data by variable and join the
-      # results on their shared columns (the API returns rows in a different
-      # order for each product, so they can't be bound side by side)
+      # results on GEOID and date (the API returns rows in a different order for
+      # each product, so they can't be bound side by side, and names can differ
+      # between products, e.g. spacing in Vintage 2015)
       if (length(which(check)) > 1) {
         if (time_series && check[2]) {
           stop("Components of change are indexed by period, and population and housing estimates by date, so they can't be combined in one time series request. Request components of change separately.", call. = FALSE)
@@ -1888,7 +1889,10 @@ get_estimates <- function(
             show_call = show_call
           )
         }) %>%
-          purrr::reduce(function(x, y) left_join(x, y, by = intersect(names(x), names(y))))
+          purrr::reduce(function(x, y) {
+            y <- y[, !names(y) %in% c("NAME", "GEONAME"), drop = FALSE]
+            left_join(x, y, by = intersect(names(x), names(y)))
+          })
       } else {
         dat <- load_data_estimates(
           geography = geography,
