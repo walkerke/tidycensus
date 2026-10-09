@@ -5,7 +5,7 @@
 * New `drop_empty` argument in `get_acs()`, `get_decennial()`, and `get_estimates()` drops rows with empty geometries (typically water-only areas not in the cartographic boundary files) when `geometry = TRUE` (#650).  These functions also now have an explicit `cb` argument, which defaults to `TRUE` (cartographic boundary files); use `cb = FALSE` for TIGER/Line files (#604).
 * `get_estimates()` now supports housing unit estimates for 2020 and later with `product = "housing"` (Vintage 2021 and later) for the US, regions, states, and counties.  The Census Bureau publishes these only as Excel tables, so the readxl package is required.
 * `get_flows()` now defaults to `year = 2020`, the most recent ACS Migration Flows release with county-to-county flows, and supports the 2017-2021 and 2018-2022 releases, which provide flows between counties and states or world regions (inflows only, with no county subdivision, MSA, or geometry support).
-* Various bug fixes and performance improvements (#649, #590, #652, #557, #564, #582, #526, #651, #653, #654).
+* Various bug fixes and performance improvements (#649, #590, #652, #557, #564, #582, #526, #651, #653, #654, #485).
 
 # tidycensus 1.8
 
