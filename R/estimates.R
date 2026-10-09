@@ -1,3 +1,149 @@
+# Housing unit estimates for 2020 and later are published only as Excel tables
+# (no CSV), with place names but no FIPS codes. Returns the same long format as
+# the other PEP files: GEOID, NAME, variable ("HUEST"), year, value
+read_housing_estimates <- function(geography, vintage) {
+  if (vintage < 2021) {
+    rlang::abort(
+      "Housing unit estimates for 2020 and later are available in tidycensus for Vintage 2021 and later."
+    )
+  }
+
+  if (!geography %in% c("us", "region", "state", "county")) {
+    rlang::abort(
+      "Housing unit estimates for 2020 and later are available for the US, regions, states, and counties."
+    )
+  }
+
+  rlang::check_installed(
+    "readxl",
+    reason = "to read housing unit estimates for 2020 and later."
+  )
+
+  table <- if (geography == "county") "CO-EST%s-HU.xlsx" else "NST-EST%s-HU.xlsx"
+
+  tmp <- tempfile(fileext = ".xlsx")
+  on.exit(unlink(tmp), add = TRUE)
+
+  census_download(
+    sprintf(
+      paste0("https://www2.census.gov/programs-surveys/popest/tables/2020-%s/housing/totals/", table),
+      vintage,
+      vintage
+    ),
+    tmp
+  )
+
+  raw <- readxl::read_excel(tmp, col_names = FALSE, .name_repair = "minimal")
+
+  # Get county codes from the same vintage's population file, which uses the
+  # same names
+  counties <- NULL
+
+  if (geography == "county") {
+    counties <- census_read_csv(
+      sprintf(
+        "https://www2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/totals/co-est%s-alldata.csv",
+        vintage,
+        vintage
+      ),
+      sprintf(
+        "ftp://ftp2.census.gov/programs-surveys/popest/datasets/2020-%s/counties/totals/co-est%s-alldata.csv",
+        vintage,
+        vintage
+      ),
+      "SUMLEV"
+    ) %>%
+      dplyr::filter(SUMLEV == "050")
+  }
+
+  parse_housing_table(raw, geography, counties)
+}
+
+# Parse a housing unit estimates table (as read by readxl with no column names)
+# and attach GEOIDs; `counties` is the vintage's county population file
+parse_housing_table <- function(raw, geography, counties = NULL) {
+  # The row of years (2020, 2021, ...) ends the header. Column 2 is the April 1,
+  # 2020 estimates base; the July 1 estimates for each year follow it
+  header <- which(raw[[3]] == "2020")[1]
+  years <- unlist(raw[header, -(1:2)])
+
+  # Geography rows have a name and values; footnotes have only text
+  after <- seq_len(nrow(raw)) > header
+  has_values <- rowSums(!is.na(raw[-1])) > 0
+  hu <- raw[after & !is.na(raw[[1]]) & has_values, -2]
+  names(hu) <- c("NAME", paste0("HUEST", years))
+
+  values <- suppressWarnings(lapply(hu[-1], as.numeric))
+  malformed <- Reduce(`|`, lapply(values, is.na))
+
+  if (any(malformed)) {
+    rlang::abort(c(
+      "Some rows in the Census Bureau's housing unit estimates table are missing values.",
+      "i" = paste(hu$NAME[malformed], collapse = "; ")
+    ))
+  }
+
+  hu[-1] <- values
+
+  # Areas are indented with leading dots
+  hu$NAME <- sub("^\\.+", "", hu$NAME)
+
+  regions <- c(
+    "Northeast Region" = "1",
+    "Midwest Region" = "2",
+    "South Region" = "3",
+    "West Region" = "4"
+  )
+
+  if (geography == "us") {
+    hu <- hu[hu$NAME == "United States", ]
+    hu$GEOID <- rep("1", nrow(hu))
+  } else if (geography == "region") {
+    hu <- hu[hu$NAME %in% names(regions), ]
+    hu$GEOID <- unname(regions[hu$NAME])
+  } else if (geography == "state") {
+    hu <- hu[!hu$NAME %in% c("United States", names(regions)), ]
+    states <- unique(tidycensus::fips_codes[c("state_code", "state_name")])
+    hu$GEOID <- states$state_code[match(hu$NAME, states$state_name)]
+  } else {
+    hu <- hu[hu$NAME != "United States", ]
+
+    county_codes <- paste0(counties$STATE, counties$COUNTY)
+    county_names <- fix_pep_encoding(counties$CTYNAME)
+    hu_county <- sub(", [^,]+$", "", hu$NAME)
+    hu_state <- sub("^.*, ", "", hu$NAME)
+
+    # Match on county and state names; a name that matches more than one county
+    # is left unmatched. Some files truncate long names (e.g. "Lower
+    # Connecticut River Valley Planning Regio" in Vintage 2022), so fall back to
+    # a single county in the state whose name starts the table's name
+    hu$GEOID <- vapply(seq_len(nrow(hu)), function(i) {
+      in_state <- counties$STNAME == hu_state[i]
+      exact <- which(in_state & county_names == hu_county[i])
+      if (length(exact) == 0) {
+        exact <- which(in_state & startsWith(hu_county[i], county_names))
+      }
+      if (length(unique(county_codes[exact])) == 1) county_codes[exact[1]] else NA_character_
+    }, character(1))
+  }
+
+  if (anyNA(hu$GEOID)) {
+    rlang::abort(c(
+      "Unable to match some areas in the Census Bureau's housing unit estimates table to a single GEOID.",
+      "i" = paste(hu$NAME[is.na(hu$GEOID)], collapse = "; ")
+    ))
+  }
+
+  hu %>%
+    dplyr::select(GEOID, NAME, dplyr::everything()) %>%
+    tidyr::pivot_longer(
+      -c(GEOID, NAME),
+      names_to = c("variable", "year"),
+      names_pattern = "(\\D+)(\\d+)",
+      values_to = "value"
+    )
+}
+
 # Puerto Rico municipios aren't in the county files; Census publishes them
 # separately by single year of age and sex (Vintage 2025 and later)
 read_pr_municipios <- function(vintage) {
@@ -124,7 +270,10 @@ parse_pep_county_char <- function(raw) {
 #'                For 2020 and later, available products vary by geography.
 #'                \code{"population"} is supported for total population
 #'                estimates, and \code{"characteristics"} is supported for
-#'                selected geographies.
+#'                selected geographies. \code{"housing"} returns housing unit
+#'                estimates (\code{"HUEST"}) for the US, regions, states, and
+#'                counties for Vintage 2021 and later; these are read from the
+#'                Census Bureau's Excel tables and require the readxl package.
 #' @param variables A character string or vector of character strings of requested variables.  For years 2020 and later, use \code{variables = "all"} to request all available variables.
 #' @param breakdown The population breakdown used when \code{product = "characteristics"}.
 #'                  Acceptable values are \code{"AGEGROUP"}, \code{"RACE"}, \code{"SEX"}, and
@@ -888,7 +1037,7 @@ get_estimates <- function(
       }
     } else if (
       is.null(product) ||
-        product %in% c("population", "components", "intercensal")
+        product %in% c("population", "components", "intercensal", "housing")
     ) {
       if (!is.null(product)) {
         if (intercensal) {
@@ -907,11 +1056,22 @@ get_estimates <- function(
           } else {
             variables <- components_estimates_variables22
           }
+        } else if (product == "housing") {
+          variables <- "HUEST"
         }
       }
 
       # Get the data into a reasonable first format that is consistent for downstream use
-      if (intercensal) {
+      if (identical(product, "housing")) {
+        if (!is.null(state) &&
+            "72" %in% suppressMessages(purrr::map_chr(state, validate_state))) {
+          rlang::abort(
+            "The Census Bureau does not publish housing unit estimates for Puerto Rico."
+          )
+        }
+
+        base <- read_housing_estimates(geography, vintage)
+      } else if (intercensal) {
         if (!geography %in% c("state", "county", "place")) {
           rlang::abort(
             "Intercensal population estimates are available for states, counties, and places."
@@ -1582,7 +1742,7 @@ get_estimates <- function(
       }
     } else {
       rlang::abort(
-        "Invalid product; use 'population', 'components', or 'characteristics', or leave NULL."
+        "Invalid product; use 'population', 'components', 'characteristics', or 'housing', or leave NULL."
       )
     }
   } else {
@@ -1956,7 +2116,8 @@ get_estimates <- function(
     } else {
       geom <- try(suppressMessages(use_tigris(
         geography = geography,
-        year = if (intercensal) vintage else year,
+        # Intercensal and 2020s housing GEOIDs follow the vintage's boundaries
+        year = if (intercensal || identical(product, "housing")) vintage else year,
         state = state,
         county = county,
         cb = cb,

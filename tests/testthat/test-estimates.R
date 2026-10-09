@@ -268,3 +268,104 @@ test_that("intercensal requests for Puerto Rico error clearly (#629)", {
     "Puerto Rico are not currently available"
   )
 })
+
+# A housing unit estimates sheet as readxl reads it (col_names = FALSE): title
+# rows, the header with years, indented areas, then footnotes
+housing_sheet <- function(names, values) {
+  years <- as.character(2020:2022)
+  rows <- lapply(seq_along(names), function(i) {
+    c(names[i], as.character(c(100, values[[i]])))
+  })
+  sheet <- rbind(
+    c("Annual Estimates of Housing Units", NA, NA, NA, NA),
+    c("Geographic Area", "April 1, 2020 Estimates Base", "Housing Unit Estimate (as of July 1)", NA, NA),
+    c(NA, NA, years),
+    do.call(rbind, rows),
+    c(NA, NA, NA, NA, NA),
+    c("Note: The estimates are based on the 2020 Census.", NA, NA, NA, NA)
+  )
+  dplyr::as_tibble(as.data.frame(sheet, stringsAsFactors = FALSE), .name_repair = "minimal")
+}
+
+test_that("2020s housing unit estimates parse with GEOIDs for states, regions, and the US", {
+  sheet <- housing_sheet(
+    c("United States", "Northeast Region", ".Rhode Island", ".Vermont"),
+    list(c(1000, 1010, 1020), c(500, 505, 510), c(463, 465, 468), c(334, 335, 336))
+  )
+
+  states <- parse_housing_table(sheet, "state")
+  expect_equal(unique(states$GEOID), c("44", "50"))
+  expect_equal(unique(states$variable), "HUEST")
+  expect_equal(states$year, rep(c("2020", "2021", "2022"), 2))
+  expect_equal(states$value[states$GEOID == "44"], c(463, 465, 468))
+
+  expect_equal(unique(parse_housing_table(sheet, "region")$GEOID), "1")
+  expect_equal(unique(parse_housing_table(sheet, "us")$GEOID), "1")
+})
+
+test_that("2020s housing county names match the population file, including truncated names", {
+  counties <- data.frame(
+    STATE = c("09", "09"),
+    COUNTY = c("110", "130"),
+    STNAME = "Connecticut",
+    CTYNAME = c("Capitol Planning Region", "Lower Connecticut River Valley Planning Regio"),
+    stringsAsFactors = FALSE
+  )
+  sheet <- housing_sheet(
+    c("United States", ".Capitol Planning Region, Connecticut", ".Lower Connecticut River Valley Planning Region, Connecticut"),
+    list(c(1, 2, 3), c(410, 412, 414), c(81, 82, 83))
+  )
+
+  hu <- parse_housing_table(sheet, "county", counties)
+  expect_equal(unique(hu$GEOID), c("09110", "09130"))
+  expect_equal(unique(hu$NAME)[2], "Lower Connecticut River Valley Planning Region, Connecticut")
+})
+
+test_that("2020s housing names matching more than one county error", {
+  counties <- data.frame(
+    STATE = c("09", "09"),
+    COUNTY = c("110", "120"),
+    STNAME = "Connecticut",
+    CTYNAME = c("Capitol Planning Region", "Capitol Planning Region"),
+    stringsAsFactors = FALSE
+  )
+  sheet <- housing_sheet(
+    c("United States", ".Capitol Planning Region, Connecticut"),
+    list(c(1, 2, 3), c(410, 412, 414))
+  )
+
+  expect_error(parse_housing_table(sheet, "county", counties), "Capitol Planning Region, Connecticut")
+})
+
+test_that("2020s housing rows with missing values error instead of disappearing", {
+  sheet <- housing_sheet(
+    c("United States", ".Rhode Island", ".Vermont"),
+    list(c(1000, 1010, 1020), c(NA, 465, 468), c(334, 335, 336))
+  )
+
+  expect_error(parse_housing_table(sheet, "state"), "Rhode Island")
+})
+
+test_that("2020s housing geometry uses the vintage's boundaries", {
+  skip_on_cran()
+
+  captured_year <- NULL
+
+  local_mocked_bindings(
+    read_housing_estimates = function(geography, vintage) {
+      dplyr::tibble(GEOID = "09110", NAME = "Capitol Planning Region, Connecticut",
+                    variable = "HUEST", year = c("2020", "2025"), value = c(410, 420))
+    },
+    use_tigris = function(geography, year, ...) {
+      captured_year <<- year
+      stop("captured geometry", call. = FALSE)
+    }
+  )
+
+  expect_error(
+    suppressMessages(get_estimates("county", product = "housing", state = "CT",
+                                   vintage = 2025, year = 2020, geometry = TRUE)),
+    "geometry data download failed"
+  )
+  expect_equal(captured_year, 2025)
+})

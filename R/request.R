@@ -258,7 +258,15 @@ read_census_file <- function(url) {
   tmp <- tempfile(fileext = paste0(".", tools::file_ext(url)))
   on.exit(unlink(tmp), add = TRUE)
 
-  resp <- census_perform(census_request(url), path = tmp)
+  census_download(url, tmp)
+
+  suppressMessages(readr::read_csv(tmp, lazy = FALSE))
+}
+
+# Download a Census file to `path`, with retries and a clear error if it isn't
+# available
+census_download <- function(url, path) {
+  resp <- census_perform(census_request(url), path = path)
   status <- httr2::resp_status(resp)
 
   # FTP transfers report curl's FTP codes rather than HTTP statuses
@@ -266,5 +274,5 @@ read_census_file <- function(url) {
     stop(sprintf("Unable to download %s (%s).", url, http_status_message(resp)), call. = FALSE)
   }
 
-  suppressMessages(readr::read_csv(tmp, lazy = FALSE))
+  invisible(path)
 }

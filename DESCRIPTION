@@ -39,6 +39,7 @@ Imports:
     tidyselect
 Suggests:
     ggplot2,
+    readxl,
     survey,
     srvyr,
     terra,
