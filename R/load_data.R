@@ -608,6 +608,17 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
     }
   }
 
+  # Housing unit estimates before Vintage 2019 require a date (2015-2017) or
+  # return every date in the series without one (2018). Request the date and
+  # keep the latest, the July 1 estimate for the vintage year, which is what the
+  # other products return by default
+  housing_latest_only <- !time_series && product == "housing" && year < 2019
+
+  if (housing_latest_only) {
+    date_var <- if (year >= 2018) "DATE_CODE" else "DATE_"
+    vars_to_get <- paste0(vars_to_get, ",", date_var)
+  }
+
   base <- sprintf("https://api.census.gov/data/%s/pep/%s", year, product)
 
   if (!is.null(state)) {
@@ -693,6 +704,11 @@ load_data_estimates <- function(geography, product = NULL, variables = NULL, key
   var_vector <- var_vector[var_vector != geo_name]
 
   dat[var_vector] <- lapply(dat[var_vector], as.numeric)
+
+  if (housing_latest_only) {
+    dat <- dat[dat[[date_var]] == max(dat[[date_var]]), names(dat) != date_var]
+    var_vector <- var_vector[var_vector != date_var]
+  }
 
   v2 <- c(var_vector, geo_name)
 
