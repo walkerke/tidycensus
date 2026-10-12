@@ -238,6 +238,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
     stop(sprintf("%ss are returned for the entire US; remove `state` and `county` and filter the result instead.", stringr::str_to_sentence(geography)), call. = FALSE)
   }
 
+  # Resolve county names once, so the data and geometry use the same county
+  county <- resolve_county_names(state, county)
+
   if (geography == "tribal census tract" && survey == "acs1") {
     stop("Tribal census tracts are not available in the 1-year ACS. Use `survey = \"acs5\"` instead.", call. = FALSE)
   }

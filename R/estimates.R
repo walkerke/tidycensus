@@ -399,6 +399,9 @@ get_estimates <- function(
     )
   }
 
+  # Resolve county names once, so the data and geometry use the same county
+  county <- resolve_county_names(state, county)
+
   ###### New logic for 2020 and later
   # Adjust as needed over the next few months, and try to keep consistent with
   # previous years that are on the API
