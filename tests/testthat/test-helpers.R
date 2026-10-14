@@ -37,9 +37,10 @@ test_that("get_decennial normalizes state-prefixed ZCTA GEOIDs", {
   ##############################################################################
   # Year 2000
 
-  # Anticipate the warning for year-2000 ZCTAs including separate polygons
-  expect_warning(
-    out <- suppressMessages(
+  # tigris notes that 2000 ZCTAs include separate polygons for discontiguous
+  # parts: a warning up to tigris 2.2.1, a message (suppressed) after
+  out <- withCallingHandlers(
+    suppressMessages(
       get_decennial(
         geography = "zcta",
         variables = "P010001",
@@ -50,7 +51,11 @@ test_that("get_decennial normalizes state-prefixed ZCTA GEOIDs", {
         geometry = TRUE
       )
     ),
-    regexp = "ZCTAs for 2000 include separate polygons for discontiguous parts"
+    warning = function(w) {
+      if (grepl("separate polygons for discontiguous parts", conditionMessage(w))) {
+        invokeRestart("muffleWarning")
+      }
+    }
   )
 
   # Ensure GEOIDs for ZCTAs got the two-digit state prefix removed
