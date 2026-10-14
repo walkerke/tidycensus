@@ -359,4 +359,10 @@ test_that("congressional summary files get their own Congress's districts", {
                   sumfile = "cd110h", geometry = TRUE, key = "test-key"),
     "not available for 2000"
   )
+  # The 2000 state legislative district files use the 2006 plans
+  expect_error(
+    get_decennial("state legislative district (lower chamber)", "H001001", year = 2000,
+                  state = "VT", sumfile = "sldh", geometry = TRUE, key = "test-key"),
+    "not available for 2000"
+  )
 })

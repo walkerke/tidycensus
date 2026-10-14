@@ -132,9 +132,11 @@ get_decennial <- function(geography,
     stop("`year` must be 2020 for voting districts.", call. = FALSE)
   }
 
-  # tigris has no boundaries for the 110th Congress (the 2000 cd110 files)
-  if (geometry && geography == "congressional district" && year == 2000) {
-    stop("Congressional district geometry is not available for 2000; use `geometry = FALSE`.", call. = FALSE)
+  # The 2000 congressional (cd110) and state legislative district (sldh / slds)
+  # files tabulate the 2006-2007 district plans, which tigris doesn't have
+  if (geometry && year == 2000 &&
+      (geography == "congressional district" || grepl("^state legislative district", geography))) {
+    stop("Geometry is not available for 2000 congressional or state legislative districts; use `geometry = FALSE`.", call. = FALSE)
   }
 
   # Check for a Census API key and warn if missing
