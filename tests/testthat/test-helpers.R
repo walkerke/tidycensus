@@ -265,3 +265,93 @@ test_that("get_acs() wide output uses the requested estimate and MOE suffixes (#
   expect_error(get_acs("county", "B19013_001", state = "RI", year = 2023, output = "wide",
                        suffix = c("E", "E"), key = "test-key"), "two different strings")
 })
+
+test_that("use_tigris() builds GEOID for 2000 / 2010 / 2011 files", {
+  geom <- sf::st_sfc(sf::st_point(c(-72.5, 44)), crs = 4269)
+  used <- list()
+
+  local_mocked_bindings(
+    places = function(state, year, cb, ...) {
+      used$places <<- c(year = year, cb = cb)
+      switch(
+        as.character(year),
+        "2000" = sf::st_sf(PLCIDFP00 = "5010675", geometry = geom),
+        "2010" = if (cb) {
+          sf::st_sf(GEO_ID = "1600000US5010675", STATE = "50", PLACE = "10675", geometry = geom)
+        } else {
+          sf::st_sf(GEOID10 = "5010675", geometry = geom)
+        }
+      )
+    },
+    state_legislative_districts = function(state, house, cb, year, ...) {
+      if (house == "upper") {
+        sf::st_sf(GEO_ID = "610U200US50ADD", STATE = "50", SLDU = "ADD", geometry = geom)
+      } else {
+        sf::st_sf(GEOID10 = "50A-1", geometry = geom)
+      }
+    },
+    congressional_districts = function(cb, year, ...) {
+      used$cd <<- c(year = year, cb = cb)
+      switch(
+        as.character(year),
+        "2010" = sf::st_sf(GEOID10 = "4801", geometry = geom),
+        "2011" = sf::st_sf(STATEFP = "48", CD112FP = "01", GEOID = "4811201", geometry = geom),
+        "2013" = sf::st_sf(STATEFP = "48", CD113FP = "01", GEOID = "4801", geometry = geom)
+      )
+    }
+  )
+
+  expect_equal(use_tigris("place", 2000, state = "VT")$GEOID, "5010675")
+  expect_equal(used$places[["cb"]], 0) # no cartographic places for 2000
+  expect_equal(use_tigris("place", 2010, cb = TRUE, state = "VT")$GEOID, "5010675")
+  expect_equal(use_tigris("place", 2010, cb = FALSE, state = "VT")$GEOID, "5010675")
+  expect_equal(
+    use_tigris("state legislative district (upper chamber)", 2010, state = "VT")$GEOID,
+    "50ADD"
+  )
+  expect_equal(
+    use_tigris("state legislative district (lower chamber)", 2010, cb = FALSE, state = "VT")$GEOID,
+    "50A-1"
+  )
+
+  expect_equal(use_tigris("congressional district", 2010)$GEOID, "4801")
+  expect_equal(used$cd[["cb"]], 0)
+  expect_equal(use_tigris("congressional district", 2011)$GEOID, "4801")
+  # The 2012 ACS uses the 113th Congress, from the 2013 files
+  expect_equal(use_tigris("congressional district", 2012)$GEOID, "4801")
+  expect_equal(used$cd[["year"]], 2013)
+})
+
+test_that("congressional summary files get their own Congress's districts", {
+  skip_on_cran()
+  used_year <- NULL
+  local_mocked_bindings(
+    load_data_decennial = function(...) {
+      data.frame(GEOID = "4801", NAME = "Congressional District 1", P001001 = 1)
+    },
+    use_tigris = function(geography, year, ...) {
+      used_year <<- year
+      sf::st_sf(GEOID = "4801", geometry = sf::st_sfc(sf::st_point(c(0, 0))))
+    }
+  )
+
+  cd_year <- function(sumfile, geography = "congressional district") {
+    suppressMessages(get_decennial(geography, "P001001", year = 2010, state = "TX",
+                                   sumfile = sumfile, geometry = TRUE, key = "test-key"))
+    used_year
+  }
+
+  expect_equal(cd_year("sf1"), 2010)
+  expect_equal(cd_year("cd113"), 2013)
+  expect_equal(cd_year("cd113profile"), 2013)
+  expect_equal(cd_year("cd115"), 2016)
+  expect_equal(cd_year("cd115profile"), 2016)
+  expect_equal(cd_year("cd116"), 2018)
+  expect_equal(cd_year("cd113", geography = "state"), 2010)
+
+  expect_error(
+    get_decennial("congressional district", "H001001", year = 2000, state = "TX",
+                  sumfile = "cd110h", geometry = TRUE, key = "test-key"),
+    "not available for 2000"
+  )
+})

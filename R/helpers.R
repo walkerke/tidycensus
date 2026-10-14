@@ -207,7 +207,23 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "place") {
 
+    # There are no cartographic boundary places for 2000
+    if (year == 2000) cb <- FALSE
+
     pl <- places(state = state, year = year, cb = cb, class = "sf", ...)
+
+    # 2000 and 2010 files name their ID columns differently
+    if ("GEO_ID" %in% names(pl)) {
+      pl$GEOID <- paste0(pl$STATE, pl$PLACE)
+    }
+
+    if ("GEOID10" %in% names(pl)) {
+      pl$GEOID <- pl$GEOID10
+    }
+
+    if ("PLCIDFP00" %in% names(pl)) {
+      pl$GEOID <- pl$PLCIDFP00
+    }
 
     return(pl)
 
@@ -224,7 +240,23 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
 
   } else if (geography == "congressional district") {
 
+    # The 2012 ACS uses the 113th Congress, whose districts first appear in
+    # the 2013 files (the 2012 files have the 112th)
+    if (year == 2012) year <- 2013
+
+    # There are no cartographic boundary congressional districts before 2013
+    if (year < 2013) cb <- FALSE
+
     cd <- congressional_districts(cb = cb, year = year, class = "sf", ...)
+
+    if ("GEOID10" %in% names(cd)) {
+      cd$GEOID <- cd$GEOID10
+    }
+
+    # The 2011 files include the Congress number in GEOID (e.g. 4811201)
+    if (year == 2011) {
+      cd$GEOID <- paste0(cd$STATEFP, cd$CD112FP)
+    }
 
     return(cd)
 
@@ -283,12 +315,28 @@ use_tigris <- function(geography, year, cb = TRUE, resolution = "500k",
     slu <- state_legislative_districts(state = state, house = "upper", cb = cb, year = year,
                                        class = "sf", ...)
 
+    if ("GEO_ID" %in% names(slu)) {
+      slu$GEOID <- paste0(slu$STATE, slu$SLDU)
+    }
+
+    if ("GEOID10" %in% names(slu)) {
+      slu$GEOID <- slu$GEOID10
+    }
+
     return(slu)
 
   } else if (geography == "state legislative district (lower chamber)") {
 
     slc <- state_legislative_districts(state = state, house = "lower", cb = cb, year = year,
                                        class = "sf", ...)
+
+    if ("GEO_ID" %in% names(slc)) {
+      slc$GEOID <- paste0(slc$STATE, slc$SLDL)
+    }
+
+    if ("GEOID10" %in% names(slc)) {
+      slc$GEOID <- slc$GEOID10
+    }
 
     return(slc)
 

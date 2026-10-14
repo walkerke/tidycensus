@@ -132,6 +132,11 @@ get_decennial <- function(geography,
     stop("`year` must be 2020 for voting districts.", call. = FALSE)
   }
 
+  # tigris has no boundaries for the 110th Congress (the 2000 cd110 files)
+  if (geometry && geography == "congressional district" && year == 2000) {
+    stop("Congressional district geometry is not available for 2000; use `geometry = FALSE`.", call. = FALSE)
+  }
+
   # Check for a Census API key and warn if missing
   key <- get_census_api_key(key)
 
@@ -518,6 +523,17 @@ get_decennial <- function(geography,
 
         geom <- try(suppressMessages(use_tigris(geography = geography, year = 2022,
                                         state = state, county = county, cb = cb, ...)))
+      } else if (geography == "congressional district" && year == 2010) {
+        # The cd113 / cd115 / cd116 files tabulate the 2010 Census for later
+        # Congresses, so use the first boundary files with those districts
+        cd_year <- switch(sumfile,
+                          cd113 = , cd113profile = 2013,
+                          cd115 = , cd115profile = 2016,
+                          cd116 = 2018,
+                          2010)
+
+        geom <- try(suppressMessages(use_tigris(geography = geography, year = cd_year,
+                                                state = state, county = county, cb = cb, ...)))
       } else {
         geom <- try(suppressMessages(use_tigris(geography = geography, year = year,
                                                 state = state, county = county, cb = cb, ...)))
