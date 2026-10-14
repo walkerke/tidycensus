@@ -7,6 +7,7 @@
 * `get_flows()` now defaults to `year = 2020`, the most recent ACS Migration Flows release with county-to-county flows, and supports the 2017-2021 and 2018-2022 releases, which provide flows between counties and states or world regions (inflows only, with no county subdivision, MSA, or geometry support).
 * `get_acs()` and `get_decennial()` now support metropolitan divisions (`geography = "metropolitan division"`) and tribal census tracts (`geography = "tribal census tract"`), returned for the entire US (#519, #621).
 * New `suffix` argument in `get_acs()` sets the estimate and margin of error suffixes for `output = "wide"`, e.g. `suffix = c("_est", "_moe")`; the default remains `c("E", "M")` (#600).
+* Cleaned variable labels: `get_acs()` and `get_decennial()` have a new `labels` argument. `labels = TRUE` names variables from their labels instead of their IDs (e.g. `total_male_under_5_years`), in tidy or wide output; `labels = "concept"` adds the concept to those names; and `labels = "attributes"` keeps the IDs and attaches readable labels (e.g. "Total > Male > Under 5 years") to the columns of wide output. `load_variables(clean_labels = TRUE)` returns the same cleaned labels.
 * `load_variables()` now includes each table's universe where the Census API publishes it (ACS detailed tables and the 2020 decennial files) (#596).
 * Various bug fixes and performance improvements (#649, #590, #652, #557, #564, #582, #526, #651, #653, #654, #485).
 

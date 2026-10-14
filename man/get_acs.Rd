@@ -25,6 +25,7 @@ get_acs(
   drop_empty = FALSE,
   cb = TRUE,
   suffix = c("E", "M"),
+  labels = FALSE,
   ...
 )
 }
@@ -113,6 +114,17 @@ error columns when \code{output = "wide"}. Defaults to \code{c("E", "M")}, givin
 columns like \code{B19013_001E} and \code{B19013_001M}; for example,
 \code{c("_est", "_moe")} gives \code{B19013_001_est} and \code{B19013_001_moe}.
 Ignored when \code{output = "tidy"}.}
+
+\item{labels}{Name variables from their labels instead of their IDs.
+\code{FALSE} (the default) uses variable IDs. \code{TRUE} uses cleaned labels
+(e.g. \code{total_male_under_5_years}), in the \code{variable} column of tidy
+output or the column names of wide output; variables whose labels are identical
+get their concept added (e.g. \code{total_male_under_5_years_white_alone}).
+\code{"concept"} always adds the concept to the name. \code{"attributes"} keeps
+the IDs and attaches the cleaned label (e.g. "Total > Male > Under 5 years") and
+concept to each column of wide output as \code{label} and \code{concept}
+attributes; it has no effect on tidy output. Variables you name yourself in
+\code{variables} keep your names.}
 
 \item{...}{Other keyword arguments}
 }

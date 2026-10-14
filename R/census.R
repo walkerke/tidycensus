@@ -48,6 +48,16 @@
 #'                   that are not in the cartographic boundary files used by default; use
 #'                   \code{cb = FALSE} to return TIGER/Line geometries for these areas instead.
 #'                   Defaults to FALSE.
+#' @param labels Name variables from their labels instead of their IDs.
+#'   \code{FALSE} (the default) uses variable IDs. \code{TRUE} uses cleaned labels
+#'   (e.g. \code{total_male_under_5_years}), in the \code{variable} column of tidy
+#'   output or the column names of wide output; variables whose labels are identical
+#'   get their concept added (e.g. \code{total_male_under_5_years_white_alone}).
+#'   \code{"concept"} always adds the concept to the name. \code{"attributes"} keeps
+#'   the IDs and attaches the cleaned label (e.g. "Total > Male > Under 5 years") and
+#'   concept to each column of wide output as \code{label} and \code{concept}
+#'   attributes; it has no effect on tidy output. Variables you name yourself in
+#'   \code{variables} keep your names.
 #' @param cb if TRUE (the default), uses the Census Bureau's cartographic boundary files
 #'   for feature geometry when \code{geometry = TRUE}. These are generalized and clipped to
 #'   the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
@@ -94,8 +104,25 @@ get_decennial <- function(geography,
                           show_call = FALSE,
                           drop_empty = FALSE,
                           cb = TRUE,
+                          labels = FALSE,
                           ...
                           ) {
+
+  # Run the request without labels, then label or rename the result
+  if (!isFALSE(validate_labels_arg(labels))) {
+    call <- match.call()
+    call$labels <- FALSE
+    result <- eval(call, parent.frame())
+
+    dataset <- if (is.null(sumfile)) summary_files(year = year)[1] else sumfile
+    if (year == 2020 && dataset == "sf1") dataset <- "pl"
+    fallback <- if (year == 2000 && dataset == "sf1") "sf3" else character()
+
+    return(apply_variable_labels(
+      result, labels, toupper_values(variables), output, suffix = "",
+      lookup = function(codes) variable_labels(codes, year, dataset, key, fallback)
+    ))
+  }
 
   if (shift_geo) {
     warning("The `shift_geo` argument is deprecated and will be removed in a future release. We recommend using `tigris::shift_geometry()` instead.", call. = FALSE)
@@ -165,6 +192,9 @@ get_decennial <- function(geography,
                     paste(variables[variables != toupper(variables)], collapse = ", ")))
     variables <- toupper(variables)
   }
+
+  # Unnamed elements of partly named `variables` keep their IDs
+  variables <- fill_variable_names(variables)
 
   if (length(table) > 1) {
     stop("Only one table may be requested per call.", call. = FALSE)

@@ -16,7 +16,8 @@ load_variables(
      "cd113", "cd113profile", "cd115", "cd115profile",
     "cd116", "plnat", "cd118"),
   cache = FALSE,
-  key = NULL
+  key = NULL,
+  clean_labels = FALSE
 )
 }
 \arguments{
@@ -32,6 +33,10 @@ the Census API without writing to a local cache.}
 
 \item{key}{Your Census API key. Defaults to \code{NULL}, which uses your
 \code{CENSUS_API_KEY} environment variable.}
+
+\item{clean_labels}{If \code{TRUE}, cleans the \code{label} column, e.g.
+"Estimate!!Total:!!Male:!!Under 5 years" becomes "Total > Male > Under 5 years".
+Defaults to \code{FALSE}.}
 }
 \value{
 A tibble of variables from the requested dataset. For datasets where the

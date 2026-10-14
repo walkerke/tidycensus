@@ -24,6 +24,7 @@ get_decennial(
   show_call = FALSE,
   drop_empty = FALSE,
   cb = TRUE,
+  labels = FALSE,
   ...
 )
 }
@@ -99,6 +100,17 @@ for feature geometry when \code{geometry = TRUE}. These are generalized and clip
 the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
 area. Note that tigris functions default to \code{cb = FALSE}. TIGER/Line files are
 always used for 2011 and 2012, when cartographic boundary files are not available.}
+
+\item{labels}{Name variables from their labels instead of their IDs.
+\code{FALSE} (the default) uses variable IDs. \code{TRUE} uses cleaned labels
+(e.g. \code{total_male_under_5_years}), in the \code{variable} column of tidy
+output or the column names of wide output; variables whose labels are identical
+get their concept added (e.g. \code{total_male_under_5_years_white_alone}).
+\code{"concept"} always adds the concept to the name. \code{"attributes"} keeps
+the IDs and attaches the cleaned label (e.g. "Total > Male > Under 5 years") and
+concept to each column of wide output as \code{label} and \code{concept}
+attributes; it has no effect on tidy output. Variables you name yourself in
+\code{variables} keep your names.}
 
 \item{...}{Other keyword arguments}
 }

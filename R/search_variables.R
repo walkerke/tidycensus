@@ -19,6 +19,9 @@
 #'   the Census API without writing to a local cache.
 #' @param key Your Census API key. Defaults to \code{NULL}, which uses your
 #'   \code{CENSUS_API_KEY} environment variable.
+#' @param clean_labels If \code{TRUE}, cleans the \code{label} column, e.g.
+#'   "Estimate!!Total:!!Male:!!Under 5 years" becomes "Total > Male > Under 5 years".
+#'   Defaults to \code{FALSE}.
 #'
 #' @return A tibble of variables from the requested dataset. For datasets where the
 #'   Census API publishes it (ACS detailed tables and the 2020 decennial files), a
@@ -45,7 +48,8 @@ load_variables <- function(
               "cd113", "cd113profile", "cd115", "cd115profile", "cd116",
               "plnat", "cd118"),
   cache = FALSE,
-  key = NULL) {
+  key = NULL,
+  clean_labels = FALSE) {
 
   if (length(year) != 1 || !grepl('[0-9]{4}', year)){
     stop("Argument \"year\" must be a single year in format YYYY.")
@@ -179,7 +183,13 @@ load_variables <- function(
     )
   }
 
-  get_dataset(dataset, year, key = key)
+  out <- get_dataset(dataset, year, key = key)
+
+  if (isTRUE(clean_labels)) {
+    out$label <- clean_variable_label(out$label)
+  }
+
+  out
 }
 
 # The universe of each table in a dataset, from the API's groups.json; NULL if

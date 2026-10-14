@@ -60,6 +60,16 @@
 #'   the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
 #'   area. Note that tigris functions default to \code{cb = FALSE}. TIGER/Line files are
 #'   always used for 2011 and 2012, when cartographic boundary files are not available.
+#' @param labels Name variables from their labels instead of their IDs.
+#'   \code{FALSE} (the default) uses variable IDs. \code{TRUE} uses cleaned labels
+#'   (e.g. \code{total_male_under_5_years}), in the \code{variable} column of tidy
+#'   output or the column names of wide output; variables whose labels are identical
+#'   get their concept added (e.g. \code{total_male_under_5_years_white_alone}).
+#'   \code{"concept"} always adds the concept to the name. \code{"attributes"} keeps
+#'   the IDs and attaches the cleaned label (e.g. "Total > Male > Under 5 years") and
+#'   concept to each column of wide output as \code{label} and \code{concept}
+#'   attributes; it has no effect on tidy output. Variables you name yourself in
+#'   \code{variables} keep your names.
 #' @param suffix A character vector of two suffixes for the estimate and margin of
 #'   error columns when \code{output = "wide"}. Defaults to \code{c("E", "M")}, giving
 #'   columns like \code{B19013_001E} and \code{B19013_001M}; for example,
@@ -104,7 +114,25 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                     geometry = FALSE, keep_geo_vars = FALSE,
                     shift_geo = FALSE, summary_var = NULL, key = NULL,
                     moe_level = 90, survey = "acs5", show_call = FALSE,
-                    drop_empty = FALSE, cb = TRUE, suffix = c("E", "M"), ...) {
+                    drop_empty = FALSE, cb = TRUE, suffix = c("E", "M"), labels = FALSE,
+                    ...) {
+
+  # Run the request without labels, then label or rename the result
+  if (!isFALSE(validate_labels_arg(labels))) {
+    call <- match.call()
+    call$labels <- FALSE
+    result <- eval(call, parent.frame())
+
+    return(apply_variable_labels(
+      result, labels, toupper_values(variables), output, suffix,
+      lookup = function(codes) {
+        datasets <- acs_label_dataset(codes, survey)
+        do.call(rbind, lapply(unique(datasets), function(d) {
+          variable_labels(codes[datasets == d], year, d, key)
+        }))
+      }
+    ))
+  }
 
   if (!is.character(suffix) || length(suffix) != 2 || anyNA(suffix) || suffix[1] == suffix[2]) {
     stop("`suffix` must be two different strings, for estimates and margins of error, e.g. c(\"E\", \"M\").", call. = FALSE)
@@ -218,6 +246,9 @@ get_acs <- function(geography, variables = NULL, table = NULL, cache_table = FAL
                     paste(variables[variables != toupper(variables)], collapse = ", ")))
     variables <- toupper(variables)
   }
+
+  # Unnamed elements of partly named `variables` keep their IDs
+  variables <- fill_variable_names(variables)
 
   # CBSA alias (fixes #514 by reverting back)
   if (geography == "cbsa") {
