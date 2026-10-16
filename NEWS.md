@@ -1,4 +1,4 @@
-# tidycensus (development version)
+# tidycensus 2.0.0
 
 * `get_estimates()` now defaults to Vintage 2025 and supports Puerto Rico: municipio population and age / sex characteristics are available with `geography = "county", state = "PR"`, and Puerto Rico metro areas are included in CBSA and CSA population estimates (#581).
 * `get_estimates()` now supports the Census Bureau's intercensal estimates with `product = "intercensal"`: use `vintage = 2020` for 2010-2020 and `vintage = 2010` for 2000-2010.  Population totals are available for states, counties, and places, and characteristics by age, sex, race, and Hispanic origin for counties (#629).  Population characteristics requests also now support `geometry = TRUE` and multiple states for counties.
@@ -9,6 +9,7 @@
 * New `suffix` argument in `get_acs()` sets the estimate and margin of error suffixes for `output = "wide"`, e.g. `suffix = c("_est", "_moe")`; the default remains `c("E", "M")` (#600).
 * Cleaned variable labels: `get_acs()` and `get_decennial()` have a new `labels` argument. `labels = TRUE` names variables from their labels instead of their IDs (e.g. `total_male_under_5_years`), in tidy or wide output; `labels = "concept"` adds the concept to those names; and `labels = "attributes"` keeps the IDs and attaches readable labels (e.g. "Total > Male > Under 5 years") to the columns of wide output. `load_variables(clean_labels = TRUE)` returns the same cleaned labels.
 * `load_variables()` now includes each table's universe where the Census API publishes it (ACS detailed tables and the 2020 decennial files) (#596).
+* Requests to the Census API and Census Bureau file downloads now use {httr2} in place of {httr}. Rate limiting and temporary server errors are retried automatically, and connection failures and API outages give clear error messages.
 * Various bug fixes and performance improvements (#649, #590, #652, #557, #564, #582, #526, #651, #653, #654, #485).
 
 # tidycensus 1.8

@@ -26,7 +26,7 @@ fips_state_table <- structure(list(abb = c("ak", "al", "ar", "as", "az", "ca", "
 "oregon", "pennsylvania", "puerto rico", "rhode island", "south carolina",
 "south dakota", "tennessee", "texas", "utah", "virginia", "virgin islands",
 "vermont", "washington", "wisconsin", "west virginia", "wyoming", "northern mariana islands"
-)), .Names = c("abb", "fips", "name"), row.names = c(NA, -56L
+)), names = c("abb", "fips", "name"), row.names = c(NA, -56L
 ), class = "data.frame")
 
 population_estimates_variables <- c("POP", "DENSITY")

@@ -17,3 +17,6 @@ index.md
 logo.png
 ^pkgdown$
 .claude
+^cran-comments\.md$
+^CRAN-SUBMISSION$
+^revdep$
