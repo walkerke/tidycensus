@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
 <span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  breakdown <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  breakdown_labels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  vintage <span class="op">=</span> <span class="fl">2024</span>,</span>
+<span>  vintage <span class="op">=</span> <span class="fl">2025</span>,</span>
 <span>  year <span class="op">=</span> <span class="va">vintage</span>,</span>
 <span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -101,6 +101,8 @@
 <span>  shift_geo <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  key <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  show_call <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  drop_empty <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  cb <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -117,8 +119,15 @@ be used an alias for <code>"metropolitan statistical area/micropolitan statistic
 
 <dt id="arg-product">product<a class="anchor" aria-label="anchor" href="#arg-product"></a></dt>
 <dd><p>The data product (optional). <code>"population"</code>, <code>"components"</code>
-               <code>"housing"</code>, and <code>"characteristics"</code> are supported.</p>
-<p>For 2020 and later, the only supported product is <code>"characteristics"</code>.</p></dd>
+               <code>"housing"</code>, and <code>"characteristics"</code> are supported.
+               <code>"intercensal"</code> returns intercensal estimates; see Details.</p>
+<p>For 2020 and later, available products vary by geography.
+               <code>"population"</code> is supported for total population
+               estimates, and <code>"characteristics"</code> is supported for
+               selected geographies. <code>"housing"</code> returns housing unit
+               estimates (<code>"HUEST"</code>) for the US, regions, states, and
+               counties for Vintage 2021 and later; these are read from the
+               Census Bureau's Excel tables and require the readxl package.</p></dd>
 
 
 <dt id="arg-variables">variables<a class="anchor" aria-label="anchor" href="#arg-variables"></a></dt>
@@ -140,7 +149,8 @@ combinations of these breakdowns.  For years 2020 and later, <code>"AGE"</code> 
 
 <dt id="arg-vintage">vintage<a class="anchor" aria-label="anchor" href="#arg-vintage"></a></dt>
 <dd><p>It is recommended to use the most recent vintage
-available for a given decennial series (so, year = 2019 for the 2010s, and year = 2025 for the 2020s).</p></dd>
+available for a given decennial series (so, year = 2019 for the 2010s, and year = 2025 for the 2020s).
+For intercensal estimates, use the end year of the series (2010 or 2020).</p></dd>
 
 
 <dt id="arg-year">year<a class="anchor" aria-label="anchor" href="#arg-year"></a></dt>
@@ -182,7 +192,9 @@ with simple feature geometry in the `geometry` column.</p></dd>
 
 <dt id="arg-keep-geo-vars">keep_geo_vars<a class="anchor" aria-label="anchor" href="#arg-keep-geo-vars"></a></dt>
 <dd><p>if TRUE, keeps all the variables from the Census
-shapefile obtained by tigris.  Defaults to FALSE.</p></dd>
+shapefile obtained by tigris.  Defaults to FALSE.  As the shapefile has its own <code>NAME</code> column, the
+shapefile's name is returned as <code>NAME.x</code> and the Census name for each geography
+(the <code>NAME</code> column when <code>keep_geo_vars = FALSE</code>) as <code>NAME.y</code>.</p></dd>
 
 
 <dt id="arg-shift-geo">shift_geo<a class="anchor" aria-label="anchor" href="#arg-shift-geo"></a></dt>
@@ -204,6 +216,22 @@ due to tidycensus or the Census API. Copy to the API call into
 a browser and see what is returned by the API directly. Defaults to FALSE.</p></dd>
 
 
+<dt id="arg-drop-empty">drop_empty<a class="anchor" aria-label="anchor" href="#arg-drop-empty"></a></dt>
+<dd><p>if TRUE and <code>geometry = TRUE</code>, drops rows with empty geometries.
+These are typically water-only areas, such as offshore block groups,
+that are not in the cartographic boundary files used by default; use
+<code>cb = FALSE</code> to return TIGER/Line geometries for these areas instead.
+Defaults to FALSE.</p></dd>
+
+
+<dt id="arg-cb">cb<a class="anchor" aria-label="anchor" href="#arg-cb"></a></dt>
+<dd><p>if TRUE (the default), uses the Census Bureau's cartographic boundary files
+for feature geometry when <code>geometry = TRUE</code>. These are generalized and clipped to
+the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
+area. Note that tigris functions default to <code>cb = FALSE</code>. TIGER/Line files are
+always used for 2011 and 2012, when cartographic boundary files are not available.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>other keyword arguments</p></dd>
 
@@ -215,6 +243,8 @@ a browser and see what is returned by the API directly. Defaults to FALSE.</p></
     <div id="details">
     <h2>Details</h2>
     <p><code>get_estimates()</code> requests data from the Population Estimates API for years 2019 and earlier; however the Population Estimates are no longer supported on the API as of 2020.  For recent years, <code>get_estimates()</code> reads a flat file from the Census website and parses it.  This means that arguments and output for 2020 and later datasets may differ slightly from datasets acquired for 2019 and earlier.</p>
+<p>Puerto Rico municipio estimates (Vintage 2025 and later) are returned for <code>geography = "county"</code> when <code>state = "PR"</code> is specified, for both <code>product = "population"</code> and <code>product = "characteristics"</code>.  The Census Bureau publishes Puerto Rico characteristics by age and sex only, so the <code>"RACE"</code> and <code>"HISP"</code> breakdowns are not available.  Puerto Rico metropolitan and micropolitan areas are included in <code>"cbsa"</code> and <code>"combined statistical area"</code> population estimates for Vintage 2025 and later.</p>
+<p>Intercensal estimates, which revise the estimates between two decennial Censuses to be consistent with both, are available with <code>product = "intercensal"</code>.  Use <code>vintage = 2020</code> for the 2010-2020 intercensal estimates and <code>vintage = 2010</code> for 2000-2010.  Population totals (<code>ESTIMATESBASE</code>, <code>POPESTIMATE</code>, and the decennial Census count <code>CENSUSPOP</code>) are available for states, counties, and places; supply a <code>breakdown</code> to get county characteristics by age, sex, race, and Hispanic origin.  If <code>year</code> is not specified, the full intercensal series is returned.</p>
 <p>As of April 2022, variables available for 2020 and later datasets are as follows: ESTIMATESBASE, POPESTIMATE, NPOPCHG, BIRTHS, DEATHS, NATURALCHG, INTERNATIONALMIG, DOMESTICMIG, NETMIG, RESIDUAL, GQESTIMATESBASE, GQESTIMATES, RBIRTH, RDEATH, RNATURALCHG, RINTERNATIONALMIG, RDOMESTICMIG, and RNETMIG.</p>
     </div>
     <div id="see-also">
@@ -234,7 +264,7 @@ a browser and see what is returned by the API directly. Defaults to FALSE.</p></
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>

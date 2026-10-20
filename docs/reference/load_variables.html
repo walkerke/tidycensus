@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -93,7 +93,8 @@
 <span>     <span class="st">"cd113"</span>, <span class="st">"cd113profile"</span>, <span class="st">"cd115"</span>, <span class="st">"cd115profile"</span>,</span>
 <span>    <span class="st">"cd116"</span>, <span class="st">"plnat"</span>, <span class="st">"cd118"</span><span class="op">)</span>,</span>
 <span>  cache <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  key <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  key <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  clean_labels <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -103,9 +104,9 @@
 
 <dl><dt id="arg-year">year<a class="anchor" aria-label="anchor" href="#arg-year"></a></dt>
 <dd><p>The year for which you are requesting variables. Either the year
-or endyear of the decennial Census or ACS sample. 5-year ACS data is
-available from 2009 through 2020. 1-year ACS data is available from 2005
-through 2021, with the exception of 2020.</p></dd>
+of the decennial Census or the year / endyear of the ACS sample. 5-year ACS
+data are available from 2009, and 1-year ACS data from 2005, with the
+exception of 2020.</p></dd>
 
 
 <dt id="arg-dataset">dataset<a class="anchor" aria-label="anchor" href="#arg-dataset"></a></dt>
@@ -113,41 +114,39 @@ through 2021, with the exception of 2020.</p></dd>
 
 
 <dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
-<dd><p>Whether you would like to cache the dataset for future access,
-or load the dataset from an existing cache. Defaults to FALSE.</p></dd>
+<dd><p>Deprecated and ignored. Variable metadata is now loaded from
+the Census API without writing to a local cache.</p></dd>
 
 
 <dt id="arg-key">key<a class="anchor" aria-label="anchor" href="#arg-key"></a></dt>
 <dd><p>Your Census API key. Defaults to <code>NULL</code>, which uses your
 <code>CENSUS_API_KEY</code> environment variable.</p></dd>
 
+
+<dt id="arg-clean-labels">clean_labels<a class="anchor" aria-label="anchor" href="#arg-clean-labels"></a></dt>
+<dd><p>If <code>TRUE</code>, cleans the <code>label</code> column, e.g.
+"Estimate!!Total:!!Male:!!Under 5 years" becomes "Total &gt; Male &gt; Under 5 years".
+Defaults to <code>FALSE</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A tibble of variables from the requested dataset.</p>
+    <p>A tibble of variables from the requested dataset. For datasets where the
+  Census API publishes it (ACS detailed tables and the 2020 decennial files), a
+  <code>universe</code> column gives the universe of each variable's table.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
     <p><code>load_variables()</code> returns three columns by default: <code>name</code>, which is the Census ID code to be supplied to the <code>variables</code> parameter in <code><a href="get_decennial.html">get_decennial()</a></code> or <code><a href="get_acs.html">get_acs()</a></code>; <code>label</code>, which is a detailed description of the variable; and <code>concept</code>, which provides information about the table that a given variable belongs to.  For 5-year ACS detailed tables datasets, a fourth column, <code>geography</code>, tells you the smallest geography at which a given variable is available.</p>
-<p>Datasets available are as follows: "sf1", "sf2", "sf3", "sf4", "pl", "dhc", "dp",
-"dhca", "ddhca", "ddhcb", "sdhc", "as", "gu", "mp", "vi", "acsse",
-"dpas", "dpgu", "dpmp", "dpvi",
-"dhcvi", "dhcgu", "dhcvi", "dhcas",
-"acs1", "acs3", "acs5", "acs1/profile",
-"acs3/profile", "acs5/profile", "acs1/subject", "acs3/subject",
-"acs5/subject", "acs1/cprofile", "acs5/cprofile",
-"sf2profile", "sf3profile",
-"sf4profile", "aian", "aianprofile",
-"cd110h", "cd110s", "cd110hprofile", "cd110sprofile", "sldh",
-"slds", "sldhprofile", "sldsprofile", "cqr",
-"cd113", "cd113profile", "cd115", "cd115profile", "cd116", "cd118", and
-"plnat".</p>
+<p>Datasets are named as they are in the Census API; see <a href="https://api.census.gov/data.html" class="external-link">https://api.census.gov/data.html</a> for a description of each dataset by year.</p>
+<p>For the American Community Survey, use <code>"acs1"</code>, <code>"acs3"</code>, or <code>"acs5"</code> for the Detailed Tables. Add <code>"/profile"</code> for the Data Profile (e.g. <code>"acs5/profile"</code>), <code>"/subject"</code> for the Subject Tables, or <code>"/cprofile"</code> for the Comparison Profile (<code>"acs1/cprofile"</code> and <code>"acs5/cprofile"</code>). <code>"acsse"</code> is the ACS 1-year Supplemental Estimates.</p>
+<p>For the decennial Census, use the name of a summary file, as supplied to the <code>sumfile</code> argument of <code><a href="get_decennial.html">get_decennial()</a></code>. Run <code>summary_files(year)</code> to see the summary files available for 2000, 2010, or 2020. Common examples are <code>"pl"</code> (Redistricting Data), <code>"dhc"</code> (Demographic and Housing Characteristics, 2020), <code>"dp"</code> (Demographic Profile, 2020), and <code>"sf1"</code> (Summary File 1, 2000 and 2010).</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="va">v15</span> <span class="op">&lt;-</span> <span class="fu">load_variables</span><span class="op">(</span><span class="fl">2015</span>, <span class="st">"acs5"</span>, cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">v15</span> <span class="op">&lt;-</span> <span class="fu">load_variables</span><span class="op">(</span><span class="fl">2015</span>, <span class="st">"acs5"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">v15</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
@@ -164,7 +163,7 @@ or load the dataset from an existing cache. Defaults to FALSE.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>

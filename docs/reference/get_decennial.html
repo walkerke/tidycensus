@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -99,6 +99,9 @@
 <span>  pop_group_label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  key <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  show_call <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  drop_empty <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  cb <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  labels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -117,17 +120,14 @@ IDs.</p></dd>
 
 
 <dt id="arg-table">table<a class="anchor" aria-label="anchor" href="#arg-table"></a></dt>
-<dd><p>The Census table for which you would like to request all variables. Uses
-lookup tables to identify the variables; performs faster when variable
-table already exists through <code>load_variables(cache = TRUE)</code>.
-Only one table may be requested per call.</p></dd>
+<dd><p>The Census table for which you would like to request all variables.
+Uses Census API groups where supported. Only one table may be
+requested per call.</p></dd>
 
 
 <dt id="arg-cache-table">cache_table<a class="anchor" aria-label="anchor" href="#arg-cache-table"></a></dt>
-<dd><p>Whether or not to cache table names for faster future access.
-Defaults to FALSE; if TRUE, only needs to be called once per
-dataset.  If variables dataset is already cached via the
-<code>load_variables</code> function, this can be bypassed.</p></dd>
+<dd><p>Deprecated and ignored. Table requests now use Census API
+groups when supported and do not write to a local cache.</p></dd>
 
 
 <dt id="arg-year">year<a class="anchor" aria-label="anchor" href="#arg-year"></a></dt>
@@ -166,7 +166,9 @@ columns.</p></dd>
 
 <dt id="arg-keep-geo-vars">keep_geo_vars<a class="anchor" aria-label="anchor" href="#arg-keep-geo-vars"></a></dt>
 <dd><p>if TRUE, keeps all the variables from the Census
-shapefile obtained by tigris.  Defaults to FALSE.</p></dd>
+shapefile obtained by tigris.  Defaults to FALSE.  As the shapefile has its own <code>NAME</code> column, the
+shapefile's name is returned as <code>NAME.x</code> and the Census name for each geography
+(the <code>NAME</code> column when <code>keep_geo_vars = FALSE</code>) as <code>NAME.y</code>.</p></dd>
 
 
 <dt id="arg-shift-geo">shift_geo<a class="anchor" aria-label="anchor" href="#arg-shift-geo"></a></dt>
@@ -200,6 +202,35 @@ Obtain one at <a href="https://api.census.gov/data/key_signup.html" class="exter
 in debugging and determining if error messages returned are
 due to tidycensus or the Census API. Copy to the API call into
 a browser and see what is returned by the API directly. Defaults to FALSE.</p></dd>
+
+
+<dt id="arg-drop-empty">drop_empty<a class="anchor" aria-label="anchor" href="#arg-drop-empty"></a></dt>
+<dd><p>if TRUE and <code>geometry = TRUE</code>, drops rows with empty geometries.
+These are typically water-only areas, such as offshore block groups,
+that are not in the cartographic boundary files used by default; use
+<code>cb = FALSE</code> to return TIGER/Line geometries for these areas instead.
+Defaults to FALSE.</p></dd>
+
+
+<dt id="arg-cb">cb<a class="anchor" aria-label="anchor" href="#arg-cb"></a></dt>
+<dd><p>if TRUE (the default), uses the Census Bureau's cartographic boundary files
+for feature geometry when <code>geometry = TRUE</code>. These are generalized and clipped to
+the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
+area. Note that tigris functions default to <code>cb = FALSE</code>. TIGER/Line files are
+always used for 2011 and 2012, when cartographic boundary files are not available.</p></dd>
+
+
+<dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
+<dd><p>Name variables from their labels instead of their IDs.
+<code>FALSE</code> (the default) uses variable IDs. <code>TRUE</code> uses cleaned labels
+(e.g. <code>total_male_under_5_years</code>), in the <code>variable</code> column of tidy
+output or the column names of wide output; variables whose labels are identical
+get their concept added (e.g. <code>total_male_under_5_years_white_alone</code>).
+<code>"concept"</code> always adds the concept to the name. <code>"attributes"</code> keeps
+the IDs and attaches the cleaned label (e.g. "Total &gt; Male &gt; Under 5 years") and
+concept to each column of wide output as <code>label</code> and <code>concept</code>
+attributes; it has no effect on tidy output. Variables you name yourself in
+<code>variables</code> keep your names.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -245,7 +276,7 @@ a browser and see what is returned by the API directly. Defaults to FALSE.</p></
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>

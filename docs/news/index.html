@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -76,9 +76,31 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="2.0.0" id="tidycensus-200">tidycensus 2.0.0<small>2026-10-19</small><a class="anchor" aria-label="anchor" href="#tidycensus-200"></a></h2>
+<ul><li>
+<code><a href="../reference/get_estimates.html">get_estimates()</a></code> now defaults to Vintage 2025 and supports Puerto Rico: municipio population and age / sex characteristics are available with <code>geography = "county", state = "PR"</code>, and Puerto Rico metro areas are included in CBSA and CSA population estimates (<a href="https://github.com/walkerke/tidycensus/issues/581" class="external-link">#581</a>).</li>
+<li>
+<code><a href="../reference/get_estimates.html">get_estimates()</a></code> now supports the Census Bureau’s intercensal estimates with <code>product = "intercensal"</code>: use <code>vintage = 2020</code> for 2010-2020 and <code>vintage = 2010</code> for 2000-2010. Population totals are available for states, counties, and places, and characteristics by age, sex, race, and Hispanic origin for counties (<a href="https://github.com/walkerke/tidycensus/issues/629" class="external-link">#629</a>). Population characteristics requests also now support <code>geometry = TRUE</code> and multiple states for counties.</li>
+<li>New <code>drop_empty</code> argument in <code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>, and <code><a href="../reference/get_estimates.html">get_estimates()</a></code> drops rows with empty geometries (typically water-only areas not in the cartographic boundary files) when <code>geometry = TRUE</code> (<a href="https://github.com/walkerke/tidycensus/issues/650" class="external-link">#650</a>). These functions also now have an explicit <code>cb</code> argument, which defaults to <code>TRUE</code> (cartographic boundary files); use <code>cb = FALSE</code> for TIGER/Line files (<a href="https://github.com/walkerke/tidycensus/issues/604" class="external-link">#604</a>).</li>
+<li>
+<code><a href="../reference/get_estimates.html">get_estimates()</a></code> now supports housing unit estimates for 2020 and later with <code>product = "housing"</code> (Vintage 2021 and later) for the US, regions, states, and counties. The Census Bureau publishes these only as Excel tables, so the readxl package is required.</li>
+<li>
+<code><a href="../reference/get_flows.html">get_flows()</a></code> now defaults to <code>year = 2020</code>, the most recent ACS Migration Flows release with county-to-county flows, and supports the 2017-2021 and 2018-2022 releases, which provide flows between counties and states or world regions (inflows only, with no county subdivision, MSA, or geometry support).</li>
+<li>
+<code><a href="../reference/get_acs.html">get_acs()</a></code> and <code><a href="../reference/get_decennial.html">get_decennial()</a></code> now support metropolitan divisions (<code>geography = "metropolitan division"</code>) and tribal census tracts (<code>geography = "tribal census tract"</code>), returned for the entire US (<a href="https://github.com/walkerke/tidycensus/issues/519" class="external-link">#519</a>, <a href="https://github.com/walkerke/tidycensus/issues/621" class="external-link">#621</a>).</li>
+<li>New <code>suffix</code> argument in <code><a href="../reference/get_acs.html">get_acs()</a></code> sets the estimate and margin of error suffixes for <code>output = "wide"</code>, e.g. <code>suffix = c("_est", "_moe")</code>; the default remains <code>c("E", "M")</code> (<a href="https://github.com/walkerke/tidycensus/issues/600" class="external-link">#600</a>).</li>
+<li>Cleaned variable labels: <code><a href="../reference/get_acs.html">get_acs()</a></code> and <code><a href="../reference/get_decennial.html">get_decennial()</a></code> have a new <code>labels</code> argument. <code>labels = TRUE</code> names variables from their labels instead of their IDs (e.g. <code>total_male_under_5_years</code>), in tidy or wide output; <code>labels = "concept"</code> adds the concept to those names; and <code>labels = "attributes"</code> keeps the IDs and attaches readable labels (e.g. “Total &gt; Male &gt; Under 5 years”) to the columns of wide output. <code>load_variables(clean_labels = TRUE)</code> returns the same cleaned labels.</li>
+<li>
+<code><a href="../reference/load_variables.html">load_variables()</a></code> now includes each table’s universe where the Census API publishes it (ACS detailed tables and the 2020 decennial files) (<a href="https://github.com/walkerke/tidycensus/issues/596" class="external-link">#596</a>).</li>
+<li>Requests to the Census API and Census Bureau file downloads now use {httr2} in place of {httr}. Rate limiting and temporary server errors are retried automatically, and connection failures and API outages give clear error messages.</li>
+<li>Various bug fixes and performance improvements (<a href="https://github.com/walkerke/tidycensus/issues/649" class="external-link">#649</a>, <a href="https://github.com/walkerke/tidycensus/issues/590" class="external-link">#590</a>, <a href="https://github.com/walkerke/tidycensus/issues/652" class="external-link">#652</a>, <a href="https://github.com/walkerke/tidycensus/issues/557" class="external-link">#557</a>, <a href="https://github.com/walkerke/tidycensus/issues/564" class="external-link">#564</a>, <a href="https://github.com/walkerke/tidycensus/issues/582" class="external-link">#582</a>, <a href="https://github.com/walkerke/tidycensus/issues/526" class="external-link">#526</a>, <a href="https://github.com/walkerke/tidycensus/issues/651" class="external-link">#651</a>, <a href="https://github.com/walkerke/tidycensus/issues/653" class="external-link">#653</a>, <a href="https://github.com/walkerke/tidycensus/issues/654" class="external-link">#654</a>, <a href="https://github.com/walkerke/tidycensus/issues/485" class="external-link">#485</a>).</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8" id="tidycensus-18">tidycensus 1.8<a class="anchor" aria-label="anchor" href="#tidycensus-18"></a></h2>
 <ul><li>
 <strong>Breaking change:</strong> the Census Bureau now requires an API key for all requests, including metadata endpoints used by <code><a href="../reference/load_variables.html">load_variables()</a></code> and <code><a href="../reference/get_pop_groups.html">get_pop_groups()</a></code>. Tidycensus will now error (rather than warn) when no key is available. Pass a key with the <code>key</code> argument or store one for future sessions with <code>census_api_key("YOUR KEY", install = TRUE)</code>. <code><a href="../reference/load_variables.html">load_variables()</a></code> and <code><a href="../reference/get_pop_groups.html">get_pop_groups()</a></code> gain a <code>key</code> argument, and table lookups triggered by the <code>table =</code> argument to <code><a href="../reference/get_acs.html">get_acs()</a></code> / <code><a href="../reference/get_decennial.html">get_decennial()</a></code> now forward the resolved key automatically.</li>
+<li>
+<code><a href="../reference/get_estimates.html">get_estimates()</a></code> now supports the 2025 city / place population estimates with <code>geography = "place"</code> and <code>vintage = 2025</code>.</li>
 <li>
 <code><a href="../reference/get_decennial.html">get_decennial()</a></code> now normalizes state-prefixed ZCTA GEOIDs returned by selected decennial API endpoints before joining to geometry.</li>
 <li>
@@ -228,7 +250,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>

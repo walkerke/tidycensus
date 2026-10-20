@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -99,6 +99,10 @@
 <span>  moe_level <span class="op">=</span> <span class="fl">90</span>,</span>
 <span>  survey <span class="op">=</span> <span class="st">"acs5"</span>,</span>
 <span>  show_call <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  drop_empty <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  cb <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  suffix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"E"</span>, <span class="st">"M"</span><span class="op">)</span>,</span>
+<span>  labels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -119,16 +123,13 @@ associated with the variable.</p></dd>
 
 <dt id="arg-table">table<a class="anchor" aria-label="anchor" href="#arg-table"></a></dt>
 <dd><p>The ACS table for which you would like to request all
-variables. Uses lookup tables to identify the variables; performs faster
-when variable table already exists through <code>load_variables(cache =
-TRUE)</code>. Only one table may be requested per call.</p></dd>
+variables. Uses Census API groups where supported. Only one table may be
+requested per call.</p></dd>
 
 
 <dt id="arg-cache-table">cache_table<a class="anchor" aria-label="anchor" href="#arg-cache-table"></a></dt>
-<dd><p>Whether or not to cache table names for faster future
-access. Defaults to FALSE; if TRUE, only needs to be called once per
-dataset.  If variables dataset is already cached via the
-<code>load_variables</code> function, this can be bypassed.</p></dd>
+<dd><p>Deprecated and ignored. Table requests now use Census API
+groups and do not write to a local cache.</p></dd>
 
 
 <dt id="arg-year">year<a class="anchor" aria-label="anchor" href="#arg-year"></a></dt>
@@ -158,8 +159,9 @@ Defaults to NULL.</p></dd>
 <dd><p>The zip code tabulation area(s) for which you are requesting
 data. Specify a single value or a vector of values to get data for more
 than one ZCTA. Numeric or character ZCTA GEOIDs are accepted. When
-specifying ZCTAs, geography must be set to `"zcta"` and `state` must be specified with
-`county` left as `NULL`. Defaults to NULL.</p></dd>
+specifying ZCTAs, geography must be set to `"zcta"` and `county` left as `NULL`.
+`state` can be used to request ZCTAs within a state for the 2011-2019 ACS only;
+the Census API does not support this for 2020 and later. Defaults to NULL.</p></dd>
 
 
 <dt id="arg-geometry">geometry<a class="anchor" aria-label="anchor" href="#arg-geometry"></a></dt>
@@ -170,7 +172,9 @@ geometry in the `geometry` column.</p></dd>
 
 <dt id="arg-keep-geo-vars">keep_geo_vars<a class="anchor" aria-label="anchor" href="#arg-keep-geo-vars"></a></dt>
 <dd><p>if TRUE, keeps all the variables from the Census
-shapefile obtained by tigris.  Defaults to FALSE.</p></dd>
+shapefile obtained by tigris.  Defaults to FALSE.  As the shapefile has its own <code>NAME</code> column, the
+shapefile's name is returned as <code>NAME.x</code> and the Census name for each geography
+(the <code>NAME</code> column when <code>keep_geo_vars = FALSE</code>) as <code>NAME.y</code>.</p></dd>
 
 
 <dt id="arg-shift-geo">shift_geo<a class="anchor" aria-label="anchor" href="#arg-shift-geo"></a></dt>
@@ -208,6 +212,43 @@ tidycensus or the Census API. Copy to the API call into a browser and see
 what is returned by the API directly. Defaults to FALSE.</p></dd>
 
 
+<dt id="arg-drop-empty">drop_empty<a class="anchor" aria-label="anchor" href="#arg-drop-empty"></a></dt>
+<dd><p>if TRUE and <code>geometry = TRUE</code>, drops rows with empty geometries.
+These are typically water-only areas, such as offshore block groups,
+that are not in the cartographic boundary files used by default; use
+<code>cb = FALSE</code> to return TIGER/Line geometries for these areas instead.
+Defaults to FALSE.</p></dd>
+
+
+<dt id="arg-cb">cb<a class="anchor" aria-label="anchor" href="#arg-cb"></a></dt>
+<dd><p>if TRUE (the default), uses the Census Bureau's cartographic boundary files
+for feature geometry when <code>geometry = TRUE</code>. These are generalized and clipped to
+the shoreline. If FALSE, uses the more detailed TIGER/Line files, which include water
+area. Note that tigris functions default to <code>cb = FALSE</code>. TIGER/Line files are
+always used for 2011 and 2012, when cartographic boundary files are not available.</p></dd>
+
+
+<dt id="arg-suffix">suffix<a class="anchor" aria-label="anchor" href="#arg-suffix"></a></dt>
+<dd><p>A character vector of two suffixes for the estimate and margin of
+error columns when <code>output = "wide"</code>. Defaults to <code>c("E", "M")</code>, giving
+columns like <code>B19013_001E</code> and <code>B19013_001M</code>; for example,
+<code>c("_est", "_moe")</code> gives <code>B19013_001_est</code> and <code>B19013_001_moe</code>.
+Ignored when <code>output = "tidy"</code>.</p></dd>
+
+
+<dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
+<dd><p>Name variables from their labels instead of their IDs.
+<code>FALSE</code> (the default) uses variable IDs. <code>TRUE</code> uses cleaned labels
+(e.g. <code>total_male_under_5_years</code>), in the <code>variable</code> column of tidy
+output or the column names of wide output; variables whose labels are identical
+get their concept added (e.g. <code>total_male_under_5_years_white_alone</code>).
+<code>"concept"</code> always adds the concept to the name. <code>"attributes"</code> keeps
+the IDs and attaches the cleaned label (e.g. "Total &gt; Male &gt; Under 5 years") and
+concept to each column of wide output as <code>label</code> and <code>concept</code>
+attributes; it has no effect on tidy output. Variables you name yourself in
+<code>variables</code> keep your names.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Other keyword arguments</p></dd>
 
@@ -231,8 +272,8 @@ what is returned by the API directly. Defaults to FALSE.</p></dd>
 <span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">tarr</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span>, color <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">coord_sf</a></span><span class="op">(</span>crs <span class="op">=</span> <span class="fl">26914</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://sjmgarnier.github.io/viridis/reference/scale_viridis.html" class="external-link">scale_fill_viridis</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://sjmgarnier.github.io/viridis/reference/scale_viridis.html" class="external-link">scale_color_viridis</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">scale_fill_viridis</span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">scale_color_viridis</span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">vt</span> <span class="op">&lt;-</span> <span class="fu">get_acs</span><span class="op">(</span>geography <span class="op">=</span> <span class="st">"county"</span>, variables <span class="op">=</span> <span class="st">"B19013_001"</span>, state <span class="op">=</span> <span class="st">"VT"</span>, year <span class="op">=</span> <span class="fl">2019</span><span class="op">)</span></span></span>
@@ -262,7 +303,7 @@ what is returned by the API directly. Defaults to FALSE.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>

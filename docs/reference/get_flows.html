@@ -18,7 +18,7 @@ Flows"><meta property="og:image" content="/logo.png"><!-- mathjax --><script src
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@ Flows</p>
 <span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  breakdown <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  breakdown_labels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  year <span class="op">=</span> <span class="fl">2018</span>,</span>
+<span>  year <span class="op">=</span> <span class="fl">2020</span>,</span>
 <span>  output <span class="op">=</span> <span class="st">"tidy"</span>,</span>
 <span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -107,7 +107,9 @@ Flows</p>
 <dl><dt id="arg-geography">geography<a class="anchor" aria-label="anchor" href="#arg-geography"></a></dt>
 <dd><p>The geography of your requested data. Possible values are
 <code>"county"</code>, <code>"county subdivision"</code>, and <code>"metropolitan statistical area"</code>.
-MSA data is only available beginning with the 2009-2013 5-year ACS.</p></dd>
+MSA data is only available beginning with the 2009-2013 5-year ACS.
+County subdivision and MSA data are available through the 2016-2020 5-year
+ACS; beginning with the 2017-2021 5-year ACS, only county data are available.</p></dd>
 
 
 <dt id="arg-variables">variables<a class="anchor" aria-label="anchor" href="#arg-variables"></a></dt>
@@ -118,7 +120,7 @@ movers of each geography (<code>"MOVEDIN"</code>, <code>"MOVEDOUT"</code>, <code
 variables are specified, they are pulled in addition to the default
 variables. The names of additional variables can be found in the Census
 Migration Flows API
-documentation at <a href="https://api.census.gov/data/2018/acs/flows/variables.html" class="external-link">https://api.census.gov/data/2018/acs/flows/variables.html</a>.</p></dd>
+documentation at <a href="https://api.census.gov/data/2020/acs/flows/variables.html" class="external-link">https://api.census.gov/data/2020/acs/flows/variables.html</a>.</p></dd>
 
 
 <dt id="arg-breakdown">breakdown<a class="anchor" aria-label="anchor" href="#arg-breakdown"></a></dt>
@@ -142,7 +144,12 @@ breakdown characteristic codes. Defaults to <code>FALSE</code>.</p></dd>
 
 <dt id="arg-year">year<a class="anchor" aria-label="anchor" href="#arg-year"></a></dt>
 <dd><p>The year, or endyear, of the ACS sample. The Migration Flows API
-is available for 5-year ACS samples from 2010 to 2018. Defaults to 2018.</p></dd>
+is available for 5-year ACS samples from 2010 to 2022. Defaults to 2020,
+the most recent sample with county-to-county flows. Beginning with the
+2017-2021 5-year ACS, the Census Bureau publishes flows between each county
+and states or world regions rather than other counties: only
+<code>"MOVEDIN"</code> is available (<code>"MOVEDOUT"</code> and <code>"MOVEDNET"</code> are
+<code>NA</code>), and <code>geometry = TRUE</code> is not supported.</p></dd>
 
 
 <dt id="arg-output">output<a class="anchor" aria-label="anchor" href="#arg-output"></a></dt>
@@ -172,11 +179,14 @@ MSAs, geography must be set to <code>"metropolitan statistical area"</code> and
 
 <dt id="arg-geometry">geometry<a class="anchor" aria-label="anchor" href="#arg-geometry"></a></dt>
 <dd><p>if FALSE (the default), return a tibble of ACS Migration
-Flows data. If TRUE, return an sf object with the centroids of both origin
-and destination as <code>sfc_POINT</code> columns. The origin point feature is
-returned in a column named <code>centroid1</code> and is the active geometry column in
-the sf object. The destination point feature is returned in the <code>centroid2</code>
-column.</p></dd>
+Flows data. If TRUE, return an sf object with the centroids of both
+geographies in each flow as <code>sfc_POINT</code> columns. The centroid of the
+reference geography (<code>GEOID1</code>) is returned in a column named
+<code>centroid1</code> and is the active geometry column in the sf object. The
+centroid of the second geography (<code>GEOID2</code>) is returned in the
+<code>centroid2</code> column. For <code>"MOVEDIN"</code>, the second geography is
+where movers came from; for <code>"MOVEDOUT"</code>, it is where they went. Not
+available for years after 2020.</p></dd>
 
 
 <dt id="arg-key">key<a class="anchor" aria-label="anchor" href="#arg-key"></a></dt>
@@ -242,7 +252,7 @@ what is returned by the API directly. Defaults to FALSE.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.9000.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>

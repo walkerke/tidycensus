@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">tidycensus</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -311,6 +311,15 @@ Hawaiian home lands</td>
 <td><code><a href="../reference/get_acs.html">get_acs()</a></code></td>
 </tr>
 <tr class="odd">
+<td><code>"tribal census tract"</code></td>
+<td>Tribal census tract (within American Indian areas); returned for the
+entire US</td>
+<td></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code> (5-year), <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
+</tr>
+<tr class="even">
 <td>
 <code>"metropolitan/micropolitan statistical area"</code> (2021
 5-year ACS and later) OR
@@ -318,6 +327,15 @@ Hawaiian home lands</td>
 OR <code>"cbsa"</code>
 </td>
 <td>Core-based statistical area</td>
+<td></td>
+<td>
+<code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
+</td>
+</tr>
+<tr class="odd">
+<td><code>"metropolitan division"</code></td>
+<td>Metropolitan division (within the largest metropolitan areas);
+returned for the entire US</td>
 <td></td>
 <td>
 <code><a href="../reference/get_acs.html">get_acs()</a></code>, <code><a href="../reference/get_decennial.html">get_decennial()</a></code>
@@ -452,11 +470,9 @@ for the ACS detailed tables, and append <code>/profile</code> for the
 Data Profile, <code>/subject</code> for the Subject Tables, or
 <code>/cprofile</code> for the Comparison Profile. To browse these
 variables, assign the result of this function to a variable and use the
-<code>View</code> function in RStudio. An optional argument
-<code>cache = TRUE</code> will cache the dataset on your computer for
-future use.</p>
+<code>View</code> function in RStudio.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">v24</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_variables.html">load_variables</a></span><span class="op">(</span><span class="fl">2024</span>, <span class="st">"acs5"</span>, cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">v24</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_variables.html">load_variables</a></span><span class="op">(</span><span class="fl">2024</span>, <span class="st">"acs5"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/View.html" class="external-link">View</a></span><span class="op">(</span><span class="va">v24</span><span class="op">)</span></span></code></pre></div>
 <p><img src="img/view.png" style="width: 100%"></p>
@@ -548,7 +564,7 @@ around the estimate:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer>
