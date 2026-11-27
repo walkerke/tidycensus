@@ -4,18 +4,27 @@
 #' @param est2 The second estimate
 #' @param moe1 The margin of error of the first estimate
 #' @param moe2 The margin of error of the second estimate
-#' @param clevel The confidence level. May by 0.9, 0.95, or 0.99
+#' @param clevel The confidence level of the test. May be 0.9, 0.95, or 0.99
+#' @param moe_level The confidence level of \code{moe1} and \code{moe2}, as in the
+#'   \code{moe_level} argument of \code{get_acs()}. May be 90 (the default, the level of
+#'   published ACS margins of error), 95, or 99
 #'
 #' @seealso https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch07.pdf
 #'
 #' @return TRUE if the difference is statistically signifiant, FALSE otherwise.
 #' @export
-significance <- function(est1, est2, moe1, moe2, clevel = 0.9){
+significance <- function(est1, est2, moe1, moe2, clevel = 0.9, moe_level = 90){
   # generate z score
   if(clevel == 0.9) z = 1.645
   else if(clevel == 0.95) z = 1.960
   else if(clevel == 0.99) z = 2.576
   else stop("clevel must be 0.9, 0.95, or 0.99")
+
+  # z score the margins of error were derived with
+  if(moe_level == 90) z_moe = 1.645
+  else if(moe_level == 95) z_moe = 1.960
+  else if(moe_level == 99) z_moe = 2.576
+  else stop("moe_level must be 90, 95, or 99")
 
   #ensure all variables are numeric
   if(any(lapply(c(est1, est2, moe1, moe2), class) != "numeric")){
@@ -27,8 +36,8 @@ significance <- function(est1, est2, moe1, moe2, clevel = 0.9){
   moe2[which(is.na(moe2))] <- 0
 
   # 1. Calculate the SEs for the two ACS estimates.
-  se1 <- moe1/z
-  se2 <- moe2/z
+  se1 <- moe1/z_moe
+  se2 <- moe2/z_moe
 
   # 2. Square the resulting SE for each estimate.
   se1 <- se1^2

@@ -4,7 +4,7 @@
 \alias{significance}
 \title{Evaluate whether the difference in two estimates is statistically significant.}
 \usage{
-significance(est1, est2, moe1, moe2, clevel = 0.9)
+significance(est1, est2, moe1, moe2, clevel = 0.9, moe_level = 90)
 }
 \arguments{
 \item{est1}{The first estimate.}
@@ -15,7 +15,11 @@ significance(est1, est2, moe1, moe2, clevel = 0.9)
 
 \item{moe2}{The margin of error of the second estimate}
 
-\item{clevel}{The confidence level. May by 0.9, 0.95, or 0.99}
+\item{clevel}{The confidence level of the test. May be 0.9, 0.95, or 0.99}
+
+\item{moe_level}{The confidence level of \code{moe1} and \code{moe2}, as in the
+\code{moe_level} argument of \code{get_acs()}. May be 90 (the default, the level of
+published ACS margins of error), 95, or 99}
 }
 \value{
 TRUE if the difference is statistically signifiant, FALSE otherwise.
